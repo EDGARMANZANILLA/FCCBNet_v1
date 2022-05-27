@@ -1,0 +1,270 @@
+﻿
+@{
+    ViewBag.Icono = "fas fa-search-location";
+    ViewBag.Title = "Localizador";
+
+}
+
+
+
+
+
+@Scripts.Render("~/Scripts/SCRIPTS_PROYECTO_VISTAS/FOLIACION/Reposicion_Suspencion/Index.js")
+
+
+
+
+<h4 class="text-center text-uppercase">localizador de formas de pago </h4>
+
+
+
+
+<div class="margenSection row ">
+
+    <div class="form-group filtro  col-12 col-xs-offset-0 offset-sm-4 col-sm-2">
+        <select class="form-control seleccion" id="TipoFiltroLocalizadorPagoCheque" required>
+
+            <option value="0" disabled selected>Seleccione Filtro...</option>
+            <option value="1">PAGO</option>
+            <option value="2">NUMERO DE EMPLEADO</option>
+        </select>
+    </div>
+
+
+    <div class="form-group  text-center  col-12 col-xs-offset-0  col-sm-2">
+
+        <input id="InputLocalizador" placeholder="Dato a buscar" class="input" type="number" autofocus pattern=" 0+\.[0-9]*[1-9][0-9]*$" onkeypress="return event.charCode >= 48 && event.charCode <= 57" required></input>
+
+    </div>
+
+
+    <br />
+</div>
+
+
+
+
+<div class="margenSection row  ">
+
+    @*<div class="col-12 text-center ">
+            <input id="InputLocalizador" placeholder="Ingrese el numero de la forma de pago" class="inputLocalizadorFormasPago col-12 text-center" pattern=" 0+\.[0-9]*[1-9][0-9]*$" onkeypress="return event.charCode >= 48 && event.charCode <= 57" required autofocus>
+        </div>*@
+
+    <br />
+    <br />
+    <br />
+
+    <div class="col-12  text-center">
+        <button id="btnLocalizador" class="btn btn-primary btn-lg" onclick="LocalizarDatoPorFiltro()"> <i class="fa fa-search" aria-hidden="true" ></i> Buscar</button>
+    </div>
+    <br />
+</div>
+
+
+
+
+
+<br />
+<br />
+<br />
+<br />
+<br />
+
+<div class="col-12 ">
+
+    <!--Nuevo modal-->
+    <!-- Cascaron de tabla para luego llenarla con datos desde la DB -->
+
+    <div class="table-responsive text-center">
+
+        <div id="TablaRegistroLocalizadoFormaPago">
+
+            <table id="RegistrosLocalizados" class='table table-striped table-bordered table-hover' style="display:none">
+                <caption class="text-uppercase"> Formas De Pago Localizado </caption>
+                <thead class="tabla">
+                    <tr class="text-center text-uppercase">
+
+                        <th>IdRegistro</th>
+                        <th>IdNom</th>
+                        <th>Referencia Bitacora</th>
+                        <th>Quincena</th>
+
+                        <th>NumEmpleado</th>
+                        <th>NombreBeneficiaro</th>
+                        <th>FolioCheque</th>
+
+                        <th>Liquido</th>
+                        <th>EstadoCheque</th>
+                        <th>Tipo Pago</th>
+
+                    </tr>
+
+
+                </thead>
+
+            </table>
+
+        </div>
+    </div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- Modal para cargar diferentes vistas de SUSPENCION O CANCELACION SEGUN EL CASO    -->
+<div class="modal fade" id="RenderVista_SuspensionCancelacion" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" style="overflow-y: scroll;">
+    <div class="modal-dialog modal-dialog-centered modal-dialog modal-xl">
+        <div class="modal-content">
+            @*<div class="modal-header">
+                    <h4 class="modal-title col-11 text-capitalize text-center">AGREGAR UNA FORMA DE PAGO A UN NUMERO DE REFERENCIA DE CANCELACION</h4>
+                    <button type="button" class="close btn-primary" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>*@
+            <div class="modal-body">
+
+
+
+                <div id="RenderPartialViewDetalleRegistroSuspencion">
+
+                </div>
+
+
+
+            </div>
+            <div class="modal-footer">
+
+
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@*<div id="RenderPartialViewDetalleRegistroSuspencion">
+
+    </div>*@
+
+
+
+
+<!-- Modal del Historico de Reposiciones   -->
+<div class="modal fade" id="btnHistoricoSeguimiento" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" style="overflow-y: scroll;">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xll">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title col-11 text-uppercase text-center">SEGUIMIENTO DEL HISTORICO DE La FORMA DE PAGO SELECCIONADA</h5>
+                <button type="button" class="close btn-primary" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                </br>
+                <!-- Cascaron de tabla para luego llenarla con datos desde la DB -->
+            
+                    <div class="table-responsive">
+
+                        <div id="TablaHistoricoReposiciones">
+
+                            <table id="HistoricoReposiciones" class='table table-striped table-bordered table-hover' style="display:block">
+                                <caption class="text-uppercase">Historico Reposiciones </caption>
+                                <thead class="tabla">
+                                    <tr class="text-center text-uppercase">
+
+                                        <th>Detalles o problemas con nominas </th>
+                                    </tr>
+                                </thead>
+
+
+                            </table>
+
+                        </div>
+                    </div>
+          
+
+                </br>
+
+
+
+            </div>
+            <div class="modal-footer">
+
+
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<style>
+
+    .inputLocalizadorFormasPago {
+        width: 400px;
+        height: 55px;
+        background: #f8f8f86b;
+        border: 2px solid;
+        border-color: #4d4b4b;
+        font-size: 14pt;
+        -webkit-border-radius: 6px;
+        -moz-border-radius: 6px;
+        border-radius: 16px;
+    }
+
+
+    input:focus {
+        border: 6px solid;
+        border-color: #1e77fd;
+        color: #1e77fd;
+    }
+
+    .seleccion {
+        border: 0;
+        height: 60px;
+        color: rgb(0, 123, 255);
+        background: transparent;
+        font-size: 17px;
+        font-weight: bolder;
+        background: #ffffff;
+    }
+
+    .filtro {
+        height: 60px;
+        background: #74BC7C;
+        font-size: 15pt;
+        color: #262626;
+        border-radius: 15px;
+    }
+
+    .input {
+        width: 400px;
+        height: 55px;
+        background: #f8f8f86b;
+        border: 2px solid;
+        font-size: 14pt;
+        float: left;
+        color: #262626;
+        padding-left: 55px;
+        -webkit-border-radius: 6px;
+        -moz-border-radius: 6px;
+        border-radius: 16px;
+        color: #1e77fd;
+    }
+
+</style>
+
+
+

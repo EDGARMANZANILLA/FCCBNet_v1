@@ -1,0 +1,394 @@
+﻿@model List<string>
+
+<div class="margenSection text-center ">
+
+    <!--  <button class="btn btn-primary btn-lg"  data-toggle="modal" data-target="#ResultadoBusquedaCuentaBancaria"  > <i class="fa fa-search" aria-hidden="true"></i> Verificar nuevas cuentas bancarias</button>
+    -->
+
+    <h5 class="col-11 text-center" style="color: blue;">Se encontraron nuevas cuentas bancarias</h5>
+    <br>
+
+    <div class="btn-block">
+        <h5 class="text-center">Selecciona una cuenta bancaria para "Agregar":</h5>
+
+        <div class="col-12 offset-md-2 col-md-8">
+            <div class="form-group">
+                <select class="form-control " id="SeleccionarCuentaDiferente" required>
+                    <option value="" disabled selected>Selecciona cuenta a agregar...</option>
+                    @foreach (var orden in Model)
+                    {
+                        <option value="@orden">@orden  </option>
+                    }
+
+
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla para mostrar los datos de la cuenta en alpha -->
+    <div class="margenSection">
+        <div class="table-responsive">
+
+            <div id="divTablaCrud">
+                <table id="tablaAgregados" class="table table-striped table-bordered table-hover" style="display:none;">
+                    <caption id="TituloDeCaption"></caption>
+                    <thead>
+                        <tr class="text-center text-uppercase">
+                            <th>Nombre banco alpha</th>
+                            <th>Cuenta</th>
+                            <th>Forma de pago</th>
+
+                        </tr>
+                    </thead>
+
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+    <!-- FIN Tabla para mostrar los datos de la cuenta en alpha -->
+
+
+    <br>
+    <br>
+    <div class="btn-block">
+        <h5 class="text-center">Selecciona el tipo de pago</h5>
+
+        <div class="col-12 offset-md-2 col-md-8">
+            <div class="form-group">
+                <select class="form-control " id="SeleccionaTipoPago" required>
+                    <option disabled selected>Selecciona el tipo de pago...</option>
+                    <option value="1">Tarjetas </option>
+                    <option value="2">Cheques</option>
+                    <option value="3">Ambos (Tarjetas y Cheques) </option>
+
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <h6 class=" col-12 text-center">Nombre de la cuenta agregar</h6>
+    <input id="NombreCuenta" class="offset-1 col-10 offset-sm-1 col-sm-8" placeholder="Asignar Nombre del banco " type="text" />
+
+    <br>
+    <br>
+    <h6 class=" col-12 text-center">Abreviatura asignada a la cuenta</h6>
+    <input id="Abreviatura" class="offset-1 col-10 offset-sm-1 col-sm-8" placeholder="Ingrese menos de 8 caracteres" type="text" />
+
+
+    <br>
+    <br>
+    <div class="col-12 text-center">
+
+
+        <button id="NuevoBancoContinuar" type="button" class="btn btn-success  text-center">Continuar</button>
+
+    </div>
+
+
+</div>
+<br>
+<br>
+
+
+
+
+
+<!-- INICIO DE MODALES -->
+<!--  Modal de confirmacion para guardar cuenta-->
+<section class="modal fade" id="AgregarBuentaBancaria" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+
+                <h5 class="col-11 text-center">Agregar nueva cuenta bancaria</h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+
+
+
+            </div>
+
+            <div id="resumenAgregarBanco" class="modal-body text-center">
+
+
+                
+
+
+
+
+
+            </div>
+
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                <button id="GuardarNuevoBanco" type="button" class="btn btn-success">Continuar</button>
+
+            </div>
+
+
+
+
+        </div>
+    </div>
+</section>
+
+
+
+
+<script>
+    function DibujarTablaAjax() {
+        $("#divTablaCrud").append(
+
+            "<table id='tablaAgregados'  class='table table-striped display table-bordered table-hover' cellspacing='0'  style='width:100%'>" +
+            " <caption class='text-uppercase'>Detalle de cuenta seleccionada en alpha </caption>"
+            + "<thead class='tabla'>" +
+
+            "<tr>" +
+            "<th>Nombre banco en alpha</th>" +
+            "<th>Cuenta</th>" +
+            "<th>Forma de pago</th>" +
+
+            "</tr>" +
+            "</thead>" +
+            "</table>"
+        );
+    };
+
+    function PintarConsultas(datos) {
+
+    $('#tablaAgregados').DataTable({
+            "ordering": false,
+            "info": false,
+            "searching": false,
+            "paging": false,
+            "lengthMenu": [5, 10],
+            "language":
+            {
+                "processing": "Procesando...",
+                "lengthMenu": "Mostrar _MENU_ registros",
+                "zeroRecords": "No se encontraron resultados",
+                "emptyTable": "Ningún dato disponible en esta tabla",
+                "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                "search": "Buscar:",
+                "info": "Mostrando de _START_ a _END_ de _TOTAL_ entradas",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Último",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                }
+            },
+            "data": datos,
+            "columns": [
+                { "data": "descrip" },
+                { "data": "cuenta" },
+                { "data": "forma_pago" }
+
+            ]
+
+        });
+    };
+
+
+
+
+    $(document).ready(function () {
+
+        let cuentaBancariaSeleccionada = null;
+        const CuentaSeleccionada = document.getElementById("SeleccionarCuentaDiferente");
+        CuentaSeleccionada.addEventListener("click",
+            function () {
+                cuentaBancariaSeleccionada = this.options[CuentaSeleccionada.selectedIndex];
+
+                console.log(cuentaBancariaSeleccionada.value);
+
+                if (cuentaBancariaSeleccionada.value != "")
+                {
+                    MensajeCargando();
+                    let enviarCuentaNombre = "{'CuentaNombre':'"+cuentaBancariaSeleccionada.value+"'}";
+
+                    $.ajax({
+                        url: '@Url.Action("ObtenerNombreCuentaBancaria", "Configuraciones_InventarioYCuentas")',
+                        data: enviarCuentaNombre,
+                        type: "POST",
+                       contentType: "application/json; charset=utf-8",
+                          success: function (msg) {
+                              OcultarMensajeCargando();
+
+
+                              $("#divTablaCrud").empty();
+
+                              DibujarTablaAjax();
+
+                              PintarConsultas(msg);
+                              console.log(msg);
+
+                          },
+                          error: function (msg) {
+                                        OcultarMensajeCargando();
+                                Swal.fire({
+                                   backdrop: true,
+                                   allowEnterKey: false,
+                                   allowOutsideClick: false,
+                                   icon: 'info',
+                                   title: 'Problema al inhabilitar',
+                                   text: 'No se pudo obtener los detalles, pongase en contacto con el administrador del sistema',
+                                  })
+                                }
+                     });
+
+                }
+
+
+            }
+        );
+
+
+        let nombreCuenta = null;
+        let abreviatura = null;
+        let tipoPago = null;
+        const Continuar = document.getElementById("NuevoBancoContinuar");
+        Continuar.addEventListener("click",
+            function ()
+            {
+
+                 tipoPago = document.getElementById("SeleccionaTipoPago");
+
+
+                if (cuentaBancariaSeleccionada != null && tipoPago.value != "Selecciona el tipo de pago...") {
+
+
+                    nombreCuenta = document.getElementById("NombreCuenta").value;
+                    abreviatura = document.getElementById("Abreviatura").value;
+
+
+                    if (abreviatura != "" && abreviatura != "") {
+
+
+
+
+                        document.getElementById("resumenAgregarBanco").innerHTML = ` Se agregara una nueva cuenta bancaria con
+                                                                                     el nombre "${nombreCuenta}" y
+                                                                                     numero de cuenta  "${cuentaBancariaSeleccionada.value}"
+                                                                                     con la abreviatura "${abreviatura}" y con el tipo de pago
+                                                                                     opcion seleccionada "${tipoPago.value}" `
+
+                        $('#AgregarBuentaBancaria').modal('show')
+                        //enviar datos al servidor
+
+
+
+                    } else {
+
+                        Swal.fire({
+                            backdrop: true,
+                            allowEnterKey: false,
+                            allowOutsideClick: false,
+                            icon: 'info',
+                            text: 'Selecione un nombre del banco y una abreviatura',
+                        })
+
+                    }
+
+                } else
+                {
+
+                    Swal.fire({
+                        backdrop: true,
+                        allowEnterKey: false,
+                        allowOutsideClick: false,
+                        icon: 'info',
+                        text: 'Selecione una cuenta bancaria y un tipo de pago',
+                    })
+
+                }
+
+
+
+
+            }
+        );
+
+
+
+
+        const GuardarNuevoBanco = document.getElementById("GuardarNuevoBanco");
+        GuardarNuevoBanco.addEventListener("click",
+            function ()
+            {
+
+
+                        let enviarDatos = "{'NombreCuenta':'" + nombreCuenta + "', 'NumeroCuenta':'" + cuentaBancariaSeleccionada.value + "','Abreviatura':'" + abreviatura + "','TipoPago':'" + tipoPago.value + "'}";
+                        MensajeCargando();
+                        $.ajax({
+                            url: '@Url.Action("AgregarCuentaBancaria", "Configuraciones_InventarioYCuentas")',
+                            data: enviarDatos,
+                            type: "POST",
+                            contentType: "application/json; charset=utf-8",
+                            success: function (msg) {
+                                OcultarMensajeCargando();
+
+                                if (msg) {
+                                    Swal.fire({
+                                        backdrop: true,
+                                        allowEnterKey: false,
+                                        allowOutsideClick: false,
+                                        icon: 'success',
+                                        title: `Se agrego exitosamente la cuenta bancaria`,
+                                        text: ``
+                                    }).then((result) => {
+                                       
+                                        document.location.reload();
+
+                                    });
+
+                                } else {
+                                    Swal.fire({
+                                        backdrop: true,
+                                        allowEnterKey: false,
+                                        allowOutsideClick: false,
+                                        icon: 'error',
+                                        title: `No se pudo agregar la cuenta bancaria`,
+                                        text: ``
+                                    }).then((result) => {
+                                        
+                                        $('#AgregarBuentaBancaria').modal('hide')
+
+                                    });
+                                }
+
+
+                            }
+                        });
+
+
+
+
+            }
+        );
+
+
+        
+
+
+
+
+
+
+
+    });
+
+
+</script>

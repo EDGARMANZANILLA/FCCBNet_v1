@@ -1,0 +1,436 @@
+﻿@model Dictionary<int, string>
+
+@{
+    ViewBag.Icono = "fas fa-boxes";
+    ViewBag.Title = "Solicitar";
+
+}
+
+
+
+<seccion class="card col-12 offset-md-2 col-md-7" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+
+
+    <div class="margenSection row" style="margin-bottom: 60px; ">
+
+
+        <div class="btn-block">
+        </div>
+
+
+        <div class="col-12 col-md-6  btn-block">
+            <button id="NuevaSolicitud" type="button" class="btn btn-primary btn-lg  btn-block" onclick="CrearNuevaSolicitudFormasPago()">Crear Nueva Solicitud</button>
+
+        </div>
+
+        <div class="col-12 col-md-6  btn-block">
+            <button id="Historico" type="button" class="btn btn-primary btn-lg  btn-block" onclick="VerHistoricoSolicitudes()">Historico de Solicitudes</button>
+
+        </div>
+
+    </div>
+
+</seccion>
+
+
+
+
+<!-- Seccion para llenar los campos de la solicitud de uno o mas bancos  -->
+<section id="AgregarBancosASolicitud" class="card margenSection col-12 offset-md-2 col-md-7" style="display:none">
+
+    <br />
+    <h5 class="col-12 text-center text-uppercase">Llene los siguientes campos para realizar la solicitud de formas de pago</h5>
+    <br />
+
+    <form>
+        <!--Seleccionar banco-->
+        <div class="row">
+
+            <div class=" col-12 text-center offset-md-1 col-md-3 text-md-right">
+                <label class="text-capitalize">  Banco:</label>
+            </div>
+
+            <div class=" col-12 col-md-6">
+                <div class="form-group">
+                    <select class="form-control" id="SeleccionBancoSolicitud" name="SeleccionBanco" required>
+                        <option value="" disabled selected>Selecciona un banco...</option>
+                        @foreach (var banco in Model)
+                        {
+
+
+                            <option value="@banco.Key" >@banco.Value </option>
+
+
+                        }
+
+                    </select>
+                </div>
+            </div>
+
+
+
+        </div>
+
+   
+
+        <!--Input para la cantidad de formas que desea solicitar el usuario-->
+        <div class="row">
+            <label class=" col-12 text-center offset-md-1 col-md-3 text-md-right">Cantidad:</label>
+            <input id="CantidadFormas" class="offset-1 col-10 offset-md-0 col-md-6" placeholder="Ingrese C. de formas a solicitar" type="number" pattern=" 0+\.[0-9]*[1-9][0-9]*$" name="itemConsumption" onkeypress="return event.charCode >= 48 && event.charCode <= 57 " />
+
+        </div>
+        <br />
+
+        <!--- Input para el folio inicial -->
+        <div class="row ">
+            <label class="col-12 text-center offset-md-0 col-md-4 text-md-right">A partir del folio:</label>
+            <input id="FInicial" class="offset-1 col-10 offset-md-0 col-md-6" placeholder="Ingrese inicio del folio a solicitar" type="number" pattern=" 0+\.[0-9]*[1-9][0-9]*$" name="itemConsumption" onkeypress="return event.charCode >= 48 && event.charCode <= 57 " />
+        </div>
+
+        <br />
+        <button type="button" class="col-12 text-center offset-md-3 col-md-6 btn btn-outline-success"  onclick="Anexar_Solicitud()"> Anexar a solicitud </button>
+
+    </form>
+
+
+    <br />
+
+</section>
+
+
+
+
+<!-- Genera la tabla para que se puedan editar los datos que se van agregando antes de poderlos agregar al historico -->
+
+<div class="margenSection">
+    <div class="table-responsive">
+
+        <div id="divTablaCrud">
+            <table id="tablaAgregados" class="table table-striped table-bordered table-hover" style="display:none;">
+                <caption id="TituloDeCaption"></caption>
+                <thead>
+                    <tr class="text-center text-uppercase">
+                        <th>Id</th>
+                        <th>Banco</th>
+                        <th>cuenta</th>
+                        <th>Folio Inicial</th>
+                        <th>Cantidad</th>
+                        <th></th>
+
+
+
+                    </tr>
+                </thead>
+
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+
+
+</div>
+
+<br />
+<br />
+<button type="button" id="CrearSolicitud" class="btn btn-primary col-10 offset-1" style="display:none" onclick="CrearSolicitudFormasPago()" >Crear nueva solicitud</button>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Generacion de tabla del Historico de las solicitudes de formas de pago  -->
+<section>
+
+    <div class="table-responsive">
+        <div id="TablaHistorica">
+            <table id="tbHistoricoSolicitudesCreadas" class="table table-striped table-bordered table-hover" style="display:none">
+                <caption class="text-uppercase">Solicitudes creadas recientemente</caption>
+
+
+                <thead class="tabla">
+                    <tr>
+                        <th>Numero Memo</th>
+                        <th>Fecha Solicitud</th>
+                        <th>
+
+                        </th>
+
+
+
+
+                    </tr>
+                </thead>
+
+                <tfoot>
+                <th class="Filtro">No. Memo</th>
+                <th class="Filtro">Fecha</th>
+
+                </tfoot>
+
+            </table>
+
+        </div>
+
+
+</section>
+
+
+
+
+
+
+
+
+
+
+
+<!-- INICIO DE MODALES -->
+<!-- Modal de Edicion -->
+<section class="modal fade" id="EditarSolicitud" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+
+                <h5 class="col-11 text-center">Editar banco seleccionado</h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+
+            </div>
+
+
+
+            <div class="modal-body">
+
+                <div class="row">
+                    <label class=" col-12 text-center offset-md-1 col-md-3 text-md-right ">Id:</label>
+                    <label id="IdEdicion" class=" offset-1 col-10 text-center offset-md-0 col-md-6 h5" title="Id de solicutud a modificar"></label>
+
+                </div>
+
+
+                <!--Seleccionar banco-->
+                <div class="row">
+
+                    <div class=" col-12 text-center offset-md-1 col-md-3 text-md-right">
+                        <label class="text-capitalize">  Banco:</label>
+                    </div>
+
+                    <div class=" col-12 col-md-6">
+                        <div class="form-group">
+                            <select class="form-control" id="EditarSeleccionNombreBanco" name="EditSeleccionBanco" required>
+                                <option value="" selected>Selecciona un banco...</option>
+                                @foreach (var banco in Model)
+                                {
+
+
+                                    <option value="@banco.Key">@banco.Value </option>
+
+
+                                }
+
+                            </select>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+
+
+                <!--Input para la cantidad de formas que desea solicitar el usuario-->
+                <div class="row">
+                    <label class=" col-12 text-center offset-md-1 col-md-3 text-md-right">Cantidad:</label>
+                    <input id="EditarCantidadFormas" class="offset-1 col-10 offset-md-0 col-md-6" placeholder="Ingrese C. de formas a solicitar" type="number" pattern=" 0+\.[0-9]*[1-9][0-9]*$" name="itemConsumption" onkeypress="" required />
+                </div>
+                <br />
+
+                <!--- Input para el folio inicial -->
+                <div class="row ">
+                    <label class="col-12 text-center offset-md-0 col-md-4 text-md-right">A partir del folio:</label>
+                    <input id="EditarFInicial" class="offset-1 col-10 offset-md-0 col-md-6" placeholder="Ingrese inicio del folio a solicitar" type="text" pattern="[A-Za-z0-9]" onkeypress="" required />
+                </div>
+
+
+
+                <br />
+
+            </div>
+
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                <button id="GuardarEdicion" type="button" class="btn btn-success">Guardar Edicion</button>
+
+            </div>
+
+
+        </div>
+    </div>
+</section>
+
+
+<!-- Modal para descarga -->
+<section class="modal fade" id="Descargar" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+
+                <h5 class="col-11 text-center text-uppercase">Solitud creada correctamente</h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+
+            </div>
+
+
+
+            <div class="modal-body text-center">
+                <a class="btn btn-success btn-lg text-center" id="DlReport" href="@Url.Action("GenerarReporteSolicitud", "Inventario", new { NumMemorandum = "0" })">Descargar solicitud creada</a>
+
+            </div>
+
+
+            <div class="modal-footer text-center">
+
+            </div>
+
+
+        </div>
+    </div>
+</section>
+
+
+<!-- Modal para mostrar los detalles de la solicitud por el memorandum -->
+<section class="modal fade " id="DetalleSolicitud" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content ">
+            <div class="modal-header">
+
+
+                <h5 class="col-11 text-center text-uppercase">Detalles</h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+
+            </div>
+
+
+
+            <div class="modal-body text-center">
+
+                <section>
+
+                    <div class="table-responsive">
+                        <div id="TablaDetalleSolicitud">
+                            <table id="tbDetalleSolicitud" class="table table-striped table-bordered table-hover">
+                                <caption class="text-uppercase">Detalle de la Solicitud</caption>
+
+
+                                <thead class="tabla">
+                                    <tr>
+                                        <th>Numero de Solicitud</th>
+                                        <th>Banco</th>
+                                        <th>Cuenta</th>
+                                        <th>Folio Inicial</th>
+                                       
+
+                                    </tr>
+                                </thead>
+
+                               
+                            </table>
+
+                        </div>
+
+
+                </section>
+
+            </div>
+
+
+            <div class="modal-footer text-center">
+
+            </div>
+
+
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

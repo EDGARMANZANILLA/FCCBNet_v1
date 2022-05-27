@@ -1,0 +1,257 @@
+﻿@{
+    ViewBag.Icono = "fas fa-ban";
+    ViewBag.Title = "Inhabilitar";
+
+}
+
+
+
+<section>
+    <div class="col-12 offset-md-2 col-md-8 text-center">
+        <h5 class=" text-uppercase"> Inhabilitar formas de pago para: </h5>
+    </div>
+
+    <div class="col-12">
+        <div class="text-center">
+            <h3 class="text-capitalize" id="Banco">@ViewBag.NombreBancoSeleccionado</h3>
+            <h6 id="IdCuentaBancariaInhabilitar" style="display:none">@ViewBag.IdBancoSeleccionado</h6>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+</br>
+</br>
+
+
+
+
+<seccion class="card col-12  offset-md-2 col-md-8 text-center" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+
+
+
+    <div class="margenSection row" style="margin-bottom: 60px; ">
+
+        <div class="btn-block">
+            <h5 class="text-center">Seleccione la opcion deseada:</h5>
+        </div>
+
+        <div class="col-12 col-md-6  btn-block">
+            <button id="InhabilitarFolios" type="button" class="btn btn-primary btn-lg  btn-block" title="Realiza la inhabilitacoin por folios al inventario" onclick="InhabilitarFolios()">&nbsp Inhabilitar un Folio o Folios &nbsp</button>
+        </div>
+
+        <div class="col-12 col-md-6  btn-block">
+            <button id="InhabilitarContenedor" type="button" class="btn btn-primary btn-lg  btn-block" title="Realiza la inhabilitacion por contrenedor al inventario" onclick="InhabilitarContenedor()">Inhabilitar Contenedor</button>
+        </div>
+
+        <div class="col-12  btn-block">
+            <button id="DetalleInhabilitado" type="button" class="btn btn-primary btn-lg  btn-block" title="Realiza la inhabilitacoin por contrenedor al inventario" onclick="VerificaDetalleInhabilitado()">Ver detalle de Inhabilitacion</button>
+        </div>
+
+    </div>
+
+</seccion>
+
+
+<!--  secciones par Inhabilitar un Folio o Folios-->
+<section id="IFolios" class="margenSection offset-1 col-10" style="background:#E6E6E6; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); display:none;">
+    <br />
+    <h4 class="col-12 text-center">Folios a inhabilitar</h4>
+    <br />
+
+    <div class="row ">
+        <label class="offset-1 col-10             col-sm-2">Folio Inicial:</label>
+        <input id="FolioInicial" class="offset-1 col-10 offset-sm-0 col-sm-3" placeholder="Ingresa el F. inicial" type="text" onkeypress="return event.charCode >= 48 && event.charCode <= 122 && event.charCode != 91 " required />
+        <label class="offset-1 col-10 offset-sm-0 col-sm-2">Folio Final:</label>
+        <input id="FolioFinal" class="offset-1 col-10 offset-sm-0 col-sm-3" placeholder="Ingresa el F. Final" type="text" onkeypress="return event.charCode >= 48 && event.charCode <= 122 && event.charCode != 91 " />
+
+    </div>
+
+
+    <br />
+    <div class="row offset-1 col-10 text-center">
+        <button id="ValidarFolios" class="btn btn-success btn-lg  btn-block" title="valida la disponibilidad de folios" onclick="ValidarFolios()">Validar folios</button>
+
+    </div>
+
+    <br />
+</section>
+
+<!-- Termina secciones par Inhabilitar un Folio o Folios -->
+<!-- Inicia Inhabilitacion por contenedores -->
+<section id="InhabilitacionContenedor" class="margenSection offset-1 col-10" style="background:#E6E6E6; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); display:none;">
+    <br />
+    <div class="text-center">
+        <h4>Contenedor a Inhabilitar</h4>
+    </div>
+    <hr />
+
+    <!--Seleccionar Numero de orden-->
+    <section id="PrimeraOpcion_Orden" >
+
+        <div class="row">
+
+            <div class=" col-12 text-center offset-md-1 col-md-3 text-md-right">
+                <label>Numero de Orden:</label>
+
+            </div>
+
+            <div class=" col-12 col-md-6">
+                <div class="form-group">
+                    <select class="form-control" id="SeleccionOrden">
+                        <option value="" selected>Selecciona un numero de orden...</option>
+                        @foreach (var orden in ViewBag.OrdenesEncontradas)
+                        {
+                            <option>@orden  </option>
+                        }
+
+                    </select>
+                </div>
+
+            </div>
+
+
+        </div>
+ 
+
+
+        <div class="col-12 text-center">
+            <button class="btn btn-outline-info" onclick="VerificarNumeroContenedores()">verificar numero de contenedores</button>
+        </div>
+    </section>
+
+    <!--Seleccionar Numero de contendor-->
+    <section id="MasOpciones" style="display: none;">
+        <div class="row text-left">
+            <button type="button" class="btn btn-success text-center"  onclick="regresarPrimeraOpcion()" > <i class="fas fa-angle-double-left"></i> Regresar </button>
+        </div>
+
+        <div class="row">
+
+            <div class=" col-12 text-center offset-md-1 col-md-3 text-md-right">
+                <label>Numero de Contenedor:</label>
+            </div>
+
+            <div class=" col-12 col-md-6">
+                <div class="form-group">
+                    <select class="form-control" id="SeleccionContenedor">
+                        <option id="opcionesDeContenedores" value="">Selecciona un numero de Contenedor...</option>
+
+                    </select>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class=" col-12 text-center">
+            <button type="button" class="btn btn-success btn-lg col-xs-12 col-md-5 " title="valida la disponibilidad de folios" onclick="ValidarContenedor()">
+                Valida folios de contenedor
+            </button>
+
+        </div>
+
+    </section>
+
+    <br />
+
+    <br />
+</section>
+<!-- Termina Inhabilitacion por contenedores -->
+
+<br />
+<br />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Modal de Cancelacion cuando hay folios ya ocupados -->
+<section class="modal fade" id="ErrorEnFormasPago" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg ">
+        <div class="modal-content">
+            <div class="modal-header">
+
+
+                <h5 class="col-11 text-center">Formas de pago ocupadas</h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+
+            </div>
+
+
+
+            <div class="modal-body">
+
+                <div class="table-responsive">
+
+                    <div id="divTablaFoliosInvalidos">
+                        <table id="tblDetalleFoliosInvalidos" class="table table-striped table-bordered table-hover" style="display:none;">
+                           
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="modal-footer">
+                <button id="Cancelar" type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+
+            </div>
+
+
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+
+
+
+<!-- Inicia Seccion de ver detalle -> Generacion de tablas -->
+<!-- Cascaron de tabla para luego llenarla con datos desde la DB -->
+<div class="margenSection" id="DetalleInhabilitacion" style="display:none">
+    <div class="table-responsive">
+
+        <div id="divTablaDetalleInhabilitados">
+
+            <table id="tblDetalleInhabilitados" class='table table-striped table-bordered table-hover'>
+                
+            </table>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+

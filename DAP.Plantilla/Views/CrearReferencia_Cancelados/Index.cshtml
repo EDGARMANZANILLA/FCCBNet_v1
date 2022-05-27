@@ -1,0 +1,668 @@
+﻿@model List<DAP.Plantilla.Models.CrearReferencia_CanceladosModels.ReferenciaCanceladoModel>
+
+
+@{
+    ViewBag.Icono = "fas fa-folder-plus";
+    ViewBag.Title = "Crear Referencias de Cancelaciones";
+
+
+}
+
+
+
+@Scripts.Render("~/Scripts/SCRIPTS_PROYECTO_VISTAS/CHEQUES_CANCELADOS/CrearReferencia_Cancelados/Index.js")
+
+
+<h3 class="text-center text-uppercase"> CREAR REFERENCIA DE CANCELACION </h3>
+
+
+
+<div class="margenSection row  ">
+
+    <div class="col-12 text-center ">
+        <input id="InputNumeroReferencia" placeholder="Ingrese el numero de referencia" class="inputCrearReferencia col-12 text-center" pattern=" 0+\.[0-9]*[1-9][0-9]*$" onkeypress="return event.charCode >= 48 && event.charCode <= 57" required autofocus>
+    </div>
+
+    <br />
+    <br />
+    <br />
+
+    <div class="col-12  text-center">
+        <button id="btnCrearReferenciaCancelados" class="btn btn-primary btn-lg"> <i class="fa fa-search" aria-hidden="true"></i> Crear</button>
+    </div>
+    <br />
+</div>
+
+
+<br />
+<br />
+<br />
+
+@if (Model.Count > 0)
+{
+
+    <div class="offset-1 col-10 text-center">
+
+
+        <div class="table-responsive text-center">
+
+            <div id="TablaRegistros_ReferenciasCancelados">
+
+                <table id="ReferenciasCancelados" class="table table-striped display table-bordered table-hover" cellspacing="0" style="width:100%; text-align:center;">
+                    <caption class="text-uppercase">Historico de Referencias Creadas en años fiscales </caption>
+                    <thead class="tabla">
+                        <tr class="text-center text-uppercase">
+
+                            <th>Id</th>
+                            <th class="col-1">Anio</th>
+                            <th class="col-1"># Referencia</th>
+                            <th class="col-1">Fecha de Creacion</th>
+
+                            <th class="col-2">Creado por:</th>
+                            <th class="col-1">Formas dentro de Referencia</th>
+                            <th class="col-1">Activo</th>
+
+                            <th class="col-2">Detalle   Referencia</th>
+                            <th class="col-1">Eliminar  Referencia</th>
+                            <th class="col-1">Finalizar Referencia</th>
+                            <th class="col-1">Detalle   Finalizacion</th>
+
+                        </tr>
+
+
+                    </thead>
+
+                    <tbody>
+
+
+
+                        @foreach (var modelo in Model)
+                        {
+                            <tr>
+
+                                <td>@modelo.Id_Iterador</td>
+                                <td>@modelo.Anio</td>
+                                <td>@modelo.Numero_Referencia</td>
+                                <td>@modelo.Fecha_Creacion</td>
+                                <td>@modelo.Creado_Por</td>
+                                <td>@modelo.FormasPagoCargadas</td>
+                                <td>@modelo.Activo</td>
+
+                                @if (@modelo.Activo)
+                                {
+                                    <th>
+                                        <button type="button" class=" btn btn-success" title="Abre los detalles para visualizar los cheques cargados" onclick="AbrirDetalleReferencia(@modelo.Id, '@modelo.Numero_Referencia')"> Ver Detalle  </button>
+                                    </th>
+
+
+
+                                    if (!@modelo.EsCancelado)
+                                    {
+
+                                        <th>
+                                            <button type="button" class=" btn btn-danger" title="Retira los cheques cargados de la referencia y la inactiva" onclick="EliminarNumeroReferencia(@modelo.Id, '@modelo.Numero_Referencia', @modelo.Anio)"> Eliminar </button>
+                                        </th>
+
+                                        <td>
+                                            <button type="button" class=" btn btn-warning" title="Finaliza la referencia seleccionada para marcar los cheques como cancelados" onclick="AbrirFinalizaReferencia(@modelo.Id)"> Finalizar </button>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                        </td>
+
+                                        <td>
+                                        </td>
+                                    }
+
+
+                                    if (@modelo.EsCancelado)
+                                    {
+                                        <th>
+                                            <button type="button" class="btn btn-success btn-lg" title="" onclick="AbrirVistaPreviaPDF(@modelo.Id)"> <i class="fas fa-print"></i> </button>
+                                        </th>
+                                    }
+
+                                }
+
+
+                            </tr>
+
+
+                        }
+
+
+                    </tbody>
+
+
+
+                </table>
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+}
+
+
+
+
+
+
+<!-- Modal para finalizar una referencia -->
+<section class="modal fade" id="FinalizarReferencia" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+
+
+                <h5 class="col-11 text-center">Finalizar Referencia de Cancelacion</h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+
+            </div>
+
+
+
+            <div class="modal-body">
+
+                <!--- Input para el folio inicial -->
+                <!--<div class="row ">
+                    <label class="col-12 text-center offset-md-0 col-md-4 text-md-right">A partir del folio:</label>
+                    <input id="FolioDocumentoCancelado" class="offset-1 col-10 offset-md-0 col-md-6" placeholder="Numero de folio de la referencia cancelada" type="text" pattern="[A-Za-z0-9]" onkeypress="" required />
+                </div>-->
+
+                <div style="width: 60%; margin: 0 auto;">
+                    <div class="row">
+                        <div class="col-12 ">
+                            <div id="fileuploader">Agregar archivo</div>
+                        </div>
+
+                        <div class="col-12 text-center">
+
+                            <button type="button" class="btn btn-success" @*data-dismiss="modal"*@ onclick="EnviarArchivo()" style=" margin-right: 50px;">Enviar </button>
+                        </div>
+                    </div>
+
+
+
+
+
+
+                    <div class="table-responsive">
+
+                        <div id="divTablaReferenciaCancelado">
+                            <table id="tblDetalleReferenciaCancelado" class="table table-striped table-bordered table-hover" style="display:none;">
+                            </table>
+
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="modal-footer">
+                <div class="btn-block col-12 text-center">
+
+                    <button id="Cancelar" type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+</section>
+
+
+
+<!-- Modal para ver detalles de referencias -->
+<div class="modal fade" id="DetalleReferencia" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" style="overflow-y: scroll;">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered  modal-xll">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="NumeroReferencia" class="modal-title col-11 text-capitalize text-center">DETALLE DE LA REFERENCIA #CC2021111111</h4>
+
+                <h5 id="NombreReferenciaCancelado" style="display:none"></h5>
+                <h6 id="IdReferenciaCanceladoSelecionado" style="display:none"></h6>
+                <button type="button" class="close btn-primary" onclick="CerrarDetalleReferencia()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="table-responsive">
+
+                    <div id="divTablaDetalleReferencia">
+                        <table id="tblDetalleReferencia" class="table table-striped table-bordered table-hover" style="display:none;">
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <div class="btn-block col-12 text-center">
+                    <span> VER REPORTES: </span>
+                    <br />
+                    <br />
+                    <button type="button" class="btn btn-success" onclick="AbrirReporteInicial('@Url.Content("~/CrearReferencia_Cancelados/")')"> Reportes INICIALES </button>
+                    <button type="button" class="btn btn-success" onclick="AbrirReporteIPD('@Url.Content("~/CrearReferencia_Cancelados/")')"> IPD </button>
+                    <button type="button" class="btn btn-success" onclick="AbrirReporteIPDCOMPENSADO('@Url.Content("~/CrearReferencia_Cancelados/")')"> IPD_Compensado </button>
+
+                    @*<button type="button" class="btn btn-success" onclick="exportarIPD('@Url.Content("~/CrearReferencia_Cancelados/DescargarIPD")')" ><i class="fas fa-cloud-download-alt" ></i>  IPD  (.dbf)</button>
+                        <button id="btnIPDCompensado" type="button" class="btn btn-success" ><i class="fas fa-cloud-download-alt"></i>  IPD Compensado  (.dbf)</button>*@
+
+                    <button type="button" class="btn btn-primary" onclick="CerrarDetalleReferencia()">Cerrar</button>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<!--    VISUALIZACION DEL PDF QUE AVALA EL TERMINO DE LA CANCELACION DE CHEQUES    -->
+<div class="modal fade" id="VisualizadorCancelacionOficial" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" style="overflow-y: scroll;">
+    <div class="modal-dialog modal-dialog-centered modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title col-11 text-capitalize text-center">Previsualizador del documento</h5>
+                <button type="button" class="close btn-primary" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div>
+
+                    <div id="VisorPdfCCOficial" class="altura">
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--   MODALES PARA DESCARGAR REPORTES Y LO NECESARIO PARA LA AFECTACION PRESUPUESTAL  -->
+<!--  1.-Reportes INICIALES  -->
+<div class="modal fade" id="ReportesBasicos" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" style="overflow-y: scroll;">
+    <div class="modal-dialog modal-dialog-centered  modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title col-11 text-capitalize text-center">Reportes Iniciales</h5>
+                <button type="button" class="close btn-primary" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+
+                <div class="row row-cols-1 row-cols-md-2">
+                    @*<div class="col mb-4 text-center">
+                        <div class="card" style="box-shadow: 0 4px 8px 0 rgba(20, 108, 223, 0.700), 0 6px 10px 6px rgba(67, 85, 201, 0.21);">
+                            <div class="card-body text-success">
+                                <h5 class="card-title"> Descargar Resumen General de Montos por Nomina a Cancelar </h5>
+                                <button class="btn btn-success">
+                                    Resumen Montos   <br />
+                                    <i class="fas fa-cloud-download-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>*@
+
+                    <div class="col mb-4 text-center">
+                        <div class="card" style="box-shadow: 0 4px 8px 0 rgba(118, 223, 20, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+                            <div class="card-body text-success">
+                                <h5 class="card-title"> Descargar Reportes de Nomina por Año </h5>
+                                <a id="descargaNominaAnual" type="button" class="agregar btn btn-success">
+                                    Rp Nomina Anual  <br />
+                                    <i class="fas fa-cloud-download-alt"></i>
+                                </a>
+
+
+                           
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col mb-4 text-center">
+                        <div class="card" style="box-shadow: 0 4px 8px 0 rgba(118, 223, 20, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+                            <div class="card-body text-success">
+                                <h5 class="card-title"> Descargar Reporte de Cuenta Bancaria por Año </h5>
+                                <a id="descargaCBAnual" type="button" class="agregar btn btn-success">
+                                    Rp Cta Bancarias   <br />
+                                    <i class="fas fa-cloud-download-alt"></i>
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col mb-4 text-center">
+                        <div class="card" style="box-shadow: 0 4px 8px 0 rgba(118, 223, 20, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+                            <div class="card-body text-success">
+                                <h5 class="card-title"> Descargar Reporte de Pension Alimenticia General </h5>
+                                <a id="descargaPenA" type="button" class="agregar btn btn-success">
+                                    Rp PenA   <br />
+                                    <i class="fas fa-cloud-download-alt"></i>
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--  2.-Reportes IPD  -->
+<div class="modal fade" id="ReportesIPD" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" style="overflow-y: scroll;">
+    <div class="modal-dialog modal-dialog-centered  modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title col-11 text-capitalize text-center">Reportes Del IPD</h5>
+                <button type="button" class="close btn-primary" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+
+
+                <div class="row card-deck">
+
+                  
+
+
+                    <div class="col-12 col-md-6 text-center">
+                        <div class="card" style="box-shadow: 0 4px 8px 0 rgba(118, 223, 20, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+                            <div class="card-body text-success">
+                                <h5 class="card-title">Tot. Gral de Nomina por Conceptos</h5>
+                                <a id="TotalesIPDPorNomina" class="btn btn-success">
+                                    TGDNXC  <br />
+                                    <i class="fas fa-cloud-download-alt"></i>
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 text-center">
+                        <div class="card" style="box-shadow: 0 4px 8px 0 rgba(118, 223, 20, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+                            <div class="card-body text-success">
+                                <h5 class="card-title">Tot. Gral de Banco por Conceptos </h5>
+                                <a id="TotalesIPDPorBanco" class="btn btn-success" onclick="EstamosEnDesarrollo()">
+                                    TGDBXB  <br />
+                                    <i class="fas fa-cloud-download-alt"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+                <br />
+                <div class="row">
+
+                    <!-- card Principal-->
+                    <div class="col-12 offset-md-2 col-md-8  text-center">
+                        <div class="card" style="box-shadow: 0 4px 8px 0 rgba(20, 108, 223, 0.700), 0 6px 10px 6px rgba(67, 85, 201, 0.21);">
+                            <div class="card-body text-success">
+                                <h5 class="card-title">Descargar IPD para afectacion presupuestal</h5>
+                                <a id="IPD" class="btn btn-success">
+                                    ... IPD ...   <br />
+                                    <i class="fas fa-cloud-download-alt"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--  3.-Reportes IPD_COMPENSADO  -->
+<div class="modal fade" id="ReportesIPD_COMPENSADO" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" style="overflow-y: scroll;">
+    <div class="modal-dialog modal-dialog-centered  modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title col-11 text-capitalize text-center">Reportes del IPD Compensado</h5>
+                <button type="button" class="close btn-primary" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+              
+
+
+
+
+
+                <div class="row row-cols-1 row-cols-md-2">
+                   <div class="col mb-4 text-center">
+                    <div class="card" style="box-shadow: 0 4px 8px 0 rgba(118, 223, 20, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+                        <div class="card-body text-success">
+                            <h5 class="card-title"> Descargar Resumen General de Montos por Nomina a Cancelar </h5>
+                            <button class="btn btn-success"  onclick="EstamosEnDesarrollo()">
+                                Resumen Montos   <br />
+                                <i class="fas fa-cloud-download-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                   </div>
+
+                    <div class="col mb-4 text-center">
+                        <div class="card" style="box-shadow: 0 4px 8px 0 rgba(118, 223, 20, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+                            <div class="card-body text-success">
+                                <h5 class="card-title"> Interface de Coutas Patronales por Nomina </h5>
+                                <button class="btn btn-success"  onclick="EstamosEnDesarrollo()">
+                                     ICPXN   <br />
+                                    <i class="fas fa-cloud-download-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col mb-4 text-center">
+                        <div class="card" style="box-shadow: 0 4px 8px 0 rgba(20, 108, 223, 0.700), 0 6px 10px 6px rgba(67, 85, 201, 0.21);">
+                            <div class="card-body text-success">
+                                <h5 class="card-title"> Descargar IPD_Compensados para afectacion Presupuestal </h5>
+                                <a id="DescargarIPDCxAnio" class="btn btn-success" >
+                                    ... IPD_C ...  <br />
+                                    <i class="fas fa-cloud-download-alt"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    @*<div class="col mb-4 text-center">
+                        <div class="card" style="box-shadow: 0 4px 8px 0 rgba(118, 223, 20, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+                            <div class="card-body text-success">
+                                <h5 class="card-title"> Descargar Reporte de Pension Alimenticia General </h5>
+                                <button class="btn btn-success">
+                                    ... IPD_C ... <br />
+                                    <i class="fas fa-cloud-download-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>*@
+                </div>
+
+
+
+
+
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<style>
+    
+    .modal.fade {
+        background: rgba(0,0,0,0.6);
+    }
+
+
+    ﻿.modaltemplate {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        background-color: rgba(0, 0, 0, 0.7);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 20;
+        padding: 0.5em;
+        visibility: visible;
+    }
+
+
+
+
+
+    .inputCrearReferencia {
+        width: 350px;
+        height: 55px;
+        background: #f8f8f86b;
+        border: 2px solid;
+        border-color: #4d4b4b;
+        font-size: 14pt;
+        -webkit-border-radius: .1px;
+        -moz-border-radius: .1px;
+        border-radius: 8px;
+    }
+
+
+    input:focus {
+        border: 6px solid;
+        border-color: #1e77fd;
+        color: #1e77fd;
+    }
+
+    .ajax-upload-dragdrop {
+        width: auto;
+        color: #DADCE3;
+        text-align: center;
+    }
+
+    .ajax-file-upload-statusbar {
+        border: 1px solid #0ba1b5;
+        margin-top: 10px;
+        width: 100%;
+        margin-right: 10px;
+        margin: 5px;
+        -moz-border-radius: 4px;
+        -webkit-border-radius: 4px;
+        border-radius: 4px;
+        padding: 5px 5px 5px 15px;
+    }
+
+
+
+
+    /* MEtodos para el buscador */
+    .inner-addon {
+        position: relative;
+    }
+
+        .inner-addon .glyphicon {
+            position: absolute;
+            padding: 10px;
+            pointer-events: none;
+        }
+
+    .left-addon .glyphicon {
+        left: 0px;
+    }
+
+    .right-addon .glyphicon {
+        right: 0px;
+    }
+
+    .left-addon input {
+        padding-left: 30px;
+    }
+
+    .right-addon input {
+        padding-right: 30px;
+    }
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

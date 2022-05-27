@@ -1,0 +1,239 @@
+﻿@model List<DAP.Plantilla.Models.InventarioModel>
+
+@*@model List<PruebaNAV.Modelos.InventariosModel>*@
+
+@{
+    ViewBag.Icono = "fas fa-boxes";
+    ViewBag.Title = "Inventario";
+
+}
+
+
+
+<head>
+    <link rel="stylesheet" href="~/Content/InventarioStyle.css">
+</head>
+
+<section>
+
+    <div class="row">
+        <div class="col" style="overflow-x:auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th> <p> Reporte de Inventario</p></th>
+
+                        <th> <p>Solicitar Nuevas Formas</p> </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+
+
+                    <tr class="text-center">
+                        <td>   <a type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#DescargarReporte" title="Descargar Reporte del inventario">Descargar</a> </td>
+                        <td>
+                            <a type="button" class="btn btn-success btn-lg" href="@Url.Action("Solicitar", "Inventario")" title="Crear Nueva Solicitud">&nbsp  Solicitar  &nbsp</a>
+                        </td>
+
+
+                    </tr>
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+</section>
+
+
+
+
+
+<!-- Generacion de tablas -->
+<section class="margenSection ">
+
+    <div class="table-responsive">
+
+        <table id="tbProducto" class="table table-striped table-bordered table-hover text-center" cellspacing="0" style="width:100%">
+            <caption>CONTROL DE INVENTARIO GENERAL DE FORMAS DE PAGO</caption>
+
+
+            <thead class="tabla ">
+                <tr>
+
+                    <th class="col-2">Cuenta Bancaria</th>
+                    <th class="col-2">Cuenta</th>
+                    <th class="col-1">Formas disponibles</th>
+                    <th class="col-1">Ultimo folio de inventario</th>
+                    <th class="col-1">Ultimo folio usado</th>
+                    <th class="col-1">Estimado de meses</th>
+                    <th class="col-4">
+
+
+
+                    </th>
+                    
+
+
+                </tr>
+            </thead>
+            <tbody>
+
+
+
+                @foreach (var modelo in Model)
+                {
+                    <tr>
+
+                        <td class="text-left">@modelo.NombreBanco</td>
+                        <td>@modelo.Cuenta</td>
+                        <td>@modelo.FormasDisponibles</td>
+                        <td>@modelo.UltimoFolioInventario</td>
+                        <td>@modelo.UltimoFolioUtilizado</td>
+                        <td>@modelo.EstimadoMeses</td>
+
+                        <th>
+                            <a type="button" class="agregar btn btn-success" href="@Url.Action("Agregar", "Inventario", new { IdCuentaBancaria = modelo.IdCuentaBancaria })">Agregar</a>
+
+                            @*<th>
+                                    <a type="button" class="agregar btn btn-primary" href="@Url.Action("Inhabilitar", "Inventario", new  { NombreBanco = modelo.NombreBanco })">Inhabilitar</a>
+                                </th>*@
+
+                            @*<th>
+                                    <a type="button" class="agregar btn btn-primary " href="@Url.Action("Ajustar", "Inventario",  new  { NombreBanco = modelo.NombreBanco })" title="Realizar un ajuste al inventario">  Asignar </a>
+                                </th>*@
+
+                            <a type="button" class="agregar btn btn-primary" href="@Url.Action("Incidencias", "Inventario", new  { IdCuentaBancaria = modelo.IdCuentaBancaria  })">Incidencias</a>
+
+
+                            <a type="button" class="agregar btn btn-success" href="@Url.Action("DetalleBanco", "Inventario", new { IdCuentaBancaria = modelo.IdCuentaBancaria })">Detalle </a>
+                        </th>
+
+                    </tr>
+
+
+                }
+
+
+            </tbody>
+        </table>
+    </div>
+
+
+</section>
+
+
+
+
+
+<!-- Modal de confirmacion para Asignar Formas de pago -->
+<section id="DescargarReporte" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+
+                <h5 class="col-11 text-center text-uppercase">Descargar el reporte del inventario del mes:</h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+
+            </div>
+
+
+
+            <div class="modal-body">
+
+
+                <div class="col-12">
+                    <div class="form-group">
+                        <select class="form-control" id="SeleccionarMes">
+                            <option value="0" disabled selected>Selecciona un mes...</option>
+
+                            <option value="1">Enero </option>
+                            <option value="2">Febrero </option>
+                            <option value="3">Marzo </option>
+                            <option value="4">Abril </option>
+                            <option value="5">Mayo </option>
+                            <option value="6">Junio </option>
+                            <option value="7">Julio </option>
+                            <option value="8">Agosto </option>
+                            <option value="9">Septiembre </option>
+                            <option value="10">Octubre </option>
+                            <option value="11">Noviembre </option>
+                            <option value="12">Diciembre </option>
+
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                <a id="DescargarPDF" type="button" class="btn btn-success" onclick="DescargarPDFInventario()">Descargar Reporte</a>
+
+            </div>
+
+
+        </div>
+    </div>
+</section>
+
+
+
+
+<!-- Modal de tabla para saber si hay cuentas nuevas en alpha -->
+<!-- Cuando entren a inventario hay que informarles si hay nuevas cuentas en alpha si no no mostrar nada -->
+<section class="modal fade" id="NuevaCuentaEncontradoAlpha" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+
+                <h5 class="col-11 text-center">Formas de pago ocupadas</h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+
+            </div>
+
+
+
+            <div class="modal-body">
+                <h4 class=" text-center text-uppercase">Encontramos problemas en los siguientes folios</h4>
+
+                <table class="table table-striped table-bordered table-hover">
+
+                    <tbody id="cuerpoTabla">
+                    </tbody>
+                </table>
+                <br />
+
+            </div>
+
+
+            <div class="modal-footer">
+                <button id="Cancelar" type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+
+            </div>
+
+
+        </div>
+    </div>
+</section>
+
+
+
+
+
+

@@ -1,0 +1,1353 @@
+﻿<style>
+    .linea {
+        border: solid coral;
+        border-radius: 22px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    .sombra {
+        background: #E6E6E6;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        display: none;
+    }
+
+    .colorCoral {
+        color: coral;
+    }
+</style>
+
+
+<hr class="linea" />
+<br />
+<h4 class="col-12 text-center text-uppercase colorCoral">Asignar formas de pago para:</h4>
+<h3 class="col-12 text-center text-uppercase">@ViewBag.NombreBanco </h3>
+<h5 id="NumeroCuenta" class=" col-12 text-center" title="Numero de cuenta activa">@ViewBag.CuentaBanco</h5>
+
+
+
+
+<seccion class="card col-12  offset-md-2 col-md-8 text-center" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+
+
+
+    <div class="margenSection row" style="margin-bottom: 60px; ">
+
+        <div class="btn-block">
+            <h5 class="text-center">Seleccione la opcion deseada:</h5>
+        </div>
+
+        <div class="col-12 col-md-6  btn-block">
+            <button id="AsignarFolios" type="button" class="btn btn-primary btn-lg  btn-block" title="Realiza la asignacion por folios al inventario" onclick="AsignarFolios()"> Asignar Folio o Folios</button>
+        </div>
+
+        <div class="col-12 col-md-6  btn-block">
+            <button id="AsignarContenedor" type="button" class="btn btn-primary btn-lg  btn-block" title="Realiza la asignacion por contrenedor al inventario" onclick="AsignarContenedor()"> Asignar Contenedor</button>
+        </div>
+
+        <div class="col-12  btn-block">
+            <button id="DetalleAsignados" type="button" class="btn btn-primary btn-lg  btn-block" title="Realiza la inhabilitacoin por contrenedor al inventario" onclick="Detalle()">Ver detalle de Asignaciones</button>
+        </div>
+
+    </div>
+
+</seccion>
+
+
+
+<!--  secciones par Inhabilitar un Folio o Folios-->
+<section id="IFolios" class="margenSection offset-1 col-10" style="background:#E6E6E6; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); display: none">
+    <br />
+    <h4 class="col-12 text-center">Asignar Folios</h4>
+    <br />
+
+    <!--Seleccionar nombre de personal -->
+    <div class="row">
+
+        <div class=" col-12 text-center  col-md-3 text-md-right ">
+            <label class="text-capitalize">Asignar a:</label>
+        </div>
+
+        <div class=" col-12 col-md-7 ">
+            <div class="form-group">
+                <select class="form-control" id="SeleccionarPersonal" required>
+                    <option value="">Selecciona personal a asignar...</option>
+                    @foreach (var nuevoNombre in ViewBag.ListaNombrePersonal)
+                    {
+
+
+                        <option>@nuevoNombre </option>
+
+
+                    }
+
+                </select>
+            </div>
+        </div>
+    </div>
+    <br />
+
+
+    <div class="row ">
+        <label class="offset-1 col-10             col-sm-2">Folio Inicial:</label>
+        <input id="FolioInicial" class="offset-1 col-10 offset-sm-0 col-sm-3" placeholder="Ingresa el F. inicial" type="text" onkeypress="return event.charCode >= 48 && event.charCode <= 122 && event.charCode != 91 " required />
+        <label class="offset-1 col-10 offset-sm-0 col-sm-2">Folio Final:</label>
+        <input id="FolioFinal" class="offset-1 col-10 offset-sm-0 col-sm-3" placeholder="Ingresa el F. Final" type="text" onkeypress="return event.charCode >= 48 && event.charCode <= 122 && event.charCode != 91 " />
+
+    </div>
+
+
+    <br />
+    <div class="row offset-1 col-10 text-center">
+        <button id="ValidarFolios" class="btn btn-success btn-lg  btn-block" title="valida la disponibilidad de folios">Validar folios</button>
+
+    </div>
+
+    <br />
+</section>
+
+<!-- Termina secciones par Inhabilitar un Folio o Folios -->
+<!-- Inicia Seccion de ver detalle -> Generacion de tablas -->
+<!-- Cascaron de tabla para luego llenarla con datos desde la DB -->
+<div class="margenSection" id="DetalleAsignacion" style="display:none;">
+    <div class="table-responsive">
+
+        <div id="TablaActualizada">
+
+            <table id="AsignarFormas" class='table table-striped table-bordered table-hover'>
+                <caption class="text-uppercase"> Formas de pago inhabilitadas </caption>
+                <thead class="tabla">
+                    <tr>
+
+                        <th>Banco</th>
+                        <th>Cuenta</th>
+                        <th>Num. Orden</th>
+                        <th>Num. Contenedor</th>
+                        <th>Folio Inicial</th>
+                        <th>Folio Final</th>
+                        <th>Formas del contenedor</th>
+                        <th>Total de Formas Actuales</th>
+                        <th>Formas Inhabilitadas</th>
+                        <th>Fecha Alta de Contenedor</th>
+
+                    </tr>
+                </thead>
+
+                <tfoot>
+                    <tr>
+
+                        <th class='Filtro'>Id</th>
+                        <th class='Filtro'>Expediente</th>
+                        <th class='Filtro'>Nombre</th>
+                        <th class='Filtro'>Folio</th>
+                        <th class='Filtro'>Clasificación</th>
+                        <th class='Filtro'>Fecha de subida</th>
+                        <th class="Filtro">Nombre Pdf</th>
+                        <th class="Filtro">Remesaaaaa</th>
+                    </tr>
+                </tfoot>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Inicia Inhabilitacion por contenedores -->
+<section id="AsignacionContenedor" class="margenSection offset-1 col-10" style="background:#E6E6E6; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); display:none;">
+    <br />
+    <div class="text-center">
+        <h4> Asignar Contenedor</h4>
+    </div>
+
+    <br />
+    <!--Seleccionar nombre de personal -->
+    <div class="row">
+
+        <div class=" col-12 text-center  col-md-3 text-md-right ">
+            <label class="text-capitalize">Asignar a:</label>
+        </div>
+
+        <div class=" col-12 col-md-7 ">
+            <div class="form-group">
+                <select class="form-control" id="SeleccionarPersonalContenedor" required>
+                    <option value="" selected>Selecciona personal a asignar...</option>
+                    @foreach (var nuevoNombre in ViewBag.ListaNombrePersonal)
+                    {
+
+
+                        <option>@nuevoNombre </option>
+
+
+                    }
+
+                </select>
+            </div>
+        </div>
+    </div>
+    <!--Seleccionar Numero de orden-->
+    <div class="row">
+
+        <div class=" col-12 text-center offset-md-1 col-md-3 text-md-right">
+            <label>Numero de Orden:</label>
+        </div>
+
+        <div class=" col-12 col-md-6">
+            <div class="form-group">
+                <select class="form-control" id="SeleccionOrden">
+                    <option value="" selected>Selecciona un numero de orden...</option>
+                    @foreach (var orden in ViewBag.OrdenesEncontradas)
+                    {
+
+
+                        <option>@orden  </option>
+
+
+                    }
+
+                </select>
+            </div>
+        </div>
+    </div>
+
+
+    <!--Seleccionar Numero de contendor-->
+    <div class="row">
+
+        <div class=" col-12 text-center offset-md-1 col-md-3 text-md-right">
+            <label>Numero de Contenedor:</label>
+        </div>
+
+        <div class=" col-12 col-md-6">
+            <div class="form-group">
+                <select class="form-control" id="SeleccionContenedor">
+                    <option id="opcionesDeContenedores" value="">Selecciona un numero de Contenedor...</option>
+
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row ">
+        <label class="col-12 text-center offset-md-1 col-md-3 text-md-right">Folio Inicial:</label>
+        <input id="FInicialContenedor" class="offset-1 col-10 offset-md-0 col-md-6" placeholder="Ingrese Folio inicial a inhabilitar" type="text" pattern="[A-Za-z0-9]" onkeypress="return event.charCode >= 48 && event.charCode <= 122 && event.charCode != 91 " />
+    </div>
+
+    <br />
+
+    <div class="row ">
+        <label class="col-12 text-center offset-md-1 col-md-3 text-md-right">Folio Final:</label>
+        <input id="FFinalContenedor" class="offset-1 col-10 offset-md-0 col-md-6" placeholder="Ingrese Folio Final a ihnabilitar" type="text" pattern="[A-Za-z0-9]" onkeypress="return event.charCode >= 48 && event.charCode <= 122 && event.charCode != 91 " />
+    </div>
+
+    <br />
+
+
+    <div class="row offset-1 col-10 text-center">
+        <button id="ValidarContenedor" type="button" class="btn btn-success btn-lg  btn-block" title="valida la disponibilidad de folios">
+            Validar contenedor de formas de pago
+        </button>
+
+    </div>
+    <br />
+
+    <br />
+</section>
+<!-- Termina Inhabilitacion por contenedores -->
+<!-- Modal de confirmacion para Asignar Formas de pago -->
+<section id="AsignarFormasContenedor" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+
+                <h5 class="col-11 text-center"> Resumen de formas de pago a asignar</h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+
+            </div>
+
+
+
+            <div class="modal-body">
+                <h4 id="ResumenAAsignar" class=" text-center text-uppercase"></h4>
+
+                <br />
+
+            </div>
+
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                <button id="GuardarAsignados" type="button" class="btn btn-success" style="display:none;">Asignar Folios</button>
+                <button id="GuardarfoliosContenedorAsignado" type="button" class="btn btn-success" style="display:none;">Asignar Folios de Contenedor</button>
+
+            </div>
+
+
+        </div>
+    </div>
+</section>
+
+
+
+<!-- Modal de Cancelacion cuando hay folios ya ocupados -->
+<section class="modal fade" id="ErrorEnFormasPago" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+
+                <h5 class="col-11 text-center">VERIFIQUE LO SIGUIENTE E INTENTELO DE NUEVO</h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+
+            </div>
+
+
+
+            <div class="modal-body">
+                <h4 class=" text-center text-uppercase">Encontramos problemas en los siguientes folios</h4>
+
+                <table class="table table-striped table-bordered table-hover">
+
+                    <tbody id="cuerpoTabla">
+                    </tbody>
+                </table>
+                <br />
+
+            </div>
+
+
+            <div class="modal-footer">
+                <button id="Cancelar" type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+
+            </div>
+
+
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+    function AsignarFolios() {
+        let InhabilitarFolios = document.getElementById('AsignarFolios').classList.remove('btn-outline-primary');
+        InhabilitarFolios = document.getElementById('AsignarFolios').classList.add('btn-primary');
+
+        let inhabilitarContenedor = document.getElementById('AsignarContenedor').classList.remove('btn-primary');
+        inhabilitarContenedor = document.getElementById('AsignarContenedor').classList.add('btn-outline-primary');
+
+        let seccionDetalle = document.getElementById('DetalleAsignados').classList.remove('btn-primary');
+        seccionDetalle = document.getElementById('DetalleAsignados').classList.add('btn-outline-primary');
+
+        document.getElementById("AsignacionContenedor").style.display = "none";
+        document.getElementById("DetalleAsignacion").style.display = "none";
+        document.getElementById("IFolios").style.display = "block";
+
+
+        document.getElementById("GuardarfoliosContenedorAsignado").style.display = "none";
+        document.getElementById("GuardarAsignados").style.display = "block";
+
+    }
+
+    function AsignarContenedor() {
+        let inhabilitarContenedor = document.getElementById('AsignarContenedor').classList.remove('btn-outline-primary');
+        inhabilitarContenedor = document.getElementById('AsignarContenedor').classList.add('btn-primary');
+
+        let seccionDetalle = document.getElementById('DetalleAsignados').classList.remove('btn-primary');
+        seccionDetalle = document.getElementById('DetalleAsignados').classList.add('btn-outline-primary');
+
+        let InhabilitarFolios = document.getElementById('AsignarFolios').classList.remove('btn-primary');
+        InhabilitarFolios = document.getElementById('AsignarFolios').classList.add('btn-outline-primary');
+
+        document.getElementById("IFolios").style.display = "none";
+        document.getElementById("DetalleAsignacion").style.display = "none";
+        document.getElementById("AsignacionContenedor").style.display = "block";
+
+
+        document.getElementById("GuardarAsignados").style.display = "none";
+        document.getElementById("GuardarfoliosContenedorAsignado").style.display = "block";
+
+    }
+
+    function Detalle() {
+
+        let detalle = document.getElementById('DetalleAsignados').classList.remove('btn-outline-primary');
+        detalle = document.getElementById('DetalleAsignados').classList.add('btn-primary');
+
+        let inhabilitarContenedor = document.getElementById('AsignarContenedor').classList.remove('btn-primary');
+        inhabilitarContenedor = document.getElementById('AsignarContenedor').classList.add('btn-outline-primary');
+
+        let InhabilitarFolios = document.getElementById('AsignarFolios').classList.remove('btn-primary');
+        InhabilitarFolios = document.getElementById('AsignarFolios').classList.add('btn-outline-primary');
+
+        document.getElementById("AsignacionContenedor").style.display = "none";
+        document.getElementById("IFolios").style.display = "none";
+        document.getElementById("DetalleAsignacion").style.display = "block";
+
+
+    }
+
+    //metodos para pintar tabla detalle con ajax
+
+    function DibujarTablaAjax() {
+        $("#TablaActualizada").append(
+
+            "<table id='AsignarFormas' class='table table-striped table-bordered table-hover' cellspacing='0' style='width:100%'>" +
+            " <caption class='text-uppercase'>Detalle general de formas de pago asignadas </caption>"
+            + "<thead class='tabla'>" +
+
+            "<tr>" +
+
+            "<th>Banco </th>" +
+            "<th>Cuenta</th>" +
+            "<th>Orden</th>" +
+            "<th>Contenedor</th>" +
+            "<th>Folio Inicial</th>" +
+            "<th>FolioFinal</th>" +
+            "<th>Total del Contenedor</th>" +
+            "<th>Formas Disponibles Actuales </th>" +
+            "<th>Formas Asignadas</th>" +
+            "<th>Fecha de Alta</th>" +
+
+            "</tr>" +
+            "</thead>" +
+            "<tfoot>" +
+            "<tr>" +
+
+            "<th class='Filtro'>Banco</td>" +
+            "<th class='Filtro'>Cuenta</td>" +
+            "<th class='Filtro'>Orden</td>" +
+            "<th class='Filtro'>Contenedor</td>" +
+            "<td class='Filtro'>F. Inicial</td>" +
+            "<td class='Filtro'>F. Final</th>" +
+            "<td class='Filtro'>Total del Contenedor</td>" +
+            "<td class='Filtro'>Formas Actuales </td>" +
+            "<td class='Filtro'>Formas Asignadas</td>" +
+            "<td class='Filtro'>Fecha de Alta</td>" +
+
+            "</tr>" +
+            "</tfoot>" +
+            "</table>"
+        );
+    };
+
+
+    function PintarConsultas(datos) {
+
+        $('#AsignarFormas').find(".Filtro").each(function () {
+            var title = $(this).text();
+            $(this).html('<input type="text" style="width:100%" onkeypress="return event.keyCode != 13;"  class="form-control input-sm" placeholder="' + title + '" />');
+        });
+        var tablaCargados = $('#AsignarFormas').DataTable({
+            "language":
+            {
+                "processing": "Procesando...",
+                "lengthMenu": "Mostrar _MENU_ registros",
+                "zeroRecords": "No se encontraron resultados",
+                "emptyTable": "Ningún dato disponible en esta tabla",
+                "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                "search": "Buscar:",
+                "info": "Mostrando de _START_ a _END_ de _TOTAL_ entradas",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Último",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                }
+            },
+            "data": datos,
+            "columns": [
+
+                { "data": "Banco" },
+                { "data": "Cuenta" },
+                { "data": "Orden" },
+                { "data": "Contenedor" },
+                { "data": "FolioInicial" },
+                { "data": "FolioFinal" },
+                { "data": "FormasTotalesContenedor" },
+                { "data": "FormasDisponiblesActuales" },
+                { "data": "FormasAsignadas" },
+                { "data": "FechaAlta"}
+
+            ],
+            "order": [[1, 'asc']]
+        }).columns().every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change', function (e) {
+                var keyCode = e.keyCode || e.which;
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+                }
+            });
+        });
+        $(".dataTable").find("tfoot tr").appendTo($(".dataTable").find("thead"));
+
+    };
+
+
+
+    function PintarTablaFoliosInvalidosEnModal(msg) {
+        let ninios = $("#cuerpoTabla").children().length
+
+
+
+        // If the <ul> element has any child nodes, remove its first child node
+        if (ninios > 1) {
+            $("#cuerpoTabla").children().remove();
+        }
+
+
+        const CUERPOTABLA = document.getElementById('cuerpoTabla');
+
+        msg.forEach(Dato => {
+
+            //crear un <tr>
+            const TR = document.createElement("tr");
+            // Creamos el <td> y se adjunta a tr
+            let tdFolio = document.createElement("td");
+            tdFolio.textContent = Dato; //el textContent del td es el concepto
+            TR.appendChild(tdFolio);
+            // el td de nómina
+
+            CUERPOTABLA.appendChild(TR);
+
+        })
+
+    }
+
+
+
+
+
+
+    $(document).ready(function () {
+
+
+     //******* Metodos para validar por folios *******//
+
+        // detecta cambios en el nombre del personal
+        let personalSeleccionado = null;
+        const nombrePersonal = document.getElementById("SeleccionarPersonal");
+        nombrePersonal.addEventListener("change",
+            function () {
+
+                personalSeleccionado = this.options[nombrePersonal.selectedIndex];
+               // console.log(personalSeleccionado.value);
+
+
+            }
+        );
+
+
+
+
+        let FInicial = null;
+        let FFinal = null;
+        let TotalFormasAsignadas = null;
+        let personaSeleccionada = null;
+
+        const Validar = document.getElementById("ValidarFolios");
+        Validar.addEventListener("click",
+            function ()
+            {
+                personaSeleccionada = document.getElementById('SeleccionarPersonal').value;
+                FInicial = document.getElementById('FolioInicial').value;
+                FFinal = document.getElementById('FolioFinal').value;
+
+                if (personalSeleccionado != null) {
+                    if (FInicial != "") {
+
+
+                        if (FFinal != "") {
+
+                            if (parseInt(FFinal) > parseInt(FInicial) || parseInt(FInicial) == parseInt(FFinal)) {
+                                //Caso en donde el folio Final es mayor al inicial o iguales
+
+                                MensajeCargando();
+
+                                let verificarFolios = "{'IdInventario':'" + "@ViewBag.IdInventario" + "','FolioInicial':'" + FInicial + "','FolioFinal':'" + FFinal + "'}";
+
+
+                                $.ajax({
+                                    url: '@Url.Action("VerificarDisponibilidadFolios", "Inventario")',
+                                    data: verificarFolios,
+                                    type: "POST",
+                                    contentType: "application/json; charset=utf-8",
+
+                                    success: function (msg) {
+
+
+                                        if (msg.length == 1) {
+                                            OcultarMensajeCargando();
+
+                                            Swal.fire({
+                                                backdrop: true,
+                                                allowEnterKey: false,
+                                                allowOutsideClick: false,
+                                                icon: 'success',
+                                                title: 'Folios Disponibles correctamente',
+                                                text: ``
+
+
+                                            })
+
+
+                                            document.getElementById('ResumenAAsignar').innerHTML = `Se asignaran ${(FFinal - FInicial) + 1} formas de pago <br/>
+                                                                    a: ${personaSeleccionada} <br/>
+                                                            del folio : ${FInicial}  al folio final : ${FFinal}    <br/>
+                                                                        ${"@ViewBag.NombreBanco"} <br/>
+                                                                     ${"@ViewBag.NumeroCuentaBanco"}`;
+
+
+                                             $('#AsignarFormasContenedor').modal('show');
+
+
+                                        }
+
+
+
+                                        //si retorna 0 es que todos los folios estan disponibles
+                                        if (msg[0] === "Folios No Disponibles" && msg.length > 1) {
+                                            OcultarMensajeCargando();
+
+                                            Swal.fire({
+                                                backdrop: true,
+                                                allowEnterKey: false,
+                                                allowOutsideClick: false,
+                                                icon: 'warning',
+                                                title: 'Folios no disponibles: ¡VERIFIQUE!',
+                                                text: ``
+
+
+                                            })
+
+
+
+                                            PintarTablaFoliosInvalidosEnModal(msg);
+
+                                            $('#ErrorEnFormasPago').modal('show');
+
+
+                                        }
+
+
+                                        //hay folios que se han ocupado anteriormente y no se pueden reocupar
+                                        if (msg[0] === "No Existe El Folio" && msg.length > 1) {
+
+                                            OcultarMensajeCargando();
+
+                                            Swal.fire({
+                                                backdrop: true,
+                                                allowEnterKey: false,
+                                                allowOutsideClick: false,
+                                                icon: 'error',
+                                                title: 'Folios Inexistente',
+                                                text: `${msg.length - 1} folios tienen problemas; Verifiquelos`
+
+
+                                            })
+
+
+
+                                            PintarTablaFoliosInvalidosEnModal(msg);
+
+                                            $('#ErrorEnFormasPago').modal('show');
+
+
+                                        }
+
+
+
+                                    },
+                                    error: function (msg) {
+                                        OcultarMensajeCargando();
+                                        Swal.fire({
+                                            backdrop: true,
+                                            allowEnterKey: false,
+                                            allowOutsideClick: false,
+                                            icon: 'info',
+                                            title: 'No se pudo verificar la disponibilidad de folios intentelo de nuevo mas tarde o pongase en contacto con el administrador del sistema',
+
+
+                                        })
+                                    }
+                                });
+
+                            } else {
+
+                                Swal.fire({
+                                    backdrop: true,
+                                    allowEnterKey: false,
+                                    allowOutsideClick: false,
+                                    icon: 'warning',
+                                    title: 'Introduzca un folio final mayor al inicial',
+
+                                })
+                            }
+                        } else {
+
+                            Swal.fire({
+                                backdrop: true,
+                                allowEnterKey: false,
+                                allowOutsideClick: false,
+                                icon: 'warning',
+                                title: 'Introduzca un folio final',
+
+                            })
+                        }
+
+
+
+                    } else {
+
+                        Swal.fire({
+                            backdrop: true,
+                            allowEnterKey: false,
+                            allowOutsideClick: false,
+                            icon: 'warning',
+                            title: 'Ingrese un folio inicial',
+
+                        })
+                    }
+
+
+                } else {
+
+                    Swal.fire({
+                        backdrop: true,
+                        allowEnterKey: false,
+                        allowOutsideClick: false,
+                        icon: 'warning',
+                        title: 'Seleccione un nombre de personal',
+
+                    })
+                }
+
+
+
+
+
+
+
+            }
+        );
+
+
+
+
+
+
+     //******* Metodos para crear tabla con datos actualizados *******//
+
+        const VerDetalle = document.getElementById("DetalleAsignados");
+        VerDetalle.addEventListener("click",
+            function () {
+
+
+                  let verificarFolios = "{'NombreBanco':'"+"@ViewBag.NombreBanco"+"'}";
+
+                            $.ajax({
+                                url: '@Url.Action("CrearTablaInhabilitadosOAsignacion", "Inventario")',
+                                data: verificarFolios,
+                                type: "POST",
+                                contentType: "application/json; charset=utf-8",
+
+                                success: function (msg) {
+                                  //  console.log("msg", msg);
+                                  //  console.log("msg", msg.length);
+
+                                    $("#TablaActualizada").empty();
+
+                                    DibujarTablaAjax();
+
+                                    PintarConsultas(msg);
+
+
+                               },
+                                error: function (msg) {
+                                    OcultarMensajeCargando();
+                                      Swal.fire({
+                                          backdrop: true,
+
+                                          allowEnterKey: false,
+                                          icon: 'info',
+                                          title: 'No se pudo verificar la disponibilidad de folios intentelo de nuevo mas tarde o pongase en contacto con el administrador del sistema',
+
+
+                                      })
+                               }
+                           });
+
+
+
+            }
+        );
+
+
+
+
+       //******* Metodos para Validar por contenedor *******//
+
+        // detecta cambios en el nombre del personal del contenedor
+        let personalSeleccionadoContenedor = null;
+        const nombreSeleccionado = document.getElementById("SeleccionarPersonalContenedor");
+        nombreSeleccionado.addEventListener("change",
+            function () {
+
+                personalSeleccionadoContenedor = this.options[nombreSeleccionado.selectedIndex];
+               // console.log(personalSeleccionadoContenedor.value);
+
+
+            }
+        );
+
+
+
+        let ordenSeleccionada = null;
+        let contenedorSelecionado = null;
+        var seleccionOrden = document.getElementById("SeleccionOrden");
+        seleccionOrden.addEventListener("change",
+            function () {
+                contenedorSelecionado = null;
+                ordenSeleccionada = this.options[seleccionOrden.selectedIndex];
+               // console.log(ordenSeleccionada.value);
+               // console.log(personalSeleccionado.value);
+
+                var DatosEnviar = "{'IdInventario': '" + "@ViewBag.IdInventario" + "' ,'OrdenSeleccionada': '" + ordenSeleccionada.value + "' }";
+
+
+                //console.log(DatosEnviar);
+               $.ajax({
+                   url: '@Url.Action("ObtenerNumerosContenedores", "Inventario")',
+                   data: DatosEnviar,
+                  type: "POST",
+                  contentType: "application/json; charset=utf-8",
+
+                   success: function (msg) {
+                      // console.log("msg", msg);
+                      // console.log("msg", msg.length);
+
+                       $("#SeleccionContenedor").find('option').not(':first').remove();
+
+                       const opciones = document.getElementById("opcionesDeContenedores");
+
+                       for (let i = 0; i < msg.length ; i++ )
+                       {
+                       // opciones.setAttribute('id', i);
+                        opciones.insertAdjacentHTML('afterend', ` <option> ${msg[i]} </option>`);
+
+                       }
+
+
+
+                    },
+                      error: function (msg) {
+                          Swal.fire({
+                              backdrop: true,
+
+                              allowEnterKey: false,
+                              icon: 'info',
+                              title: 'No se pudo cargar los numeros de orden intentelo de nuevo mas tarde o pongase en contacto con el administrador del sistema',
+
+
+                          })
+                      }
+                 });
+
+
+            }
+        );
+
+
+
+
+
+        // detecta cambios en el numero del contenedor
+        let idDelContenedorEncontrado = null;
+        let folioInicialDelContenedorDB = null;
+        let folioFinalDelContenedorDB = null;
+
+        var numeroDeContenedor = document.getElementById("SeleccionContenedor");
+
+        numeroDeContenedor.addEventListener("change",
+            function () {
+
+                contenedorSelecionado = this.options[numeroDeContenedor.selectedIndex];
+                //console.log(contenedorSelecionado.value);
+
+
+             var DatosEnviar = "{'IdInventario':'"+"@ViewBag.IdInventario"+"','OrdenSeleccionada':'"+ordenSeleccionada.value+"','ContenedorSeleccionado':'"+contenedorSelecionado.value+"' }";
+
+
+               $.ajax({
+                   url: '@Url.Action("ObtenerFoliosDelContenedor", "Inventario")',
+                   data: DatosEnviar,
+                   type: "POST",
+                   contentType: "application/json; charset=utf-8",
+
+                   success: function (msg)
+                   {
+                     //  console.log("msg", msg);
+                      // console.log("msg", msg.length);
+
+                       idDelContenedorEncontrado = msg[0];
+
+                     //  console.log(idDelContenedorEncontrado);
+
+                       document.getElementById('FInicialContenedor').value = msg[1];
+                       document.getElementById('FFinalContenedor').value = msg[2];
+
+                       folioInicialDelContenedorDB = parseInt(msg[1]);
+                       folioFinalDelContenedorDB = parseInt(msg[2]);
+
+                       Swal.fire({
+                           backdrop: true,
+
+                           allowEnterKey: true,
+                           icon: 'info',
+                           title: 'FOLIOS ENCONTRADOS DENTRO DEL CONTENEDOR',
+                           text: `Los folios encontrados van del  rango:
+                                        Folio inicial ${msg[1]}
+                                                y
+                                        Folio final hasta ${msg[2]}`
+
+
+                       })
+
+
+
+
+                   },error: function (msg) {
+                          Swal.fire({
+                              backdrop: true,
+
+                              allowEnterKey: false,
+                              icon: 'info',
+                              title: 'No se pudo cargar los numeros de orden intentelo de nuevo mas tarde o pongase en contacto con el administrador del sistema',
+
+
+                          })
+                      }
+                 });
+
+
+            }
+        );
+
+
+
+
+        //Valida el contenedor
+        FolioInicialContenedor = null;
+        FolioFinalContenedor = null;
+        document.getElementById('ValidarContenedor').addEventListener('click', () => {
+
+
+            FolioInicialContenedor = document.getElementById("FInicialContenedor").value;
+            FolioFinalContenedor = document.getElementById("FFinalContenedor").value;
+
+
+            // ordenSeleccionada.value
+            if (personalSeleccionadoContenedor != null) {
+
+                if (ordenSeleccionada != null) {
+                   // console.log(ordenSeleccionada.value);
+                    if (contenedorSelecionado != null) {
+
+
+                        if (FolioInicialContenedor != "" && parseInt(FolioInicialContenedor) >= parseInt(folioInicialDelContenedorDB) && parseInt(FolioInicialContenedor) <= parseInt(folioFinalDelContenedorDB)) {
+
+
+                            if (FolioFinalContenedor != "" && parseInt(FolioFinalContenedor) >= parseInt(folioInicialDelContenedorDB) && parseInt(FolioFinalContenedor) <= parseInt(folioFinalDelContenedorDB)) {
+
+                                if (parseInt(FolioInicialContenedor) <= parseInt(FolioFinalContenedor)) {
+                                     MensajeCargando();
+
+
+                                    let verificarContenedor = "{'IdContenedor':'" + idDelContenedorEncontrado + "','FolioInicial':'" + FolioInicialContenedor + "','FolioFinal':'" + FolioFinalContenedor + "'}";
+
+                                    //console.log(verificarContenedor);
+                                      $.ajax({
+                                             url: '@Url.Action("VerificarDisponibilidadContenedor", "Inventario")',
+                                             data: verificarContenedor,
+                                            type: "POST",
+                                            contentType: "application/json; charset=utf-8",
+
+                                          success: function (msg) {
+                                              //  console.log("msg", msg);
+                                              //  console.log("msg", msg.length);
+
+
+
+                                                    //si retorna 0 es que todos los folios estan disponibles
+                                             if (msg.length == 1)
+                                             {
+
+                                                OcultarMensajeCargando();
+
+                                                Swal.fire({
+                                                    backdrop: true,
+
+                                                    allowEnterKey: false,
+                                                    icon: 'success',
+                                                    title: 'Folios Disponibles correctamente',
+                                                    text: ``
+
+
+                                                })
+
+
+                                                 document.getElementById('ResumenAAsignar').innerHTML = `Se asignaran ${(FolioFinalContenedor - FolioInicialContenedor) + 1} formas de pago <br/>
+                                                                    a: ${personalSeleccionadoContenedor.value} <br/>
+                                                            del folio : ${FolioInicialContenedor}  al folio final : ${FolioFinalContenedor}    <br/>
+                                                                        ${"@ViewBag.NombreBanco"} <br/>
+                                                                     ${"@ViewBag.NumeroCuentaBanco"}`;
+
+
+
+
+                                                 $('#AsignarFormasContenedor').modal('show');
+
+
+                                             }
+
+
+
+
+                                                //hay folios que se han ocupado anteriormente y no se pueden reocupar
+                                             if (msg[0] === "Folios No Disponibles" && msg.length > 1)
+                                                {
+
+                                                    OcultarMensajeCargando();
+
+                                                    Swal.fire({
+                                                        backdrop: true,
+
+                                                        allowEnterKey: false,
+                                                        icon: 'warning',
+                                                        title: 'Folios no disponibles',
+                                                        text: `${msg.length - 1} folios ya fueron ocupados`
+
+
+                                                    });
+
+                                                    PintarTablaFoliosInvalidosEnModal(msg);
+
+                                                    $('#ErrorEnFormasPago').modal('show');
+
+                                                  }
+
+
+
+                                          },
+                                           error: function (msg) {
+                                                    OcultarMensajeCargando();
+                                                    Swal.fire({
+                                                        backdrop: true,
+
+                                                        allowEnterKey: false,
+                                                        icon: 'info',
+                                                        title: 'No se pudo verificar la disponibilidad de folios intentelo de nuevo mas tarde o pongase en contacto con el administrador del sistema',
+
+
+                                                    })
+                                           }
+                                      });
+
+
+
+
+
+
+
+
+                                } else {
+                                    Swal.fire({
+                                        backdrop: true,
+
+                                        allowEnterKey: false,
+                                        icon: 'warning',
+                                        title: `Verifique <br/>
+                                       FOLIO INICIAL debe ser menor o igual al FOLIO FINAL`
+
+                                    })
+                                }
+
+
+
+                            } else {
+                                //No ingreso un Folio Final
+                                Swal.fire({
+                                    backdrop: true,
+
+                                    allowEnterKey: false,
+                                    icon: 'warning',
+                                    title: `VERIFIQUE <br/>
+                                     FOLIO FINAL debe estar dentro del rango
+                                ${folioInicialDelContenedorDB} al ${folioFinalDelContenedorDB}`
+
+                                })
+                            }
+                        } else {
+                            //no ingreso un folio inicial correcto
+                            Swal.fire({
+                                backdrop: true,
+
+                                allowEnterKey: false,
+                                icon: 'warning',
+                                title: `VERIFIQUE <br/>
+                                FOLIO INCIAL debe estar dentro del rango
+                                ${folioInicialDelContenedorDB} al ${folioFinalDelContenedorDB}`
+
+                            })
+                        }
+                    } else {
+                        //no selecciono ningun contenedor
+                        Swal.fire({
+                            backdrop: true,
+
+                            allowEnterKey: false,
+                            icon: 'warning',
+                            title: 'Seleccione un numero de CONTENEDOR',
+                        })
+                    }
+                } else {
+                    //no selecciono ninguna orden
+                    Swal.fire({
+                        backdrop: true,
+
+                        allowEnterKey: false,
+                        icon: 'warning',
+                        title: 'Seleccione un numero de orden',
+
+
+                    })
+                }
+            } else {
+                //no selecciono ninguna orden
+                Swal.fire({
+                    backdrop: true,
+
+                    allowEnterKey: false,
+                    icon: 'warning',
+                    title: 'Seleccione una persona para asignar contenedor',
+
+
+                })
+            }
+
+
+
+
+        });
+
+
+
+
+    //******* Envia Datos al servidor *******//
+
+
+        const GuardarAsignacion = document.getElementById("GuardarAsignados");
+        GuardarAsignacion.addEventListener("click",
+            function () {
+
+
+                //IdIncidencia = 1 es por que esta inhabilitado
+                let enviarFolios = "{'IdInventario':'"+"@ViewBag.IdInventario"+"','FolioInicial':'"+FInicial+"','FolioFinal':'"+FFinal+"','IdIncidencia':'2','NombreEmpleado':'"+personalSeleccionado.value+"'}";
+                console.log(enviarFolios);
+
+                MensajeCargando();
+               $.ajax({
+                   url: '@Url.Action("CrearIncidencias", "Inventario")',
+                   data: enviarFolios,
+                  type: "POST",
+                  contentType: "application/json; charset=utf-8",
+
+                   success: function (msg) {
+                       console.log("msg", msg);
+                       console.log("msg", msg.length);
+
+                       if (msg.length == 1)
+                       {
+                           OcultarMensajeCargando();
+                           Swal.fire({
+                               backdrop: true,
+                               allowEnterKey: false,
+                               allowOutsideClick: false,
+                               icon: 'success',
+                               title: 'Correcto',
+                               text: 'Incidencias modificadas correctamente'
+                           }).then((result) => {
+                               if (result.value) {
+
+                                   location.reload();
+
+                                   //$('#Confirmar').modal('hide')
+                               }
+                           })
+
+                       }
+
+                       if (msg[0] === "Folios Sin Guardar Incidencia" && msg.length > 1)
+                       {
+                           OcultarMensajeCargando();
+                           Swal.fire({
+                               backdrop: true,
+
+                               allowEnterKey: false,
+                               icon: 'error',
+                               title: 'Pongase en contacto con el administrador del sistema',
+
+
+                           })
+
+
+                           PintarTablaFoliosInvalidosEnModal(msg);
+
+
+
+                           $('#ErrorEnFormasPago').modal('show');
+                       }
+                   },
+                   error: function (msg) {
+                       OcultarMensajeCargando();
+                          Swal.fire({
+                              backdrop: true,
+
+                              allowEnterKey: false,
+                              icon: 'info',
+                              title: 'No se pudo cargar los numeros de orden intentelo de nuevo mas tarde o pongase en contacto con el administrador del sistema',
+
+
+                          })
+                   }
+               });
+
+            }
+        );
+
+
+
+        const AsignarContenedor = document.getElementById("GuardarfoliosContenedorAsignado");
+        AsignarContenedor.addEventListener("click",
+            function () {
+                MensajeCargando();
+                let DatosContenedor = "{'IdInventario':'"+"@ViewBag.IdInventario"+"','NumeroOrden':'"+ordenSeleccionada.value+"','IdContenedor':'"+idDelContenedorEncontrado+"','FolioInicial':'"+FolioInicialContenedor+"','FolioFinal':'"+FolioFinalContenedor+"','IdIncidencia':'2','NombreEmpleado':'"+personalSeleccionadoContenedor.value+"'}";
+
+                              $.ajax({
+                                  url: '@Url.Action("CrearIncidenciasContenedor", "Inventario")',
+                                  data: DatosContenedor,
+                                    type: "POST",
+                                    contentType: "application/json; charset=utf-8",
+
+                                  success: function (msg) {
+                                        console.log("msg", msg);
+                                        console.log("msg", msg.length);
+
+
+
+                                            //si retorna 0 es que todos los folios estan disponibles
+                                     if (msg.length == 1)
+                                     {
+                                        OcultarMensajeCargando();
+
+                                         Swal.fire({
+                                             backdrop: true,
+                                             allowEnterKey: false,
+                                             allowOutsideClick: false,
+                                             allowEscapeKey: false,
+                                             icon: 'success',
+                                             title: 'Correcto',
+                                             text: 'Incidencias modificadas correctamente'
+                                         }).then((result) => {
+                                             if (result.value) {
+
+                                                 location.reload();
+
+                                                 //$('#Confirmar').modal('hide')
+                                             }
+                                         })
+
+
+
+                                     }
+
+
+
+
+                                        //hay folios que se han ocupado anteriormente y no se pueden reocupar
+                                      if (msg[0] === "Folios No Disponibles" && msg.length > 1)
+                                      {
+
+                                            OcultarMensajeCargando();
+
+                                            Swal.fire({
+                                                backdrop: true,
+
+                                                allowEnterKey: false,
+                                                icon: 'warning',
+                                                title: 'Folios no disponibles',
+                                                text: `${msg.length - 1} folios ya fueron ocupados`
+
+
+                                            });
+
+                                            PintarTablaFoliosInvalidosEnModal(msg);
+
+                                            $('#ErrorEnFormasPago').modal('show');
+
+                                      }
+
+
+                                  },
+                                    error: function (msg) {
+                                        OcultarMensajeCargando();
+                                        Swal.fire({
+                                            backdrop: true,
+
+                                            allowEnterKey: false,
+                                            icon: 'info',
+                                            title: 'No se pudo verificar la disponibilidad de folios intentelo de nuevo mas tarde o pongase en contacto con el administrador del sistema',
+
+
+                                        })
+                                    }
+                              });
+
+
+
+
+
+            }
+        );
+
+
+
+
+
+    });
+
+
+
+
+</script>

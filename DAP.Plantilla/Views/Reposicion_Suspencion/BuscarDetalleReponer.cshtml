@@ -1,0 +1,272 @@
+﻿@model DAP.Plantilla.Models.BuscardorChequeModels.DetallesInformativosChequeModel
+
+
+
+@*@Scripts.Render("~/Scripts/ScriptProyecto/Reposicion_Suspencion/DetalleReponer.js")*@
+
+
+
+<seccion>
+
+
+    </br>
+    </br>
+    <h3 class="col-12 text-center text-uppercase"> Detalles del Identificador @Model.IdRegistro para su reposición</h3>
+    </br>
+    </br>
+    <!--Inicio del Grid con los detalles -->
+    <div id="detallesFormasPago" class="text-justify">
+
+
+
+        <div class="row offset-0  offset-sm-1 offset-lg-1 offset-xl-1   marginbottom">
+
+
+
+            <div class="col-12 col-sm-3  orientacion">
+                <label for="">Identificador Nomina:</label>
+                <br>
+                <span id="IdNom">@Model.Id_nom</span>
+
+            </div>
+
+
+
+            <div class="col-12 col-sm-3  orientacion">
+                <label for="">Referencia Bitacora:</label>
+                <br>
+                <span id="ReferenciaBitacora"> @Model.ReferenciaBitacora</span>
+
+            </div>
+
+            <div class="col-12 col-sm-3 orientacion">
+                <label>Quincena:</label>
+                <br>
+                <span id="Quincena" class="text-center">@Model.Quincena</span>
+
+            </div>
+
+            <div class="col-12 col-sm-3  orientacion">
+                <label>Delegacion:</label>
+                <br>
+                <span id="Delegacion">@Model.Delegacion</span>
+
+            </div>
+
+        </div>
+
+
+        <div class="row offset-0  offset-sm-1 offset-lg-1 offset-xl-1   marginbottom">
+
+
+
+            <div class="col-12 col-sm-3  orientacion">
+                <label for="">Numero de Empleado:</label>
+                <br>
+                <span id="NumeroEmpleado">@Model.NumEmpleado</span>
+
+            </div>
+
+            <div class="col-12 col-sm-3  orientacion">
+                <label>Nombre Empleado:</label>
+                <br>
+                <span id="Nombre Empleado">@Model.NombreEmpleado</span>
+
+            </div>
+
+            <div class="col-12 col-sm-3 orientacion">
+                <label>Folio de forma de pago:</label>
+                <br>
+                <span id="NumeroFolio" class="text-center">@Model.Folio </span>
+
+            </div>
+
+
+
+            <div class="col-12 col-sm-3  orientacion">
+                <label for="">Liquido:</label>
+                <br>
+                <span id="ImporteLiquido">@Model.Liquido</span>
+
+            </div>
+
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+        <div class="row offset-0  offset-sm-1 offset-lg-2  offset-xl-3  marginbottom">
+
+            <div class="col-12 col-sm-3 orientacion">
+                <label for="">Estado Cheque:</label>
+                <br>
+                <span id="EstadoCheque" class="text-center">@Model.EstadoCheque</span>
+
+            </div>
+
+
+
+            <div class="col-12 col-sm-3  orientacion">
+                <label for="">Banco Pagador:</label>
+                <br>
+                <span id="BancoPagador">@Model.BancoPagador </span>
+
+            </div>
+
+            <div class="col-12 col-sm-6 orientacion">
+                <label for="">Cuenta Pagadora:</label>
+                <br>
+                <span id="CuentaPagadora" class="text-center">@Model.CuentaPagadora</span>
+
+            </div>
+
+
+        </div>
+
+
+
+
+        @if (@Model.EsPenA == true)
+        {
+
+
+            <div class="row offset-0  offset-sm-1 offset-lg-2  offset-xl-3  marginbottom">
+
+
+                <div class="col-12 col-sm-3 orientacion">
+                    <label>Es Pension A:</label>
+                    <br>
+                    <span id="EsPenA">@Model.EsPenA </span>
+
+                </div>
+
+
+
+                <div class="col-12 col-sm-3  orientacion">
+                    <label for="">Num Beneficiario</label>
+                    <br>
+                    <span id="NumBeneficiario">@Model.NumBeneficiarioPenA </span>
+
+                </div>
+
+                <div class="col-12 col-sm-6  orientacion">
+                    <label for="">Beneficiario Pension Alim:</label>
+                    <br>
+                    <span id="NombreBenePenA">@Model.NombreBeneficiarioPenA</span>
+
+                </div>
+
+            </div>
+
+
+        }
+
+    </div>
+
+
+
+
+    <div class="row  text-center marginbottom">
+
+        @if (Convert.ToBoolean(Model.EsRefoliado))
+        {
+            <div class=" offset-4 col-4">
+                <label for="" class="text-justify">Es Refoliado:</label>
+                <br>
+
+                <button type="button" class="btn btn-outline-info btn-block btn-sm" title="Realizar un ajuste al inventario" onclick="HistoricoSeguimiento(@Model.IdRegistro)">Ver historico de seguimiento </button>
+
+
+            </div>
+        }
+
+    </div>
+
+    </br>
+    
+    <label class="btn-lg text-uppercase col-12 text-center">Ingrese Nuevo Folio a Reponer</label>
+    <div class="col-12 text-center ">
+
+        <input id="InputNuevaFormaDePago" placeholder="Folio de la nueva forma de pago" class="inputLocalizadorFormasPago col-8 text-center btn-lg" pattern=" 0+\.[0-9]*[1-9][0-9]*$" onkeypress="return event.charCode >= 48 && event.charCode <= 57" required autofocus>
+    </div>
+
+    </br>
+
+
+
+    <div class="col-12  text-center marginbottom">
+
+        <button type="button" class="btn bg-success text-white col-8" title="Realizar un ajuste al inventario" onclick="ReponerNuevoFolio(@Model.IdRegistro);">Reponer </button>
+
+    </div>
+
+
+
+
+
+
+</seccion>
+
+
+
+
+
+<style>
+
+
+    /*******************************************/
+    /******************************************/
+    /*****************************************/
+    /*CSS PARA EL MODAL*/
+
+
+    .modal.fade {
+        background: rgba(0,0,0,0.7);
+    }
+
+    .borde {
+        border: 1px solid;
+    }
+
+    .marginbottom {
+        margin-bottom: 40px;
+    }
+
+
+
+
+
+    @@media only screen and (max-width: 576px) {
+
+
+        .orientacion {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+    }
+
+
+
+
+
+    #detallesFormasPago label {
+        font-weight: bold;
+        font-style: italic;
+        color: rgb(68, 147, 211);
+        margin-bottom: 3px;
+    }
+
+
+
+    #detallesFormasPago span {
+        font-weight: 900;
+        color: #60bb6bd3;
+    }
+</style>

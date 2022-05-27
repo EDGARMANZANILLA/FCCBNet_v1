@@ -1,0 +1,288 @@
+﻿@model Dictionary<int, string> 
+
+<style>
+
+    .texto-azul {
+        text-align: center;
+        color: blue;
+    }
+</style>
+
+<!--   Modificar Cuenta bancaria existente -->
+
+    <class class="margenSection row">
+
+        <div class="btn-block">
+            <h5 class="text-center">Editar una cuenta bancaria:</h5>
+        </div>
+
+
+        <div class="col-12 offset-md-2 col-md-8">
+            <div class="form-group">
+                <select class="form-control " id="SeleccionarCuentaModificar" required>
+                    <option value="">Selecciona la cuenta bancaria a editar...</option>
+                    @foreach (var nueva in Model)
+                     {
+                       <option value="@nueva.Key" >@nueva.Value</option>
+                     }
+
+                </select>
+            </div>
+        </div>
+
+
+        <div class="col-12 text-center">
+            <button id="editarCuenta" class="btn btn-primary btn-lg" > <i class="fas fa-edit"></i> Editar</button>
+
+        </div>
+
+
+    </class>
+
+<br />
+<br />
+
+
+
+<!-- Modales de edicion para editar al personal  -->
+<!-- INICIO DE MODALES -->
+<section class="modal fade" id="EditarCuentaBancaria" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+
+                <h5 class="col-11 text-center">Edicion de una cuenta bancaria</h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+
+            </div>
+
+
+            <div class=" modal-body">
+                <div class="col-12 text-center">
+
+                    <h5 id="cuenta" class="texto-azul" ></h5>
+                </div>
+
+
+                <br>
+                <h6 class=" col-12 text-center">Nombre de la cuenta agregar</h6>
+                <input id="NombreCuenta" class="offset-1 col-10 offset-sm-1 col-sm-10 texto-azul"  placeholder="Nombre del banco de la cuenta" type="text" />
+
+                <br>
+                <br>
+                <h6 class=" col-12 text-center">Abreviatura asignada a la cuenta</h6>
+                <input id="Abreviatura" class="offset-1 col-10 offset-sm-1 col-sm-10 texto-azul" placeholder="Asignar una abreviatura" type="text" />
+
+                <br>
+                <br>
+                <div class="btn-block">
+                    <h5 class="text-center">Selecciona el tipo de pago</h5>
+
+                    <div class="col-12 offset-md-2 col-md-8 " >
+                        <div class="form-group  ">
+                            <select class="form-control texto-azul text-center" id="SeleccionarFormaPago" required>
+                                <option disabled selected>Selecciona el tipo de pago...</option>
+                                <option value="1" >Tarjetas </option>
+                                <option value="2" >Cheques</option>
+                                <option value="3" >Ambos (Tarjetas y Cheques) </option>
+
+
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                <button id="GuardarEdicionCuenta" type="button" class="btn btn-success">Guardar edicion de cuenta bancaria </button>
+
+            </div>
+
+
+        </div>
+    </div>
+</section>
+
+
+
+<script>
+    $(document).ready(function () {
+
+
+        let cuentaSeleccionada = null;
+        const CuentaSeleccionadaUsuario = document.getElementById("SeleccionarCuentaModificar");
+        CuentaSeleccionadaUsuario.addEventListener("change",
+            function () {
+                //mesSeleccionado = null;
+                cuentaSeleccionada = this.options[CuentaSeleccionadaUsuario.selectedIndex];
+
+                console.log(cuentaSeleccionada.value);
+
+                //let a = href = "/Inventario/GenerarReporteSolicitud?NumMemorandum=19";
+
+                //window.open(url);
+                document.getElementById("cuenta").innerHTML = cuentaSeleccionada.value;
+
+            }
+        );
+
+
+        let IdCuenta = null;
+
+        const Continuar = document.getElementById("editarCuenta");
+        Continuar.addEventListener("click",
+            function () {
+
+                if (cuentaSeleccionada != null) {
+                    let enviarDatos = "{'IdCuentaBancaria':'" + cuentaSeleccionada.value + "'}";
+                    MensajeCargando();
+                    $.ajax({
+                        url: '@Url.Action("ObtenerInfoCuentaBancaria", "Configuraciones_InventarioYCuentas")',
+                        data: enviarDatos,
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (msg) {
+
+                            let detalleCuenta = new Array();
+
+                            detalleCuenta = msg;
+
+                            OcultarMensajeCargando();
+
+                            console.log(detalleCuenta);
+
+                            IdCuenta = detalleCuenta.Id;
+                            document.getElementById("NombreCuenta").value = detalleCuenta.NombreBanco;
+                            document.getElementById("Abreviatura").value = detalleCuenta.Abreviatura;
+                            document.getElementById("SeleccionarFormaPago").value = detalleCuenta.IdCuentaBancaria_TipoPagoCuenta;
+
+                            $('#EditarCuentaBancaria').modal('show');
+                        }
+                    });
+
+                } else
+                {
+                    Swal.fire({
+                        backdrop: true,
+                        allowEnterKey: false,
+                        allowOutsideClick: false,
+                        icon: 'info',
+                        title: `Selecciona una cuenta bancaria`
+
+                    })
+                }
+
+
+            }
+        );
+
+
+
+
+
+        const GuardarEdicion = document.getElementById("GuardarEdicionCuenta");
+        GuardarEdicion.addEventListener("click",
+            function () {
+               let nombreBancoEditado = document.getElementById("NombreCuenta").value;
+               let abreviaturaBancoEditado = document.getElementById("Abreviatura").value ;
+               let tipoPagoEditado = document.getElementById("SeleccionarFormaPago").value ;
+
+                console.log(nombreBancoEditado);
+                console.log(abreviaturaBancoEditado);
+                console.log(tipoPagoEditado);
+
+                if (cuentaSeleccionada != null && nombreBancoEditado != "" && abreviaturaBancoEditado != "" && tipoPagoEditado != "") {
+                    
+
+                    let enviarDatos = "{'IdCuentaBancaria':'"+cuentaSeleccionada.value+"','NombreCuenta':'"+nombreBancoEditado+"','Abreviatura':'"+abreviaturaBancoEditado+"','TipoPago':'"+tipoPagoEditado+"'}";
+                    MensajeCargando();
+                    $.ajax({
+                        url: '@Url.Action("EditarCuentaBancaria", "Configuraciones_InventarioYCuentas")',
+                        data: enviarDatos,
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (msg) {
+                            OcultarMensajeCargando();
+                            if (msg) {
+                                Swal.fire({
+                                    backdrop: true,
+                                    allowEnterKey: false,
+                                    allowOutsideClick: false,
+                                    icon: 'success',
+                                    title: `Se modifico exitosamente la cuenta bancaria`,
+                                    text: ``
+                                }).then((result) => {
+
+                                    document.location.reload();
+
+                                });
+
+                            } else {
+                                Swal.fire({
+                                    backdrop: true,
+                                    allowEnterKey: false,
+                                    allowOutsideClick: false,
+                                    icon: 'error',
+                                    title: `No se pudo modificar la cuenta bancaria`,
+                                    text: ``
+                                }).then((result) => {
+
+                                    $('#EditarCuentaBancaria').modal('hide');
+
+                                });
+                            }
+
+
+
+
+                        }
+                    });
+
+                } else
+                {
+                    Swal.fire({
+                        backdrop: true,
+                        allowEnterKey: false,
+                        allowOutsideClick: false,
+                        icon: 'info',
+                        title: `No deje campos vacios`
+
+                    })
+                }
+
+
+
+
+
+
+
+
+
+            }
+        );
+
+
+
+
+
+
+
+        
+
+    });
+
+
+
+
+
+
+</script>

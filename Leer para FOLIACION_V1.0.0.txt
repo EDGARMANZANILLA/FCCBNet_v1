@@ -1,0 +1,4 @@
+Copiar la carpeta crystal al proyecto 
+Cambiar la configuracion del proyecto a 32 bits 
+Verificar que cargue el JS de Mensajes 
+

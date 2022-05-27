@@ -1,0 +1,513 @@
+﻿@model Dictionary<int, string>
+
+<section id="IFolios" class="margenSection offset-1 col-10" style="background:#E6E6E6; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); ">
+    <br />
+    <h4 class="col-12 text-center">Desinhabilita folios inhabilitados por error de un banco con chequera </h4>
+    <br />
+
+    <!--Seleccionar nombre de personal -->
+    <div class="row">
+
+        <div class=" col-12 text-center  col-md-3 text-md-right ">
+            <label class="text-capitalize">Selecciona un banco:</label>
+        </div>
+
+        <div class=" col-12 col-md-7 ">
+            <div class="form-group">
+                <select class="form-control" id="IdInventarioDesinhabilitarfolios" required>
+                    <option value="">Selecciona una cuenta...</option>
+                    @foreach (var nuevaCuenta in Model)
+                    {
+
+                        <option value="@nuevaCuenta.Key">@nuevaCuenta.Value</option>
+
+
+
+                    }
+
+                </select>
+            </div>
+        </div>
+    </div>
+    <br />
+
+
+    <div class="row ">
+        <label class="offset-1 col-10             col-sm-2">Folio Inicial:</label>
+        <input id="FolioInicialDesinhabilitado" class="offset-1 col-10 offset-sm-0 col-sm-3" placeholder="Ingresa el F. inicial" type="text" onkeypress="return event.charCode >= 48 && event.charCode <= 122 && event.charCode != 91 " required />
+        <label class="offset-1 col-10 offset-sm-0 col-sm-2">Folio Final:</label>
+        <input id="FolioFinalDesinhabilitar" class="offset-1 col-10 offset-sm-0 col-sm-3" placeholder="Ingresa el F. Final" type="text" onkeypress="return event.charCode >= 48 && event.charCode <= 122 && event.charCode != 91 " />
+
+    </div>
+
+
+    <br />
+    <div class="row offset-1 col-10 text-center" >
+        <button id="DesinhabilitarInhabilitados" class="btn btn-success btn-lg  btn-block" title="Desinhabilitar folios">Desinhabilitar folios inhabilitados</button>
+        <br />
+    </div>
+
+
+
+    <br />
+    <br />
+
+</section>
+
+<br />
+<br />
+<br />
+
+
+
+
+
+<!-- MODAL DE LOS DETALLES DE LOS FOLIOS QUE SE PUEDEN DESINHABILITAR -->
+<div class="modal fade" id="detallesDesinhabilitados" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title col-11 text-capitalize text-center" >Resumen de los folios a Desinhabilitar</h5>
+                <button type="button" class="close btn-primary" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+
+                <!-- Cascaron de tabla para luego llenarla con datos desde la DB -->
+                <div class="margenSection">
+                    <div class="table-responsive">
+
+                        <div id="TablaFolioADesinhabilitar">
+
+                            <table id="TblDetallesDesinhabilitar" class='table table-striped table-bordered table-hover' style="display:none">
+                                <caption class="text-uppercase"> Resumen de Nomina </caption>
+                                <thead class="tabla">
+                                    <tr class="text-center text-uppercase">
+
+                                        <th>Detalles o problemas con nominas </th>
+                                    </tr>
+                                </thead>
+
+
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                <dl style="display:none">
+                    <dt>Detalles:</dt>
+                    <dd> - "SIN PAGOMATICOS" ==> NO HAY EMPLEADOS CON TARJETAS PARA FOLIAR EN PAGOMATICO</dd>
+                    <dt>Solucion:</dt>
+                    <dd> - F/FP ==> INTENTE FOLIAR POR FORMAS DE PAGO</dd>
+                    <dd> - IFNN ==> INTENTE FOLIAR LA NOMINA DE NUEVO</dd>
+                </dl>
+
+
+            </div>
+            <div class="modal-footer text-capitalize text-center" style="text-align:center">
+
+
+                <button type="button" class="btn bg-secondary  col-sm-2 " data-dismiss="modal">Cerrar</button>
+                @*<button type="button" class="btn bg-warning text-dark btn-lg col-6" data-dismiss="modal">Des-inhabilitar</button>*@
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+
+
+
+
+
+    function DibujarTablaDetalleFoliosInhabilitados() {
+        $("#TablaFolioADesinhabilitar").append(
+
+            "<table id='TblDetallesDesinhabilitar'  class='table table-striped display table-bordered table-hover' cellspacing='0'  style='width:100%'>" +
+            " <caption class='text-uppercase'>detalles de problemas encontrados</caption>" +
+            "<thead class='tabla'>" +
+
+            "<tr class='text-center text-uppercase'>" +
+
+            "<th>Id </th>" +
+            "<th>Folio</th>" +
+            "<th>Incidencia</th>" +
+            "<th>Contenedor</th>" +
+            "<th>Fecha Incidencia</th>" +
+            "<th> </th>" +
+
+            "</tr>" +
+            "</thead>" +
+            "</table>"
+        );
+    };
+
+    let DetalleFoliosInhabilitar;
+    function LlenarTablaDetalleProblemasChequesDesinhabilitados(datos) {
+
+        DetalleFoliosInhabilitar = $('#TblDetallesDesinhabilitar').DataTable({
+            "ordering": true,
+            "info": false,
+            "searching": false,
+            "paging": true,
+            "lengthMenu": [10, 20],
+            "language":
+            {
+                "processing": "Procesando...",
+                "lengthMenu": "Mostrar _MENU_ registros",
+                "zeroRecords": "No se encontraron resultados",
+                "emptyTable": "Ningún dato disponible en esta tabla",
+                "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                "search": "Buscar:",
+                "info": "Mostrando de _START_ a _END_ de _TOTAL_ entradas",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Último",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                }
+            },
+            "data": datos,
+            "columns": [
+                { "data": "Id" },
+                { "data": "Folio" },
+                { "data": "Incidencia" },
+                { "data": "IdContenedor" },
+                { "data": "FechaIncidencia" },
+                { "data": "Error" }
+
+            ],
+            "columnDefs": [
+
+
+                { className: "text-center col-1", visible: true, "targets": 0, },
+                { className: "text-center col-1", visible: true, "targets": 1, },
+                { className: "text-center col-4", visible: true, "targets": 2, },
+                { className: "text-center col-1", visible: true, "targets": 3, },
+                { className: "text-center col-1", visible: true, "targets": 4, },
+                {
+                        className: "text-center col-4",
+                        visible: true,
+                        "targets": [5],
+                        render: function (data, type, row) {
+                            // console.log(typeof data);
+                            if (data == 1) {
+                                return '<h4 class="NoDesinhabilitar bg-danger btn  text-uppercase text-light"  > No se puede DesInhabilitar </h4>';
+                            }
+                            else {
+                                return '<h4 class="desinhabilitarPorError bg-success btn  text-uppercase text-light" > Correcto para DesInhabilitar</h4>';
+                            }
+                        }
+                }
+
+
+            ],
+
+            "order": [[0, 'asc']]
+        });
+    };
+
+
+
+
+
+
+
+
+    $(document).ready(function () {
+
+        let idinventarioSelecionado = null;
+        const Desinhabilitar = document.getElementById("IdInventarioDesinhabilitarfolios");
+        Desinhabilitar.addEventListener("change",
+            function () {
+
+                idinventarioSelecionado = null;
+                idinventarioSelecionado = this.options[Desinhabilitar.selectedIndex];
+                console.log(idinventarioSelecionado.value);
+            }
+        );
+
+
+
+        let EnviaIdNom;
+        const EnviarParaDesinhabilitar = document.getElementById("DesinhabilitarInhabilitados");
+        EnviarParaDesinhabilitar.addEventListener("click",
+            function () {
+
+                let folioInicialDes = document.getElementById("FolioInicialDesinhabilitado").value;
+                let folioFinalDes = document.getElementById("FolioFinalDesinhabilitar").value;
+
+
+                if (idinventarioSelecionado != null)
+                {
+                    if (folioFinalDes != "" && folioInicialDes != "") {
+
+                        if (folioFinalDes >= folioInicialDes) {
+
+
+                            //int FInicialInhabilitado, int FFinalInhabilitado
+                            //let datosAEnviar()
+
+                            //console.log(folioInicialDes);
+                            //console.log(folioFinalDes);
+
+
+                            MensajeCargando();
+                            EnviaIdNom = null;
+                            EnviaIdNom = "{'IdInventario':'"+idinventarioSelecionado.value+"','FInicialInhabilitado':'"+folioInicialDes+"','FFinalInhabilitado':'"+folioFinalDes+"'}";
+
+
+                            $.ajax({
+                                url: '@Url.Action("DesinhabilitarFoliosInhabiliados", "Configuraciones_InventarioYCuentas")',
+                                data: EnviaIdNom,
+                                type: "POST",
+                                contentType: "application/json; charset=utf-8",
+                                success: function (response) {
+                                    console.log(response);
+
+                                    //$('#detallesDesinhabilitados').show();
+                                    $('#detallesDesinhabilitados').modal('show')
+
+
+                                    if (response.RespuestaServidor == 200) {
+                                        $('#TablaFolioADesinhabilitar').empty();
+
+                                        DibujarTablaDetalleFoliosInhabilitados();
+                                        LlenarTablaDetalleProblemasChequesDesinhabilitados(response.DatosObtenidos);
+
+                                    } else if (response.RespuestaServidor == 500)
+                                    {
+                                        MensajeErrorSweet(response.MensajeError);
+                                    }
+
+
+
+                                   // OcultarMensajeCargando();
+
+                                },
+                                error: function (jqXHR, textStatus) {
+                                    MensajeErrorSweet("Ocurrio un error intenta de nuevo " + textStatus)
+                                    //alert('Error occured: ' + textStatus);
+                                }
+
+                            });
+
+
+                            OcultarMensajeCargando();
+
+                        } else {
+                            MensajeErrorSweet('El folio FINAL no puede ser menor al INICIAL', "Verifique el folio final");
+                        }
+
+
+                    } else {
+                        MensajeErrorSweet('no deje los campos vacios', "Verifique los datos");
+                    }
+
+                } else
+                {
+                    MensajeErrorSweet('',"Seleccione una cuenta bancaria");
+                }
+
+
+            }
+        );
+
+
+
+
+
+
+        $(document).on("click", ".desinhabilitarPorError", function () {
+
+            let datosFilaSeleccionada = DetalleFoliosInhabilitar.row($(this).parents("tr")).data();
+
+            console.log(datosFilaSeleccionada);
+            console.log(datosFilaSeleccionada.Id);
+            console.log(datosFilaSeleccionada.IdContenedor);
+            console.log(datosFilaSeleccionada.Folio);
+
+            MensajeCargando();
+
+
+
+
+
+
+
+
+
+
+
+
+
+           let enviarIdentificadores = "{'IdDetalle':'"+datosFilaSeleccionada.Id+"', 'IdContenedor':'"+datosFilaSeleccionada.IdContenedor+"', 'Folio':'"+datosFilaSeleccionada.Folio+"'}";
+            @*   $.ajax({
+                    url: '@Url.Action("DesinhabilitarFolioPorId", "Configuraciones_InventarioYCuentas")',
+                    data: enviarIdentificadores,
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (resultado) {
+
+                       // console.log(resultado);
+
+                        if (resultado.RespuestaServidor == 200) {
+
+                            MensajeCorrectoSweet("Se a Des-inhabilitado correctamente el folio con el id : " + datosFilaSeleccionada.Id);
+
+                        } else if (resultado.RespuestaServidor == 500) {
+                            MensajeErrorSweet(response.MensajeError);
+                        }
+
+                    },
+                    error: function (msg) {
+
+                        MensajeErrorSweet('', 'Ocurrio un problema intente de nuevo');
+
+                    }
+                });*@
+
+
+
+
+        /*************************************************************************************************************************************************************************/
+        /*************************************************************************************************************************************************************************/
+            ////////////*********************** AJAX ANIDADO COMO UNA PROMESA ***************************************//
+
+            new Promise(function (resolve, reject) {
+                $.ajax({
+                    url: '@Url.Action("DesinhabilitarFolioPorId", "Configuraciones_InventarioYCuentas")',
+                    data: enviarIdentificadores,
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (resultado) {
+                      //  resolve(data); //Resuelvo la promesa (la cumplo) y con esto se puede recibir como parámetro
+                        // console.log(resultado);
+
+                        if (resultado.RespuestaServidor == 200) {
+
+                            MensajeCorrectoSweet("Se a Des-inhabilitado correctamente el id : " + datosFilaSeleccionada.Id + " con el folio " + datosFilaSeleccionada.Folio);
+
+                        } else if (resultado.RespuestaServidor == 500) {
+                            MensajeErrorSweet(response.MensajeError);
+                        }
+
+                    },
+                    error: function (msg) {
+                       // reject(CausaDelError); //marco la promesa como incumplida y paso como parámetro el porque no se cumplió
+                        MensajeErrorSweet('', 'Ocurrio un problema intente de nuevo');
+
+                    }
+
+
+                }).then(function () { //Notese que no necesito declarar la variable
+                          $.ajax({
+                                url: '@Url.Action("DesinhabilitarFoliosInhabiliados", "Configuraciones_InventarioYCuentas")',
+                                data: EnviaIdNom,
+                                type: "POST",
+                                contentType: "application/json; charset=utf-8",
+                                success: function (response) {
+                                    console.log(response);
+
+                                    //$('#detallesDesinhabilitados').show();
+                                    $('#detallesDesinhabilitados').modal('show')
+
+
+                                    if (response.RespuestaServidor == 200) {
+                                        $('#TablaFolioADesinhabilitar').empty();
+
+                                        DibujarTablaDetalleFoliosInhabilitados();
+                                        LlenarTablaDetalleProblemasChequesDesinhabilitados(response.DatosObtenidos);
+
+                                    } else if (response.RespuestaServidor == 500)
+                                    {
+                                        MensajeErrorSweet(response.MensajeError);
+                                    }
+
+
+
+                                   // OcultarMensajeCargando();
+
+                                },
+                                error: function (jqXHR, textStatus) {
+                                    MensajeErrorSweet("Ocurrio un error intenta de nuevo " + textStatus)
+                                    //alert('Error occured: ' + textStatus);
+                                }
+
+                            });
+
+                    })
+                    .catch(function (error) {
+                        //Capturo los errores posibles en la primer promesa o en la segunda (then)
+                        console.log(error);
+                        MensajeErrorSweet('','Ninguna fila seleccionada')
+                    });
+            });
+
+
+
+
+
+
+
+
+
+            OcultarMensajeCargando();
+
+
+        });
+
+
+
+
+        $(document).on("click", ".NoDesinhabilitar", function () {
+            MensajeErrorSweet('Folio no inhabilitado',"No se puede DES-INHABILITAR este folio");
+
+        });
+
+
+
+
+
+
+
+
+    });
+
+
+</script>

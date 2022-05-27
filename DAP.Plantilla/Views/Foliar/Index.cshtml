@@ -1,0 +1,258 @@
+﻿@model List<DAP.Plantilla.Models.FoliacionModels.DetallesBancoInventario>
+
+
+
+
+@Scripts.Render("~/Scripts/SCRIPTS_PROYECTO_VISTAS/FOLIACION/Foliar/Index.js")
+
+
+<section class="row">
+
+    <div class="col-12 col-md-6">
+
+
+
+        <!--Nuevo modal-->
+        <!-- Cascaron de tabla para luego llenarla con datos desde la DB -->
+
+        <div class="table-responsive text-center">
+
+            <div id="TablaResumenInventario">
+
+                <table id="NuevaTablaInventarioActualizada" class='table table-striped table-bordered table-hover'>
+                    <caption class="text-uppercase"> Formas De Pago Disponible </caption>
+                    <thead class="tabla">
+                        <tr class="text-center text-uppercase">
+
+                            <th>Banco</th>
+                            <th>Cuenta</th>
+                            <th>Formas Disponibles</th>
+
+                        </tr>
+
+
+                    </thead>
+
+                </table>
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+    <div class="col-12 col-md-6">
+
+
+        <div class="table-responsive">
+
+            <div id="TablaQuincenas">
+
+                <table id="UltimaQuincenaFoliada" class='table table-striped table-bordered table-hover'>
+                    <caption class="text-uppercase">ultima quincena resgistrada </caption>
+                    <thead class="tabla">
+                        <tr class="text-center text-uppercase">
+
+                            <th>Banco</th>
+
+                        </tr>
+
+
+                    </thead>
+
+
+                    <tbody class="text-center azul">
+                        <tr>
+                            <td>@ViewBag.UltimaQuincenaEncontrada</td>
+                        </tr>
+
+                    </tbody>
+
+
+                </table>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+
+
+
+
+
+<!-- Eleccion de la manera con la que se desea foliar si pagomatico o cheques -->
+<seccion id="SeleccionVistas" class="margenSection  card col-12  offset-md-2 col-md-8 text-center" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+
+    <div class="margenSection row">
+
+        <div class="btn-block">
+            <h3>NUEVA QUINCENA A FOLIAR</h3>
+            <h3>Ingresa la quincena a foliar:</h3>
+            <br />
+        </div>
+
+        <div class=" col-12 text-center">
+            <input id="QuincenaFoliacion" class=" col-10 offset-xs-0 col-xs-6 input" placeholder="Nueva quincena a foliar" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" autofocus />
+        </div>
+
+        <div class="col-12 offset-md-2 col-md-8 text-center">
+            <div class="form-group">
+                <br />
+                <br />
+                <select class="form-control " id="SeleccionarTipoFoliacion" required>
+                    <option value="" disabled selected>Selecciona un tipo de foliacion...</option>
+                    <option value="1"> PAGOMATICO</option>
+                    <option value="2"> FORMAS DE PAGO</option>
+                </select>
+            </div>
+        </div>
+
+
+        <div class="col-12 text-center">
+            <br />
+            <button type="button" class="btn btn-lg btn-success" onclick="RetornarVistaParcial()"><i class="far fa-hand-point-right"></i> Continuar</button>
+
+        </div>
+
+
+    </div>
+
+
+
+</seccion>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="ModalPDFVisualizador" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title col-11 text-capitalize text-center">Verificacion de Reporte </h5>
+                <button type="button" class="close btn-primary" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div>
+
+                    <div id="example" class="altura">
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="RenderVistaParcial">
+
+</div>
+
+
+
+
+
+
+<style>
+    .margenSection {
+        margin-top: 60px;
+        margin-bottom: 60px;
+    }
+
+    .linea {
+        border: solid brown;
+        border-radius: 22px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+
+    .sombra {
+        background: #E6E6E6;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        display: none;
+    }
+
+
+    caption {
+        background: #f9fcf9;
+        color: black;
+        font-weight: bold;
+        text-align: center;
+        caption-side: top;
+        font-size: 18px;
+    }
+
+    .tabla {
+        text-align: center;
+        background: #74BC7C;
+    }
+
+    .azul {
+        color: blue;
+        font-weight: bold;
+        text-align: center;
+        caption-side: top;
+        font-size: 30px;
+    }
+
+
+
+    .input {
+        width: 250px;
+        height: 45px;
+        color: blue;
+        text-align: center;
+        border-radius: 10px;
+        background-color: rgb(219, 250, 235);
+        border: 2px solid rgb(19, 168, 243);
+        font-weight: bold;
+        font-size: 18px;
+        box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.08);
+    }
+
+
+    .container {
+        background: gray;
+        min-height: 100vh;
+    }
+
+
+
+    .altura {
+        height: 100vh;
+        border: solid;
+    }
+
+    .pdfobject-container {
+        height: 100vh;
+        border: 1rem solid rgba(0,0,0,.1);
+    }
+</style>
+

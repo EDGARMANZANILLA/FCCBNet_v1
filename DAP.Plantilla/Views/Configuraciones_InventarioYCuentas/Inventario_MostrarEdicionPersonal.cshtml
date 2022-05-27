@@ -1,0 +1,228 @@
+﻿@model List<DAP.Foliacion.Entidades.DTO.Configuracion_EditarPersonalDTO>
+
+<!--   Modificar personal -->
+
+<class class="margenSection row">
+
+    <div class="btn-block">
+        <h5 class="text-center">Selecciona un nombre del personal para "Editar":</h5>
+    </div>
+
+
+    <div class="col-12 offset-md-2 col-md-8">
+        <div class="form-group">
+            <select class="form-control " id="SeleccionarPersonalEditar" required>
+                <option value="" selected>Selecciona personal a editar...</option>
+                @foreach (var orden in Model)
+                {
+                    
+
+                    <option value="@orden.Id">@orden.NombreEmpleado  </option>
+
+
+                }
+
+            </select>
+        </div>
+    </div>
+
+
+    <div class="col-12 text-center">
+        <button id="EditarNombrePersonal" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#EditarEmpleado"> <i class="fas fa-edit"></i> Editar</button>
+
+    </div>
+
+
+</class>
+
+<br />
+<br />
+
+
+
+
+
+
+<!-- Modales de edicion para editar al personal  -->
+<!-- INICIO DE MODALES -->
+<!--  Modal de confirmacion para la inhabilitacion-->
+<section class="modal fade" id="EditarEmpleado" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+
+                <h4 class="col-11 text-center">Realiza la edicion del personal</h4>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+
+            </div>
+
+
+            <div class=" modal-body">
+                <h5 class=" col-12 text-center">Edite el nombre del personal y guarde </h5>
+                <br />
+                <input id="EditarNombreCompleto" class="offset-1 col-10 offset-sm-0 col-sm-12" placeholder="Edicion del personal" type="text" />
+
+
+                <br />
+
+            </div>
+
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                <button id="GuardarEdicion" type="button" class="btn btn-success">Guardar edicion de personal </button>
+
+            </div>
+
+
+        </div>
+    </div>
+</section>
+
+
+
+
+<script>
+
+    $(document).ready(function () {
+
+        let IdnombrePersonaSeleccionada = null;
+        const Editar = document.getElementById("SeleccionarPersonalEditar");
+        Editar.addEventListener("click",
+            function () {
+
+
+                IdnombrePersonaSeleccionada = this.options[Editar.selectedIndex];
+                // console.log(IdnombrePersonaSeleccionada.option);
+              //  MensajeCargando();
+                    let enviarIdNombre = "{'Id':'"+IdnombrePersonaSeleccionada.value+"'}";
+                              $.ajax({
+                                  url: '@Url.Action("ObtenerNombreEdicion", "Configuraciones_InventarioYCuentas")',
+                                  data: enviarIdNombre,
+                                  type: "POST",
+                                  contentType: "application/json; charset=utf-8",
+                               success: function (msg) {
+                                  // OcultarMensajeCargando();
+
+                                   document.getElementById("EditarNombreCompleto").value = msg;
+
+                               },
+                            });
+
+
+            }
+        );
+
+
+        let nombreEditado = null;
+        const GuardarEditar = document.getElementById("GuardarEdicion");
+        GuardarEditar.addEventListener("click",
+            function () {
+
+                nombreEditado = document.getElementById("EditarNombreCompleto").value.trim();
+
+
+                if (nombreEditado != "") {
+                    console.log(nombreEditado);
+
+
+                    Swal.fire({
+                        title: '¿Esta seguro que desea guardar los cambios?',
+                        showDenyButton: true,
+                        showCancelButton: true,
+                        confirmButtonText: `Guardar`,
+                        denyButtonText: `No Guardar`,
+                    }).then((result) => {
+                        /* Read more about isConfirmed, isDenied below */
+                        if (result.isConfirmed) {
+                            MensajeCargando();
+                            let enviarNombreEditado = "{'Id':'"+IdnombrePersonaSeleccionada.value+"','NombreEditado':'"+nombreEditado+"'}";
+                              $.ajax({
+                                  url: '@Url.Action("EditarNombrePersonal", "Configuraciones_InventarioYCuentas")',
+                                  data: enviarNombreEditado,
+                                  type: "POST",
+                                  contentType: "application/json; charset=utf-8",
+                               success: function (msg) {
+                                   OcultarMensajeCargando();
+
+                                   if (msg) {
+                                       Swal.fire('No se pudo Editar con exito!', '', 'error');
+                                   }
+                                   
+
+                                   Swal.fire({
+                                       backdrop: true,
+                                       allowEnterKey: false,
+                                       allowOutsideClick: false,
+                                       icon: 'success',
+                                       title: 'Guardado con exito!',
+                                     
+                                   }).then((result) => {
+                                       document.location.reload();
+                                   })
+
+
+
+
+                               },
+                               error: function (msg) {
+                                   OcultarMensajeCargando();
+                                      Swal.fire({
+                                          backdrop: true,
+                                          allowEnterKey: false,
+                                          allowOutsideClick: false,
+                                          icon: 'info',
+                                          title: 'Problema al realizar la edicion',
+                                          text: 'No se pudo modificar el personalo pongase en contacto con el administrador del sistema',
+                                      })
+                               }
+                            });
+
+
+
+
+
+
+
+                        } else if (result.isDenied) {
+                            Swal.fire('Los cambios no seran guardados', '', 'info')
+
+                        }
+                    })
+
+                } else
+                {
+
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Oops...',
+                        text: 'No se puede dejar vacio el campo',
+
+                    })
+
+                }
+
+
+
+            }
+        );
+
+
+
+
+
+
+
+    });
+
+
+
+</script>
+
+
+

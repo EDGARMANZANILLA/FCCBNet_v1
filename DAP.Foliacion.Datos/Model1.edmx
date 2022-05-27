@@ -1,0 +1,1339 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="FoliacionInterfacesCargadasPruebaDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Cat_EstadoCancelados_Pagos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Estado" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="Descrip" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="Activo" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Cat_EstadosPago_Pagos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Descrip" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="Activo" Type="nchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cat_FiltroConsultaDatosPersonalesNomina">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EsPena" Type="bit" Nullable="false" />
+          <Property Name="EsPagomatico" Type="bit" />
+          <Property Name="Cheque" Type="bit" />
+          <Property Name="Delegacion" Type="int" />
+          <Property Name="Consulta" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="cat_FiltroGrupoImpresionDelegaciones">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GrupoImpresionDelegacion" Type="int" Nullable="false" />
+          <Property Name="NombreComun" Type="nvarchar" MaxLength="75" Nullable="false" />
+          <Property Name="DelegacionesIncluidas" Type="nvarchar" MaxLength="150" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Cat_FormasPago_Pagos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Descrip" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Activo" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cat_ReportesCCancelados">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Modulo" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="TipoReporte" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="NombreReporte" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Nomina" Type="nchar" MaxLength="20" Nullable="false" />
+          <Property Name="Consulta" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Descrip" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="ExepcionesCargaInterfaces">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TipoExcepcion" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Id_nom" Type="int" Nullable="false" />
+          <Property Name="Adicional" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Coment" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="Problema" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="diferenciasDeRegistros" Type="int" />
+          <Property Name="DiferenciaNoFoliados" Type="int" Nullable="false" />
+          <Property Name="RegTotales" Type="int" Nullable="false" />
+          <Property Name="RegFoliados" Type="int" Nullable="false" />
+          <Property Name="Quincena" Type="int" Nullable="false" />
+          <Property Name="AnioInterfas" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="LOG_EXCEPCIONES">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Clase" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Metodo" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="Usuario" Type="int" />
+          <Property Name="Excepcion" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="Comentario" Type="nvarchar" MaxLength="500" />
+          <Property Name="Fecha" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="Tbl_CuentaBancarias_TipoPagoCuenta">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TipoPago" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tbl_CuentasBancarias">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NombreBanco" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Abreviatura" Type="nvarchar" MaxLength="10" />
+          <Property Name="Cuenta" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="IdCuentaBancaria_TipoPagoCuenta" Type="int" Nullable="false" />
+          <Property Name="IdInventario" Type="int" />
+          <Property Name="FechaCreacion" Type="date" Nullable="false" />
+          <Property Name="IdctabancaIPD" Type="int" />
+          <Property Name="IdBancoIPD" Type="int" />
+          <Property Name="FechaBaja" Type="date" />
+          <Property Name="Activo" Type="bit" />
+          <Property Name="InicioBaja" Type="bit" />
+        </EntityType>
+        <EntityType Name="Tbl_HistoricoQuincenasRegistradas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="QuincenaRegistrada" Type="int" Nullable="false" />
+          <Property Name="Activo" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tbl_Inventario">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FormasDisponibles" Type="int" Nullable="false" />
+          <Property Name="UltimoFolioInventario" Type="nvarchar" MaxLength="50" />
+          <Property Name="UltimoFolioUtilizado" Type="nvarchar" MaxLength="50" />
+          <Property Name="EstimadoMeses" Type="decimal" Precision="4" Scale="2" />
+          <Property Name="Activo" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tbl_InventarioAsignacionPersonal">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdEmpleado" Type="int" Nullable="false" />
+          <Property Name="NombrePersonal" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="FechaHabilitacion" Type="date" Nullable="false" />
+          <Property Name="Activo" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tbl_InventarioContenedores">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdInventario" Type="int" Nullable="false" />
+          <Property Name="NumOrden" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="NumContenedor" Type="int" Nullable="false" />
+          <Property Name="FolioInicial" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="FolioFinal" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="FormasTotalesContenedor" Type="int" Nullable="false" />
+          <Property Name="FormasDisponiblesActuales" Type="int" Nullable="false" />
+          <Property Name="FormasInhabilitadas" Type="int" />
+          <Property Name="FormasAsignadas" Type="int" />
+          <Property Name="FormasFoliadas" Type="int" />
+          <Property Name="FechaAlta" Type="date" Nullable="false" />
+          <Property Name="Activo" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tbl_InventarioDetalle">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdContenedor" Type="int" Nullable="false" />
+          <Property Name="NumFolio" Type="int" Nullable="false" />
+          <Property Name="IdIncidencia" Type="int" />
+          <Property Name="FechaIncidencia" Type="date" />
+          <Property Name="IdEmpleado" Type="int" />
+          <Property Name="Activo" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tbl_InventarioTipoIncidencia">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Descrip_Incidencia" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Activo" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tbl_Pagos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Id_nom" Type="int" Nullable="false" />
+          <Property Name="Nomina" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="An" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Adicional" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Anio" Type="int" Nullable="false" />
+          <Property Name="Mes" Type="int" Nullable="false" />
+          <Property Name="Quincena" Type="int" Nullable="false" />
+          <Property Name="ReferenciaBitacora" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Partida" Type="nvarchar" MaxLength="15" />
+          <Property Name="Delegacion" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="RfcEmpleado" Type="nvarchar" MaxLength="15" />
+          <Property Name="NumEmpleado" Type="int" Nullable="false" />
+          <Property Name="NombreEmpleado" Type="nvarchar" MaxLength="150" />
+          <Property Name="EsPenA" Type="bit" />
+          <Property Name="BeneficiarioPenA" Type="nvarchar" MaxLength="150" />
+          <Property Name="NumBeneficiario" Type="nvarchar" MaxLength="5" />
+          <Property Name="ImporteLiquido" Type="numeric" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="FolioCheque" Type="int" Nullable="false" />
+          <Property Name="FolioCFDI" Type="int" />
+          <Property Name="Integridad_HashMD5" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="IdTbl_CuentaBancaria_BancoPagador" Type="int" Nullable="false" />
+          <Property Name="IdCat_FormaPago_Pagos" Type="int" Nullable="false" />
+          <Property Name="IdCat_EstadoPago_Pagos" Type="int" Nullable="false" />
+          <Property Name="IdTbl_InventarioDetalle" Type="int" />
+          <Property Name="IdTbl_Referencias_Cancelaciones" Type="int" />
+          <Property Name="TieneSeguimientoHistorico" Type="bit" />
+          <Property Name="Activo" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tbl_Referencias_Cancelaciones">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Anio" Type="int" Nullable="false" />
+          <Property Name="Numero_Referencia" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Fecha_Creacion" Type="date" Nullable="false" />
+          <Property Name="Creado_Por" Type="nvarchar" MaxLength="70" />
+          <Property Name="FormasPagoDentroReferencia" Type="int" Nullable="false" />
+          <Property Name="EsCancelado" Type="bit" Nullable="false" />
+          <Property Name="FolioDocumento" Type="nvarchar" MaxLength="100" />
+          <Property Name="ArchivoSustento" Type="varbinary(max)" />
+          <Property Name="Activo" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tbl_SeguimientoHistoricoFormas_Pagos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdTbl_Pagos" Type="int" Nullable="false" />
+          <Property Name="FechaCambio" Type="date" Nullable="false" />
+          <Property Name="ChequeAnterior" Type="int" Nullable="false" />
+          <Property Name="ChequeNuevo" Type="int" />
+          <Property Name="MotivoRefoliacion" Type="nvarchar" MaxLength="150" />
+          <Property Name="RefoliadoPor" Type="nvarchar" MaxLength="100" />
+          <Property Name="EsCancelado" Type="bit" Nullable="false" />
+          <Property Name="ReferenciaCancelado" Type="nvarchar" MaxLength="10" />
+          <Property Name="IdCat_EstadoCancelado" Type="int" />
+          <Property Name="Activo" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tbl_Solicitudes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NumeroMemo" Type="int" Nullable="false" />
+          <Property Name="IdCuentaBancaria" Type="int" Nullable="false" />
+          <Property Name="Cantidad" Type="int" Nullable="false" />
+          <Property Name="FolioInicial" Type="nvarchar" MaxLength="50" />
+          <Property Name="FechaSolicitud" Type="date" Nullable="false" />
+          <Property Name="Activo" Type="bit" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Tbl_CuentasBancarias_Tbl_Inventario">
+          <End Role="Tbl_Inventario" Type="Self.Tbl_Inventario" Multiplicity="0..1" />
+          <End Role="Tbl_CuentasBancarias" Type="Self.Tbl_CuentasBancarias" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tbl_Inventario">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tbl_CuentasBancarias">
+              <PropertyRef Name="IdInventario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tbl_CuentasBancarias_Tbl_TipoPagoCuenta">
+          <End Role="Tbl_CuentaBancarias_TipoPagoCuenta" Type="Self.Tbl_CuentaBancarias_TipoPagoCuenta" Multiplicity="1" />
+          <End Role="Tbl_CuentasBancarias" Type="Self.Tbl_CuentasBancarias" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tbl_CuentaBancarias_TipoPagoCuenta">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tbl_CuentasBancarias">
+              <PropertyRef Name="IdCuentaBancaria_TipoPagoCuenta" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tbl_InventarioContenedores_Tbl_Inventario">
+          <End Role="Tbl_Inventario" Type="Self.Tbl_Inventario" Multiplicity="1" />
+          <End Role="Tbl_InventarioContenedores" Type="Self.Tbl_InventarioContenedores" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tbl_Inventario">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tbl_InventarioContenedores">
+              <PropertyRef Name="IdInventario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tbl_InventarioDetalle_Tbl_InventarioAsignacionPersonal">
+          <End Role="Tbl_InventarioAsignacionPersonal" Type="Self.Tbl_InventarioAsignacionPersonal" Multiplicity="0..1" />
+          <End Role="Tbl_InventarioDetalle" Type="Self.Tbl_InventarioDetalle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tbl_InventarioAsignacionPersonal">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tbl_InventarioDetalle">
+              <PropertyRef Name="IdEmpleado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tbl_InventarioDetalle_Tbl_InventarioContenedores">
+          <End Role="Tbl_InventarioContenedores" Type="Self.Tbl_InventarioContenedores" Multiplicity="1" />
+          <End Role="Tbl_InventarioDetalle" Type="Self.Tbl_InventarioDetalle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tbl_InventarioContenedores">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tbl_InventarioDetalle">
+              <PropertyRef Name="IdContenedor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tbl_InventarioDetalle_Tbl_InventarioTipoIncidencia">
+          <End Role="Tbl_InventarioTipoIncidencia" Type="Self.Tbl_InventarioTipoIncidencia" Multiplicity="0..1" />
+          <End Role="Tbl_InventarioDetalle" Type="Self.Tbl_InventarioDetalle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tbl_InventarioTipoIncidencia">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tbl_InventarioDetalle">
+              <PropertyRef Name="IdIncidencia" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tbl_Pagos_Cat_EstadosPago_Pagos">
+          <End Role="Cat_EstadosPago_Pagos" Type="Self.Cat_EstadosPago_Pagos" Multiplicity="1" />
+          <End Role="Tbl_Pagos" Type="Self.Tbl_Pagos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cat_EstadosPago_Pagos">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tbl_Pagos">
+              <PropertyRef Name="IdCat_EstadoPago_Pagos" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tbl_Pagos_Cat_FormasPago_Pagos">
+          <End Role="Cat_FormasPago_Pagos" Type="Self.Cat_FormasPago_Pagos" Multiplicity="1" />
+          <End Role="Tbl_Pagos" Type="Self.Tbl_Pagos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cat_FormasPago_Pagos">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tbl_Pagos">
+              <PropertyRef Name="IdCat_FormaPago_Pagos" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tbl_Pagos_Tbl_CuentasBancarias">
+          <End Role="Tbl_CuentasBancarias" Type="Self.Tbl_CuentasBancarias" Multiplicity="1" />
+          <End Role="Tbl_Pagos" Type="Self.Tbl_Pagos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tbl_CuentasBancarias">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tbl_Pagos">
+              <PropertyRef Name="IdTbl_CuentaBancaria_BancoPagador" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tbl_Pagos_Tbl_InventarioDetalle">
+          <End Role="Tbl_InventarioDetalle" Type="Self.Tbl_InventarioDetalle" Multiplicity="0..1" />
+          <End Role="Tbl_Pagos" Type="Self.Tbl_Pagos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tbl_InventarioDetalle">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tbl_Pagos">
+              <PropertyRef Name="IdTbl_InventarioDetalle" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tbl_Pagos_Tbl_Referencias_Cancelaciones">
+          <End Role="Tbl_Referencias_Cancelaciones" Type="Self.Tbl_Referencias_Cancelaciones" Multiplicity="0..1" />
+          <End Role="Tbl_Pagos" Type="Self.Tbl_Pagos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tbl_Referencias_Cancelaciones">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tbl_Pagos">
+              <PropertyRef Name="IdTbl_Referencias_Cancelaciones" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tbl_SeguimientoFormas_Pagos_Cat_EstadoCancelados_Pagos">
+          <End Role="Cat_EstadoCancelados_Pagos" Type="Self.Cat_EstadoCancelados_Pagos" Multiplicity="0..1" />
+          <End Role="Tbl_SeguimientoHistoricoFormas_Pagos" Type="Self.Tbl_SeguimientoHistoricoFormas_Pagos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cat_EstadoCancelados_Pagos">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tbl_SeguimientoHistoricoFormas_Pagos">
+              <PropertyRef Name="IdCat_EstadoCancelado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tbl_Solicitudes_Tbl_CuentasBancarias">
+          <End Role="Tbl_CuentasBancarias" Type="Self.Tbl_CuentasBancarias" Multiplicity="1" />
+          <End Role="Tbl_Solicitudes" Type="Self.Tbl_Solicitudes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tbl_CuentasBancarias">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tbl_Solicitudes">
+              <PropertyRef Name="IdCuentaBancaria" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="FoliacionInterfacesCargadasPruebaDBModelStoreContainer">
+          <EntitySet Name="Cat_EstadoCancelados_Pagos" EntityType="Self.Cat_EstadoCancelados_Pagos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Cat_EstadosPago_Pagos" EntityType="Self.Cat_EstadosPago_Pagos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="cat_FiltroConsultaDatosPersonalesNomina" EntityType="Self.cat_FiltroConsultaDatosPersonalesNomina" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="cat_FiltroGrupoImpresionDelegaciones" EntityType="Self.cat_FiltroGrupoImpresionDelegaciones" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Cat_FormasPago_Pagos" EntityType="Self.Cat_FormasPago_Pagos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="cat_ReportesCCancelados" EntityType="Self.cat_ReportesCCancelados" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ExepcionesCargaInterfaces" EntityType="Self.ExepcionesCargaInterfaces" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LOG_EXCEPCIONES" EntityType="Self.LOG_EXCEPCIONES" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tbl_CuentaBancarias_TipoPagoCuenta" EntityType="Self.Tbl_CuentaBancarias_TipoPagoCuenta" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tbl_CuentasBancarias" EntityType="Self.Tbl_CuentasBancarias" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tbl_HistoricoQuincenasRegistradas" EntityType="Self.Tbl_HistoricoQuincenasRegistradas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tbl_Inventario" EntityType="Self.Tbl_Inventario" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tbl_InventarioAsignacionPersonal" EntityType="Self.Tbl_InventarioAsignacionPersonal" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tbl_InventarioContenedores" EntityType="Self.Tbl_InventarioContenedores" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tbl_InventarioDetalle" EntityType="Self.Tbl_InventarioDetalle" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tbl_InventarioTipoIncidencia" EntityType="Self.Tbl_InventarioTipoIncidencia" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tbl_Pagos" EntityType="Self.Tbl_Pagos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tbl_Referencias_Cancelaciones" EntityType="Self.Tbl_Referencias_Cancelaciones" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tbl_SeguimientoHistoricoFormas_Pagos" EntityType="Self.Tbl_SeguimientoHistoricoFormas_Pagos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tbl_Solicitudes" EntityType="Self.Tbl_Solicitudes" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Tbl_CuentasBancarias_Tbl_Inventario" Association="Self.FK_Tbl_CuentasBancarias_Tbl_Inventario">
+            <End Role="Tbl_Inventario" EntitySet="Tbl_Inventario" />
+            <End Role="Tbl_CuentasBancarias" EntitySet="Tbl_CuentasBancarias" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tbl_CuentasBancarias_Tbl_TipoPagoCuenta" Association="Self.FK_Tbl_CuentasBancarias_Tbl_TipoPagoCuenta">
+            <End Role="Tbl_CuentaBancarias_TipoPagoCuenta" EntitySet="Tbl_CuentaBancarias_TipoPagoCuenta" />
+            <End Role="Tbl_CuentasBancarias" EntitySet="Tbl_CuentasBancarias" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tbl_InventarioContenedores_Tbl_Inventario" Association="Self.FK_Tbl_InventarioContenedores_Tbl_Inventario">
+            <End Role="Tbl_Inventario" EntitySet="Tbl_Inventario" />
+            <End Role="Tbl_InventarioContenedores" EntitySet="Tbl_InventarioContenedores" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tbl_InventarioDetalle_Tbl_InventarioAsignacionPersonal" Association="Self.FK_Tbl_InventarioDetalle_Tbl_InventarioAsignacionPersonal">
+            <End Role="Tbl_InventarioAsignacionPersonal" EntitySet="Tbl_InventarioAsignacionPersonal" />
+            <End Role="Tbl_InventarioDetalle" EntitySet="Tbl_InventarioDetalle" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tbl_InventarioDetalle_Tbl_InventarioContenedores" Association="Self.FK_Tbl_InventarioDetalle_Tbl_InventarioContenedores">
+            <End Role="Tbl_InventarioContenedores" EntitySet="Tbl_InventarioContenedores" />
+            <End Role="Tbl_InventarioDetalle" EntitySet="Tbl_InventarioDetalle" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tbl_InventarioDetalle_Tbl_InventarioTipoIncidencia" Association="Self.FK_Tbl_InventarioDetalle_Tbl_InventarioTipoIncidencia">
+            <End Role="Tbl_InventarioTipoIncidencia" EntitySet="Tbl_InventarioTipoIncidencia" />
+            <End Role="Tbl_InventarioDetalle" EntitySet="Tbl_InventarioDetalle" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tbl_Pagos_Cat_EstadosPago_Pagos" Association="Self.FK_Tbl_Pagos_Cat_EstadosPago_Pagos">
+            <End Role="Cat_EstadosPago_Pagos" EntitySet="Cat_EstadosPago_Pagos" />
+            <End Role="Tbl_Pagos" EntitySet="Tbl_Pagos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tbl_Pagos_Cat_FormasPago_Pagos" Association="Self.FK_Tbl_Pagos_Cat_FormasPago_Pagos">
+            <End Role="Cat_FormasPago_Pagos" EntitySet="Cat_FormasPago_Pagos" />
+            <End Role="Tbl_Pagos" EntitySet="Tbl_Pagos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tbl_Pagos_Tbl_CuentasBancarias" Association="Self.FK_Tbl_Pagos_Tbl_CuentasBancarias">
+            <End Role="Tbl_CuentasBancarias" EntitySet="Tbl_CuentasBancarias" />
+            <End Role="Tbl_Pagos" EntitySet="Tbl_Pagos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tbl_Pagos_Tbl_InventarioDetalle" Association="Self.FK_Tbl_Pagos_Tbl_InventarioDetalle">
+            <End Role="Tbl_InventarioDetalle" EntitySet="Tbl_InventarioDetalle" />
+            <End Role="Tbl_Pagos" EntitySet="Tbl_Pagos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tbl_Pagos_Tbl_Referencias_Cancelaciones" Association="Self.FK_Tbl_Pagos_Tbl_Referencias_Cancelaciones">
+            <End Role="Tbl_Referencias_Cancelaciones" EntitySet="Tbl_Referencias_Cancelaciones" />
+            <End Role="Tbl_Pagos" EntitySet="Tbl_Pagos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tbl_SeguimientoFormas_Pagos_Cat_EstadoCancelados_Pagos" Association="Self.FK_Tbl_SeguimientoFormas_Pagos_Cat_EstadoCancelados_Pagos">
+            <End Role="Cat_EstadoCancelados_Pagos" EntitySet="Cat_EstadoCancelados_Pagos" />
+            <End Role="Tbl_SeguimientoHistoricoFormas_Pagos" EntitySet="Tbl_SeguimientoHistoricoFormas_Pagos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tbl_Solicitudes_Tbl_CuentasBancarias" Association="Self.FK_Tbl_Solicitudes_Tbl_CuentasBancarias">
+            <End Role="Tbl_CuentasBancarias" EntitySet="Tbl_CuentasBancarias" />
+            <End Role="Tbl_Solicitudes" EntitySet="Tbl_Solicitudes" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="FoliacionInterfacesCargadasPruebaDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="FoliacionInterfacesCargadasPruebaDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Cat_EstadoCancelados_Pagos" EntityType="FoliacionInterfacesCargadasPruebaDBModel.Cat_EstadoCancelados_Pagos" />
+          <EntitySet Name="Cat_EstadosPago_Pagos" EntityType="FoliacionInterfacesCargadasPruebaDBModel.Cat_EstadosPago_Pagos" />
+          <EntitySet Name="cat_FiltroConsultaDatosPersonalesNomina" EntityType="FoliacionInterfacesCargadasPruebaDBModel.cat_FiltroConsultaDatosPersonalesNomina" />
+          <EntitySet Name="cat_FiltroGrupoImpresionDelegaciones" EntityType="FoliacionInterfacesCargadasPruebaDBModel.cat_FiltroGrupoImpresionDelegaciones" />
+          <EntitySet Name="Cat_FormasPago_Pagos" EntityType="FoliacionInterfacesCargadasPruebaDBModel.Cat_FormasPago_Pagos" />
+          <EntitySet Name="ExepcionesCargaInterfaces" EntityType="FoliacionInterfacesCargadasPruebaDBModel.ExepcionesCargaInterface" />
+          <EntitySet Name="LOG_EXCEPCIONES" EntityType="FoliacionInterfacesCargadasPruebaDBModel.LOG_EXCEPCIONES" />
+          <EntitySet Name="sysdiagrams" EntityType="FoliacionInterfacesCargadasPruebaDBModel.sysdiagram" />
+          <EntitySet Name="Tbl_CuentaBancarias_TipoPagoCuenta" EntityType="FoliacionInterfacesCargadasPruebaDBModel.Tbl_CuentaBancarias_TipoPagoCuenta" />
+          <EntitySet Name="Tbl_CuentasBancarias" EntityType="FoliacionInterfacesCargadasPruebaDBModel.Tbl_CuentasBancarias" />
+          <EntitySet Name="Tbl_HistoricoQuincenasRegistradas" EntityType="FoliacionInterfacesCargadasPruebaDBModel.Tbl_HistoricoQuincenasRegistradas" />
+          <EntitySet Name="Tbl_Inventario" EntityType="FoliacionInterfacesCargadasPruebaDBModel.Tbl_Inventario" />
+          <EntitySet Name="Tbl_InventarioAsignacionPersonal" EntityType="FoliacionInterfacesCargadasPruebaDBModel.Tbl_InventarioAsignacionPersonal" />
+          <EntitySet Name="Tbl_InventarioContenedores" EntityType="FoliacionInterfacesCargadasPruebaDBModel.Tbl_InventarioContenedores" />
+          <EntitySet Name="Tbl_InventarioDetalle" EntityType="FoliacionInterfacesCargadasPruebaDBModel.Tbl_InventarioDetalle" />
+          <EntitySet Name="Tbl_InventarioTipoIncidencia" EntityType="FoliacionInterfacesCargadasPruebaDBModel.Tbl_InventarioTipoIncidencia" />
+          <EntitySet Name="Tbl_Pagos" EntityType="FoliacionInterfacesCargadasPruebaDBModel.Tbl_Pagos" />
+          <EntitySet Name="Tbl_Referencias_Cancelaciones" EntityType="FoliacionInterfacesCargadasPruebaDBModel.Tbl_Referencias_Cancelaciones" />
+          <EntitySet Name="Tbl_SeguimientoHistoricoFormas_Pagos" EntityType="FoliacionInterfacesCargadasPruebaDBModel.Tbl_SeguimientoHistoricoFormas_Pagos" />
+          <EntitySet Name="Tbl_Solicitudes" EntityType="FoliacionInterfacesCargadasPruebaDBModel.Tbl_Solicitudes" />
+          <AssociationSet Name="FK_Tbl_SeguimientoFormas_Pagos_Cat_EstadoCancelados_Pagos" Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_SeguimientoFormas_Pagos_Cat_EstadoCancelados_Pagos">
+            <End Role="Cat_EstadoCancelados_Pagos" EntitySet="Cat_EstadoCancelados_Pagos" />
+            <End Role="Tbl_SeguimientoHistoricoFormas_Pagos" EntitySet="Tbl_SeguimientoHistoricoFormas_Pagos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tbl_Pagos_Cat_EstadosPago_Pagos" Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Pagos_Cat_EstadosPago_Pagos">
+            <End Role="Cat_EstadosPago_Pagos" EntitySet="Cat_EstadosPago_Pagos" />
+            <End Role="Tbl_Pagos" EntitySet="Tbl_Pagos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tbl_Pagos_Cat_FormasPago_Pagos" Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Pagos_Cat_FormasPago_Pagos">
+            <End Role="Cat_FormasPago_Pagos" EntitySet="Cat_FormasPago_Pagos" />
+            <End Role="Tbl_Pagos" EntitySet="Tbl_Pagos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tbl_CuentasBancarias_Tbl_TipoPagoCuenta" Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_CuentasBancarias_Tbl_TipoPagoCuenta">
+            <End Role="Tbl_CuentaBancarias_TipoPagoCuenta" EntitySet="Tbl_CuentaBancarias_TipoPagoCuenta" />
+            <End Role="Tbl_CuentasBancarias" EntitySet="Tbl_CuentasBancarias" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tbl_CuentasBancarias_Tbl_Inventario" Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_CuentasBancarias_Tbl_Inventario">
+            <End Role="Tbl_Inventario" EntitySet="Tbl_Inventario" />
+            <End Role="Tbl_CuentasBancarias" EntitySet="Tbl_CuentasBancarias" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tbl_Pagos_Tbl_CuentasBancarias" Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Pagos_Tbl_CuentasBancarias">
+            <End Role="Tbl_CuentasBancarias" EntitySet="Tbl_CuentasBancarias" />
+            <End Role="Tbl_Pagos" EntitySet="Tbl_Pagos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tbl_Solicitudes_Tbl_CuentasBancarias" Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Solicitudes_Tbl_CuentasBancarias">
+            <End Role="Tbl_CuentasBancarias" EntitySet="Tbl_CuentasBancarias" />
+            <End Role="Tbl_Solicitudes" EntitySet="Tbl_Solicitudes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tbl_InventarioContenedores_Tbl_Inventario" Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_InventarioContenedores_Tbl_Inventario">
+            <End Role="Tbl_Inventario" EntitySet="Tbl_Inventario" />
+            <End Role="Tbl_InventarioContenedores" EntitySet="Tbl_InventarioContenedores" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tbl_InventarioDetalle_Tbl_InventarioAsignacionPersonal" Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_InventarioDetalle_Tbl_InventarioAsignacionPersonal">
+            <End Role="Tbl_InventarioAsignacionPersonal" EntitySet="Tbl_InventarioAsignacionPersonal" />
+            <End Role="Tbl_InventarioDetalle" EntitySet="Tbl_InventarioDetalle" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tbl_InventarioDetalle_Tbl_InventarioContenedores" Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_InventarioDetalle_Tbl_InventarioContenedores">
+            <End Role="Tbl_InventarioContenedores" EntitySet="Tbl_InventarioContenedores" />
+            <End Role="Tbl_InventarioDetalle" EntitySet="Tbl_InventarioDetalle" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tbl_InventarioDetalle_Tbl_InventarioTipoIncidencia" Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_InventarioDetalle_Tbl_InventarioTipoIncidencia">
+            <End Role="Tbl_InventarioTipoIncidencia" EntitySet="Tbl_InventarioTipoIncidencia" />
+            <End Role="Tbl_InventarioDetalle" EntitySet="Tbl_InventarioDetalle" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tbl_Pagos_Tbl_InventarioDetalle" Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Pagos_Tbl_InventarioDetalle">
+            <End Role="Tbl_InventarioDetalle" EntitySet="Tbl_InventarioDetalle" />
+            <End Role="Tbl_Pagos" EntitySet="Tbl_Pagos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tbl_Pagos_Tbl_Referencias_Cancelaciones" Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Pagos_Tbl_Referencias_Cancelaciones">
+            <End Role="Tbl_Referencias_Cancelaciones" EntitySet="Tbl_Referencias_Cancelaciones" />
+            <End Role="Tbl_Pagos" EntitySet="Tbl_Pagos" />
+          </AssociationSet>
+          <EntitySet Name="cat_ReportesCCancelados" EntityType="FoliacionInterfacesCargadasPruebaDBModel.cat_ReportesCCancelados" />
+        </EntityContainer>
+        <EntityType Name="Cat_EstadoCancelados_Pagos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Estado" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Descrip" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Activo" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Tbl_SeguimientoHistoricoFormas_Pagos" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_SeguimientoFormas_Pagos_Cat_EstadoCancelados_Pagos" FromRole="Cat_EstadoCancelados_Pagos" ToRole="Tbl_SeguimientoHistoricoFormas_Pagos" />
+        </EntityType>
+        <EntityType Name="Cat_EstadosPago_Pagos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Descrip" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Activo" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Tbl_Pagos" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Pagos_Cat_EstadosPago_Pagos" FromRole="Cat_EstadosPago_Pagos" ToRole="Tbl_Pagos" />
+        </EntityType>
+        <EntityType Name="cat_FiltroConsultaDatosPersonalesNomina">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EsPena" Type="Boolean" Nullable="false" />
+          <Property Name="EsPagomatico" Type="Boolean" />
+          <Property Name="Cheque" Type="Boolean" />
+          <Property Name="Delegacion" Type="Int32" />
+          <Property Name="Consulta" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="cat_FiltroGrupoImpresionDelegaciones">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GrupoImpresionDelegacion" Type="Int32" Nullable="false" />
+          <Property Name="NombreComun" Type="String" Nullable="false" MaxLength="75" FixedLength="false" Unicode="true" />
+          <Property Name="DelegacionesIncluidas" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Cat_FormasPago_Pagos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Descrip" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Activo" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Tbl_Pagos" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Pagos_Cat_FormasPago_Pagos" FromRole="Cat_FormasPago_Pagos" ToRole="Tbl_Pagos" />
+        </EntityType>
+        <EntityType Name="ExepcionesCargaInterface">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TipoExcepcion" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Id_nom" Type="Int32" Nullable="false" />
+          <Property Name="Adicional" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Coment" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Problema" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="diferenciasDeRegistros" Type="Int32" />
+          <Property Name="DiferenciaNoFoliados" Type="Int32" Nullable="false" />
+          <Property Name="RegTotales" Type="Int32" Nullable="false" />
+          <Property Name="RegFoliados" Type="Int32" Nullable="false" />
+          <Property Name="Quincena" Type="Int32" Nullable="false" />
+          <Property Name="AnioInterfas" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="LOG_EXCEPCIONES">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Clase" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Metodo" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Usuario" Type="Int32" />
+          <Property Name="Excepcion" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Comentario" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Fecha" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="Tbl_CuentaBancarias_TipoPagoCuenta">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TipoPago" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Tbl_CuentasBancarias" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_CuentasBancarias_Tbl_TipoPagoCuenta" FromRole="Tbl_CuentaBancarias_TipoPagoCuenta" ToRole="Tbl_CuentasBancarias" />
+        </EntityType>
+        <EntityType Name="Tbl_CuentasBancarias">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NombreBanco" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Abreviatura" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Cuenta" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="IdCuentaBancaria_TipoPagoCuenta" Type="Int32" Nullable="false" />
+          <Property Name="IdInventario" Type="Int32" />
+          <Property Name="FechaCreacion" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="FechaBaja" Type="DateTime" Precision="0" />
+          <Property Name="Activo" Type="Boolean" />
+          <Property Name="InicioBaja" Type="Boolean" />
+          <NavigationProperty Name="Tbl_CuentaBancarias_TipoPagoCuenta" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_CuentasBancarias_Tbl_TipoPagoCuenta" FromRole="Tbl_CuentasBancarias" ToRole="Tbl_CuentaBancarias_TipoPagoCuenta" />
+          <NavigationProperty Name="Tbl_Inventario" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_CuentasBancarias_Tbl_Inventario" FromRole="Tbl_CuentasBancarias" ToRole="Tbl_Inventario" />
+          <NavigationProperty Name="Tbl_Pagos" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Pagos_Tbl_CuentasBancarias" FromRole="Tbl_CuentasBancarias" ToRole="Tbl_Pagos" />
+          <NavigationProperty Name="Tbl_Solicitudes" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Solicitudes_Tbl_CuentasBancarias" FromRole="Tbl_CuentasBancarias" ToRole="Tbl_Solicitudes" />
+          <Property Name="IdctabancaIPD" Type="Int32" />
+          <Property Name="IdBancoIPD" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Tbl_HistoricoQuincenasRegistradas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="QuincenaRegistrada" Type="Int32" Nullable="false" />
+          <Property Name="Activo" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tbl_Inventario">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FormasDisponibles" Type="Int32" Nullable="false" />
+          <Property Name="UltimoFolioInventario" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UltimoFolioUtilizado" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="EstimadoMeses" Type="Decimal" Precision="4" Scale="2" />
+          <Property Name="Activo" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Tbl_CuentasBancarias" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_CuentasBancarias_Tbl_Inventario" FromRole="Tbl_Inventario" ToRole="Tbl_CuentasBancarias" />
+          <NavigationProperty Name="Tbl_InventarioContenedores" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_InventarioContenedores_Tbl_Inventario" FromRole="Tbl_Inventario" ToRole="Tbl_InventarioContenedores" />
+        </EntityType>
+        <EntityType Name="Tbl_InventarioAsignacionPersonal">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdEmpleado" Type="Int32" Nullable="false" />
+          <Property Name="NombrePersonal" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="FechaHabilitacion" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Activo" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Tbl_InventarioDetalle" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_InventarioDetalle_Tbl_InventarioAsignacionPersonal" FromRole="Tbl_InventarioAsignacionPersonal" ToRole="Tbl_InventarioDetalle" />
+        </EntityType>
+        <EntityType Name="Tbl_InventarioContenedores">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdInventario" Type="Int32" Nullable="false" />
+          <Property Name="NumOrden" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="NumContenedor" Type="Int32" Nullable="false" />
+          <Property Name="FolioInicial" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FolioFinal" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FormasTotalesContenedor" Type="Int32" Nullable="false" />
+          <Property Name="FormasDisponiblesActuales" Type="Int32" Nullable="false" />
+          <Property Name="FormasInhabilitadas" Type="Int32" />
+          <Property Name="FormasAsignadas" Type="Int32" />
+          <Property Name="FormasFoliadas" Type="Int32" />
+          <Property Name="FechaAlta" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Activo" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Tbl_Inventario" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_InventarioContenedores_Tbl_Inventario" FromRole="Tbl_InventarioContenedores" ToRole="Tbl_Inventario" />
+          <NavigationProperty Name="Tbl_InventarioDetalle" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_InventarioDetalle_Tbl_InventarioContenedores" FromRole="Tbl_InventarioContenedores" ToRole="Tbl_InventarioDetalle" />
+        </EntityType>
+        <EntityType Name="Tbl_InventarioDetalle">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdContenedor" Type="Int32" Nullable="false" />
+          <Property Name="NumFolio" Type="Int32" Nullable="false" />
+          <Property Name="IdIncidencia" Type="Int32" />
+          <Property Name="FechaIncidencia" Type="DateTime" Precision="0" />
+          <Property Name="IdEmpleado" Type="Int32" />
+          <Property Name="Activo" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Tbl_InventarioAsignacionPersonal" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_InventarioDetalle_Tbl_InventarioAsignacionPersonal" FromRole="Tbl_InventarioDetalle" ToRole="Tbl_InventarioAsignacionPersonal" />
+          <NavigationProperty Name="Tbl_InventarioContenedores" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_InventarioDetalle_Tbl_InventarioContenedores" FromRole="Tbl_InventarioDetalle" ToRole="Tbl_InventarioContenedores" />
+          <NavigationProperty Name="Tbl_InventarioTipoIncidencia" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_InventarioDetalle_Tbl_InventarioTipoIncidencia" FromRole="Tbl_InventarioDetalle" ToRole="Tbl_InventarioTipoIncidencia" />
+          <NavigationProperty Name="Tbl_Pagos" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Pagos_Tbl_InventarioDetalle" FromRole="Tbl_InventarioDetalle" ToRole="Tbl_Pagos" />
+        </EntityType>
+        <EntityType Name="Tbl_InventarioTipoIncidencia">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Descrip_Incidencia" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Activo" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Tbl_InventarioDetalle" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_InventarioDetalle_Tbl_InventarioTipoIncidencia" FromRole="Tbl_InventarioTipoIncidencia" ToRole="Tbl_InventarioDetalle" />
+        </EntityType>
+        <EntityType Name="Tbl_Pagos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Id_nom" Type="Int32" Nullable="false" />
+          <Property Name="Nomina" Type="String" Nullable="false" MaxLength="2" FixedLength="true" Unicode="false" />
+          <Property Name="An" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Adicional" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Anio" Type="Int32" Nullable="false" />
+          <Property Name="Mes" Type="Int32" Nullable="false" />
+          <Property Name="Quincena" Type="Int32" Nullable="false" />
+          <Property Name="ReferenciaBitacora" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Partida" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Delegacion" Type="String" Nullable="false" MaxLength="2" FixedLength="true" Unicode="false" />
+          <Property Name="RfcEmpleado" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="NumEmpleado" Type="Int32" Nullable="false" />
+          <Property Name="NombreEmpleado" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="EsPenA" Type="Boolean" />
+          <Property Name="BeneficiarioPenA" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="NumBeneficiario" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="ImporteLiquido" Type="Decimal" Nullable="false" Precision="10" Scale="2" />
+          <Property Name="FolioCheque" Type="Int32" Nullable="false" />
+          <Property Name="FolioCFDI" Type="Int32" />
+          <Property Name="Integridad_HashMD5" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="IdTbl_CuentaBancaria_BancoPagador" Type="Int32" Nullable="false" />
+          <Property Name="IdCat_FormaPago_Pagos" Type="Int32" Nullable="false" />
+          <Property Name="IdCat_EstadoPago_Pagos" Type="Int32" Nullable="false" />
+          <Property Name="IdTbl_InventarioDetalle" Type="Int32" />
+          <Property Name="IdTbl_Referencias_Cancelaciones" Type="Int32" />
+          <Property Name="TieneSeguimientoHistorico" Type="Boolean" />
+          <Property Name="Activo" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Cat_EstadosPago_Pagos" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Pagos_Cat_EstadosPago_Pagos" FromRole="Tbl_Pagos" ToRole="Cat_EstadosPago_Pagos" />
+          <NavigationProperty Name="Cat_FormasPago_Pagos" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Pagos_Cat_FormasPago_Pagos" FromRole="Tbl_Pagos" ToRole="Cat_FormasPago_Pagos" />
+          <NavigationProperty Name="Tbl_CuentasBancarias" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Pagos_Tbl_CuentasBancarias" FromRole="Tbl_Pagos" ToRole="Tbl_CuentasBancarias" />
+          <NavigationProperty Name="Tbl_InventarioDetalle" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Pagos_Tbl_InventarioDetalle" FromRole="Tbl_Pagos" ToRole="Tbl_InventarioDetalle" />
+          <NavigationProperty Name="Tbl_Referencias_Cancelaciones" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Pagos_Tbl_Referencias_Cancelaciones" FromRole="Tbl_Pagos" ToRole="Tbl_Referencias_Cancelaciones" />
+        </EntityType>
+        <EntityType Name="Tbl_Referencias_Cancelaciones">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Anio" Type="Int32" Nullable="false" />
+          <Property Name="Numero_Referencia" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Fecha_Creacion" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Creado_Por" Type="String" MaxLength="70" FixedLength="false" Unicode="true" Nullable="true" />
+          <Property Name="FormasPagoDentroReferencia" Type="Int32" Nullable="false" />
+          <Property Name="EsCancelado" Type="Boolean" Nullable="false" />
+          <Property Name="FolioDocumento" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="true" />
+          <Property Name="ArchivoSustento" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="true" />
+          <Property Name="Activo" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Tbl_Pagos" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Pagos_Tbl_Referencias_Cancelaciones" FromRole="Tbl_Referencias_Cancelaciones" ToRole="Tbl_Pagos" />
+        </EntityType>
+        <EntityType Name="Tbl_SeguimientoHistoricoFormas_Pagos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdTbl_Pagos" Type="Int32" Nullable="false" />
+          <Property Name="FechaCambio" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="ChequeAnterior" Type="Int32" Nullable="false" />
+          <Property Name="ChequeNuevo" Type="Int32" />
+          <Property Name="MotivoRefoliacion" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="RefoliadoPor" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="EsCancelado" Type="Boolean" Nullable="false" />
+          <Property Name="ReferenciaCancelado" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="IdCat_EstadoCancelado" Type="Int32" />
+          <Property Name="Activo" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Cat_EstadoCancelados_Pagos" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_SeguimientoFormas_Pagos_Cat_EstadoCancelados_Pagos" FromRole="Tbl_SeguimientoHistoricoFormas_Pagos" ToRole="Cat_EstadoCancelados_Pagos" />
+        </EntityType>
+        <EntityType Name="Tbl_Solicitudes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NumeroMemo" Type="Int32" Nullable="false" />
+          <Property Name="IdCuentaBancaria" Type="Int32" Nullable="false" />
+          <Property Name="Cantidad" Type="Int32" Nullable="false" />
+          <Property Name="FolioInicial" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FechaSolicitud" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Activo" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Tbl_CuentasBancarias" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Solicitudes_Tbl_CuentasBancarias" FromRole="Tbl_Solicitudes" ToRole="Tbl_CuentasBancarias" />
+        </EntityType>
+        <Association Name="FK_Tbl_SeguimientoFormas_Pagos_Cat_EstadoCancelados_Pagos">
+          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Cat_EstadoCancelados_Pagos" Role="Cat_EstadoCancelados_Pagos" Multiplicity="0..1" />
+          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Tbl_SeguimientoHistoricoFormas_Pagos" Role="Tbl_SeguimientoHistoricoFormas_Pagos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cat_EstadoCancelados_Pagos">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tbl_SeguimientoHistoricoFormas_Pagos">
+              <PropertyRef Name="IdCat_EstadoCancelado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tbl_Pagos_Cat_EstadosPago_Pagos">
+          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Cat_EstadosPago_Pagos" Role="Cat_EstadosPago_Pagos" Multiplicity="1" />
+          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Tbl_Pagos" Role="Tbl_Pagos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cat_EstadosPago_Pagos">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tbl_Pagos">
+              <PropertyRef Name="IdCat_EstadoPago_Pagos" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tbl_Pagos_Cat_FormasPago_Pagos">
+          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Cat_FormasPago_Pagos" Role="Cat_FormasPago_Pagos" Multiplicity="1" />
+          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Tbl_Pagos" Role="Tbl_Pagos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cat_FormasPago_Pagos">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tbl_Pagos">
+              <PropertyRef Name="IdCat_FormaPago_Pagos" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tbl_CuentasBancarias_Tbl_TipoPagoCuenta">
+          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Tbl_CuentaBancarias_TipoPagoCuenta" Role="Tbl_CuentaBancarias_TipoPagoCuenta" Multiplicity="1" />
+          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Tbl_CuentasBancarias" Role="Tbl_CuentasBancarias" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tbl_CuentaBancarias_TipoPagoCuenta">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tbl_CuentasBancarias">
+              <PropertyRef Name="IdCuentaBancaria_TipoPagoCuenta" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tbl_CuentasBancarias_Tbl_Inventario">
+          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Tbl_Inventario" Role="Tbl_Inventario" Multiplicity="0..1" />
+          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Tbl_CuentasBancarias" Role="Tbl_CuentasBancarias" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tbl_Inventario">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tbl_CuentasBancarias">
+              <PropertyRef Name="IdInventario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tbl_Pagos_Tbl_CuentasBancarias">
+          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Tbl_CuentasBancarias" Role="Tbl_CuentasBancarias" Multiplicity="1" />
+          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Tbl_Pagos" Role="Tbl_Pagos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tbl_CuentasBancarias">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tbl_Pagos">
+              <PropertyRef Name="IdTbl_CuentaBancaria_BancoPagador" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tbl_Solicitudes_Tbl_CuentasBancarias">
+          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Tbl_CuentasBancarias" Role="Tbl_CuentasBancarias" Multiplicity="1" />
+          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Tbl_Solicitudes" Role="Tbl_Solicitudes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tbl_CuentasBancarias">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tbl_Solicitudes">
+              <PropertyRef Name="IdCuentaBancaria" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tbl_InventarioContenedores_Tbl_Inventario">
+          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Tbl_Inventario" Role="Tbl_Inventario" Multiplicity="1" />
+          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Tbl_InventarioContenedores" Role="Tbl_InventarioContenedores" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tbl_Inventario">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tbl_InventarioContenedores">
+              <PropertyRef Name="IdInventario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tbl_InventarioDetalle_Tbl_InventarioAsignacionPersonal">
+          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Tbl_InventarioAsignacionPersonal" Role="Tbl_InventarioAsignacionPersonal" Multiplicity="0..1" />
+          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Tbl_InventarioDetalle" Role="Tbl_InventarioDetalle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tbl_InventarioAsignacionPersonal">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tbl_InventarioDetalle">
+              <PropertyRef Name="IdEmpleado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tbl_InventarioDetalle_Tbl_InventarioContenedores">
+          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Tbl_InventarioContenedores" Role="Tbl_InventarioContenedores" Multiplicity="1" />
+          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Tbl_InventarioDetalle" Role="Tbl_InventarioDetalle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tbl_InventarioContenedores">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tbl_InventarioDetalle">
+              <PropertyRef Name="IdContenedor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tbl_InventarioDetalle_Tbl_InventarioTipoIncidencia">
+          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Tbl_InventarioTipoIncidencia" Role="Tbl_InventarioTipoIncidencia" Multiplicity="0..1" />
+          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Tbl_InventarioDetalle" Role="Tbl_InventarioDetalle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tbl_InventarioTipoIncidencia">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tbl_InventarioDetalle">
+              <PropertyRef Name="IdIncidencia" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tbl_Pagos_Tbl_InventarioDetalle">
+          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Tbl_InventarioDetalle" Role="Tbl_InventarioDetalle" Multiplicity="0..1" />
+          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Tbl_Pagos" Role="Tbl_Pagos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tbl_InventarioDetalle">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tbl_Pagos">
+              <PropertyRef Name="IdTbl_InventarioDetalle" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tbl_Pagos_Tbl_Referencias_Cancelaciones">
+          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Tbl_Referencias_Cancelaciones" Role="Tbl_Referencias_Cancelaciones" Multiplicity="0..1" />
+          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Tbl_Pagos" Role="Tbl_Pagos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tbl_Referencias_Cancelaciones">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tbl_Pagos">
+              <PropertyRef Name="IdTbl_Referencias_Cancelaciones" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="cat_ReportesCCancelados">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Modulo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TipoReporte" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="NombreReporte" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Nomina" Type="String" Nullable="false" MaxLength="20" FixedLength="true" Unicode="true" />
+          <Property Name="Consulta" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Descrip" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="FoliacionInterfacesCargadasPruebaDBModelStoreContainer" CdmEntityContainer="FoliacionInterfacesCargadasPruebaDBEntities">
+          <EntitySetMapping Name="Cat_EstadoCancelados_Pagos">
+            <EntityTypeMapping TypeName="FoliacionInterfacesCargadasPruebaDBModel.Cat_EstadoCancelados_Pagos">
+              <MappingFragment StoreEntitySet="Cat_EstadoCancelados_Pagos">
+                <ScalarProperty Name="Activo" ColumnName="Activo" />
+                <ScalarProperty Name="Descrip" ColumnName="Descrip" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Cat_EstadosPago_Pagos">
+            <EntityTypeMapping TypeName="FoliacionInterfacesCargadasPruebaDBModel.Cat_EstadosPago_Pagos">
+              <MappingFragment StoreEntitySet="Cat_EstadosPago_Pagos">
+                <ScalarProperty Name="Activo" ColumnName="Activo" />
+                <ScalarProperty Name="Descrip" ColumnName="Descrip" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cat_FiltroConsultaDatosPersonalesNomina">
+            <EntityTypeMapping TypeName="FoliacionInterfacesCargadasPruebaDBModel.cat_FiltroConsultaDatosPersonalesNomina">
+              <MappingFragment StoreEntitySet="cat_FiltroConsultaDatosPersonalesNomina">
+                <ScalarProperty Name="Consulta" ColumnName="Consulta" />
+                <ScalarProperty Name="Delegacion" ColumnName="Delegacion" />
+                <ScalarProperty Name="Cheque" ColumnName="Cheque" />
+                <ScalarProperty Name="EsPagomatico" ColumnName="EsPagomatico" />
+                <ScalarProperty Name="EsPena" ColumnName="EsPena" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cat_FiltroGrupoImpresionDelegaciones">
+            <EntityTypeMapping TypeName="FoliacionInterfacesCargadasPruebaDBModel.cat_FiltroGrupoImpresionDelegaciones">
+              <MappingFragment StoreEntitySet="cat_FiltroGrupoImpresionDelegaciones">
+                <ScalarProperty Name="DelegacionesIncluidas" ColumnName="DelegacionesIncluidas" />
+                <ScalarProperty Name="NombreComun" ColumnName="NombreComun" />
+                <ScalarProperty Name="GrupoImpresionDelegacion" ColumnName="GrupoImpresionDelegacion" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Cat_FormasPago_Pagos">
+            <EntityTypeMapping TypeName="FoliacionInterfacesCargadasPruebaDBModel.Cat_FormasPago_Pagos">
+              <MappingFragment StoreEntitySet="Cat_FormasPago_Pagos">
+                <ScalarProperty Name="Activo" ColumnName="Activo" />
+                <ScalarProperty Name="Descrip" ColumnName="Descrip" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ExepcionesCargaInterfaces">
+            <EntityTypeMapping TypeName="FoliacionInterfacesCargadasPruebaDBModel.ExepcionesCargaInterface">
+              <MappingFragment StoreEntitySet="ExepcionesCargaInterfaces">
+                <ScalarProperty Name="AnioInterfas" ColumnName="AnioInterfas" />
+                <ScalarProperty Name="Quincena" ColumnName="Quincena" />
+                <ScalarProperty Name="RegFoliados" ColumnName="RegFoliados" />
+                <ScalarProperty Name="RegTotales" ColumnName="RegTotales" />
+                <ScalarProperty Name="DiferenciaNoFoliados" ColumnName="DiferenciaNoFoliados" />
+                <ScalarProperty Name="diferenciasDeRegistros" ColumnName="diferenciasDeRegistros" />
+                <ScalarProperty Name="Problema" ColumnName="Problema" />
+                <ScalarProperty Name="Coment" ColumnName="Coment" />
+                <ScalarProperty Name="Adicional" ColumnName="Adicional" />
+                <ScalarProperty Name="Id_nom" ColumnName="Id_nom" />
+                <ScalarProperty Name="TipoExcepcion" ColumnName="TipoExcepcion" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LOG_EXCEPCIONES">
+            <EntityTypeMapping TypeName="FoliacionInterfacesCargadasPruebaDBModel.LOG_EXCEPCIONES">
+              <MappingFragment StoreEntitySet="LOG_EXCEPCIONES">
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="Comentario" ColumnName="Comentario" />
+                <ScalarProperty Name="Excepcion" ColumnName="Excepcion" />
+                <ScalarProperty Name="Usuario" ColumnName="Usuario" />
+                <ScalarProperty Name="Metodo" ColumnName="Metodo" />
+                <ScalarProperty Name="Clase" ColumnName="Clase" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="FoliacionInterfacesCargadasPruebaDBModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="definition" ColumnName="definition" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tbl_CuentaBancarias_TipoPagoCuenta">
+            <EntityTypeMapping TypeName="FoliacionInterfacesCargadasPruebaDBModel.Tbl_CuentaBancarias_TipoPagoCuenta">
+              <MappingFragment StoreEntitySet="Tbl_CuentaBancarias_TipoPagoCuenta">
+                <ScalarProperty Name="TipoPago" ColumnName="TipoPago" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tbl_CuentasBancarias">
+            <EntityTypeMapping TypeName="FoliacionInterfacesCargadasPruebaDBModel.Tbl_CuentasBancarias">
+              <MappingFragment StoreEntitySet="Tbl_CuentasBancarias">
+                <ScalarProperty Name="IdBancoIPD" ColumnName="IdBancoIPD" />
+                <ScalarProperty Name="IdctabancaIPD" ColumnName="IdctabancaIPD" />
+                <ScalarProperty Name="InicioBaja" ColumnName="InicioBaja" />
+                <ScalarProperty Name="Activo" ColumnName="Activo" />
+                <ScalarProperty Name="FechaBaja" ColumnName="FechaBaja" />
+                <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
+                <ScalarProperty Name="IdInventario" ColumnName="IdInventario" />
+                <ScalarProperty Name="IdCuentaBancaria_TipoPagoCuenta" ColumnName="IdCuentaBancaria_TipoPagoCuenta" />
+                <ScalarProperty Name="Cuenta" ColumnName="Cuenta" />
+                <ScalarProperty Name="Abreviatura" ColumnName="Abreviatura" />
+                <ScalarProperty Name="NombreBanco" ColumnName="NombreBanco" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tbl_HistoricoQuincenasRegistradas">
+            <EntityTypeMapping TypeName="FoliacionInterfacesCargadasPruebaDBModel.Tbl_HistoricoQuincenasRegistradas">
+              <MappingFragment StoreEntitySet="Tbl_HistoricoQuincenasRegistradas">
+                <ScalarProperty Name="Activo" ColumnName="Activo" />
+                <ScalarProperty Name="QuincenaRegistrada" ColumnName="QuincenaRegistrada" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tbl_Inventario">
+            <EntityTypeMapping TypeName="FoliacionInterfacesCargadasPruebaDBModel.Tbl_Inventario">
+              <MappingFragment StoreEntitySet="Tbl_Inventario">
+                <ScalarProperty Name="Activo" ColumnName="Activo" />
+                <ScalarProperty Name="EstimadoMeses" ColumnName="EstimadoMeses" />
+                <ScalarProperty Name="UltimoFolioUtilizado" ColumnName="UltimoFolioUtilizado" />
+                <ScalarProperty Name="UltimoFolioInventario" ColumnName="UltimoFolioInventario" />
+                <ScalarProperty Name="FormasDisponibles" ColumnName="FormasDisponibles" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tbl_InventarioAsignacionPersonal">
+            <EntityTypeMapping TypeName="FoliacionInterfacesCargadasPruebaDBModel.Tbl_InventarioAsignacionPersonal">
+              <MappingFragment StoreEntitySet="Tbl_InventarioAsignacionPersonal">
+                <ScalarProperty Name="Activo" ColumnName="Activo" />
+                <ScalarProperty Name="FechaHabilitacion" ColumnName="FechaHabilitacion" />
+                <ScalarProperty Name="NombrePersonal" ColumnName="NombrePersonal" />
+                <ScalarProperty Name="IdEmpleado" ColumnName="IdEmpleado" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tbl_InventarioContenedores">
+            <EntityTypeMapping TypeName="FoliacionInterfacesCargadasPruebaDBModel.Tbl_InventarioContenedores">
+              <MappingFragment StoreEntitySet="Tbl_InventarioContenedores">
+                <ScalarProperty Name="Activo" ColumnName="Activo" />
+                <ScalarProperty Name="FechaAlta" ColumnName="FechaAlta" />
+                <ScalarProperty Name="FormasFoliadas" ColumnName="FormasFoliadas" />
+                <ScalarProperty Name="FormasAsignadas" ColumnName="FormasAsignadas" />
+                <ScalarProperty Name="FormasInhabilitadas" ColumnName="FormasInhabilitadas" />
+                <ScalarProperty Name="FormasDisponiblesActuales" ColumnName="FormasDisponiblesActuales" />
+                <ScalarProperty Name="FormasTotalesContenedor" ColumnName="FormasTotalesContenedor" />
+                <ScalarProperty Name="FolioFinal" ColumnName="FolioFinal" />
+                <ScalarProperty Name="FolioInicial" ColumnName="FolioInicial" />
+                <ScalarProperty Name="NumContenedor" ColumnName="NumContenedor" />
+                <ScalarProperty Name="NumOrden" ColumnName="NumOrden" />
+                <ScalarProperty Name="IdInventario" ColumnName="IdInventario" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tbl_InventarioDetalle">
+            <EntityTypeMapping TypeName="FoliacionInterfacesCargadasPruebaDBModel.Tbl_InventarioDetalle">
+              <MappingFragment StoreEntitySet="Tbl_InventarioDetalle">
+                <ScalarProperty Name="Activo" ColumnName="Activo" />
+                <ScalarProperty Name="IdEmpleado" ColumnName="IdEmpleado" />
+                <ScalarProperty Name="FechaIncidencia" ColumnName="FechaIncidencia" />
+                <ScalarProperty Name="IdIncidencia" ColumnName="IdIncidencia" />
+                <ScalarProperty Name="NumFolio" ColumnName="NumFolio" />
+                <ScalarProperty Name="IdContenedor" ColumnName="IdContenedor" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tbl_InventarioTipoIncidencia">
+            <EntityTypeMapping TypeName="FoliacionInterfacesCargadasPruebaDBModel.Tbl_InventarioTipoIncidencia">
+              <MappingFragment StoreEntitySet="Tbl_InventarioTipoIncidencia">
+                <ScalarProperty Name="Activo" ColumnName="Activo" />
+                <ScalarProperty Name="Descrip_Incidencia" ColumnName="Descrip_Incidencia" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tbl_Pagos">
+            <EntityTypeMapping TypeName="FoliacionInterfacesCargadasPruebaDBModel.Tbl_Pagos">
+              <MappingFragment StoreEntitySet="Tbl_Pagos">
+                <ScalarProperty Name="Activo" ColumnName="Activo" />
+                <ScalarProperty Name="TieneSeguimientoHistorico" ColumnName="TieneSeguimientoHistorico" />
+                <ScalarProperty Name="IdTbl_Referencias_Cancelaciones" ColumnName="IdTbl_Referencias_Cancelaciones" />
+                <ScalarProperty Name="IdTbl_InventarioDetalle" ColumnName="IdTbl_InventarioDetalle" />
+                <ScalarProperty Name="IdCat_EstadoPago_Pagos" ColumnName="IdCat_EstadoPago_Pagos" />
+                <ScalarProperty Name="IdCat_FormaPago_Pagos" ColumnName="IdCat_FormaPago_Pagos" />
+                <ScalarProperty Name="IdTbl_CuentaBancaria_BancoPagador" ColumnName="IdTbl_CuentaBancaria_BancoPagador" />
+                <ScalarProperty Name="Integridad_HashMD5" ColumnName="Integridad_HashMD5" />
+                <ScalarProperty Name="FolioCFDI" ColumnName="FolioCFDI" />
+                <ScalarProperty Name="FolioCheque" ColumnName="FolioCheque" />
+                <ScalarProperty Name="ImporteLiquido" ColumnName="ImporteLiquido" />
+                <ScalarProperty Name="NumBeneficiario" ColumnName="NumBeneficiario" />
+                <ScalarProperty Name="BeneficiarioPenA" ColumnName="BeneficiarioPenA" />
+                <ScalarProperty Name="EsPenA" ColumnName="EsPenA" />
+                <ScalarProperty Name="NombreEmpleado" ColumnName="NombreEmpleado" />
+                <ScalarProperty Name="NumEmpleado" ColumnName="NumEmpleado" />
+                <ScalarProperty Name="RfcEmpleado" ColumnName="RfcEmpleado" />
+                <ScalarProperty Name="Delegacion" ColumnName="Delegacion" />
+                <ScalarProperty Name="Partida" ColumnName="Partida" />
+                <ScalarProperty Name="ReferenciaBitacora" ColumnName="ReferenciaBitacora" />
+                <ScalarProperty Name="Quincena" ColumnName="Quincena" />
+                <ScalarProperty Name="Mes" ColumnName="Mes" />
+                <ScalarProperty Name="Anio" ColumnName="Anio" />
+                <ScalarProperty Name="Adicional" ColumnName="Adicional" />
+                <ScalarProperty Name="An" ColumnName="An" />
+                <ScalarProperty Name="Nomina" ColumnName="Nomina" />
+                <ScalarProperty Name="Id_nom" ColumnName="Id_nom" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tbl_Referencias_Cancelaciones">
+            <EntityTypeMapping TypeName="FoliacionInterfacesCargadasPruebaDBModel.Tbl_Referencias_Cancelaciones">
+              <MappingFragment StoreEntitySet="Tbl_Referencias_Cancelaciones">
+                <ScalarProperty Name="Activo" ColumnName="Activo" />
+                <ScalarProperty Name="ArchivoSustento" ColumnName="ArchivoSustento" />
+                <ScalarProperty Name="FolioDocumento" ColumnName="FolioDocumento" />
+                <ScalarProperty Name="EsCancelado" ColumnName="EsCancelado" />
+                <ScalarProperty Name="FormasPagoDentroReferencia" ColumnName="FormasPagoDentroReferencia" />
+                <ScalarProperty Name="Creado_Por" ColumnName="Creado_Por" />
+                <ScalarProperty Name="Fecha_Creacion" ColumnName="Fecha_Creacion" />
+                <ScalarProperty Name="Numero_Referencia" ColumnName="Numero_Referencia" />
+                <ScalarProperty Name="Anio" ColumnName="Anio" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tbl_SeguimientoHistoricoFormas_Pagos">
+            <EntityTypeMapping TypeName="FoliacionInterfacesCargadasPruebaDBModel.Tbl_SeguimientoHistoricoFormas_Pagos">
+              <MappingFragment StoreEntitySet="Tbl_SeguimientoHistoricoFormas_Pagos">
+                <ScalarProperty Name="Activo" ColumnName="Activo" />
+                <ScalarProperty Name="IdCat_EstadoCancelado" ColumnName="IdCat_EstadoCancelado" />
+                <ScalarProperty Name="ReferenciaCancelado" ColumnName="ReferenciaCancelado" />
+                <ScalarProperty Name="EsCancelado" ColumnName="EsCancelado" />
+                <ScalarProperty Name="RefoliadoPor" ColumnName="RefoliadoPor" />
+                <ScalarProperty Name="MotivoRefoliacion" ColumnName="MotivoRefoliacion" />
+                <ScalarProperty Name="ChequeNuevo" ColumnName="ChequeNuevo" />
+                <ScalarProperty Name="ChequeAnterior" ColumnName="ChequeAnterior" />
+                <ScalarProperty Name="FechaCambio" ColumnName="FechaCambio" />
+                <ScalarProperty Name="IdTbl_Pagos" ColumnName="IdTbl_Pagos" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tbl_Solicitudes">
+            <EntityTypeMapping TypeName="FoliacionInterfacesCargadasPruebaDBModel.Tbl_Solicitudes">
+              <MappingFragment StoreEntitySet="Tbl_Solicitudes">
+                <ScalarProperty Name="Activo" ColumnName="Activo" />
+                <ScalarProperty Name="FechaSolicitud" ColumnName="FechaSolicitud" />
+                <ScalarProperty Name="FolioInicial" ColumnName="FolioInicial" />
+                <ScalarProperty Name="Cantidad" ColumnName="Cantidad" />
+                <ScalarProperty Name="IdCuentaBancaria" ColumnName="IdCuentaBancaria" />
+                <ScalarProperty Name="NumeroMemo" ColumnName="NumeroMemo" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cat_ReportesCCancelados">
+            <EntityTypeMapping TypeName="FoliacionInterfacesCargadasPruebaDBModel.cat_ReportesCCancelados">
+              <MappingFragment StoreEntitySet="cat_ReportesCCancelados">
+                <ScalarProperty Name="Descrip" ColumnName="Descrip" />
+                <ScalarProperty Name="Consulta" ColumnName="Consulta" />
+                <ScalarProperty Name="Nomina" ColumnName="Nomina" />
+                <ScalarProperty Name="NombreReporte" ColumnName="NombreReporte" />
+                <ScalarProperty Name="TipoReporte" ColumnName="TipoReporte" />
+                <ScalarProperty Name="Modulo" ColumnName="Modulo" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

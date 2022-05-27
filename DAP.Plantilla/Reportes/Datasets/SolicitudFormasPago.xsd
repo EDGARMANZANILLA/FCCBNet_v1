@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="SolicitudFormasPago" targetNamespace="http://tempuri.org/SolicitudFormasPago.xsd" xmlns:mstns="http://tempuri.org/SolicitudFormasPago.xsd" xmlns="http://tempuri.org/SolicitudFormasPago.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="SolicitudFormasPago" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="SolicitudFormasPago" msprop:Generator_UserDSName="SolicitudFormasPago">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="FormaPago" msprop:Generator_TableClassName="FormaPagoDataTable" msprop:Generator_TableVarName="tableFormaPago" msprop:Generator_TablePropName="FormaPago" msprop:Generator_RowDeletingName="FormaPagoRowDeleting" msprop:Generator_RowChangingName="FormaPagoRowChanging" msprop:Generator_RowEvHandlerName="FormaPagoRowChangeEventHandler" msprop:Generator_RowDeletedName="FormaPagoRowDeleted" msprop:Generator_UserTableName="FormaPago" msprop:Generator_RowChangedName="FormaPagoRowChanged" msprop:Generator_RowEvArgName="FormaPagoRowChangeEvent" msprop:Generator_RowClassName="FormaPagoRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="NombreBanco" msprop:Generator_ColumnVarNameInTable="columnNombreBanco" msprop:Generator_ColumnPropNameInRow="NombreBanco" msprop:Generator_ColumnPropNameInTable="NombreBancoColumn" msprop:Generator_UserColumnName="NombreBanco" type="xs:string" minOccurs="0" />
+              <xs:element name="NumeroCuenta" msprop:Generator_ColumnVarNameInTable="columnNumeroCuenta" msprop:Generator_ColumnPropNameInRow="NumeroCuenta" msprop:Generator_ColumnPropNameInTable="NumeroCuentaColumn" msprop:Generator_UserColumnName="NumeroCuenta" type="xs:string" minOccurs="0" />
+              <xs:element name="FolioInicial" msprop:Generator_ColumnVarNameInTable="columnFolioInicial" msprop:Generator_ColumnPropNameInRow="FolioInicial" msprop:Generator_ColumnPropNameInTable="FolioInicialColumn" msprop:Generator_UserColumnName="FolioInicial" type="xs:string" minOccurs="0" />
+              <xs:element name="Cantidad" msprop:Generator_ColumnVarNameInTable="columnCantidad" msprop:Generator_ColumnPropNameInRow="Cantidad" msprop:Generator_ColumnPropNameInTable="CantidadColumn" msprop:Generator_UserColumnName="Cantidad" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="NumeroMemo" msprop:Generator_TableClassName="NumeroMemoDataTable" msprop:Generator_TableVarName="tableNumeroMemo" msprop:Generator_TablePropName="NumeroMemo" msprop:Generator_RowDeletingName="NumeroMemoRowDeleting" msprop:Generator_RowChangingName="NumeroMemoRowChanging" msprop:Generator_RowEvHandlerName="NumeroMemoRowChangeEventHandler" msprop:Generator_RowDeletedName="NumeroMemoRowDeleted" msprop:Generator_UserTableName="NumeroMemo" msprop:Generator_RowChangedName="NumeroMemoRowChanged" msprop:Generator_RowEvArgName="NumeroMemoRowChangeEvent" msprop:Generator_RowClassName="NumeroMemoRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="NMemo" msprop:Generator_ColumnVarNameInTable="columnNMemo" msprop:Generator_ColumnPropNameInRow="NMemo" msprop:Generator_ColumnPropNameInTable="NMemoColumn" msprop:Generator_UserColumnName="NMemo" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

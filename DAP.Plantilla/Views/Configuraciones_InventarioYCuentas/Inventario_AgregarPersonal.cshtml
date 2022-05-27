@@ -1,0 +1,248 @@
+﻿
+
+<class class="margenSection row">
+
+    <div class="btn-block">
+        <h5 class="text-center">"Agregar" nueva persona para poder Asignarle formas de pago:</h5>
+    </div>
+
+    <label class="col-12 text-center">Numero de empleado:</label>
+    <input id="NumeroEmpleado" class=" offset-sm-0 col-12 offset-md-3 col-md-5 text-center" placeholder="Ingresa un numero de empleado" type="text" onkeypress="return event.charCode >= 48 && event.charCode <= 122 && event.charCode != 91 " />
+    <br />
+    <button id="BuscarNumeroEmpleado" class="btn btn-primary" > <i class="fa fa-search" aria-hidden="true"></i> Buscar</button>
+
+
+
+</class>
+<br />
+<br />
+
+
+<!-- INICIO DE MODALES -->
+<!--  Modal de confirmacion para la inhabilitacion-->
+<section class="modal fade" id="ResultadoBusquedaEmpleado" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+
+                <h5 class="col-11 text-center">Resultado de la busqueda del empleado</h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+
+            </div>
+
+
+            <div class="modal-body">
+                <h3 id="NombreEmpleadoEncontrado" class=" col-12 text-center" style="color:blue"></h3>
+
+                <br />
+
+            </div>
+
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                <button id="GuardarEmpleadoEncontrado" type="button" class="btn btn-success" style="display:none">Agregar personal </button>
+
+            </div>
+
+
+        </div>
+    </div>
+</section>
+
+
+
+
+<script>
+
+
+
+    $(document).ready(function () {
+
+        let numeroEmpleado = null;
+        let nombreEmpleadoEncontrado = null;
+           /* Metodos para saber que vista parcial retornar */
+        const BuscarEmpleado = document.getElementById("BuscarNumeroEmpleado");
+        BuscarEmpleado.addEventListener("click",
+            function () {
+
+                numeroEmpleado = document.getElementById("NumeroEmpleado").value;
+
+               console.log(numeroEmpleado);
+               // console.log(numeroEmpleado.value);
+
+                if ( numeroEmpleado != "") {
+
+                    let enviarNumeroEmpleado = "{'NumEmpleado':'"+numeroEmpleado+"'}";
+
+                    MensajeCargando();
+                   $.ajax({
+                       url: '@Url.Action("EncontrarNumeroEmpleado", "Configuraciones_InventarioYCuentas")',
+                       data: enviarNumeroEmpleado,
+                       type: "POST",
+                       contentType: "application/json; charset=utf-8",
+
+                       success: function (msg) {
+                           OcultarMensajeCargando();
+
+                           //limpiamos el nombre del empleado
+                           nombreEmpleadoEncontrado = null;
+                           if (msg === "Empleado no Encontrado") {
+                               numeroEmpleado = null;
+                               Swal.fire({
+                                   backdrop: true,
+                                   allowEnterKey: false,
+                                   allowOutsideClick: false,
+                                   icon: 'error',
+                                   title: `${msg}`,
+
+                               });
+                           } else {
+                               nombreEmpleadoEncontrado = msg;
+                               document.getElementById("NombreEmpleadoEncontrado").innerText = msg;
+                               document.getElementById("GuardarEmpleadoEncontrado").style.display = "block";
+                               $('#ResultadoBusquedaEmpleado').modal('show');
+                           }
+
+
+
+
+
+
+                       },
+                       error: function (msg) {
+                           OcultarMensajeCargando();
+                              Swal.fire({
+                                  backdrop: true,
+                                  allowEnterKey: false,
+                                  allowOutsideClick: false,
+                                  icon: 'info',
+                                  title: 'No se pudo buscar el numero del empleado intentelo de nuevo mas tarde o pongase en contacto con el administrador del sistema',
+
+
+                              })
+                       }
+                    });
+
+
+                } else
+                {
+                    Swal.fire({
+                        backdrop: true,
+                        allowEnterKey: false,
+                        allowOutsideClick: false,
+                        icon: 'info',
+                        text: 'verifique el numero del empleado'
+                    });
+                }
+
+
+
+
+
+
+            }
+        );
+
+
+
+
+
+
+       // let nombreEmpleadoEncontrado = null;
+        const GuardarEmpleado = document.getElementById("GuardarEmpleadoEncontrado");
+        GuardarEmpleado.addEventListener("click",
+            function () {
+
+                if (numeroEmpleado != null && nombreEmpleadoEncontrado != "Empleado no Encontrado") {
+
+                    let guardarNombreEmpleado = "{'NumeroEmpleado':'"+numeroEmpleado+"','NombreEmpleado':'" + nombreEmpleadoEncontrado + "'}";
+
+                    MensajeCargando();
+                   $.ajax({
+                       url: '@Url.Action("GuardarNuevoNombreEmpleadoAsignaciones", "Configuraciones_InventarioYCuentas")',
+                       data: guardarNombreEmpleado,
+                       type: "POST",
+                       contentType: "application/json; charset=utf-8",
+
+                       success: function (msg) {
+                           OcultarMensajeCargando();
+                           console.log("msg", msg);
+
+                           if (msg) {
+                               Swal.fire({
+                                   backdrop: true,
+                                   allowEnterKey: false,
+                                   allowOutsideClick: false,
+                                   icon: 'success',
+                                   title: `Guardado exitoso del nuevo personal`,
+
+                               }).then((result) => {
+                                   /* Read more about isConfirmed, isDenied below */
+                                  
+                                       document.location.reload();
+                                 
+                               });
+
+                              
+                           } else {
+                               Swal.fire({
+                                   backdrop: true,
+                                   allowEnterKey: false,
+                                   allowOutsideClick: false,
+                                   icon: 'error',
+                                   title: `No se pudo guardar el personal`,
+                                   text: `El nombre del empleado seleccionado ya se encuentra registrado y activo`
+
+                               });
+                           }
+
+
+
+
+
+
+                       },
+                       error: function (msg) {
+                           OcultarMensajeCargando();
+                              Swal.fire({
+                                  backdrop: true,
+                                  allowEnterKey: false,
+                                  allowOutsideClick: false,
+                                  icon: 'info',
+                                  title: 'intentelo mas tarde o pongase en contacto con el administrador',
+
+
+                              })
+                       }
+                    });
+
+
+                } else
+                {
+                    Swal.fire({
+                        backdrop: true,
+                        allowEnterKey: false,
+                        allowOutsideClick: false,
+                        icon: 'info',
+                        text: 'Numero o Nombre de empleado no valido'
+                    });
+                }
+
+
+
+
+
+
+            }
+        );
+
+    });
+
+
+</script>

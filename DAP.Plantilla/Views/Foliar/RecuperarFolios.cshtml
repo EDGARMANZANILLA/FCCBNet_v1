@@ -1,0 +1,109 @@
+﻿<div class="col-12 text-center">
+
+    <section id="IFolios" class="margenSection offset-1 col-10" style="background:#f8f2f2; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); ">
+        <br />
+        <h4 class="col-12 text-center">Recuperar Folios </h4>
+        <br />
+        <br />
+        <div class="offset-2 col-8 text-left ">
+            <h5>Cuentas Bancarias </h5>
+            <div class="form-group ">
+                <div id="mainselection">
+                    <select class="form-control " id="RecuperFoliosCuentaBancaria" required style=" white-space:pre-wrap; ">
+                        <option value="" disabled selected>Selecciona una cuenta bancaria...</option>
+                        @foreach (var nuevoBanco in ViewBag.BancosConTarjeta)
+                        {
+
+                            <option value="@nuevoBanco.Key">@nuevoBanco.Value </option>
+                        }
+                    </select>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+        <div class="row text-center">
+            <label class="offset-3 col-6  ">Inicial:</label>
+            <input id="recuperarFoliosRangoInicial" class="offset-3 col-6 btn-lg " placeholder="Del..." type="number" autofocus pattern=" 0+\.[0-9]*[1-9][0-9]*$" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+        </div>
+
+        <br />
+
+        <div class="row text-center">
+            <label class="offset-3 col-6  ">Final:</label>
+            <input id="recuperarFoliosRangoFinal" class="offset-3 col-6 btn-lg " placeholder="AL..." type="number" autofocus pattern=" 0+\.[0-9]*[1-9][0-9]*$" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+        </div>
+
+        <br />
+        <br />
+
+
+
+
+        <div class="col-12 text-center ">
+            <button class="btn btn-lg btn-primary margenAlPie" onclick="RecuperarFolios()"> Buscar Folios</button>
+        </div>
+
+
+
+    </section>
+
+</div>
+
+
+
+<div class="margenSection">
+    <div class="table-responsive">
+
+        <div id="TablaResumenRecuperarFolios">
+
+            <table id="TablaRecuperarFolios2" class="table table-striped table-bordered table-hover" style="display:none;">
+                <caption class="text-uppercase"> Resumen de Nomina </caption>
+                <thead class="tabla">
+                    <tr class="text-center text-uppercase">
+
+                        <th>Delegacion</th>
+                        <th>Sindi</th>
+                        <th>Confia</th>
+                        <th>Otros</th>
+                        <th>Foliado</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+
+
+            </table>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<style>
+    #mainselection select {
+        border: 0;
+        color: rgb(0, 123, 255);
+        background: transparent;
+        font-size: 16px;
+        font-weight: bolder;
+        background: #ffffff;
+        text-align: left;
+    }
+
+    #mainselection {
+        border-radius: 9px 9px 9px 9px;
+        box-shadow: 1px 1px 10px #017BFF;
+    }
+</style>
+
+
+
+

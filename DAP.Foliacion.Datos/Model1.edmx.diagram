@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="ddd56015ee7b47d896b9f53df82d75ac" Name="Diagram1" ZoomLevel="84">
+        <EntityTypeShape EntityType="FoliacionInterfacesCargadasPruebaDBModel.Cat_EstadoCancelados_Pagos" Width="2.125" PointX="7.75" PointY="2.5" />
+        <EntityTypeShape EntityType="FoliacionInterfacesCargadasPruebaDBModel.Cat_EstadosPago_Pagos" Width="2.125" PointX="5.25" PointY="0.75" />
+        <EntityTypeShape EntityType="FoliacionInterfacesCargadasPruebaDBModel.cat_FiltroConsultaDatosPersonalesNomina" Width="2.125" PointX="0.75" PointY="1.625" />
+        <EntityTypeShape EntityType="FoliacionInterfacesCargadasPruebaDBModel.cat_FiltroGrupoImpresionDelegaciones" Width="2.125" PointX="9.75" PointY="6.625" />
+        <EntityTypeShape EntityType="FoliacionInterfacesCargadasPruebaDBModel.Cat_FormasPago_Pagos" Width="2.125" PointX="5.25" PointY="17.25" />
+        <EntityTypeShape EntityType="FoliacionInterfacesCargadasPruebaDBModel.ExepcionesCargaInterface" Width="2.125" PointX="9.75" PointY="9.625" />
+        <EntityTypeShape EntityType="FoliacionInterfacesCargadasPruebaDBModel.LOG_EXCEPCIONES" Width="2.125" PointX="11.75" PointY="6.625" />
+        <EntityTypeShape EntityType="FoliacionInterfacesCargadasPruebaDBModel.sysdiagram" Width="2.125" PointX="13.75" PointY="10.5" />
+        <EntityTypeShape EntityType="FoliacionInterfacesCargadasPruebaDBModel.Tbl_CuentaBancarias_TipoPagoCuenta" Width="2.125" PointX="0.5" PointY="6.125" />
+        <EntityTypeShape EntityType="FoliacionInterfacesCargadasPruebaDBModel.Tbl_CuentasBancarias" Width="2.125" PointX="2.875" PointY="7.25" />
+        <EntityTypeShape EntityType="FoliacionInterfacesCargadasPruebaDBModel.Tbl_HistoricoQuincenasRegistradas" Width="2.125" PointX="12.75" PointY="1.625" />
+        <EntityTypeShape EntityType="FoliacionInterfacesCargadasPruebaDBModel.Tbl_Inventario" Width="2.125" PointX="0.5" PointY="8.75" />
+        <EntityTypeShape EntityType="FoliacionInterfacesCargadasPruebaDBModel.Tbl_InventarioAsignacionPersonal" Width="2.125" PointX="3" PointY="18.25" />
+        <EntityTypeShape EntityType="FoliacionInterfacesCargadasPruebaDBModel.Tbl_InventarioContenedores" Width="2.125" PointX="3" PointY="12.625" />
+        <EntityTypeShape EntityType="FoliacionInterfacesCargadasPruebaDBModel.Tbl_InventarioDetalle" Width="2.125" PointX="5.25" PointY="13" />
+        <EntityTypeShape EntityType="FoliacionInterfacesCargadasPruebaDBModel.Tbl_InventarioTipoIncidencia" Width="2.125" PointX="3" PointY="21.125" />
+        <EntityTypeShape EntityType="FoliacionInterfacesCargadasPruebaDBModel.Tbl_Pagos" Width="2.125" PointX="7.5" PointY="8" />
+        <EntityTypeShape EntityType="FoliacionInterfacesCargadasPruebaDBModel.Tbl_Referencias_Cancelaciones" Width="2.125" PointX="5.25" PointY="3.875" />
+        <EntityTypeShape EntityType="FoliacionInterfacesCargadasPruebaDBModel.Tbl_SeguimientoHistoricoFormas_Pagos" Width="2.125" PointX="10" PointY="1.875" />
+        <EntityTypeShape EntityType="FoliacionInterfacesCargadasPruebaDBModel.Tbl_Solicitudes" Width="2.125" PointX="5.25" PointY="7.875" />
+        <AssociationConnector Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_SeguimientoFormas_Pagos_Cat_EstadoCancelados_Pagos" />
+        <AssociationConnector Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Pagos_Cat_EstadosPago_Pagos" />
+        <AssociationConnector Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Pagos_Cat_FormasPago_Pagos" />
+        <AssociationConnector Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_CuentasBancarias_Tbl_TipoPagoCuenta" />
+        <AssociationConnector Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_CuentasBancarias_Tbl_Inventario" />
+        <AssociationConnector Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Pagos_Tbl_CuentasBancarias" />
+        <AssociationConnector Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Solicitudes_Tbl_CuentasBancarias" />
+        <AssociationConnector Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_InventarioContenedores_Tbl_Inventario" />
+        <AssociationConnector Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_InventarioDetalle_Tbl_InventarioAsignacionPersonal" />
+        <AssociationConnector Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_InventarioDetalle_Tbl_InventarioContenedores" />
+        <AssociationConnector Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_InventarioDetalle_Tbl_InventarioTipoIncidencia" />
+        <AssociationConnector Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Pagos_Tbl_InventarioDetalle" />
+        <AssociationConnector Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Pagos_Tbl_Referencias_Cancelaciones" />
+        <EntityTypeShape EntityType="FoliacionInterfacesCargadasPruebaDBModel.cat_ReportesCCancelados" Width="2.625" PointX="10.375" PointY="13.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,675 @@
+﻿@model  Dictionary<int, string>
+
+
+<!-- Vista de Formas de pago-->
+<seccion id="VistaFormasPago" class="margenSection  card col-12  offset-md-1 col-md-10 text-center" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); ">
+    <br />
+    <div class="col-5 text-left">
+        <button type="button" class="btn btn-success btn text-center" onclick="RegresarIndexFoliacionDesdeFormaPago()"> <i class="fas fa-arrow-left"></i>  Regresar</button>
+    </div>
+
+
+    <br />
+
+    <div class="col-12  text-center">
+
+        <hr class="linea col-10 " />
+    </div>
+    <br />
+    <br />
+
+
+    <div class="btn-block">
+        <br />
+        <h5>QUINCENA A FOLIAR CON FORMAS DE PAGO</h5>
+        <h5 id="QuincenaFormasPago" class="azul">@ViewBag.NumeroQuincena </h5>
+        <br />
+    </div>
+
+
+    <div class="row">
+
+        <!-- Selecciona una nomina-->
+        <div class="col-12">
+
+            <div class=" margenSection">
+                <h5>Nominas</h5>
+                <div class="form-group text-left">
+                    <div id="mainselection">
+                        <select class="form-control " id="SeleccionarNominaFoliar" required>
+                            <option value="" disabled selected>Selecciona una Nomina...</option>
+                            @foreach (var nuevaNomina in Model)
+                            {
+
+                                <option value="@nuevaNomina.Key">@nuevaNomina.Value </option>
+                            }
+                        </select>
+
+
+                    </div>
+
+                </div>
+
+
+
+
+                <button class="align-content-center btn btn-info" onclick="verResumenXDelegacionNominaCheque()"> ver detalle de nomina seleccionada </button>
+                <br />
+                <br />
+
+                <div class="col-12 ">
+                    <button class=" text-center col-md-4 col-12   btn btn-info  " title="Muestra la vista previa en un pdf de como quedaria la nomina al foliar o como esta foliada" onclick="ImprimirNominaCheques()">Reporte Nomina <i class="fas fa-print"></i> </button>
+
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+    
+
+
+        <!-- Selecciona una nomina-->
+        <!--<div class="col-12 text-center">
+
+            <div class="offset-1 col-10 text-left margenSection">
+                <h5>Cuentas Bancarias </h5>
+                <div class="form-group ">
+                    <div id="mainselection">
+                        <select class="form-control " id="SeleccionarCuentaBancaria" required style=" white-space:pre-wrap; ">
+                            <option value="" disabled selected>Selecciona una cuenta bancaria...</option>
+                            @foreach (var nuevoBanco in ViewBag.BancosConTarjeta)
+                            {
+
+                                <option value="@nuevoBanco.Key">@nuevoBanco.Value </option>
+                            }
+                        </select>
+
+                    </div>
+
+
+                </div>
+
+
+
+            </div>
+        </div>-->
+
+
+        <!-- inserta una rango de foliacion-->
+        <!--<div class="col-12 col-lg-6">
+
+
+
+
+            <section id="IFolios" class="margenSection offset-1 col-10" style="background:#E6E6E6; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); ">
+                <br />
+                <h4 class="col-12 text-center">Rango de Foliacion</h4>
+                <br />
+
+
+                <div class="row text-center">
+                    <label class="offset-1 col-10  ">Inicial:</label>
+                    <input id="rangoInicial" class="offset-2 col-8 btn-lg " placeholder="Del" type="text" onkeypress="return event.charCode >= 48 && event.charCode <= 122 && event.charCode != 91 " required />
+
+
+                </div>
+                <br />
+                <div class="row text-center">
+
+                    <label class="offset-1 col-10  ">Final:</label>
+                    <h3 id="rangoFinal" class="offset-3 col-6 " style="border:solid; color:#017BFF;">...</h3>
+                </div>
+
+
+                <br />
+                <br />
+
+                <div class="row text-center">
+                    <label class="offset-1 col-10 offset-sm-1 col-sm-5  ">Numero de Registros Foliados:</label>
+                    <h3 id="registrosFoliados" class="offset-1 col-10 offset-sm-1 col-sm-4  text-sm-center" style="border:solid; color:#017BFF;" title="Numero de Registros Foliados">...</h3>
+
+                </div>
+
+                <br />
+
+                <br class="margensection" />
+            </section>
+
+        </div>
+
+
+        <div class="col-12 col-lg-6">
+
+
+            <section id="IFolios" class="margenSection offset-1 col-10" style="background:#E6E6E6; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+                <br />
+                <h4 class="col-12 text-center">Folios a inhabilitar</h4>
+                <br />
+
+                <div class="col-md-12 text-center">
+                    <form>
+                        <div>
+                            <label class="btn btn-lg  btn-outline-primary">
+                                <input id="checkInhabilitar" type="checkbox" autocomplete="off"> Inhabilitar
+                            </label>
+
+
+                        </div>
+                    </form>
+                    <br />
+                </div>
+
+                <div class="row text-center">
+                    <label class="offset-1 col-10   ">Folio Inicial:</label>
+                    <input id="FolioInicialInhabilitado" class="offset-2 col-8 btn-lg " placeholder="Del" type="text" onkeypress="return event.charCode >= 48 && event.charCode <= 122 && event.charCode != 91 " required />
+
+                </div>
+                <br />
+                <br />
+                <div class="row text-center">
+                    <label class="offset-1 col-10   ">Folio Final:</label>
+                    <input id="FolioFinalInhabilitado" class="offset-2 col-8 btn-lg " placeholder="Al" type="text" onkeypress="return event.charCode >= 48 && event.charCode <= 122 && event.charCode != 91 " />
+
+                </div>
+
+                <br />
+                <br />
+            </section>
+
+
+        </div>-->
+
+
+        <!--- boton para foliar aqui se deberia enviar la peticion ajax-->
+        <!--<div class="col-12 ">
+            <button class=" text-center col-md-4 col-12   btn btn-info  " title="Muestra la vista previa en un pdf de como quedaria la nomina al foliar o como esta foliada" onclick="ImprimirNominaCheques()">Reporte Nomina <i class="fas fa-print"></i> </button>
+
+        </div>
+        <br />
+        <br />
+        <div class="col-12 ">
+            <button id="FoliarNomina" class=" col-md-6 col-12 text-center btn btn-success btn-lg " title="Folea la nomina seleccionada">Foliar</button>
+
+        </div>-->
+
+    </div>
+
+
+
+
+    <hr class="linea " />
+
+
+
+</seccion>
+
+
+<seccion id="ParteBancariaFoliacion" class="margenSection  card col-12  offset-md-1 col-md-10 text-center" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); display: none;">
+    <br />
+    <div class="col-5 text-left">
+        <button type="button" class="btn btn-success btn text-center" onclick="RegresarVistaFormaPago()"> <i class="fas fa-arrow-left"></i>  Regresar</button>
+    </div>
+
+
+    <br />
+
+    <div class="col-12  text-center">
+
+        <hr class="linea col-10 " />
+    </div>
+    <br />
+    <br />
+
+
+    <div class="col-12 offset-md-3 col-md-6 text-center margensection">
+
+
+        <seccion id="resumenProbableFoliacion" class="card  " style=" box-shadow: 1px 1px 4px 2px #5cb85c;   border-radius: 80px 20px;">
+            <br />
+            <h5>Resumen Delegacion Seleccionada a Foliar</h5>
+            <br />
+            <ul class="text-justify">
+                <li><label>Nomina :           </label> <label id="NominaCheche" class="font-weight-bold">  {Nomina}</label>              </li>
+                <li><label>Delegacion :       </label> <label id="DelegacionCheque" class="font-weight-bold">{Delegacion}</label>        </li>
+                <li><label>GrupoFoliacion :   </label> <label id="GrupoFoliacionCheque" class="font-weight-bold">{GrupoFoliacion}</label></li>
+                <li><label>Tipo de Registros :   </label> <label id="TipoNomina" class="font-weight-bold">{Tipo nomina}</label>             </li>
+                <li><label>Personal a Foliar :</label> <label id="NumeroRegistros" class="font-weight-bold">{NumeroRegistros}</label>     </li>
+            </ul>
+            <br />
+
+        </seccion>
+    </div>
+
+
+
+
+    <div class="row">
+        <!-- Selecciona una nomina-->
+        <div class="col-12 text-center">
+
+            <div class="offset-1 col-10 text-left margenSection">
+                <h5>Cuentas Bancarias </h5>
+                <div class="form-group ">
+                    <div id="mainselection">
+                        <select class="form-control " id="SeleccionarCuentaBancaria" required style=" white-space:pre-wrap; ">
+                            <option value="" disabled selected>Selecciona una cuenta bancaria...</option>
+                            @foreach (var nuevoBanco in ViewBag.BancosConTarjeta)
+                            {
+
+                                <option value="@nuevoBanco.Key">@nuevoBanco.Value </option>
+                            }
+                        </select>
+
+                    </div>
+
+
+                </div>
+
+
+
+            </div>
+        </div>
+
+
+        <!-- inserta una rango de foliacion-->
+        <div class="col-12 col-lg-6">
+
+
+
+
+            <section id="IFolios" class="margenSection offset-1 col-10" style="background:#E6E6E6; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); ">
+                <br />
+                <h4 class="col-12 text-center">Rango de Foliacion</h4>
+                <br />
+
+
+                <div class="row text-center">
+                    <label class="offset-1 col-10  ">Inicial:</label>
+                    <input id="rangoInicial" class="offset-2 col-8 btn-lg " placeholder="Del" type="number" autofocus pattern=" 0+\.[0-9]*[1-9][0-9]*$" onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+
+
+                </div>
+                <br />
+                <div class="row text-center">
+
+                    <label class="offset-1 col-10  ">Final:</label>
+                    <h3 id="rangoFinal" class="offset-3 col-6 " style="border:solid; color:#017BFF;">...</h3>
+                </div>
+
+
+                <br />
+                <br />
+
+                <div class="row text-center">
+                    <label class="offset-1 col-10 offset-sm-1 col-sm-5  ">Numero de Registros Foliados:</label>
+                    <h3 id="registrosFoliados" class="offset-1 col-10 offset-sm-1 col-sm-4  text-sm-center" style="border:solid; color:#017BFF;" title="Numero de Registros Foliados">...</h3>
+
+                </div>
+
+                <br />
+
+                <br class="margensection" />
+            </section>
+
+        </div>
+
+
+        <div class="col-12 col-lg-6">
+
+
+            <section id="IFolios" class="margenSection offset-1 col-10" style="background:#E6E6E6; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+                <br />
+                <h4 class="col-12 text-center">Folios a inhabilitar</h4>
+                <br />
+
+                <div class="col-md-12 text-center">
+                    <form>
+                        <div>
+                            <label id="cambiaColorInhabilitar" class="btn btn-lg  btn-outline-primary" onclick="CambiarColor()">
+                                <input id="checkInhabilitar" type="checkbox" autocomplete="off"> Inhabilitar
+                            </label>
+
+
+                        </div>
+                    </form>
+                    <br />
+                </div>
+
+                <div class="row text-center">
+                    <label class="offset-1 col-10   ">Folio Inicial:</label>
+                    <input id="FolioInicialInhabilitado" class="offset-2 col-8 btn-lg " placeholder="Del" type="number" autofocus pattern=" 0+\.[0-9]*[1-9][0-9]*$" onkeypress="return event.charCode >= 48 && event.charCode <= 57" required />
+
+                </div>
+                <br />
+                <br />
+                <div class="row text-center">
+                    <label class="offset-1 col-10   ">Folio Final:</label>
+                    <input id="FolioFinalInhabilitado" class="offset-2 col-8 btn-lg " placeholder="Al" type="number" autofocus pattern=" 0+\.[0-9]*[1-9][0-9]*$" onkeypress="return event.charCode >= 48 && event.charCode <= 57" required />
+
+                </div>
+
+                <br />
+                <br />
+            </section>
+
+
+        </div>
+
+
+        <!--- boton para foliar aqui se deberia enviar la peticion ajax-->
+     
+        <br />
+        <br />
+        <div class="col-12 ">
+            <button type="button" class=" col-md-6 col-12 text-center btn btn-success btn-lg" title="Folea la nomina seleccionada" onclick="FoliarNominaCheque()" >Foliar</button>
+
+        </div>
+
+    </div>
+
+
+
+
+    <hr class="linea " />
+
+
+
+</seccion>
+
+
+
+
+
+
+
+
+
+
+
+<!-- Modal para mostrar detalles de la nomina cargada -->
+<div class="modal fade" id="DetalleDelegacionNominaCheque" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog   modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title col-11 text-capitalize text-center" id="NombreCabezeraModal">{Nombre del detalle de la nomina}</h5>
+                <!-- <button type="button" class="close btn-primary" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                -->
+            </div>
+            <div class="modal-body">
+
+
+                <!--Nuevo modal-->
+                <!-- Cascaron de tabla para luego llenarla con datos desde la DB -->
+                <div class="margenSection">
+                    <div class="table-responsive">
+
+                        <div id="TablaResumenNomina">
+
+                            <table id="NuevaTablaResumen" class='table table-striped table-bordered table-hover' style="display:none;">
+                                <caption class="text-uppercase"> Resumen de Nomina </caption>
+                                <thead class="tabla">
+                                    <tr class="text-center text-uppercase">
+
+                                        <th>Delegacion</th>
+                                        <th>Sindi</th>
+                                        <th>Confia</th>
+                                        <th>Otros</th>
+                                        <th>Foliado</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+
+
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+
+                <br />
+
+            </div>
+
+            <div class="modal-footer">
+
+
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!--    VISUALIZACION DE PDF POR DELEGACION O NOMINA DE CHEQUE    -->
+<!-- Modal -->
+<div class="modal fade" id="ModalPDFVisualizadorCheque" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" style="overflow-y: scroll;">
+    <div class="modal-dialog modal-dialog-centered modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title col-11 text-capitalize text-center">Verificacion de Reporte </h5>
+                <button type="button" class="close btn-primary" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div>
+
+                    <div id="VisorPdfCheque" class="altura">
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- MODAL DE LOS DETALLES DE LA FOLIACION YA SEA QUE ESTEN BIEN O MAL -->
+<div class="modal fade" id="DetallesConNominasFoliadasCHEQUES" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title col-11 text-capitalize text-center " id="NombreNominaDelegacion">Resumen del proceso finalizado</h5>
+                <button type="button" class="close btn-primary" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+
+                <!-- Cascaron de tabla para luego llenarla con datos desde la DB -->
+                <div class="margenSection">
+                    <div class="table-responsive">
+
+                        <div id="TablaDetalleNominasCheque">
+
+                            <table id="TblDetallesNominasFoleadasCheques" class='table table-striped table-bordered table-hover' style="display:none">
+                                <caption class="text-uppercase"> Resumen de Nomina </caption>
+                                <thead class="tabla">
+                                    <tr class="text-center text-uppercase">
+
+                                        <th>Detalles o problemas con nominas </th>
+                                    </tr>
+                                </thead>
+
+
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                <dl>
+                    <dt>Detalles:</dt>
+                    <dd> - "SIN PAGOMATICOS" ==> NO HAY EMPLEADOS CON TARJETAS PARA FOLIAR EN PAGOMATICO</dd>
+                    <dt>Solucion:</dt>
+                    <dd> - F/FP ==> INTENTE FOLIAR POR FORMAS DE PAGO</dd>
+                    <dd> - IFNN ==> INTENTE FOLIAR LA NOMINA DE NUEVO</dd>
+                </dl>
+
+
+            </div>
+            <div class="modal-footer">
+
+
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<!-- MODAL PARA MOSTRAR LOS CHEQUES QUE YA ESTAN USADOS Y NO SE PUEDEN VOLVER A USAR -->
+<div class="modal fade" id="DetalleProblemasConCHEQUES" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title col-11 text-center text-uppercase "> problemas encontrados en los siguientes folios</h5>
+                <button type="button" class="close btn-primary" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+
+                <!-- Cascaron de tabla para luego llenarla con datos desde la DB -->
+                <div class="margenSection">
+                    <div class="table-responsive">
+
+                        <div id="TablaProblemasCheques">
+
+                            <table id="ProblemasCheques" class='table table-striped table-bordered table-hover' style="display:none">
+                                <caption class="text-uppercase">detalles de problemas encontrados  </caption>
+
+                                <thead class="tabla">
+                                    <tr class="text-center text-uppercase">
+
+                                        <th>Id </th>
+                                        <th>Folio  </th>
+                                        <th>Incidencia </th>
+                                        <th>Fecha Incidencia </th>
+
+
+                                    </tr>
+                                </thead>
+
+
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+
+            <div class="modal-footer">
+
+
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+<style>
+
+    #mainselection select {
+        border: 0;
+        color: rgb(0, 123, 255);
+        background: transparent;
+        font-size: 16px;
+        font-weight: bolder;
+        background: #ffffff;
+        text-align: left;
+    }
+
+    #mainselection {
+        border-radius: 9px 9px 9px 9px;
+        box-shadow: 1px 1px 10px #017BFF;
+    }
+
+
+    .modal.fade {
+        background: rgba(0,0,0,0.5);
+    }
+
+    .container {
+        background: gray;
+        min-height: 100vh;
+    }
+
+
+
+    .pdfobject-container {
+        height: 100vh;
+        border: 1rem solid rgba(0,0,0,.1);
+    }
+</style>
+
+
+
+

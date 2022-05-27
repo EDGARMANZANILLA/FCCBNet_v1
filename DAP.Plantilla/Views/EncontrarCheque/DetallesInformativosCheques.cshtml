@@ -1,0 +1,636 @@
+﻿@model DAP.Plantilla.Models.BuscardorChequeModels.DetallesInformativosChequeModel
+
+
+
+<seccion>
+
+
+    </br>
+    </br>
+    <h3 class="col-12 text-center">DETALLE DEL IDENTIFICADOR @Model.IdRegistro  CON FORMA DE PAGO @Model.Folio </h3>
+    </br>
+    </br>
+    <!--Inicio del Grid con los detalles -->
+    <div id="detallesFormasPago" class="text-justify">
+
+
+
+        <div class="row offset-0  offset-sm-1 offset-lg-1 offset-xl-1   marginbottom">
+
+
+
+            <div class="col-12 col-sm-3  orientacion">
+                <label for="">Identificador Nomina:</label>
+                <br>
+                <span id="IdNom">@Model.Id_nom</span>
+
+            </div>
+
+
+
+            <div class="col-12 col-sm-3  orientacion">
+                <label for="">Referencia Bitacora:</label>
+                <br>
+                <span id="ReferenciaBitacora"> @Model.ReferenciaBitacora</span>
+
+            </div>
+
+            <div class="col-12 col-sm-3 orientacion">
+                <label>Quincena:</label>
+                <br>
+                <span id="Quincena" class="text-center">@Model.Quincena</span>
+
+            </div>
+
+            <div class="col-12 col-sm-3  orientacion">
+                <label>Delegacion:</label>
+                <br>
+                <span id="Delegacion">@Model.Delegacion</span>
+
+            </div>
+
+        </div>
+
+
+        <div class="row offset-0  offset-sm-1 offset-lg-1 offset-xl-1   marginbottom">
+
+
+
+            <div class="col-12 col-sm-3  orientacion">
+                <label for="">Numero de Empleado:</label>
+                <br>
+                <span id="NumeroEmpleado">@Model.NumEmpleado</span>
+
+            </div>
+
+            <div class="col-12 col-sm-3  orientacion">
+                <label>Nombre Empleado:</label>
+                <br>
+                <span id="Nombre Empleado">@Model.NombreEmpleado</span>
+
+            </div>
+
+            <div class="col-12 col-sm-3 orientacion">
+                <label>Folio de forma de pago:</label>
+                <br>
+                <span id="NumeroFolio" class="text-center">@Model.Folio </span>
+
+            </div>
+
+
+
+            <div class="col-12 col-sm-3  orientacion">
+                <label for="">Liquido:</label>
+                <br>
+                <span id="ImporteLiquido">@Model.Liquido</span>
+
+            </div>
+
+
+
+        </div>
+
+
+
+
+        <div class="row offset-0  offset-sm-1 offset-lg-2  offset-xl-3  marginbottom">
+
+            <div class="col-12 col-sm-3 orientacion">
+                <label for="">Estado Cheque:</label>
+                <br>
+                <span id="EstadoCheque" class="text-center">@Model.EstadoCheque</span>
+
+            </div>
+
+
+            <div class="col-12 col-sm-3  orientacion">
+                <label for="">Banco Pagador:</label>
+                <br>
+                <span id="BancoPagador">@Model.BancoPagador </span>
+
+            </div>
+
+            <div class="col-12 col-sm-6 orientacion">
+                <label for="">Cuenta Pagadora:</label>
+                <br>
+                <span id="CuentaPagadora" class="text-center">@Model.CuentaPagadora</span>
+
+            </div>
+
+
+        </div>
+
+
+
+
+        @if (@Model.EsPenA == true)
+        {
+
+
+            <div class="row offset-0  offset-sm-1 offset-lg-2  offset-xl-3  marginbottom">
+
+
+                <div class="col-12 col-sm-3 orientacion">
+                    <label>Es Pension A:</label>
+                    <br>
+                    <span id="EsPenA">@Model.EsPenA </span>
+
+                </div>
+
+
+
+                <div class="col-12 col-sm-3  orientacion">
+                    <label for="">Num Beneficiario</label>
+                    <br>
+                    <span id="NumBeneficiario">@Model.NumBeneficiarioPenA </span>
+
+                </div>
+
+                <div class="col-12 col-sm-6  orientacion">
+                    <label for="">Beneficiario Pension Alim:</label>
+                    <br>
+                    <span id="NombreBenePenA">@Model.NombreBeneficiarioPenA</span>
+
+                </div>
+
+            </div>
+
+
+        }
+
+    </div>
+
+
+
+    </br>
+
+
+
+
+    <div class="row  text-center marginbottom">
+
+        @if (Convert.ToBoolean(Model.EsRefoliado))
+        {
+            <div class=" offset-4 col-4">
+                <label for="" class="text-justify">Es Refoliado:</label>
+                <br>
+
+                <button type="button" class="btn btn-outline-info btn-block btn-sm" title="Realizar un ajuste al inventario" onclick="HistoricoSeguimiento(@Model.IdRegistro)">Ver historico de seguimiento </button>
+
+
+            </div>
+        }
+
+    </div>
+
+
+
+
+
+
+
+    <div class="col-12  text-center marginbottom">
+
+
+        <button  type="button" class="btn btn-lg btn-outline-danger" title="Cargar el cheque dentro de una referencia de cancelacion" onclick="VerificaSiTieneReferencia(@Model.IdRegistro)" ><i class="fas fa-ban"></i> Iniciar proceso de Cancelacion </i></button>
+
+
+
+    </div>
+
+
+
+    </br>
+    </br>
+
+</seccion>
+
+
+
+
+
+
+
+
+
+
+<!-- Modal del Historico de Reposiciones   -->
+<div class="modal fade" id="HistoricoSeguimientoFormaPago" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xll">
+        <div class="modal-content " role="document">
+            <div class="modal-header">
+                <h5 class="modal-title col-11 text-capitalize text-center">SEGUIMIENTO DEL HISTORICO PARA LA FORMA DE PAGO @Model.Folio</h5>
+                <button type="button" class="close btn-primary" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <!-- Cascaron de tabla para luego llenarla con datos desde la DB -->
+                <div >
+                    <div class="table-responsive">
+
+                        <div id="TablaHistoricoReposiciones">
+
+                            <table id="HistoricoReposiciones" class='table table-striped table-bordered table-hover' style="display:block">
+                                <caption class="text-uppercase">Historico DE  SEGUIMIENTO </caption>
+                                <thead class="tabla">
+                                    <tr class="text-center text-uppercase">
+
+                                        <th>Detalles o problemas con nominas </th>
+                                    </tr>
+                                </thead>
+
+
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+
+                </br>
+                </br>
+
+
+
+            </div>
+            <div class="modal-footer">
+
+
+                <button type="button" class="btn btn-primary" onclick="$('#HistoricoSeguimientoFormaPago').modal('hide')" >Cerrar</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+<!-- Modal para cargar una forma de pago a una referencia para su foliacion   -->
+<div class="modal fade" id="AgregarFormaPagoCancelacion" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title col-11 text-capitalize text-center">AGREGAR UNA FORMA DE PAGO A UN NUMERO DE REFERENCIA DE CANCELACION PARA LA FORMA DE PAGO @Model.Folio</h4>
+                <button type="button" class="close btn-primary" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+
+                <div class="margenSection row">
+
+                    <h4 class="col-12 text-center text-uppercase"> SELECCIONA UNA REFERENCIA EXISTENTE: </h4>
+
+
+
+                    <div class="col-12 offset-md-2 col-md-8 text-center">
+                        <div class="form-group">
+                            <br />
+                            <select class="form-control " id="SeleccionaReferenciaCancelacion" required>
+                                <option value="" disabled selected>Selecciona un tipo de foliacion...</option>
+                                <option value="0">Remover forma de pago de la referencia(Anular cancelacion)</option>
+                                @foreach (var nuevoregistro in ViewBag.diccionarioReferenciaCancelacion)
+                                {
+                                    <option value="@nuevoregistro.Key">@nuevoregistro.Value </option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+
+                        <h5 id="ExisteReferencia" class="col-12 offset-md-2 col-md-8 text-info bg-warning" style="display:none;">TEXTO AGREGADO</h5>
+                    
+
+
+                    <div class="col-12 text-center">
+                        <br />
+                        <button type="button" class="btn btn-lg btn-success" onclick="AgregarFormaPagoReferenciaCancelacion(@Model.IdRegistro)"><i class="fas fa-check"></i> ACEPTAR </button>
+
+                    </div>
+
+
+                </div>
+
+                </br>
+                </br>
+                </br>
+
+
+
+            </div>
+            <div class="modal-footer">
+
+
+                <button id="CerrarModal_AgregarFormaPagoCancelacion" type="button" class="btn btn-primary" onclick="$('#AgregarFormaPagoCancelacion').modal('hide')" >Cerrar</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+/*    .modal-backdrop {
+        visibility: hidden !important;
+    }*/
+/*
+    .modal.in {
+        background-color: rgba(0,0,0,0.5);
+    }
+*/
+
+    .modal.fade {
+        background: rgba(0,0,0,0.6);
+    }
+
+
+    /*******************************************/
+    /******************************************/
+    /*****************************************/
+    /*CSS PARA EL MODAL*/
+
+
+    .borde {
+        border: 1px solid;
+    }
+
+    .marginbottom {
+        margin-bottom: 40px;
+    }
+
+
+
+
+
+    @@media only screen and (max-width: 576px) {
+
+
+        .orientacion {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+    }
+
+
+
+
+
+    #detallesFormasPago label {
+        font-weight: bold;
+        font-style: italic;
+        color: rgb(68, 147, 211);
+        margin-bottom: 3px;
+    }
+
+
+
+    #detallesFormasPago span {
+        font-weight: 900;
+        color: #60bb6bd3;
+    }
+</style>
+
+
+
+
+@*<script>
+
+        ////*********Crea y pinta la tabla del modal del hostorico **********///
+        function DibujarTBLHistoricoFormaPago() {
+            $("#TablaHistoricoReposiciones").append(
+
+                "<table id='HistoricoReposiciones'  class='margenSection table table-striped display table-bordered table-hover' cellspacing='0'  style='width:100%'>" +
+                " <caption class='text-uppercase'>Historico de Reposiciones</caption>"
+                + "<thead class='tabla'>" +
+
+                "<tr class='text-center text-uppercase'>" +
+
+
+                "<th>Id</th>" +
+                "<th>Fecha Cambio</th>" +
+                "<th>Motivo de Reposicion</th>" +
+                "<th>Forma de Pago Anterior </th>" +
+                "<th>                       </th>" +
+                "<th>Nueva Forma de Pago    </th>" +
+                "<th>Repuesto por </th>" +
+
+
+                "</tr>" +
+                "</thead>" +
+                "</table>"
+            );
+        };
+
+
+        function PintarDatosHistoricoFormaPago(datos) {
+            $('#HistoricoReposiciones').DataTable({
+                "ordering": true,
+                "info": false,
+                "searching": false,
+                "paging": false,
+                "lengthMenu": [5, 10],
+                "language":
+                {
+                    "processing": "Procesando...",
+                    "lengthMenu": "Mostrar _MENU_ registros",
+                    "zeroRecords": "No se encontraron resultados",
+                    "emptyTable": "Ningún dato disponible en esta tabla",
+                    "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                    "search": "Buscar:",
+                    "info": "Mostrando de _START_ a _END_ de _TOTAL_ entradas",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Último",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    }
+                },
+                "data": datos,
+                "columns": [
+
+                    { "data": "Id" },
+                    { "data": "FechaCambio" },
+                    { "data": "MotivoRefoliacion" },
+                    { "data": "ChequeAnterior" },
+                    null,
+                    { "data": "ChequeNuevo" },
+                    { "data": "RepuestoPor" },
+                ],
+                "columnDefs": [
+
+                    { className: "text-center col-1", visible: true, "targets": 0, },
+                    { className: "text-center col-2", visible: true, "targets": 1, },
+                    { className: "text-center col-2", visible: true, "targets": 2, },
+                    { className: "text-center col-1", visible: true, "targets": 3, },
+                    {
+                        className: "text-center col-1",
+                        visible: true,
+                        "targets": [4],
+                        render: function (data, type, row) {
+                            //console.log(typeof data);
+                            //console.log( data);
+                            //if (data) {
+                            return '<i class="fas fa-exchange-alt"></i>';
+                            //}
+
+                        }
+                    },
+                    { className: "text-center col-1", visible: true, "targets": 5, },
+                    { className: "text-center col-4", visible: true, "targets": 6, }
+
+
+                ],
+                "order": [[0, 'desc']]
+
+            });
+
+        };
+
+
+
+
+
+        function HistoricoSeguimiento(idRegistro) {
+
+            MensajeCargando();
+
+            let HistoricoAlocalizar = "{'IdRegistro':'" + idRegistro + "'}";
+
+
+            $.ajax({
+                url: 'Reposicion_Suspencion/BuscarHistorico',
+                data: HistoricoAlocalizar,
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+
+
+
+                    if (response.RespuestaServidor == 200) {
+
+                       // console.log(response.Data);
+
+
+                        $('#TablaHistoricoReposiciones').empty();
+                        DibujarTBLHistoricoFormaPago();
+                        PintarDatosHistoricoFormaPago(response.Data);
+
+                        $('#HistoricoSeguimientoFormaPago').modal('show');
+
+
+
+                    } else {
+                        MensajeErrorSweet(response.Error, response.Solucion);
+                    }
+
+                    OcultarMensajeCargando();
+
+                }, error: function (jqXHR, textStatus) {
+                    MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
+                    OcultarMensajeCargando();
+                }
+            });
+
+        }
+
+
+
+        function AgregarFormaPagoReferenciaCancelacion(IdRegitroAReferenciaCancelado)
+        {
+            let SeleccionaReferencia = document.getElementById("SeleccionaReferenciaCancelacion");
+
+            console.log(SeleccionaReferencia);
+
+
+            if (SeleccionaReferencia.value != "") {
+
+                MensajeCargando();
+
+                let enviarIdReferencia = "{'IdReferenciaCancelado':'"+SeleccionaReferencia.value+"', 'IdRegistroCancelar':'"+IdRegitroAReferenciaCancelado+"'}";
+
+
+                $.ajax({
+                    url: 'EncontrarCheque/AgregarIdFormaPagoAReferenciaCancelado',
+                    data: enviarIdReferencia,
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (response) {
+
+                        if (response.bandera) {
+
+                            if (SeleccionaReferencia.value != 0) {
+
+                                MensajeCorrectoSweet("se a ingresado la forma de pago a la referencia seleccionada correctamente");
+                            }
+                            else
+                            {
+                                MensajeCorrectoSweet("se a eliminado la forma de pago de la referencia seleccionada correctamente");
+                            }
+
+
+                        } else
+                        {
+                            MensajeErrorSweet("Solicite la suspencion de la forma de pago primero", response.MensajeError)
+                        }
+                        OcultarMensajeCargando();
+
+                        $('#AgregarFormaPagoCancelacion').modal('hide')
+                        $('#RenderPartialViewDetallesCheques').html('');
+
+
+
+                    }, error: function (jqXHR, textStatus) {
+                        MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
+                        OcultarMensajeCargando();
+                    }
+                });
+
+                OcultarMensajeCargando();
+
+               // console.log(SeleccionaReferencia.value + " || " + IdRegitroAReferenciaCancelado);
+            } else
+            {
+                MensajeErrorSweet(" Seleccione una referencia ", " No se a elegido ninguna referencia aún ");
+            }
+
+
+
+        }
+
+
+
+    </script>*@

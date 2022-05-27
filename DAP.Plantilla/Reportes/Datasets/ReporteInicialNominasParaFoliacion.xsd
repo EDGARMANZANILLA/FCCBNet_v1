@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="ReporteInicialNominasParaFoliacion" targetNamespace="http://tempuri.org/ReporteInicialNominasParaFoliacion.xsd" xmlns:mstns="http://tempuri.org/ReporteInicialNominasParaFoliacion.xsd" xmlns="http://tempuri.org/ReporteInicialNominasParaFoliacion.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="ReporteInicialNominasParaFoliacion" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="ReporteInicialNominasParaFoliacion" msprop:Generator_UserDSName="ReporteInicialNominasParaFoliacion">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="RegitrosNominaDelegacion" msprop:Generator_TableClassName="RegitrosNominaDelegacionDataTable" msprop:Generator_TableVarName="tableRegitrosNominaDelegacion" msprop:Generator_TablePropName="RegitrosNominaDelegacion" msprop:Generator_RowDeletingName="RegitrosNominaDelegacionRowDeleting" msprop:Generator_RowChangingName="RegitrosNominaDelegacionRowChanging" msprop:Generator_RowEvHandlerName="RegitrosNominaDelegacionRowChangeEventHandler" msprop:Generator_RowDeletedName="RegitrosNominaDelegacionRowDeleted" msprop:Generator_UserTableName="RegitrosNominaDelegacion" msprop:Generator_RowChangedName="RegitrosNominaDelegacionRowChanged" msprop:Generator_RowEvArgName="RegitrosNominaDelegacionRowChangeEvent" msprop:Generator_RowClassName="RegitrosNominaDelegacionRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Nomina" msprop:Generator_ColumnVarNameInTable="columnNomina" msprop:Generator_ColumnPropNameInRow="Nomina" msprop:Generator_ColumnPropNameInTable="NominaColumn" msprop:Generator_UserColumnName="Nomina" type="xs:string" minOccurs="0" />
+              <xs:element name="Id_Nom" msprop:Generator_ColumnVarNameInTable="columnId_Nom" msprop:Generator_ColumnPropNameInRow="Id_Nom" msprop:Generator_ColumnPropNameInTable="Id_NomColumn" msprop:Generator_UserColumnName="Id_Nom" type="xs:string" minOccurs="0" />
+              <xs:element name="Coment" msprop:Generator_ColumnVarNameInTable="columnComent" msprop:Generator_ColumnPropNameInRow="Coment" msprop:Generator_ColumnPropNameInTable="ComentColumn" msprop:Generator_UserColumnName="Coment" type="xs:string" minOccurs="0" />
+              <xs:element name="Adicional" msprop:Generator_ColumnVarNameInTable="columnAdicional" msprop:Generator_ColumnPropNameInRow="Adicional" msprop:Generator_ColumnPropNameInTable="AdicionalColumn" msprop:Generator_UserColumnName="Adicional" type="xs:string" minOccurs="0" />
+              <xs:element name="RutaBase" msprop:Generator_ColumnVarNameInTable="columnRutaBase" msprop:Generator_ColumnPropNameInRow="RutaBase" msprop:Generator_ColumnPropNameInTable="RutaBaseColumn" msprop:Generator_UserColumnName="RutaBase" type="xs:string" minOccurs="0" />
+              <xs:element name="Confianza" msprop:Generator_ColumnVarNameInTable="columnConfianza" msprop:Generator_ColumnPropNameInRow="Confianza" msprop:Generator_ColumnPropNameInTable="ConfianzaColumn" msprop:Generator_UserColumnName="Confianza" type="xs:string" minOccurs="0" />
+              <xs:element name="Sindicalizados" msprop:Generator_ColumnVarNameInTable="columnSindicalizados" msprop:Generator_ColumnPropNameInRow="Sindicalizados" msprop:Generator_ColumnPropNameInTable="SindicalizadosColumn" msprop:Generator_UserColumnName="Sindicalizados" type="xs:string" minOccurs="0" />
+              <xs:element name="Otros" msprop:Generator_ColumnVarNameInTable="columnOtros" msprop:Generator_ColumnPropNameInRow="Otros" msprop:Generator_ColumnPropNameInTable="OtrosColumn" msprop:Generator_UserColumnName="Otros" type="xs:string" minOccurs="0" />
+              <xs:element name="Delegacion" msprop:Generator_ColumnVarNameInTable="columnDelegacion" msprop:Generator_ColumnPropNameInRow="Delegacion" msprop:Generator_ColumnPropNameInTable="DelegacionColumn" msprop:Generator_UserColumnName="Delegacion" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Quincena" msprop:Generator_TableClassName="QuincenaDataTable" msprop:Generator_TableVarName="tableQuincena" msprop:Generator_TablePropName="Quincena" msprop:Generator_RowDeletingName="QuincenaRowDeleting" msprop:Generator_RowChangingName="QuincenaRowChanging" msprop:Generator_RowEvHandlerName="QuincenaRowChangeEventHandler" msprop:Generator_RowDeletedName="QuincenaRowDeleted" msprop:Generator_UserTableName="Quincena" msprop:Generator_RowChangedName="QuincenaRowChanged" msprop:Generator_RowEvArgName="QuincenaRowChangeEvent" msprop:Generator_RowClassName="QuincenaRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="NumQuincena" msprop:Generator_ColumnVarNameInTable="columnNumQuincena" msprop:Generator_ColumnPropNameInRow="NumQuincena" msprop:Generator_ColumnPropNameInTable="NumQuincenaColumn" msprop:Generator_UserColumnName="NumQuincena" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

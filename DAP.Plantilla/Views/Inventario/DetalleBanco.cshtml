@@ -1,0 +1,64 @@
+﻿@model List<DAP.Plantilla.Models.DetalleBancoModel>
+@{
+    ViewBag.Icono = "fas fa-boxes";
+    ViewBag.Title = "Detalle del banco";
+
+
+}
+
+
+<section >
+    <div class="col-12 offset-md-2 col-md-8 text-center">
+        <h5 class=" text-uppercase"> Detalles de la cuenta de Banco: </h5>
+    </div>
+
+    <div class="col-12">
+        <div class="text-center">
+            <h3 id="DetalleBancoCuenta" class="text-capitalize">@ViewBag.NombreBancoSeleccionado</h3>
+            <h6 id="IdCuentaBancariaDetalleBanco" style="display:none">@ViewBag.IdBancoSeleccionado</h6>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<div class="col-12  text-center  margenSection ">
+    <button id="CargarDetallesFolios" type="button" class="btn btn-outline-info btn-lg col-6 " onclick="CargarDetallesFolios()">Cargar Detalles de Formas de pago</button>
+
+</div>
+
+
+
+
+
+
+<!-- Generacion de tablas -->
+<section class="margenSection">
+    <div>
+        <div class="table-responsive margenSection ">
+            <table id="table_id" class="table table-striped table-bordered table-hover text-center" cellspacing="0" style="width:100%">
+                <thead class="tabla ">
+                    @*<caption>CONTROL DEL DETALLE DEL BANCO  @ViewBag.NombreBancoSeleccionado</caption>*@
+                    <tr>
+                        <th>Numero de Orden</th>
+                        <th>Numero de Contenedor</th>
+                        <th>Numero Folio</th>
+                        <th>Incidencia</th>
+                        <th>Empleado Asignado</th>
+                        <th>Fecha Incidencia</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</section>
+<br />
+<br />
+
+
+

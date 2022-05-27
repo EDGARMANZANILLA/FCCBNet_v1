@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="DsTGCxNominaDeducciones" targetNamespace="http://tempuri.org/DsTGCxNominaDeducciones.xsd" xmlns:mstns="http://tempuri.org/DsTGCxNominaDeducciones.xsd" xmlns="http://tempuri.org/DsTGCxNominaDeducciones.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="DsTGCxNominaDeducciones" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="DsTGCxNominaDeducciones" msprop:Generator_UserDSName="DsTGCxNominaDeducciones">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="TGCxNominaDeducciones" msprop:Generator_TableClassName="TGCxNominaDeduccionesDataTable" msprop:Generator_TableVarName="tableTGCxNominaDeducciones" msprop:Generator_TablePropName="TGCxNominaDeducciones" msprop:Generator_RowDeletingName="TGCxNominaDeduccionesRowDeleting" msprop:Generator_RowChangingName="TGCxNominaDeduccionesRowChanging" msprop:Generator_RowEvHandlerName="TGCxNominaDeduccionesRowChangeEventHandler" msprop:Generator_RowDeletedName="TGCxNominaDeduccionesRowDeleted" msprop:Generator_UserTableName="TGCxNominaDeducciones" msprop:Generator_RowChangedName="TGCxNominaDeduccionesRowChanged" msprop:Generator_RowEvArgName="TGCxNominaDeduccionesRowChangeEvent" msprop:Generator_RowClassName="TGCxNominaDeduccionesRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Clave" msprop:Generator_ColumnVarNameInTable="columnClave" msprop:Generator_ColumnPropNameInRow="Clave" msprop:Generator_ColumnPropNameInTable="ClaveColumn" msprop:Generator_UserColumnName="Clave" type="xs:string" minOccurs="0" />
+              <xs:element name="Descripcion" msprop:Generator_ColumnVarNameInTable="columnDescripcion" msprop:Generator_ColumnPropNameInRow="Descripcion" msprop:Generator_ColumnPropNameInTable="DescripcionColumn" msprop:Generator_UserColumnName="Descripcion" type="xs:string" minOccurs="0" />
+              <xs:element name="MontoPositivo" msprop:Generator_ColumnVarNameInTable="columnMontoPositivo" msprop:Generator_ColumnPropNameInRow="MontoPositivo" msprop:Generator_ColumnPropNameInTable="MontoPositivoColumn" msprop:Generator_UserColumnName="MontoPositivo" type="xs:decimal" minOccurs="0" />
+              <xs:element name="MontoNegativo" msprop:Generator_ColumnVarNameInTable="columnMontoNegativo" msprop:Generator_ColumnPropNameInRow="MontoNegativo" msprop:Generator_ColumnPropNameInTable="MontoNegativoColumn" msprop:Generator_UserColumnName="MontoNegativo" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Ramo" msprop:Generator_ColumnVarNameInTable="columnRamo" msprop:Generator_ColumnPropNameInRow="Ramo" msprop:Generator_ColumnPropNameInTable="RamoColumn" msprop:Generator_UserColumnName="Ramo" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

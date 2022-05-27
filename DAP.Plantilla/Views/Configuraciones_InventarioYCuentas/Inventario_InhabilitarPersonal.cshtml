@@ -1,0 +1,204 @@
+﻿@model List<DAP.Foliacion.Entidades.DTO.Configuracion_EditarPersonalDTO>
+<!-- Inhabilitar al personal de asignacion -->
+
+<class class="margenSection row">
+
+    <div class="btn-block">
+        <h5 class="text-center">Selecciona un nombre del personal para "Eliminar":</h5>
+    </div>
+
+
+    <div class="col-12 offset-md-2 col-md-8">
+        <div class="form-group">
+            <select class="form-control " id="SeleccionarPersonalInhabilitar" required>
+                <option value="" selected disabled>Selecciona personal a inhabilitar...</option>
+                @foreach (var orden in Model)
+                {
+
+
+                    <option value="@orden.Id">@orden.NombreEmpleado  </option>
+
+
+                }
+
+            </select>
+        </div>
+    </div>
+
+
+    <div class="col-12 text-center">
+        <button id="InhabilitarEmpleado" class="btn btn-danger btn-lg" > <i class="fas fa-trash-alt"></i> Eliminar</button>
+
+    </div>
+
+
+</class>
+<br />
+<br />
+
+
+
+
+<!-- Modales de eliminacion del personal de asignacion -->
+<!--  Modal de confirmacion para la Eliminacion-->
+<section class="modal fade" id="EliminarEmpleado" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+
+                <h5 class="col-11 text-center">Realiza la inhabilitacion del personal</h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+
+            </div>
+
+
+            <div class=" modal-body">
+                <h6 class=" col-12 text-center">Nombre del personal a inhabilitar de asignaciones</h6>
+
+                <input id="FolioFinal" class="offset-1 col-10 offset-sm-0 col-sm-12" placeholder="Edicion del personal" type="text" />
+
+
+                <br />
+
+            </div>
+
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                <button id="GuardarInhabilitados" type="button" class="btn btn-success">Guardar edicion de personal </button>
+
+            </div>
+
+
+        </div>
+    </div>
+</section>
+
+
+<script>
+
+
+    $(document).ready(function () {
+
+        let IdnombrePersonaSeleccionado = null;
+        const PersonalInhabilitar = document.getElementById("SeleccionarPersonalInhabilitar");
+        PersonalInhabilitar.addEventListener("click",
+            function () {
+                IdnombrePersonaSeleccionado = this.options[PersonalInhabilitar.selectedIndex];
+
+
+            }
+        );
+
+
+
+          
+        const InhabilitarEmpleado = document.getElementById("InhabilitarEmpleado");
+        InhabilitarEmpleado.addEventListener("click",
+            function () {
+               
+
+               
+
+                if (IdnombrePersonaSeleccionado != null) {
+
+
+
+                    Swal.fire({
+                        title: '¿Esta seguro que desea guardar los cambios?',
+                        showDenyButton: true,
+                        showCancelButton: true,
+                        confirmButtonColor: '#28A745',
+                        confirmButtonText: `Guardar`,
+                        denyButtonText: `No Guardar`,
+                    }).then((result) => {
+                        /* Read more about isConfirmed, isDenied below */
+                        if (result.isConfirmed) {
+                            MensajeCargando();
+
+                            let enviarIdNombre = "{'Id':'" + IdnombrePersonaSeleccionado.value + "'}";
+                            $.ajax({
+                                url: '@Url.Action("InhabilitarPersonalPorID", "Configuraciones_InventarioYCuentas")',
+                                data: enviarIdNombre,
+                                type: "POST",
+                                contentType: "application/json; charset=utf-8",
+                                success: function (msg) {
+                                    OcultarMensajeCargando();
+
+                                    if (msg) {
+                                        Swal.fire('No se pudo Editar con exito!', '', 'error');
+                                    }
+
+
+                                    Swal.fire({
+                                        backdrop: true,
+                                        allowEnterKey: false,
+                                        allowOutsideClick: false,
+                                        icon: 'success',
+                                        title: 'Se inhabilito con exito!',
+
+                                    }).then((result) => {
+                                        document.location.reload();
+                                    })
+
+
+
+
+                                },
+                                error: function (msg) {
+                                    OcultarMensajeCargando();
+                                    Swal.fire({
+                                        backdrop: true,
+                                        allowEnterKey: false,
+                                        allowOutsideClick: false,
+                                        icon: 'info',
+                                        title: 'Problema al inhabilitar',
+                                        text: 'No se pudo inhabilitar el personal, pongase en contacto con el administrador del sistema',
+                                    })
+                                }
+                            });
+
+
+
+
+
+
+
+                        } else if (result.isDenied) {
+                            Swal.fire('Los cambios no seran guardados', '', 'info')
+
+                        }
+                    });
+
+
+
+
+                } else {
+                    Swal.fire('Seleccione un personal a inhabilitar', '', 'info')
+                }
+
+
+            }
+        );
+
+
+
+       
+
+
+
+
+
+
+
+    });
+
+</script>
+
+
+

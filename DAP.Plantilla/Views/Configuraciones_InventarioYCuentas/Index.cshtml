@@ -1,0 +1,457 @@
+﻿@{
+    ViewBag.Icono = "fas fa-tools";
+    ViewBag.Title = "Configuracion de Inventario";
+
+
+}
+
+
+
+<style>
+
+
+    * {
+        margin: 0;
+        padding: 0;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+
+
+    ul {
+        list-style-type: none;
+    }
+
+    a {
+        color: #000000;
+        text-decoration: none;
+    }
+
+    /** =======================
+    * Contenedor Principal
+    ===========================*/
+    h3 {
+        color: #0094ff;
+    
+        text-align: center;
+       
+    }
+
+        h1 a {
+            color: #00ffff;
+            font-size: 16px;
+        }
+
+    .accordion {
+        width: 100%;
+        max-width: 360px;
+        margin: 30px auto 20px;
+        background: #fcf5f5;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+    }
+
+        .accordion .link {
+            cursor: pointer;
+            display: block;
+            padding: 15px 15px 15px 42px;
+            color: #4D4D4D;
+            font-size: 14px;
+            font-weight: 700;
+            border-bottom: 1px solid #CCC;
+            position: relative;
+            -webkit-transition: all 0.4s ease;
+            -o-transition: all 0.4s ease;
+            transition: all 0.4s ease;
+        }
+
+        .accordion li:last-child .link {
+            border-bottom: 0;
+        }
+
+        .accordion li i {
+            position: absolute;
+            top: 16px;
+            left: 12px;
+            font-size: 18px;
+            color: #595959;
+            -webkit-transition: all 0.4s ease;
+            -o-transition: all 0.4s ease;
+            transition: all 0.4s ease;
+        }
+
+            .accordion li i.fa-chevron-down {
+                right: 12px;
+                left: auto;
+                font-size: 16px;
+            }
+
+        .accordion li.open .link {
+            color: #b63b4d;
+        }
+
+        .accordion li.open i {
+            color: #b63b4d;
+        }
+
+            .accordion li.open i.fa-chevron-down {
+                -webkit-transform: rotate(180deg);
+                -ms-transform: rotate(180deg);
+                -o-transform: rotate(180deg);
+                transform: rotate(180deg);
+            }
+
+        .accordion li.default .submenu {
+            display: block;
+        }
+    /**
+    * Submenu
+    -----------------------------*/
+    .submenu {
+        display: none;
+        background: #444359;
+        font-size: 14px;
+    }
+
+        .submenu li {
+            border-bottom: 1px solid #4b4a5e;
+        }
+
+        .submenu a {
+            display: block;
+            text-decoration: none;
+            color: #000000;
+            padding: 12px;
+            padding-left: 42px;
+            -webkit-transition: all 0.25s ease;
+            -o-transition: all 0.25s ease;
+            transition: all 0.25s ease;
+        }
+
+            .submenu a:hover {
+                background: #b63b4d;
+                color: #FFF;
+            }
+</style>
+
+
+
+
+
+
+<h3>Privilegios Escalados</h3>
+<!-- Contenedor -->
+<ul id="accordion" class="accordion">
+    <li>
+        <div class="link"><i class="fas fa-user-tag"></i>Asignaciones<i class="fa fa-chevron-down"></i></div>
+        <ul class="submenu">
+            <li><a id="AgregarPersonal">Agregar personal</a></li>
+            <li><a id="EditarPersonal">Modicar personal</a></li>
+            <li><a id="InhabilitarPersonal">Inhabilitar personal</a></li>
+        </ul>
+    </li>
+    <!--    <li class="default  open>">   -->
+    <li >
+        <div class="link"><i class="fas fa-university"></i>Cuentas bancarias<i class="fa fa-chevron-down"></i></div>
+        <ul class="submenu">
+            <li><a id="VerificaAgregaCuenta">Agregar y/o Verificar cuenta bancaria</a></li>
+            <li><a id="ModificarCuenta">Modificar cuenta bancaria</a></li>
+            <li><a id="EliminarCuenta">Quitar cuenta bancaria</a></li>
+
+        </ul>
+    </li>
+    <li>
+        <div class="link"><i class="fas fa-money-check-alt"></i>Formas de pago excepcionales<i class="fa fa-chevron-down"></i></div>
+        <ul class="submenu">
+            <li><a id="FormasExepcionales">Crear nueva Exepcion</a></li>
+            <li><a id="Desinhabilitar">Desinhabilitar cheques inhabilitados por error</a></li>
+        </ul>
+    </li>
+
+</ul>
+
+<div id="RenderVistaParcial" class="card col-12 offset-md-1 col-md-10 margenSection" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+
+</div>
+
+
+
+
+<script>
+
+
+
+
+
+
+
+
+
+    $(document).ready(function () {
+
+        /* funcion a nonima para la tabla de priviliegios escalados*/
+        $(function () {
+            var Accordion = function (el, multiple) {
+                this.el = el || {};
+                this.multiple = multiple || false;
+
+                // Variables privadas
+                var links = this.el.find('.link');
+                // Evento
+                links.on('click', { el: this.el, multiple: this.multiple }, this.dropdown)
+            }
+
+            Accordion.prototype.dropdown = function (e) {
+                var $el = e.data.el;
+                $this = $(this),
+                    $next = $this.next();
+
+                $next.slideToggle();
+                $this.parent().toggleClass('open');
+
+                if (!e.data.multiple) {
+                    $el.find('.submenu').not($next).slideUp().parent().removeClass('open');
+                };
+            }
+
+            var accordion = new Accordion($('#accordion'), false);
+
+
+        });
+
+
+
+        /************************* ASIGNACIONES  **********************************/
+
+        /* Metodos para saber que vista parcial retornar */
+        const Asignar = document.getElementById("AgregarPersonal");
+        Asignar.addEventListener("click",
+            function () {
+
+
+                var laURLDeLaVista = '@Url.Action("Inventario_AgregarPersonal", "Configuraciones_InventarioYCuentas")';
+                $.ajax({
+                    cache: false,
+                    async: true,
+                    type: "GET",
+                    url: laURLDeLaVista,
+                    data: {},
+                    success: function (response) {
+                        $('#RenderVistaParcial').html('');
+                        $('#RenderVistaParcial').html(response);
+                    }
+                });
+
+
+
+
+            }
+        );
+
+
+
+         /* Retorna la vista parcial de Edicion */
+        const EditarPersonal = document.getElementById("EditarPersonal");
+        EditarPersonal.addEventListener("click",
+            function () {
+
+
+                let URLDeLaVista = '@Url.Action("Inventario_MostrarEdicionPersonal", "Configuraciones_InventarioYCuentas")';
+                $.ajax({
+                    cache: false,
+                    async: true,
+                    type: "GET",
+                    url: URLDeLaVista,
+                    data: {},
+                    success: function (response) {
+                        $('#RenderVistaParcial').html('');
+                        $('#RenderVistaParcial').html(response);
+                    }
+                });
+
+
+
+
+            }
+        );
+
+
+        /* Retorna la vista parcial de Inhabilitacion */
+        const InhabilitarPersonal = document.getElementById("InhabilitarPersonal");
+        InhabilitarPersonal.addEventListener("click",
+            function () {
+
+
+                let URLDeLaVista = '@Url.Action("Inventario_InhabilitarPersonal", "Configuraciones_InventarioYCuentas")';
+                $.ajax({
+                    cache: false,
+                    async: true,
+                    type: "GET",
+                    url: URLDeLaVista,
+                    data: {},
+                    success: function (response) {
+                        $('#RenderVistaParcial').html('');
+                        $('#RenderVistaParcial').html(response);
+                    }
+                });
+
+
+
+
+            }
+        );
+
+
+
+
+
+
+    /************************* Cuentas Bancarias  **********************************/
+
+               /* Retorna la vista parcial */
+        const VerificarCuenta = document.getElementById("VerificaAgregaCuenta");
+        VerificarCuenta.addEventListener("click",
+            function () {
+
+
+                let URLDeLaVista = '@Url.Action("CuentaBancaria_VerificarAgregar", "Configuraciones_InventarioYCuentas")';
+                $.ajax({
+                    cache: false,
+                    async: true,
+                    type: "GET",
+                    url: URLDeLaVista,
+                    data: {},
+                    success: function (response) {
+                        $('#RenderVistaParcial').html('');
+                        $('#RenderVistaParcial').html(response);
+                    }
+                });
+
+            }
+        );
+
+
+         /* Retorna la vista parcial de modificacion*/
+        const ModificarCuenta = document.getElementById("ModificarCuenta");
+        ModificarCuenta.addEventListener("click",
+            function () {
+
+
+                let URLDeLaVista = '@Url.Action("CuentaBancaria_MostrarEdicionBanco", "Configuraciones_InventarioYCuentas")';
+                $.ajax({
+                    cache: false,
+                    async: true,
+                    type: "GET",
+                    url: URLDeLaVista,
+                    data: {},
+                    success: function (response) {
+                        $('#RenderVistaParcial').html('');
+                        $('#RenderVistaParcial').html(response);
+                    }
+                });
+
+            }
+        );
+
+
+        /*Retorna la vista de eliminacion de cuenta*/
+        const EliminarCuenta = document.getElementById("EliminarCuenta");
+        EliminarCuenta.addEventListener("click",
+            function () {
+
+
+                let URLDeLaVista = '@Url.Action("CuentaBancaria_EliminacionCuenta", "Configuraciones_InventarioYCuentas")';
+                $.ajax({
+                    cache: false,
+                    async: true,
+                    type: "GET",
+                    url: URLDeLaVista,
+                    data: {},
+                    success: function (response) {
+                        $('#RenderVistaParcial').html('');
+                        $('#RenderVistaParcial').html(response);
+                    }
+                });
+
+            }
+        );
+
+
+
+
+    /************************* Formas de pago exepcionales **********************************/
+
+        const Exepciones = document.getElementById("FormasExepcionales");
+        Exepciones.addEventListener("click",
+            function () {
+
+
+                let URLDeLaVista = '@Url.Action("FormasPagoExcepcionales", "Configuraciones_InventarioYCuentas")';
+                $.ajax({
+                    cache: false,
+                    async: true,
+                    type: "GET",
+                    url: URLDeLaVista,
+                    data: {},
+                    success: function (response) {
+                        $('#RenderVistaParcial').html('');
+                        $('#RenderVistaParcial').html(response);
+                    }
+                });
+
+
+
+
+            }
+        );
+
+
+        const Desinhabilitar = document.getElementById("Desinhabilitar");
+        Desinhabilitar.addEventListener("click",
+            function () {
+
+
+                let URLDeLaVista = '@Url.Action("FormasPagoExcepcionales_DesinhabilitarInhabilitados", "Configuraciones_InventarioYCuentas")';
+                $.ajax({
+                    cache: false,
+                    async: true,
+                    type: "GET",
+                    url: URLDeLaVista,
+                    data: {},
+                    success: function (response) {
+                        $('#RenderVistaParcial').html('');
+                        $('#RenderVistaParcial').html(response);
+                    }
+                });
+
+
+
+
+            }
+        );
+
+
+
+
+       
+
+
+
+
+
+    });
+
+
+
+
+
+
+
+
+
+
+
+</script>

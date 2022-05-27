@@ -1,0 +1,52 @@
+﻿@{
+    ViewBag.Icono = "fas fa-exclamation-triangle";
+    ViewBag.Title = "Incidencias";
+
+
+}
+
+
+
+<section>
+    <div class="col-12 offset-md-2 col-md-8 text-center">
+        <h5 class=" text-uppercase"> Crear una nueva incidencia para formas de pagos del banco: </h5>
+    </div>
+
+    <div class="col-12">
+        <div class="text-center">
+            <h3 class="text-capitalize" id="Banco">@ViewBag.NombreBancoSeleccionado</h3>
+            <h6 id="IdCuentaBancariaAgregar" style="display:none">@ViewBag.IdBancoSeleccionado</h6>
+
+        </div>
+
+    </div>
+
+</section>
+
+</br>
+</br>
+</br>
+    
+<seccion class="card col-12 offset-md-2 col-md-8" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+
+    <div class="margenSection row" style="margin-bottom: 60px; ">
+
+
+        <div class="btn-block">
+            <h5 class="text-center">Seleccione la opcion deseada:</h5>
+        </div>
+
+        <div class="col-12 col-md-6  btn-block">
+            <a type="button" class="btn btn-primary btn-lg  btn-block" href="@Url.Action("Inhabilitar", "Inventario", new  { IdCuentaBancaria = ViewBag.IdBancoSeleccionado })">Inhabilitar</a>
+
+        </div>
+
+        <div class="col-12 col-md-6  btn-block">
+            <a type="button" class="btn btn-primary btn-lg  btn-block"  href="@Url.Action("Asignar", "Inventario", new { IdCuentaBancaria = ViewBag.IdBancoSeleccionado })" title="Realizar un ajuste al inventario">Asignar</a>
+
+        </div>
+
+    </div>
+
+</seccion>
+

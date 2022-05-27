@@ -1,0 +1,2 @@
+1- Agregar la dll a la referencia System.configuration en datos y en la platilla donde se vayan a usar
+2- Agregar la cadena de conexion como una variable local en App.Config

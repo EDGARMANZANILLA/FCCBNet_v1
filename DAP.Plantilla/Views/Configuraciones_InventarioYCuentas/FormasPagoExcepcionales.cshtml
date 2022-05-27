@@ -1,0 +1,221 @@
+﻿@model List<string>
+<!-- Asignacion o inhabilitacion de formas de pago que hayan tenido chequera en algun momento -->
+
+<class class="margenSection row">
+
+    <div class="btn-block">
+        <h5 class="text-center">Formas de pago excepcionales:</h5>
+    </div>
+
+
+    <div class="btn-block offset-1 col-10">
+        <h5 class="text-justify  ">En este apartado se pueden "Asignar e Inhabilitar" formas de pago  formas de pago de una cuenta donde haya existido cheques y ahora solo cuenta con pagamatico (Tarjetas):</h5>
+        <br />
+    </div>
+
+
+    <div class="col-12 offset-md-2 col-md-8">
+        <div class="form-group">
+            <select class="form-control " id="SeleccionCuentaExecepcional" required>
+                <option value="" disabled selected>Selecciona una cuenta activa a editar...</option>
+                @foreach (var nueva in Model)
+                {
+                    <option value="@nueva">@nueva</option>
+                }
+            </select>
+        </div>
+    </div>
+
+
+    <div class=" col-12 offset-md-3 col-md-6 text-center">
+        <form>
+            <label> Selecciona una opcion : </label>
+            <div>
+                <label class="btn  btn-outline-primary">
+                    <input id="checkAsignar" type="checkbox" autocomplete="off"> Asignar
+                </label>
+                <label class="btn  btn-outline-primary">
+                    <input id="checkInhabilitar" type="checkbox" autocomplete="off"> Inhabilitar
+                </label>
+
+            </div>
+        </form>
+        <br />
+    </div>
+
+
+    <div class="col-12 text-center">
+        <button id="continuarExepciones" class="btn btn-success btn-lg"> <i class="far fa-hand-point-right"></i> Continuar</button>
+    </div>
+
+</class>
+
+<br />
+<br />
+
+<div id="RenderVistaParcialExepciones" >
+
+</div>
+
+
+
+<script>
+    $(document).ready(function () {
+
+        let cuentaSeleccionadaExepcion = null;
+
+        var SeleccionCuenta = document.getElementById("SeleccionCuentaExecepcional");
+        SeleccionCuenta.addEventListener("change",
+            function () {
+                cuentaSeleccionadaExepcion = null;
+                cuentaSeleccionadaExepcion = this.options[SeleccionCuenta.selectedIndex];
+                console.log(cuentaSeleccionadaExepcion.value);
+            }
+        );
+
+
+
+
+
+
+        let asignar = false;
+        var checkbox = document.getElementById('checkAsignar');
+        checkbox.addEventListener('change', function () {
+            if (this.checked) {
+                //alert('checkbox esta seleccionado');
+                asignar = true;
+                console.log(asignar);
+            } else {
+                asignar = false;
+                console.log(asignar);
+            }
+        });
+
+
+
+
+
+        let inhabilitar = false;
+        var checkboxInhabilitar = document.getElementById('checkInhabilitar');
+        checkboxInhabilitar.addEventListener('change', function () {
+            if (this.checked) {
+                //alert('checkbox esta seleccionado');
+                inhabilitar = true;
+                console.log(inhabilitar);
+            } else {
+                inhabilitar = false;
+                console.log(inhabilitar);
+            }
+        });
+
+
+
+        const Continuar = document.getElementById("continuarExepciones");
+        Continuar.addEventListener("click",
+            function () {
+
+                if (cuentaSeleccionadaExepcion != null)
+                {
+                    if (asignar == true && inhabilitar == false || asignar == false && inhabilitar == true)
+                    {
+                           //envia a la vista de asignacion
+                           if (asignar == true && inhabilitar == false )
+                           {
+
+                           
+                               let EnviarNumeroCuenta = "{'NumeroCuenta':'"+cuentaSeleccionadaExepcion.value+"'}";
+                               console.log(EnviarNumeroCuenta);
+
+                                $.ajax({
+                                  
+                                    url: '@Url.Action("FormasPagoExcepcionales_Asignar", "Configuraciones_InventarioYCuentas")',
+                                    data: EnviarNumeroCuenta,
+                                    type: "POST",
+                                    contentType: "application/json; charset=utf-8",
+                                    success: function (response) {
+                                        $('#RenderVistaParcialExepciones').html('');
+                                        $('#RenderVistaParcialExepciones').html(response);
+                                    }
+                                });
+
+                           }
+
+                            //envia a la vista de inhabilitacion
+                           if (asignar == false && inhabilitar == true)
+                           {
+
+                     
+                               let NumeroCuentaInhabilitar = "{'NumeroCuenta':'"+cuentaSeleccionadaExepcion.value+"'}";
+
+                              
+                                $.ajax({
+                                    url: '@Url.Action("FormasPagoExcepcionales_Inhabilitar", "Configuraciones_InventarioYCuentas")',
+                                    data: NumeroCuentaInhabilitar,
+                                    type: "POST",     
+                                    contentType: "application/json; charset=utf-8",
+                                    success: function (response) {
+                                        $('#RenderVistaParcialExepciones').html('');
+                                        $('#RenderVistaParcialExepciones').html(response);
+                                    }
+                                });
+
+                           }
+
+
+
+
+
+
+
+                    }
+                    else {
+
+
+                        Swal.fire({
+                            backdrop: true,
+                            allowEnterKey: false,
+                            allowOutsideClick: false,
+                            icon: 'info',
+                            title: 'seleccione solo una opcion ',
+                            text: ``
+
+                        });
+
+                    }
+
+                }
+                else
+                {
+                    Swal.fire({
+                        backdrop: true,
+                        allowEnterKey: false,
+                        allowOutsideClick: false,
+                        icon: 'info',
+                        title: 'seleccione una cuenta',
+                        text: ``
+
+                    });
+
+                }
+
+
+
+
+
+
+
+            }
+        );
+
+
+
+
+
+
+
+
+    });
+</script>
+
+
+

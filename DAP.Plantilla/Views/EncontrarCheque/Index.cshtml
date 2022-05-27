@@ -1,0 +1,632 @@
+﻿
+
+@Scripts.Render("~/Scripts/SCRIPTS_PROYECTO_VISTAS/CHEQUES_CANCELADOS/EncontrarCheque/Index.js")
+
+@{
+    ViewBag.Icono = "fas fa-ban";
+    ViewBag.Title = "Encontrar forma de pago para cancelacion";
+
+
+}
+
+
+<div class="margenSection row ">
+
+    <div class="form-group filtro  col-12 col-xs-offset-0 offset-sm-3 col-sm-2">
+        <select class="form-control seleccion" id="TipoFiltro" required>
+
+            <option value="" disabled selected>FILTROS OPCIONALES...</option>
+            <option value="1">CHEQUE</option>
+            <option value="2">NUMERO DE EMPLEADO</option>
+            <option value="3">NOMBRE BENEFICIARIO</option>
+        </select>
+    </div>
+
+
+    <div class="form-group    col-12 col-sm-4">
+
+        <select id="Buscador" class="input">
+
+            @*<option>OPCION 1</option>
+                <option>OPCION 2</option>
+                <option>OPCION 3</option>
+                <option>OPCION 4</option>
+                <option>OPCION 5</option>
+                <option>OPCION 6</option>
+                <option>OPCION 7</option>
+                <option>OPCION 8</option>
+                <option>OPCION 9</option>
+                <option>OPCION 10</option>
+                <option>OPCION 11</option>*@
+
+        </select>
+    </div>
+
+
+    <br />
+</div>
+
+
+
+<br />
+<div class="col-12  text-center">
+    <button id="btnBuscardor" class="btn btn-primary btn-lg"> <i class="fa fa-search" aria-hidden="true"></i> Buscar</button>
+
+
+</div>
+
+
+<br />
+<br />
+
+<div class="col-12 ">
+
+    <!--Nuevo modal-->
+    <!-- Cascaron de tabla para luego llenarla con datos desde la DB -->
+
+    <div class="table-responsive text-center">
+
+        <div id="TablaRegistros">
+
+            <table id="RegistrosEncontrados" class='table table-striped table-bordered table-hover' style="display:none">
+                <caption class="text-uppercase"> Formas De Pago Disponible </caption>
+                <thead class="tabla">
+                    <tr class="text-center text-uppercase">
+
+                        <th>IdRegistro</th>
+                        <th>IdNom</th>
+                        <th>Referencia Bitacora</th>
+                        <th>Quincena</th>
+
+                        <th>NumEmpleado</th>
+                        <th>NombreBeneficiaro</th>
+                        <th>FolioCheque</th>
+
+                        <th>Liquido</th>
+                        <th>EstadoCheque</th>
+
+                    </tr>
+
+
+                </thead>
+
+            </table>
+
+        </div>
+    </div>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- Modal para cargar una forma de pago a una referencia para su foliacion   -->
+<div class="modal fade" id="Prueba_RenderVista" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+        <div class="modal-content" role="document">
+            @*<div class="modal-header">
+                    <h4 class="modal-title col-11 text-capitalize text-center">AGREGAR UNA FORMA DE PAGO A UN NUMERO DE REFERENCIA DE CANCELACION</h4>
+                    <button type="button" class="close btn-primary" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>*@
+            <div class="modal-body">
+
+                <div id="RenderPartialViewDetallesCheques">
+
+                </div>
+
+
+
+
+            </div>
+            <div class="modal-footer">
+
+
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+
+    .select2-selection__rendered {
+        color: #007BFF !important;
+        margin-top: 1rem;
+        padding-left: 8px;
+        padding-right: 200px;
+    }
+
+    .select2-search__field {
+        font-size: 100%;
+        margin-top: 5px;
+        margin-left: 5px;
+        padding: 0;
+        max-width: 100%;
+        height: 60px;
+        font-family: sans-serif;
+        font-size: 25px;
+        font-weight: bolder;
+    }
+
+    .select2-results__options {
+        list-style: none;
+        margin-bottom: 25px;
+        padding: 0;
+    }
+
+
+
+
+    .select2-results {
+        text-align: center;
+        color: rgb(0, 123, 255);
+        font-size: 20px;
+        font-weight: bolder;
+    }
+
+
+    .seleccion {
+        border: 0;
+        height: 60px;
+        color: rgb(0, 123, 255);
+        background: transparent;
+        font-size: 17px;
+        font-weight: bolder;
+        background: #ffffff;
+    }
+
+    .filtro {
+        height: 60px;
+        background: #74BC7C;
+        font-size: 15pt;
+        color: #262626;
+        border-radius: 15px;
+    }
+
+
+
+
+
+
+
+
+
+    .seleccion2 {
+        font-size: 18px;
+        font-weight: bolder;
+        color: #007BFF;
+        text-align: center;
+    }
+
+
+
+
+
+
+    .input {
+        width: 400px;
+        height: 55px;
+        background: #f8f8f86b;
+        border: 2px solid;
+        font-size: 14pt;
+        float: left;
+        color: #262626;
+        padding-left: 55px;
+        -webkit-border-radius: 6px;
+        -moz-border-radius: 6px;
+        border-radius: 16px;
+        color: #1e77fd;
+    }
+</style>
+
+
+
+@*<script>
+
+
+
+        function DibujarTablaRegistros() {
+            $("#TablaRegistros").append(
+
+                "<table id='RegistrosEncontrados'  class='table table-striped display table-bordered table-hover' cellspacing='0'  style='width:100%'>" +
+                " <caption class='text-uppercase'>Registros Encontrados</caption>"
+                + "<thead class='tabla'>" +
+
+                "<tr class='text-center text-uppercase'>" +
+
+
+                 "<th>Id_Nom</th>"+
+                 "<th>Referencia Bitacora</th>"+
+                 "<th>Quincena</th>"+
+                 "<th>Num Empleado</th>"+
+                 "<th>Nombre Beneficiaro</th>"+
+                 "<th>Num Benef</th>"+
+                 "<th>Folio Cheque</th>"+
+                 "<th>Liquido</th>"+
+                "<th>Estado Cheque</th>" +
+                "<th>Tipo Pago</th>" +
+                "<th> </th>" +
+
+                "</tr>" +
+                "</thead>" +
+                "</table>"
+            );
+        };
+
+        let RegistrosTabla;
+        function PintarRegistrosEncontrados(datos) {
+
+
+
+            RegistrosTabla= $('#RegistrosEncontrados').DataTable({
+                "ordering": true,
+                "info": false,
+                "searching": false,
+                "paging": false,
+                "lengthMenu": [5, 10],
+                "language":
+                {
+                    "processing": "Procesando...",
+                    "lengthMenu": "Mostrar _MENU_ registros",
+                    "zeroRecords": "No se encontraron resultados",
+                    "emptyTable": "Ningún dato disponible en esta tabla",
+                    "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+                    "search": "Buscar:",
+                    "info": "Mostrando de _START_ a _END_ de _TOTAL_ entradas",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Último",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    }
+                },
+                "data": datos,
+                "columns": [
+
+                    { "data": "Id_nom" },
+                    { "data": "ReferenciaBitacora" },
+                    { "data": "Quincena" },
+                    { "data": "NumEmpleado" },
+                    { "data": "NombreBeneficiaro" },
+                    { "data": "NumBene" },
+                    { "data": "FolioCheque" },
+                    { "data": "Liquido" },
+                    { "data": "EstadoCheque" },
+                    { "data": "TipoPago" },
+                    { "data": "IdRegistro" }
+                ],
+                "columnDefs": [
+
+                    { className: "text-center col-1", visible: true, "targets": 0, },
+                    { className: "text-center col-1", visible: true, "targets": 1, },
+                    { className: "text-center col-1", visible: true, "targets": 2, },
+                    { className: "text-center col-1", visible: true, "targets": 3, },
+                    { className: "text-center col-2", visible: true, "targets": 4, },
+                    { className: "text-center col-1", visible: true, "targets": 5, },
+                    { className: "text-center col-1", visible: true, "targets": 6, },
+                    { className: "text-center col-1", visible: true, "targets": 7, },
+                    { className: "text-center col-1", visible: true, "targets": 8, },
+                    { className: "text-center col-1", visible: true, "targets": 9, },
+                    {
+                        className: "text-center col-1",
+                        visible: true,
+                        "targets": [10],
+                        render: function (data, type, row) {
+                             //console.log(typeof data);
+                             //console.log( data);
+                            if (data) {
+                                return '<h4 class="verDetalle bg-success btn  text-uppercase text-light"  > Ver Detalle </h4>';
+                            }
+
+                        }
+                    }
+
+                ],
+                "order": [[2, 'desc']]
+
+            });
+
+        };
+
+
+
+
+
+
+        $(document).ready(function () {
+
+
+
+
+
+
+            let filtroSeleccionado = null;
+            const TipoFiltro = document.getElementById("TipoFiltro");
+            TipoFiltro.addEventListener("change",
+                function () {
+
+                    filtroSeleccionado = null;
+                    filtroSeleccionado = this.options[TipoFiltro.selectedIndex];
+                    console.log(filtroSeleccionado.value);
+
+                    document.getElementById("Buscador").disabled = false;
+                }
+            );
+
+
+
+            let EnviaIdNom = "{'NumeroQuincena: ''}";
+
+
+            $("#Buscador").select2
+            ({
+
+                language: "es",
+                width: '100%',
+                ajax: {
+                        url: '@Url.Action("ObtenerFiltradoDatos", "EncontrarCheque")',
+                        type: 'GET',
+                        dataType: 'json',
+                        delay: 1000,
+                    data: function (data) {
+
+                        //let query = {
+                        //    nombre: data.term,
+                        //    type: 'strin'
+                        //}
+
+                        return {
+                            TipoDeBusqueda: filtroSeleccionado.value,
+                            BuscarDato: data.term
+                        };
+
+                       // console.log(query.term);
+
+                        // Query parameters will be ?search=[term]&type=public
+                        //return query;
+                            //console.log(response.term);
+
+                    },
+                    processResults: function (data, params) {
+                        // parse the results into the format expected by Select2
+                        // since we are using custom formatting functions we do not need to
+                        // alter the remote JSON data, except to indicate that infinite
+                        // scrolling can be used
+                                ////console.log("entre TILIN")
+                                ////console.log(data)
+                                ////console.log(data.DataElementosEncontrados)
+
+
+                        let results = [];
+                        $.each(data, function (index, item) {
+
+                            results.push({
+                                id: item.id,
+                                text: item.text
+                            })
+
+                        });
+
+                        return { results };
+
+                    },
+                    cache: true
+                },
+                placeholder: "Ingrese datos a buscar...",
+                allowClear: true,
+                disabled: true,
+                minimumInputLength: 5,
+                cache: true,
+
+
+
+
+
+            });
+
+
+            let myID = 'Buscador';
+
+
+
+            $('#select2-' + myID + '-container').addClass('seleccion2');
+            $('#select2-' + myID + '-container').parent().css('height', '62px');
+            $('#select2-' + myID + '-container').parent().css('border-radius', '15px');
+
+
+
+
+
+
+
+
+            let datoSeleccionadoSelect2 = null;
+            $('#Buscador').on('select2:select', function (e) {
+
+                datoSeleccionadoSelect2 = null;
+                datoSeleccionadoSelect2 = e.params.data;
+                console.log(datoSeleccionadoSelect2 );
+            });
+
+
+
+
+
+
+
+
+
+
+
+
+
+            const Buscador= document.getElementById("btnBuscardor");
+            Buscador.addEventListener("click",
+                function () {
+
+                    if (filtroSeleccionado != null)
+                    {
+                        if (datoSeleccionadoSelect2 != null)
+                        {
+                            MensajeCargando();
+
+                            //let BuscarElementoSeleccionado = "{'BuscarElemento_id': '"+datoSeleccionadoSelect2.id+"', 'BuscarElemento_text': '"+datoSeleccionadoSelect2.text+"'}";
+                            let BuscarElementoSeleccionado = "{'BuscarElemento':'"+datoSeleccionadoSelect2.i+"'}";
+                            let BuscarElemento = {
+
+                                tipoBusqueda: filtroSeleccionado.value,
+                                id: datoSeleccionadoSelect2.id,
+                                text: datoSeleccionadoSelect2.text,
+
+                            };
+
+                            $.ajax({
+                                url: '@Url.Action("Buscar", "EncontrarCheque")',
+                                data: JSON.stringify(BuscarElemento),
+                                type: "POST",
+                                contentType: "application/json; charset=utf-8",
+                                success: function (response) {
+
+                                    if (response.RespuestaServidor == 201) {
+                                        MensajeCorrectoSweet("Registro encontrado satisfactoriamente");
+                                        console.log(response.RegistrosEncontrados);
+                                        //$('#TablaEsFoliada').empty();
+                                        //DibujarTablaEsFoliada();
+                                        //PintarResultadoEsFoliada(response.DetalleTabla);
+                                        $('#TablaRegistros').empty();
+                                        DibujarTablaRegistros();
+                                        PintarRegistrosEncontrados(response.RegistrosEncontrados);
+                                    } else if (response.RespuestaServidor == "500") {
+                                        MensajeErrorSweet(response.Error);
+                                    }
+
+                                    OcultarMensajeCargando();
+
+                                }, error: function (jqXHR, textStatus) {
+                                    MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
+                                    OcultarMensajeCargando();
+                                }
+                            });
+
+
+                        }
+                        else {
+                            MensajeErrorSweet("seleccione un dato por favor!", "No se a seleccionado ningun dato");
+                        }
+                    }
+                    else
+                    {
+                        MensajeErrorSweet("seleccione un filtro deseado!", "No se a seleccionado ningun filtro");
+                    }
+
+
+
+
+
+
+
+                }
+            );
+
+
+
+
+
+
+
+
+            //Click para eliminar el elemento seleccionado de la tabla
+            $(document).on("click", ".verDetalle", function () {
+
+
+
+                //console.log("vieja" + listaBancosSolicitados);
+
+                let datoAEliminar = RegistrosTabla.row($(this).parents("tr")).data();
+
+              //  console.log(datoAEliminar.IdRegistro);
+
+
+                let buscarIdRegistro = "{'IdRegistroBuscar': '"+datoAEliminar.IdRegistro+"'}";
+
+                     MensajeCargando();
+                     $.ajax({
+                       url: '@Url.Action("DetallesInformativosCheques", "EncontrarCheque")',
+                       data: buscarIdRegistro,
+                       type: "POST",
+                       contentType: "application/json; charset=utf-8",
+                       success: function (response) {
+
+                                    if (response.RespuestaServidor === "500") {
+                                        MensajeErrorSweet(response.MensajeError);
+                                        $('#RenderPartialViewDetallesCheques').html('');
+                                    } else {
+                                        $('#RenderPartialViewDetallesCheques').html('');
+                                        $('#RenderPartialViewDetallesCheques').html(response);
+
+                                    }
+
+
+
+                                    OcultarMensajeCargando();
+                       }
+                     });
+
+
+            });
+
+
+
+
+
+
+
+
+
+
+
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </script>*@

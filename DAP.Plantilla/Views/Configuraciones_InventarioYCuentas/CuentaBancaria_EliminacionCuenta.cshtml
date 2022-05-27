@@ -1,0 +1,217 @@
+﻿@model Dictionary<int, string> 
+
+
+<!-- Eliminar una cuenta bancaria activa -->
+
+    <class class="margenSection row">
+
+        <div class="btn-block">
+            <h5 class="text-center">Selecciona una cuenta bancaria para "Eliminar":</h5>
+        </div>
+
+
+        <div class="col-12 offset-md-2 col-md-8">
+            <div class="form-group">
+                <select class="form-control " id="SelecionarCuentaActiva" required>
+                    <option value="" disabled selected>Selecciona una cuenta activa a editar...</option>
+                     @foreach (var nueva in Model)
+                     {
+                        <option value="@nueva.Key">@nueva.Value</option>
+                     }
+                </select>
+            </div>
+        </div>
+
+
+        <div class="col-12 text-center">
+            <button id="Eliminar_Continuar" class="btn btn-danger btn-lg" > <i class="fas fa-trash-alt"></i> Eliminar</button>
+
+        </div>
+
+
+    </class>
+<br />
+<br />
+
+
+
+
+
+
+<!--  Modal de confirmacion para la Eliminacion-->
+<section class="modal fade" id="EliminarCuentaActiva" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+
+                <h5 class="col-11 text-center font-weight-bold text-uppercase text-danger ">ADVERTENCIA!</h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+
+            </div>
+
+
+            <div class=" modal-body col-12 text-center ">
+                <h6 class="bg-danger text-white text-justify"> Si, y solo si desea Eliminar la cuenta bancaria continue, ya que despues de esto podria ser irecuperable los datos de la cuenta bancaria</h6>
+                <br />
+                <h3 id="cuentaBancariaSeleccionada" style="color: blue;"></h3>
+
+            </div>
+        
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                <button id="GuardarEliminacion" type="button" class="btn btn-success">Eliminar cuanta bancaria </button>
+
+            </div>
+
+
+        </div>
+    </div>
+</section>
+
+
+
+
+<script>
+    $(document).ready(function () {
+
+
+        let cuentaSeleccionadaAInhabilitar = null;
+        const CuentaSeleccionada = document.getElementById("SelecionarCuentaActiva");
+        CuentaSeleccionada.addEventListener("change",
+            function () {
+                cuentaSeleccionadaAInhabilitar = this.options[CuentaSeleccionada.selectedIndex];
+
+
+               // document.getElementById("cuentaBancariaSeleccionada").innerHTML = cuentaSeleccionadaAInhabilitar.value;
+                document.getElementById("cuentaBancariaSeleccionada").innerHTML = document.getElementById('SelecionarCuentaActiva').options[document.getElementById('SelecionarCuentaActiva').selectedIndex].text;
+
+            }
+        );
+
+
+
+
+
+        const Continuar = document.getElementById("Eliminar_Continuar");
+        Continuar.addEventListener("click",
+            function () {
+
+                if (cuentaSeleccionadaAInhabilitar != null)
+                $('#EliminarCuentaActiva').modal('show');
+
+            }
+        );
+
+        const GuadarEliminacion = document.getElementById("GuardarEliminacion");
+        GuardarEliminacion.addEventListener("click",
+            function () {
+
+                Swal.fire({
+                    title: 'Realmente esta seguro de eliminar la cuenta bancaria?',
+                    allowEnterKey: false,
+                    allowOutsideClick: false,
+                    confirmButtonColor: '#28A745',
+                    showDenyButton: true,
+                    showCancelButton: false,
+
+                    confirmButtonText: `Eliminar`,
+                    denyButtonText: `No Eliminar`,
+                }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+
+                        //envia la cuenta al server para hacer la ihnanactivacion de la cuenta bancaria seleccionada
+
+                        let EliminarCuentaBancaria = "{'IdCuentaBancaria':'"+cuentaSeleccionadaAInhabilitar.value+"'}";
+
+                    MensajeCargando();
+                   $.ajax({
+                       url: '@Url.Action("EliminarCuentaBancaria", "Configuraciones_InventarioYCuentas")',
+                       data: EliminarCuentaBancaria,
+                       type: "POST",
+                       contentType: "application/json; charset=utf-8",
+                       success: function (msg) {
+                           OcultarMensajeCargando();
+                           console.log("msg", msg);
+
+                           if (msg) {
+                               Swal.fire({
+                                   backdrop: true,
+                                   allowEnterKey: false,
+                                   allowOutsideClick: false,
+                                   icon: 'success',
+                                   title: `Cuenta Eliminada exitodamente`,
+
+                               }).then((result) => {
+                                   /* Read more about isConfirmed, isDenied below */
+
+                                       document.location.reload();
+
+                               });
+
+
+                           } else {
+                               Swal.fire({
+                                   backdrop: true,
+                                   allowEnterKey: false,
+                                   allowOutsideClick: false,
+                                   icon: 'error',
+                                   title: `No se pudo Eliminar la cuenta bancaria`,
+
+                               });
+                           }
+
+
+
+
+
+
+                       },
+                       error: function (msg) {
+                           OcultarMensajeCargando();
+                              Swal.fire({
+                                  backdrop: true,
+                                  allowEnterKey: false,
+                                  allowOutsideClick: false,
+                                  icon: 'info',
+                                  title: 'intentelo mas tarde o pongase en contacto con el administrador',
+
+
+                              })
+                       }
+                    });
+
+
+
+
+
+
+
+
+
+
+
+                    } else if (result.isDenied) {
+                        Swal.fire('No sera eliminada la cuenta seleccionada', '', 'info')
+                    }
+                })
+
+
+            }
+        );
+
+
+
+
+
+
+    });
+
+
+</script>

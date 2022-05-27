@@ -1,0 +1,36 @@
+﻿
+
+p {
+    color: black;
+    margin-left: 30px;
+    font-size: 1.4em;
+    text-align: center;
+
+
+  }
+
+
+button {
+    text-align:center;
+}
+
+
+.margenSection {
+    margin-top: 60px;
+}
+
+
+
+.tabla {
+   
+    text-align: center;
+    background: #74BC7C;
+}
+
+
+
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+    background-color: #74BC7C;
+}
+
+
