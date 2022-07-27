@@ -41,6 +41,7 @@ namespace DAP.Foliacion.Negocios
                     nuevaReferenciaDeCancelado.Id_Iterador = ++iterador;
 
                     nuevaReferenciaDeCancelado.Anio = nuevaReferencia.Anio;
+                    nuevaReferenciaDeCancelado.NReferencia = Convert.ToString( nuevaReferencia.NReferencia );
                     nuevaReferenciaDeCancelado.Numero_Referencia = nuevaReferencia.Numero_Referencia;
                     nuevaReferenciaDeCancelado.Fecha_Creacion = nuevaReferencia.Fecha_Creacion.ToString("MM/dd/yyyy");
                     nuevaReferenciaDeCancelado.Creado_Por = nuevaReferencia.Creado_Por;
@@ -62,17 +63,19 @@ namespace DAP.Foliacion.Negocios
         public static int CrearNuevaReferenciaCancelados(string nuevoNumero)
         {
             var transaccion = new Transaccion();
-
             var repositorio = new Repositorio<Tbl_Referencias_Cancelaciones>(transaccion);
+            int anioActual = DateTime.Now.Year;
 
 
-            Tbl_Referencias_Cancelaciones nuevoNumeroRefenciaCanceladoExiste = repositorio.Obtener(x => x.Anio == DateTime.Now.Year && x.Numero_Referencia == nuevoNumero && x.Activo == true);
+
+            Tbl_Referencias_Cancelaciones existeReferenciaEnAnio = repositorio.Obtener(x => x.Anio == DateTime.Now.Year && x.Activo == true);
             int idAgregado = 0;
-            if (nuevoNumeroRefenciaCanceladoExiste == null)
+            Tbl_Referencias_Cancelaciones nuevaReferencia = new Tbl_Referencias_Cancelaciones();
+            if (existeReferenciaEnAnio == null)
             {
-                Tbl_Referencias_Cancelaciones nuevaReferencia = new Tbl_Referencias_Cancelaciones();
+                nuevaReferencia.NReferencia = 1;
                 nuevaReferencia.Anio = DateTime.Now.Year;
-                nuevaReferencia.Numero_Referencia = "CC" + nuevoNumero;
+                nuevaReferencia.Numero_Referencia = nuevoNumero;
                 nuevaReferencia.Fecha_Creacion = DateTime.Now.Date;
                 nuevaReferencia.FormasPagoDentroReferencia = 0;
                 nuevaReferencia.Creado_Por = "**********";
@@ -81,6 +84,51 @@ namespace DAP.Foliacion.Negocios
                 idAgregado = repositorio.Agregar(nuevaReferencia).Id;
 
             }
+            else 
+            {
+                int nReferencia = repositorio.ObtenerPorFiltro(x => x.Anio == DateTime.Now.Year && x.Activo == true).OrderByDescending(x => x.NReferencia).Select(x => x.NReferencia).FirstOrDefault();
+
+                nuevaReferencia.NReferencia = nReferencia +1;
+
+
+                Tbl_Referencias_Cancelaciones nuevoNumeroRefenciaCanceladoExiste2 = repositorio.Obtener(x => x.Anio == DateTime.Now.Year && x.Numero_Referencia == nuevoNumero && x.Activo == true);
+             
+                if (nuevoNumeroRefenciaCanceladoExiste2 == null)
+                {
+                    nuevaReferencia.Anio = DateTime.Now.Year;
+                    nuevaReferencia.Numero_Referencia = nuevoNumero;
+                    nuevaReferencia.Fecha_Creacion = DateTime.Now.Date;
+                    nuevaReferencia.FormasPagoDentroReferencia = 0;
+                    nuevaReferencia.Creado_Por = "**********";
+                    nuevaReferencia.EsCancelado = false;
+                    nuevaReferencia.Activo = true;
+                    idAgregado = repositorio.Agregar(nuevaReferencia).Id;
+
+                }
+            }
+
+
+
+
+
+
+
+
+            //Tbl_Referencias_Cancelaciones nuevoNumeroRefenciaCanceladoExiste = repositorio.Obtener(x => x.Anio == DateTime.Now.Year && x.Numero_Referencia == nuevoNumero && x.Activo == true);
+          
+            //if (nuevoNumeroRefenciaCanceladoExiste == null)
+            //{
+            //    Tbl_Referencias_Cancelaciones nuevaReferencia = new Tbl_Referencias_Cancelaciones();
+            //    nuevaReferencia.Anio = DateTime.Now.Year;
+            //    nuevaReferencia.Numero_Referencia = "CC" + nuevoNumero;
+            //    nuevaReferencia.Fecha_Creacion = DateTime.Now.Date;
+            //    nuevaReferencia.FormasPagoDentroReferencia = 0;
+            //    nuevaReferencia.Creado_Por = "**********";
+            //    nuevaReferencia.EsCancelado = false;
+            //    nuevaReferencia.Activo = true;
+            //    idAgregado = repositorio.Agregar(nuevaReferencia).Id;
+
+            //}
 
             return idAgregado;
         }
@@ -547,6 +595,12 @@ namespace DAP.Foliacion.Negocios
                     }
 
 
+                    //if (pago.FolioCheque == 123172)
+                    //{
+                    //    int r = 100;
+                    //}
+
+
                     DatosGeneralesIPD_DTO datosGeneralesEncontrados = CrearReferencia_CanceladosDbSinEntity.ObtenerDatosGeneralesxIdNom_IPD(pago.Id_nom, anio);
 
 
@@ -744,11 +798,21 @@ namespace DAP.Foliacion.Negocios
                 var transaccion = new Transaccion();
                 var repoTblPagos = new Repositorio<Tbl_Pagos>(transaccion);
 
+                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 List<Tbl_Pagos> pagosEncontrados = repoTblPagos.ObtenerPorFiltro(x => x.Anio == anioSeleccionado && x.IdTbl_Referencias_Cancelaciones == IdReferecniaCancelacion && x.Nomina != "08" && x.Activo == true).ToList();
+         //       List<Tbl_Pagos> pagosEncontrados = repoTblPagos.ObtenerPorFiltro(x => x.FolioCheque == 678 && x.Anio == 2021 && x.Activo == true).ToList();
 
                 int lDF_6M = 0;
                 foreach (Tbl_Pagos pago in pagosEncontrados)
                 {
+
+                    //if (pago.FolioCheque == 678)
+                    //{
+                    //    int a = 110;
+                    //}
+
+
                     string anio = "";
                     if (DateTime.Now.Year != pago.Anio)
                     {
@@ -997,10 +1061,9 @@ namespace DAP.Foliacion.Negocios
                 }
                 Escribir.Close();
             }
-            
 
 
-            string respuestaRellado =  ActualizacionDFBS.LLenarIPDCompensado(pathDestino, nombreArchivoDBFAnual, registrosCompensados);
+           string respuestaRellado =  ActualizacionDFBS.LLenarIPDCompensado(pathDestino, nombreArchivoDBFAnual, registrosCompensados);
 
             if (Convert.ToInt32(respuestaRellado) == registrosCompensados.Count())
             {

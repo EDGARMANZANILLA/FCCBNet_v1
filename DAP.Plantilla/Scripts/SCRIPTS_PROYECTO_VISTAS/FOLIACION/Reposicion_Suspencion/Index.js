@@ -248,7 +248,7 @@ function SuspenderPagoTrabajador(idRegistro) {
 
                    // console.log(response)
 
-                    if (response.respuestaServidor == 2) {
+                    if (response.respuestaServidor == 200) {
                         //entra si todo fue bien en el servidor 
                         MensajeCorrectoConRecargaPagina(response.solucion)
 
@@ -439,7 +439,7 @@ function ReponerNuevoFolio(idRegistro) {
                     contentType: "application/json; charset=utf-8",
                     success: function (response) {
 
-                        if (response.respuestaServidor == 2) {
+                        if (response.respuestaServidor == 200) {
                             //entra si todo fue bien en el servidor 
                             MensajeCorrectoConRecargaPagina(response.solucion)
                         }
@@ -539,6 +539,7 @@ function LocalizarDatoPorFiltro()
     let tipoFiltro = document.getElementById("TipoFiltroLocalizadorPagoCheque").value;
     let buscarDato = document.getElementById("InputLocalizador").value;
 
+    $('#TablaRegistroLocalizadoFormaPago').empty();
     if (parseInt( tipoFiltro) != 0) {
 
 

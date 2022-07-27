@@ -145,8 +145,10 @@ function MensajeConfirmar(Texto, Funcion) {
 //MensajeCargando
 function MensajeCargando() {
     $.blockUI({
-        message: "<h3>Espere un momentooo</h3>" +
-            "<div class='sk-three-bounce'><div class='sk-child sk-bounce1'></div><div class='sk-child sk-bounce2'></div><div class='sk-child sk-bounce3'></div></div>",
+        message: `
+                    <h3 style="font-size:1.2rem;">Espere un momento</h3>
+                    <div class='sk-three-bounce'><div class='sk-child sk-bounce1'></div><div class='sk-child sk-bounce2'></div><div class='sk-child sk-bounce3'></div></div>
+                `,
         css: {
             border: 'none',
             padding: '15px',
@@ -160,6 +162,7 @@ function MensajeCargando() {
 
 
 }
+
 function OcultarMensajeCargando() {
     $.unblockUI();
 }
@@ -169,8 +172,12 @@ function OcultarMensajeCargando() {
 
 
 
+/**********************************************************************************************************************************************************************************************************************************/
+/**********************************************************************************************************************************************************************************************************************************/
+/***********************************************************************************       Mensajes Con Sweet alert V9.X        ***************************************************************************************************/
+/**********************************************************************************************************************************************************************************************************************************/
+/**********************************************************************************************************************************************************************************************************************************/
 
-//Mensajes Con Sweet alert V9.X
 
 function MensajeErrorSweet(Solucion, Error)
 {
@@ -199,6 +206,8 @@ function MensajeWarningSweet(Texto)
         text: Texto,
         footer: '<a href="#">Contactar al desarrollador?</a>'
     });
+
+
 }
 
 
@@ -221,10 +230,33 @@ function MensajeCorrectoSweet(Texto)
 
 
 
+function MensajeCorrecto_sinClickSweet(Texto) {
+    Swal.fire({
+        backdrop: true,
+        allowEnterKey: true,
+        allowOutsideClick: true,
+        allowEscapeKey: true,
+        icon: 'success',
+        title: '',
+        text: Texto,
+        footer: '<a href="#">Contactar al desarrollador?</a>'
+    });
+
+
+}
+
+
+
+function RecargarSoloPaginaActual()
+{
+    window.location.reload();
+}
+
+
+
 
 function MensajeCorrectoConRecargaPagina(Texto)
 {
-
     Swal.fire({
      
         title: '',
@@ -244,6 +276,26 @@ function MensajeCorrectoConRecargaPagina(Texto)
 
 
 
+
+function MensajeCorrectoConRecargaPagina_UnicaParaRecuperFoliosEnVistaDetalle(Texto) {
+
+    Swal.fire({
+        title: '',
+        text: Texto,
+        icon: 'success',
+        showCancelButton: false,
+        allowOutsideClick: false,
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'OK',
+        footer: '<a href="#">Contactar al desarrollador?</a>'
+    }).then((result) => {
+        if (result.isConfirmed) {
+
+           // $("#table_id").empty();
+            CargarDetallesFolios();
+        }
+    })
+}
 
 
 
@@ -331,23 +383,6 @@ function MensajeEstamosEnConstrucion()
 /*Un cuadro de diálogo de confirmación, con una función adjunta al botón "Confirmar"*/
 function MensajeConFuncionAdjuntaDeConfirmar( PreguntaSeguridad , Texto )
 {
-    //Swal.fire({
-    //    title: 'Are you sure?',
-    //    text: "You won't be able to revert this!",
-    //    icon: 'warning',
-    //    showCancelButton: true,
-    //    confirmButtonColor: '#3085d6',
-    //    cancelButtonColor: '#d33',
-    //    confirmButtonText: 'Yes, delete it!'
-    //}).then((result) => {
-    //    if (result.isConfirmed) {
-    //        Swal.fire(
-    //            'Deleted!',
-    //            'Your file has been deleted.',
-    //            'success'
-    //        )
-    //    }
-    //})
 
 
 
@@ -358,7 +393,9 @@ function MensajeConFuncionAdjuntaDeConfirmar( PreguntaSeguridad , Texto )
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancelar!',
+        footer: '<a href="#">Contactar al desarrollador?</a>'
     }).then((result) => {
         if (result.isConfirmed) {
             Swal.fire(
@@ -368,6 +405,8 @@ function MensajeConFuncionAdjuntaDeConfirmar( PreguntaSeguridad , Texto )
             )
         }
     })
+
+    //Se usa en Solicitar.js Metodo => CrearSolicitudFormasPago()
 }
 
 

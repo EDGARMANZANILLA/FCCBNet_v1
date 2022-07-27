@@ -37,24 +37,34 @@
 <!-- Generacion de tablas -->
 <section class="margenSection">
     <div>
+
         <div class="table-responsive margenSection ">
-            <table id="table_id" class="table table-striped table-bordered table-hover text-center" cellspacing="0" style="width:100%">
-                <thead class="tabla ">
-                    @*<caption>CONTROL DEL DETALLE DEL BANCO  @ViewBag.NombreBancoSeleccionado</caption>*@
-                    <tr>
-                        <th>Numero de Orden</th>
-                        <th>Numero de Contenedor</th>
-                        <th>Numero Folio</th>
-                        <th>Incidencia</th>
-                        <th>Empleado Asignado</th>
-                        <th>Fecha Incidencia</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+
+            <div id="tblVistaDestalleFolios">
+                <table id="table_id" class="table table-striped table-bordered table-hover text-center" cellspacing="0" style="width:100%">
+                    <thead class="tabla ">
+                        @*<caption>CONTROL DEL DETALLE DEL BANCO  @ViewBag.NombreBancoSeleccionado</caption>*@
+                        <tr>
+                            <th>N. de Orden</th>
+                            <th>N. de Contenedor</th>
+                            <th>Numero Folio</th>
+                            <th>Incidencia</th>
+                            <th>Fecha Incidencia</th>
+                            <th>Asignado al Empleado</th>
+                            <th>Fecha Asignacion</th>
+                            <th>Recuperar Folio de Incidencia</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+
+            </div>
+
+
 
         </div>
+
     </div>
 </section>
 <br />

@@ -23,16 +23,19 @@ namespace DAP.Foliacion.Entidades
     
         public int Id { get; set; }
         public string NombreBanco { get; set; }
+        public Nullable<bool> EsPenA { get; set; }
         public string Abreviatura { get; set; }
         public string Cuenta { get; set; }
+        public string NombreCampoEn_AN { get; set; }
         public int IdCuentaBancaria_TipoPagoCuenta { get; set; }
+        public Nullable<bool> CuentaConChequera { get; set; }
         public Nullable<int> IdInventario { get; set; }
         public System.DateTime FechaCreacion { get; set; }
+        public Nullable<int> IdctabancaIPD { get; set; }
+        public Nullable<int> IdBancoIPD { get; set; }
         public Nullable<System.DateTime> FechaBaja { get; set; }
         public Nullable<bool> Activo { get; set; }
         public Nullable<bool> InicioBaja { get; set; }
-        public Nullable<int> IdctabancaIPD { get; set; }
-        public Nullable<int> IdBancoIPD { get; set; }
     
         public virtual Tbl_CuentaBancarias_TipoPagoCuenta Tbl_CuentaBancarias_TipoPagoCuenta { get; set; }
         public virtual Tbl_Inventario Tbl_Inventario { get; set; }

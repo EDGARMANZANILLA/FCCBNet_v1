@@ -28,11 +28,11 @@ namespace DAP.Plantilla.Models.BuscardorChequeModels
         public decimal Liquido { get; set; }
 
 
-
+        public string EsSuspencion { get; set; }
         public string EstadoCheque { get; set; }
         public string BancoPagador { get; set; }
         public string CuentaPagadora { get; set; }
-
+        public string TipoPago { get; set; }
 
 
 

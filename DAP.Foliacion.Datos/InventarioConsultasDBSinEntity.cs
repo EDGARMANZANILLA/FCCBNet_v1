@@ -27,14 +27,14 @@ namespace DAP.Foliacion.Datos
                         Tbl_InventarioDetalle nuevoDetalle = new Tbl_InventarioDetalle();
 
                         nuevoDetalle.Id = LeerDatos.GetInt32(0);
-                        nuevoDetalle.IdContenedor = LeerDatos.GetInt32(1);
-                        nuevoDetalle.NumFolio = LeerDatos.GetInt32(2);
-                        string a = LeerDatos[3].ToString().Trim();
-                        if (LeerDatos[3].ToString().Trim() != "")
-                        { nuevoDetalle.IdIncidencia = LeerDatos.GetInt32(3); }
-                        if (LeerDatos[4].ToString().Trim() != "") { nuevoDetalle.FechaIncidencia = LeerDatos.GetDateTime(4); }
-                        if (LeerDatos[5].ToString().Trim() != "") { nuevoDetalle.IdEmpleado = LeerDatos.GetInt32(5); }
-                        nuevoDetalle.Activo = LeerDatos.GetBoolean(6);
+                        nuevoDetalle.IdContenedor = LeerDatos.GetInt32(2);
+                        nuevoDetalle.NumFolio = LeerDatos.GetInt32(3);
+                        string a = LeerDatos[4].ToString().Trim();
+                        if (LeerDatos[4].ToString().Trim() != "")
+                        { nuevoDetalle.IdIncidencia = LeerDatos.GetInt32(4); }
+                        if (LeerDatos[5].ToString().Trim() != "") { nuevoDetalle.FechaIncidencia = LeerDatos.GetDateTime(5); }
+                        if (LeerDatos[6].ToString().Trim() != "") { nuevoDetalle.IdEmpleado = LeerDatos.GetInt32(6); }
+                        nuevoDetalle.Activo = LeerDatos.GetBoolean(8);
 
                         listaDetalleEncontrados.Add(nuevoDetalle);
                     }

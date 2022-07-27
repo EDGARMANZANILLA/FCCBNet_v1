@@ -9,13 +9,13 @@ namespace DAP.Foliacion.Entidades.DTO.FoliarDTO
     public class AlertasAlFolearPagomaticosDTO
     {
         /***************************************************************************************************************************************/
-        // Valor de IdAtevcion 
+        // Valor de IdAtencion 
         //   0 == SIN FOLIAR
         //   1 == YA SE ENCUENTRA FOLIADO 
         //   2 == NO HAY PAGOMATICOS POR FOLIAR
         //   3 == NO SE ENCONTRO LA BASE EN ALPHA (Interfaces)
         //   4 == DBF SIN PERMISOS (DBF ESTA ABIERTA POR OTRA PERSONA)
-        //                 
+        // 200 == LA DBF SE ACTUALIZO CON EXITO Y CONTINE UNA RESPUESTA NUMERICA DE LOS REGISTROS AFECTADOS
         /***************************************************************************************************************************************/
         public int IdAtencion { get; set; }
         public string NumeroNomina { get; set; }
@@ -33,5 +33,7 @@ namespace DAP.Foliacion.Entidades.DTO.FoliarDTO
 
         public string SubPathRuta_Ruta { get; set; }
         public string NombreDBF_RutaNomina { get; set; }
+        public int  NumeroRegistrosActualizados { get; set; }
+
     }
 }

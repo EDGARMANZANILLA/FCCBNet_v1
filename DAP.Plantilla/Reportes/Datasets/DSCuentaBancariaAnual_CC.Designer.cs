@@ -685,7 +685,7 @@ namespace DAP.Plantilla.Reportes.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public NominaPorBancoRow AddNominaPorBancoRow(string NombreNomina, decimal SumaLiquido, string TotalRegistros, string NombreCuentaBanco) {
+            public NominaPorBancoRow AddNominaPorBancoRow(string NombreNomina, decimal SumaLiquido, int TotalRegistros, string NombreCuentaBanco) {
                 NominaPorBancoRow rowNominaPorBancoRow = ((NominaPorBancoRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         NombreNomina,
@@ -727,7 +727,7 @@ namespace DAP.Plantilla.Reportes.Datasets {
                 base.Columns.Add(this.columnNombreNomina);
                 this.columnSumaLiquido = new global::System.Data.DataColumn("SumaLiquido", typeof(decimal), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnSumaLiquido);
-                this.columnTotalRegistros = new global::System.Data.DataColumn("TotalRegistros", typeof(string), null, global::System.Data.MappingType.Element);
+                this.columnTotalRegistros = new global::System.Data.DataColumn("TotalRegistros", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnTotalRegistros);
                 this.columnNombreCuentaBanco = new global::System.Data.DataColumn("NombreCuentaBanco", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnNombreCuentaBanco);
@@ -977,10 +977,10 @@ namespace DAP.Plantilla.Reportes.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string TotalRegistros {
+            public int TotalRegistros {
                 get {
                     try {
-                        return ((string)(this[this.tableNominaPorBanco.TotalRegistrosColumn]));
+                        return ((int)(this[this.tableNominaPorBanco.TotalRegistrosColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
                         throw new global::System.Data.StrongTypingException("El valor de la columna \'TotalRegistros\' de la tabla \'NominaPorBanco\' es DBNull.", e);

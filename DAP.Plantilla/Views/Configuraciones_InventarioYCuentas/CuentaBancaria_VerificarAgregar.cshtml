@@ -27,8 +27,8 @@
     </div>
 
     <!-- Tabla para mostrar los datos de la cuenta en alpha -->
-    <div class="margenSection">
-        <div class="table-responsive">
+    <div class="margenSection offset-sm-2 col-sm-8">
+        <div class="table-responsive text-center">
 
             <div id="divTablaCrud">
                 <table id="tablaAgregados" class="table table-striped table-bordered table-hover" style="display:none;">
@@ -70,6 +70,21 @@
             </div>
         </div>
     </div>
+
+    <br>
+    <div class="col-md-12 text-center">
+        <form>
+            <div>
+                <label id="cambiaColorCuentaBancaria" class="btn btn-lg  btn-outline-primary" onclick="CambiarColorAgregarCuenta()">
+                    <input id="checkChequera" type="checkbox" autocomplete="off"> Tendra chequera
+                </label>
+
+
+            </div>
+        </form>
+        <br />
+    </div>
+
 
     <br>
     <h6 class=" col-12 text-center">Nombre de la cuenta agregar</h6>
@@ -150,7 +165,7 @@
     function DibujarTablaAjax() {
         $("#divTablaCrud").append(
 
-            "<table id='tablaAgregados'  class='table table-striped display table-bordered table-hover' cellspacing='0'  style='width:100%'>" +
+            "<table id='tablaAgregados'  class='table table-striped display table-bordered table-hover ' cellspacing='0'  style='width:100%'>" +
             " <caption class='text-uppercase'>Detalle de cuenta seleccionada en alpha </caption>"
             + "<thead class='tabla'>" +
 
@@ -201,6 +216,21 @@
         });
     };
 
+
+
+
+    function CambiarColorAgregarCuenta() {
+        let hayInhabilitado = document.getElementById('checkChequera').checked
+
+        //console.log(hayInhabilitado);
+        if (hayInhabilitado) {
+            document.getElementById('cambiaColorCuentaBancaria').className = 'btn btn-lg btn-primary';
+        }
+        else {
+            document.getElementById('cambiaColorCuentaBancaria').className = 'btn btn-lg btn-outline-primary';
+        }
+
+    }
 
 
 
@@ -264,7 +294,10 @@
             function ()
             {
 
-                 tipoPago = document.getElementById("SeleccionaTipoPago");
+                tipoPago = document.getElementById("SeleccionaTipoPago");
+
+                let textotipoPago = tipoPago.options[tipoPago.selectedIndex].text;
+
 
 
                 if (cuentaBancariaSeleccionada != null && tipoPago.value != "Selecciona el tipo de pago...") {
@@ -283,7 +316,7 @@
                                                                                      el nombre "${nombreCuenta}" y
                                                                                      numero de cuenta  "${cuentaBancariaSeleccionada.value}"
                                                                                      con la abreviatura "${abreviatura}" y con el tipo de pago
-                                                                                     opcion seleccionada "${tipoPago.value}" `
+                                                                                     opcion seleccionada "${textotipoPago}" `
 
                         $('#AgregarBuentaBancaria').modal('show')
                         //enviar datos al servidor
@@ -329,8 +362,8 @@
             function ()
             {
 
-
-                        let enviarDatos = "{'NombreCuenta':'" + nombreCuenta + "', 'NumeroCuenta':'" + cuentaBancariaSeleccionada.value + "','Abreviatura':'" + abreviatura + "','TipoPago':'" + tipoPago.value + "'}";
+                let tendraChequera= document.getElementById('checkChequera').checked
+                let enviarDatos = "{'NombreCuenta':'" + nombreCuenta + "', 'NumeroCuenta':'" + cuentaBancariaSeleccionada.value + "','Abreviatura':'" + abreviatura + "','TipoPago':'" + tipoPago.value + "' , 'TendraChequera':'" + tendraChequera+"' }";
                         MensajeCargando();
                         $.ajax({
                             url: '@Url.Action("AgregarCuentaBancaria", "Configuraciones_InventarioYCuentas")',

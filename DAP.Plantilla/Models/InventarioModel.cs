@@ -13,7 +13,7 @@ namespace DAP.Plantilla.Models
         public string NombreBanco { get; set; }
         public string Cuenta { get; set; }
 
-        public int FormasDisponibles { get; set; }
+        public string FormasDisponibles { get; set; }
 
         public string UltimoFolioInventario { get; set; }
 

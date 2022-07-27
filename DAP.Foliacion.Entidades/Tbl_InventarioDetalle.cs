@@ -21,13 +21,16 @@ namespace DAP.Foliacion.Entidades
         }
     
         public int Id { get; set; }
+        public int IdInventario { get; set; }
         public int IdContenedor { get; set; }
         public int NumFolio { get; set; }
         public Nullable<int> IdIncidencia { get; set; }
         public Nullable<System.DateTime> FechaIncidencia { get; set; }
         public Nullable<int> IdEmpleado { get; set; }
+        public Nullable<System.DateTime> FechaAsignacionExterna { get; set; }
         public bool Activo { get; set; }
     
+        public virtual Tbl_Inventario Tbl_Inventario { get; set; }
         public virtual Tbl_InventarioAsignacionPersonal Tbl_InventarioAsignacionPersonal { get; set; }
         public virtual Tbl_InventarioContenedores Tbl_InventarioContenedores { get; set; }
         public virtual Tbl_InventarioTipoIncidencia Tbl_InventarioTipoIncidencia { get; set; }

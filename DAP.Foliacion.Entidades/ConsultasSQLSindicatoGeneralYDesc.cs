@@ -19,7 +19,7 @@ namespace DAP.Foliacion.Entidades
         /// Devuelve 6 cadenas de consultas para los de confianza y otras 6 para los sindicalizado  
         /// </summary>
         /// <returns></returns>
-        public static List<string> ObtenerConsultas_TotalesXSindicato( string An, int AnioInterface)
+        public static List<string> ObtenerConsultas_TotalesXSindicato( string An, int AnioInterface, List<string> bancosContenidosEnAn )
         {
 
             string Anio = "";
@@ -27,6 +27,8 @@ namespace DAP.Foliacion.Entidades
             {
                 Anio = Convert.ToString( AnioInterface );
             }
+
+
 
 
             /*Para los de confianza osea NO SINDICALIZADOS*/
@@ -103,6 +105,26 @@ namespace DAP.Foliacion.Entidades
 
             return consultasPreparadas;
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

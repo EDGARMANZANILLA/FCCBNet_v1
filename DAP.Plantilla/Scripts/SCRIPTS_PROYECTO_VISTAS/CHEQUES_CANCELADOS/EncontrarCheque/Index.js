@@ -504,6 +504,8 @@ $(document).ready(function () {
     Buscador.addEventListener("click",
         function () {
 
+            $('#TablaRegistros').empty();
+
             if (filtroSeleccionado != null) {
                 if (datoSeleccionadoSelect2 != null) {
                     MensajeCargando();

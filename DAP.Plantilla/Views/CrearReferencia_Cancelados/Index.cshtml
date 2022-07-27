@@ -55,7 +55,8 @@
 
                             <th>Id</th>
                             <th class="col-1">Anio</th>
-                            <th class="col-1"># Referencia</th>
+                            <th class="col-1"># Referencia Interna</th>
+                            <th class="col-1">Referencia Externa</th>
                             <th class="col-1">Fecha de Creacion</th>
 
                             <th class="col-2">Creado por:</th>
@@ -82,6 +83,7 @@
 
                                 <td>@modelo.Id_Iterador</td>
                                 <td>@modelo.Anio</td>
+                                <td>@modelo.NReferencia</td>
                                 <td>@modelo.Numero_Referencia</td>
                                 <td>@modelo.Fecha_Creacion</td>
                                 <td>@modelo.Creado_Por</td>
@@ -328,19 +330,9 @@
 
 
                 <div class="row row-cols-1 row-cols-md-2">
-                    @*<div class="col mb-4 text-center">
-                        <div class="card" style="box-shadow: 0 4px 8px 0 rgba(20, 108, 223, 0.700), 0 6px 10px 6px rgba(67, 85, 201, 0.21);">
-                            <div class="card-body text-success">
-                                <h5 class="card-title"> Descargar Resumen General de Montos por Nomina a Cancelar </h5>
-                                <button class="btn btn-success">
-                                    Resumen Montos   <br />
-                                    <i class="fas fa-cloud-download-alt"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>*@
+             
 
-                    <div class="col mb-4 text-center">
+                    @*<div class="col mb-4 text-center">
                         <div class="card" style="box-shadow: 0 4px 8px 0 rgba(118, 223, 20, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
                             <div class="card-body text-success">
                                 <h5 class="card-title"> Descargar Reportes de Nomina por Año </h5>
@@ -353,13 +345,27 @@
                            
                             </div>
                         </div>
+                    </div>*@ 
+                    
+                    
+                    <div class="col mb-4 text-center">
+                        <div class="card" style="box-shadow: 0 4px 8px 0 rgba(118, 223, 20, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+                            <div class="card-body text-success">
+                                <h5 class="card-title"> Descargar Reportes de Nomina por Año </h5>
+                                <a id="descargaNominaAnual" type="button" class="agregar btn btn-success"  onclick="exportarZIP('@Url.Content("~/CrearReferencia_Cancelados/DescargarReporteNominaAnual_AXIOS")' , 1)" >
+                                    Rp Nomina Anual  <br />
+                                    <i class="fas fa-cloud-download-alt"></i>
+                                </a>
+
+                            </div>
+                        </div>
                     </div>
 
                     <div class="col mb-4 text-center">
                         <div class="card" style="box-shadow: 0 4px 8px 0 rgba(118, 223, 20, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
                             <div class="card-body text-success">
                                 <h5 class="card-title"> Descargar Reporte de Cuenta Bancaria por Año </h5>
-                                <a id="descargaCBAnual" type="button" class="agregar btn btn-success">
+                                <a id="descargaCBAnual" type="button" class="agregar btn btn-success" onclick="exportarZIP('@Url.Content("~/CrearReferencia_Cancelados/DescargarReporteCuentaBancariaAnual_AXIOS")' , 2)">
                                     Rp Cta Bancarias   <br />
                                     <i class="fas fa-cloud-download-alt"></i>
                                 </a>
@@ -371,7 +377,7 @@
                         <div class="card" style="box-shadow: 0 4px 8px 0 rgba(118, 223, 20, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
                             <div class="card-body text-success">
                                 <h5 class="card-title"> Descargar Reporte de Pension Alimenticia General </h5>
-                                <a id="descargaPenA" type="button" class="agregar btn btn-success">
+                                <a id="descargaPenA" type="button" class="agregar btn btn-success" onclick="exportarZIP('@Url.Content("~/CrearReferencia_Cancelados/DescargarReportePensionAlimenticia_AXIOS")' , 3)">
                                     Rp PenA   <br />
                                     <i class="fas fa-cloud-download-alt"></i>
                                 </a>
@@ -411,14 +417,14 @@
 
                 <div class="row card-deck">
 
-                  
+
 
 
                     <div class="col-12 col-md-6 text-center">
                         <div class="card" style="box-shadow: 0 4px 8px 0 rgba(118, 223, 20, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
                             <div class="card-body text-success">
                                 <h5 class="card-title">Tot. Gral de Nomina por Conceptos</h5>
-                                <a id="TotalesIPDPorNomina" class="btn btn-success">
+                                <a id="TotalesIPDPorNomina" class="btn btn-success" onclick="EstamosEnDesarrollo()">
                                     TGDNXC  <br />
                                     <i class="fas fa-cloud-download-alt"></i>
                                 </a>
@@ -444,10 +450,10 @@
                 </div>
 
                 <br />
-                <div class="row">
+                <!--<div class="row">-->
 
                     <!-- card Principal-->
-                    <div class="col-12 offset-md-2 col-md-8  text-center">
+                    <!--<div class="col-12 offset-md-2 col-md-8  text-center">
                         <div class="card" style="box-shadow: 0 4px 8px 0 rgba(20, 108, 223, 0.700), 0 6px 10px 6px rgba(67, 85, 201, 0.21);">
                             <div class="card-body text-success">
                                 <h5 class="card-title">Descargar IPD para afectacion presupuestal</h5>
@@ -460,8 +466,25 @@
                     </div>
 
 
-                </div>
+                </div>-->
 
+                <div class="row">
+
+                    <!-- card Principal-->
+                    <div class="col-12 offset-md-2 col-md-8  text-center">
+                        <div class="card" style="box-shadow: 0 4px 8px 0 rgba(20, 108, 223, 0.700), 0 6px 10px 6px rgba(67, 85, 201, 0.21);">
+                            <div class="card-body text-success">
+                                <h5 class="card-title">Descargar IPD para afectacion presupuestal</h5>
+                                <a id="IPD_Axios" class="btn btn-success" onclick="exportarIPD('@Url.Content("~/CrearReferencia_Cancelados/DescargarIPDPorAnio_AXIOS")')">
+                                    ... IPD ...   <br />
+                                    <i class="fas fa-cloud-download-alt"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
 
 
 
@@ -517,7 +540,7 @@
                         </div>
                     </div>
 
-                    <div class="col mb-4 text-center">
+                    @*<div class="col mb-4 text-center">
                         <div class="card" style="box-shadow: 0 4px 8px 0 rgba(20, 108, 223, 0.700), 0 6px 10px 6px rgba(67, 85, 201, 0.21);">
                             <div class="card-body text-success">
                                 <h5 class="card-title"> Descargar IPD_Compensados para afectacion Presupuestal </h5>
@@ -527,7 +550,24 @@
                                 </a>
                             </div>
                         </div>
+                    </div>*@
+
+                       <div class="col mb-4 text-center">
+                        <div class="card" style="box-shadow: 0 4px 8px 0 rgba(20, 108, 223, 0.700), 0 6px 10px 6px rgba(67, 85, 201, 0.21);">
+                            <div class="card-body text-success">
+                                <h5 class="card-title"> Descargar IPD_Compensados para afectacion Presupuestal </h5>
+                                <a id="DescargarIPDCxAnio" class="btn btn-success" onclick="exportarIPDCompensado('@Url.Content("~/CrearReferencia_Cancelados/DescargarIPDCompensadoPorAnio_AXIOS")')">
+                                    ... IPD_C ...  <br />
+                                    <i class="fas fa-cloud-download-alt"></i>
+                                </a>
+                            </div>
+                        </div>
                     </div>
+
+
+
+
+
                     @*<div class="col mb-4 text-center">
                         <div class="card" style="box-shadow: 0 4px 8px 0 rgba(118, 223, 20, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
                             <div class="card-body text-success">

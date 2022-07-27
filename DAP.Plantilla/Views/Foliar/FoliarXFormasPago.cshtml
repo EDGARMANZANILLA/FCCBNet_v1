@@ -71,130 +71,6 @@
     
 
 
-        <!-- Selecciona una nomina-->
-        <!--<div class="col-12 text-center">
-
-            <div class="offset-1 col-10 text-left margenSection">
-                <h5>Cuentas Bancarias </h5>
-                <div class="form-group ">
-                    <div id="mainselection">
-                        <select class="form-control " id="SeleccionarCuentaBancaria" required style=" white-space:pre-wrap; ">
-                            <option value="" disabled selected>Selecciona una cuenta bancaria...</option>
-                            @foreach (var nuevoBanco in ViewBag.BancosConTarjeta)
-                            {
-
-                                <option value="@nuevoBanco.Key">@nuevoBanco.Value </option>
-                            }
-                        </select>
-
-                    </div>
-
-
-                </div>
-
-
-
-            </div>
-        </div>-->
-
-
-        <!-- inserta una rango de foliacion-->
-        <!--<div class="col-12 col-lg-6">
-
-
-
-
-            <section id="IFolios" class="margenSection offset-1 col-10" style="background:#E6E6E6; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); ">
-                <br />
-                <h4 class="col-12 text-center">Rango de Foliacion</h4>
-                <br />
-
-
-                <div class="row text-center">
-                    <label class="offset-1 col-10  ">Inicial:</label>
-                    <input id="rangoInicial" class="offset-2 col-8 btn-lg " placeholder="Del" type="text" onkeypress="return event.charCode >= 48 && event.charCode <= 122 && event.charCode != 91 " required />
-
-
-                </div>
-                <br />
-                <div class="row text-center">
-
-                    <label class="offset-1 col-10  ">Final:</label>
-                    <h3 id="rangoFinal" class="offset-3 col-6 " style="border:solid; color:#017BFF;">...</h3>
-                </div>
-
-
-                <br />
-                <br />
-
-                <div class="row text-center">
-                    <label class="offset-1 col-10 offset-sm-1 col-sm-5  ">Numero de Registros Foliados:</label>
-                    <h3 id="registrosFoliados" class="offset-1 col-10 offset-sm-1 col-sm-4  text-sm-center" style="border:solid; color:#017BFF;" title="Numero de Registros Foliados">...</h3>
-
-                </div>
-
-                <br />
-
-                <br class="margensection" />
-            </section>
-
-        </div>
-
-
-        <div class="col-12 col-lg-6">
-
-
-            <section id="IFolios" class="margenSection offset-1 col-10" style="background:#E6E6E6; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
-                <br />
-                <h4 class="col-12 text-center">Folios a inhabilitar</h4>
-                <br />
-
-                <div class="col-md-12 text-center">
-                    <form>
-                        <div>
-                            <label class="btn btn-lg  btn-outline-primary">
-                                <input id="checkInhabilitar" type="checkbox" autocomplete="off"> Inhabilitar
-                            </label>
-
-
-                        </div>
-                    </form>
-                    <br />
-                </div>
-
-                <div class="row text-center">
-                    <label class="offset-1 col-10   ">Folio Inicial:</label>
-                    <input id="FolioInicialInhabilitado" class="offset-2 col-8 btn-lg " placeholder="Del" type="text" onkeypress="return event.charCode >= 48 && event.charCode <= 122 && event.charCode != 91 " required />
-
-                </div>
-                <br />
-                <br />
-                <div class="row text-center">
-                    <label class="offset-1 col-10   ">Folio Final:</label>
-                    <input id="FolioFinalInhabilitado" class="offset-2 col-8 btn-lg " placeholder="Al" type="text" onkeypress="return event.charCode >= 48 && event.charCode <= 122 && event.charCode != 91 " />
-
-                </div>
-
-                <br />
-                <br />
-            </section>
-
-
-        </div>-->
-
-
-        <!--- boton para foliar aqui se deberia enviar la peticion ajax-->
-        <!--<div class="col-12 ">
-            <button class=" text-center col-md-4 col-12   btn btn-info  " title="Muestra la vista previa en un pdf de como quedaria la nomina al foliar o como esta foliada" onclick="ImprimirNominaCheques()">Reporte Nomina <i class="fas fa-print"></i> </button>
-
-        </div>
-        <br />
-        <br />
-        <div class="col-12 ">
-            <button id="FoliarNomina" class=" col-md-6 col-12 text-center btn btn-success btn-lg " title="Folea la nomina seleccionada">Foliar</button>
-
-        </div>-->
-
     </div>
 
 
@@ -390,7 +266,7 @@
 
 
 <!-- Modal para mostrar detalles de la nomina cargada -->
-<div class="modal fade" id="DetalleDelegacionNominaCheque" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="DetalleDelegacionNominaCheque" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" style="overflow-y: scroll;">
     <div class="modal-dialog   modal-xl">
         <div class="modal-content">
             <div class="modal-header">

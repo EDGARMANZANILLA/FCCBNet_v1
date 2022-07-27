@@ -32,11 +32,13 @@ namespace DAP.Plantilla.Controllers
             try
             {
 
-                DetallesInformativosChequeModel nuevoDetalle = Mapper.Map<DetallesRegistroDTO, DetallesInformativosChequeModel>(BuscadorChequeNegocios.ObtenerDetallesIdRegistro(IdRegistroBuscar));
+                //DetallesInformativosChequeModel nuevoDetalle = Mapper.Map<DetallesRegistroDTO, DetallesInformativosChequeModel>(BuscadorChequeNegocios.ObtenerDetallesIdRegistro(IdRegistroBuscar));
 
+                DetallesInformativosChequeModel nuevoDetalle = Mapper.Map<DetallesRegistroDTO, DetallesInformativosChequeModel>(Reposicion_SuspencionNegocios.ObtenerDetalleCompletoIdRegistro(IdRegistroBuscar));
                 ViewBag.diccionarioReferenciaCancelacion = BuscadorChequeNegocios.ObtenerReferenciasDeCancelacionPorAnioActivas(DateTime.Now.Year);
 
-          
+
+
 
                 /***********************************************************************************/
 
@@ -62,12 +64,6 @@ namespace DAP.Plantilla.Controllers
                 RespuestaServidor = "500",
                 MensajeError = "No se encuentran cargadas las nominas de la quincena seleccionada"
             });
-
-
-
-
-
-
 
         }
 

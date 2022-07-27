@@ -200,9 +200,10 @@ namespace DAP.Plantilla.Controllers
         }
 
 
-        public ActionResult AgregarCuentaBancaria(string NombreCuenta, string NumeroCuenta, string Abreviatura,int  TipoPago)
+        public ActionResult AgregarCuentaBancaria(string NombreCuenta, string NumeroCuenta, string Abreviatura,int  TipoPago, bool TendraChequera)
         {
-            bool bandera = Foliacion.Negocios.Configuraciones_InventarioYCuentasNegocios.AgregarCuentaBancariaEInventario( NombreCuenta, NumeroCuenta, Abreviatura, TipoPago, ObjetosExtras.ObtenerHoraReal.ObtenerDateTimeFechaReal());
+            DateTime fechaActual = ObjetosExtras.ObtenerHoraReal.ObtenerDateTimeFechaReal();
+            bool bandera = Foliacion.Negocios.Configuraciones_InventarioYCuentasNegocios.AgregarCuentaBancariaEInventario( NombreCuenta, NumeroCuenta, Abreviatura, TipoPago, fechaActual, TendraChequera);
 
             return Json(bandera, JsonRequestBehavior.AllowGet);
         }

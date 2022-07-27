@@ -28,7 +28,6 @@ namespace DAP.Plantilla.ObjetosExtras
 
         public static DateTime ObtenerDateTimeFechaReal()
         {
-
             string fechaExterna = Convert.ToString(ObtenerFechaServerGoogle());
 
             return Convert.ToDateTime(fechaExterna);

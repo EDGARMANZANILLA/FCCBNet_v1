@@ -272,3 +272,9 @@ button {
 .margenAlPie {
     margin-bottom: 60px;
 }
+
+
+
+.dt-buttons {
+    text-align: right;
+}

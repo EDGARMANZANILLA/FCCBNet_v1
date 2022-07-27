@@ -24,8 +24,6 @@ namespace DAP.Foliacion.Datos.ClasesParaDBF
 
     public class ActualizacionDFBS
     {
-       
-
         /// <summary>
         /// Metodo para actualizar una tabla en especifico pasando la ruta y el nombre del archivo, 
         /// </summary>
@@ -148,9 +146,7 @@ namespace DAP.Foliacion.Datos.ClasesParaDBF
 
 
 
-
-
-        public static async Task<string> ActualizarDBF_Pagomaticos(string RutaPath, string NombreArchivo, List<ResumenPersonalAFoliarDTO> ResumenPersonalFoliar, bool EsPena)
+        public static async Task<string> ActualizarDBF_Pagomaticos_Asincrono(string RutaPath, string NombreArchivo, List<ResumenPersonalAFoliarDTO> ResumenPersonalFoliar, bool EsPena)
         {
             //EjemploDePath:  string pathPruebaSERVER208 = @"F:\SAGITARI\GENERAL\ARCHIVOS\";
 
@@ -168,20 +164,20 @@ namespace DAP.Foliacion.Datos.ClasesParaDBF
 
 
 
-                    await con.OpenAsync(); 
+                    await con.OpenAsync();
                     foreach (ResumenPersonalAFoliarDTO nuevoRegistro in ResumenPersonalFoliar)
                     {
-                        
+
 
                         string ExecutarQuery = "";
                         if (EsPena)
                         {
-                            ExecutarQuery = "UPDATE ["+NombreArchivo+"] SET Num_che = '" + nuevoRegistro.NumChe + "', Banco_x = '" + nuevoRegistro.BancoX + "', Cuenta_x = '" + nuevoRegistro.CuentaX + "' , Observa = '" + nuevoRegistro.Observa + "' WHERE NUM = '" + nuevoRegistro.CadenaNumEmpleado + "' and RFC = '" + nuevoRegistro.RFC + "' and LIQUIDO = " + nuevoRegistro.Liquido + " and DELEG = '" + nuevoRegistro.Delegacion + "' and Benef = '" + nuevoRegistro.NumBeneficiario + "' ";
+                            ExecutarQuery = "UPDATE [" + NombreArchivo + "] SET Num_che = '" + nuevoRegistro.NumChe + "', Banco_x = '" + nuevoRegistro.BancoX + "', Cuenta_x = '" + nuevoRegistro.CuentaX + "' , Observa = '" + nuevoRegistro.Observa + "' WHERE NUM = '" + nuevoRegistro.CadenaNumEmpleado + "' and RFC = '" + nuevoRegistro.RFC + "' and LIQUIDO = " + nuevoRegistro.Liquido + " and DELEG = '" + nuevoRegistro.Delegacion + "' and Benef = '" + nuevoRegistro.NumBeneficiario + "' ";
 
                         }
                         else
                         {
-                            ExecutarQuery = "UPDATE ["+NombreArchivo+"] SET Num_che = '" + nuevoRegistro.NumChe + "', Banco_x = '" + nuevoRegistro.BancoX + "', Cuenta_x = '" + nuevoRegistro.CuentaX + "' , Observa = '" + nuevoRegistro.Observa + "' WHERE NUM = '" + nuevoRegistro.CadenaNumEmpleado + "' and RFC = '" + nuevoRegistro.RFC + "' and LIQUIDO = " + nuevoRegistro.Liquido + " and DELEG = '" + nuevoRegistro.Delegacion + "' ";
+                            ExecutarQuery = "UPDATE [" + NombreArchivo + "] SET Num_che = '" + nuevoRegistro.NumChe + "', Banco_x = '" + nuevoRegistro.BancoX + "', Cuenta_x = '" + nuevoRegistro.CuentaX + "' , Observa = '" + nuevoRegistro.Observa + "' WHERE NUM = '" + nuevoRegistro.CadenaNumEmpleado + "' and RFC = '" + nuevoRegistro.RFC + "' and LIQUIDO = " + nuevoRegistro.Liquido + " and DELEG = '" + nuevoRegistro.Delegacion + "' ";
 
                         }
 
@@ -201,43 +197,81 @@ namespace DAP.Foliacion.Datos.ClasesParaDBF
 
 
 
-                      //await Task.WhenAll(tareas);
+                    //await Task.WhenAll(tareas);
 
                     con.Close();
 
-                  
+
                     //return Convert.ToString(tareas.Count());
                 }
             }
             catch (System.Data.OleDb.OleDbException E)
             {
-               return E.Message.ToString();
+                return E.Message.ToString();
 
                 //Debug.WriteLine("Ocurrio un error :" + E.Message.ToString());
+            }
+            return Convert.ToString(ElementosModificados);
+        }
+
+
+        /************************************************************************************************************************************************************************************************************************************/
+        /************************************************************************************************************************************************************************************************************************************/
+        /*********************************************************************          METODOS UTILIZADOS EN LA FOLIACION DE PAGOMATICOS Y CHEQUES         *********************************************************************************/
+        /************************************************************************************************************************************************************************************************************************************/
+        /************************************************************************************************************************************************************************************************************************************/
+        public static string ActualizarDBF_Pagomaticos(string RutaPath, string NombreArchivo, List<ResumenPersonalAFoliarDTO> ResumenPersonalFoliar, bool EsPena)
+        {
+            string constr = "Provider=VFPOLEDB.1; Data Source="+RutaPath+"";
+            int ElementosModificados = 0;
+            try
+            {
+                using (OleDbConnection con = new OleDbConnection(constr))
+                {
+                    con.Open(); 
+                    foreach (ResumenPersonalAFoliarDTO nuevoRegistro in ResumenPersonalFoliar)
+                    {
+                        string ExecutarQuery = "";
+                        if (EsPena)
+                        {
+                            ExecutarQuery = "UPDATE ["+NombreArchivo+"] SET Num_che = '" + nuevoRegistro.NumChe + "', Banco_x = '" + nuevoRegistro.BancoX + "', Cuenta_x = '" + nuevoRegistro.CuentaX + "' , Observa = '" + nuevoRegistro.Observa + "' WHERE NUM = '" + nuevoRegistro.CadenaNumEmpleado + "' and RFC = '" + nuevoRegistro.RFC + "' and LIQUIDO = " + nuevoRegistro.Liquido + " and DELEG = '" + nuevoRegistro.Delegacion + "' and Benef = '" + nuevoRegistro.NumBeneficiario + "' ";
+                        }
+                        else
+                        {
+                            ExecutarQuery = "UPDATE ["+NombreArchivo+"] SET Num_che = '" + nuevoRegistro.NumChe + "', Banco_x = '" + nuevoRegistro.BancoX + "', Cuenta_x = '" + nuevoRegistro.CuentaX + "' , Observa = '" + nuevoRegistro.Observa + "' WHERE NUM = '" + nuevoRegistro.CadenaNumEmpleado + "' and RFC = '" + nuevoRegistro.RFC + "' and LIQUIDO = " + nuevoRegistro.Liquido + " and DELEG = '" + nuevoRegistro.Delegacion + "' ";
+                        }
+
+                        OleDbCommand cmd = new OleDbCommand(ExecutarQuery, con);
+                        int modificado = cmd.ExecuteNonQuery();
+
+                        if (modificado == 1)
+                        {
+                            ElementosModificados += modificado;
+                        }
+                    }
+                    con.Close();
+                }
+            }
+            catch (System.Data.OleDb.OleDbException E)
+            {
+               return E.Message.ToString();
             }
            return Convert.ToString(ElementosModificados);
         }
 
 
-        public static async Task<string> ActualizarDBF_Cheques(string RutaPath, string NombreArchivo, List<ResumenPersonalAFoliarDTO> ResumenPersonalFoliar, bool EsPena)
+        public static string ActualizarDBF_Cheques(string RutaPath, string NombreArchivo, List<ResumenPersonalAFoliarDTO> ResumenPersonalFoliar, bool EsPena)
         {
-            //EjemploDePath:  string pathPruebaSERVER208 = @"F:\SAGITARI\GENERAL\ARCHIVOS\";
-
-
-            // string constr = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source="+RutaPath+";Extended Properties=dBASE 5.0;";
             string constr = "Provider=VFPOLEDB.1 ;Data Source=" + RutaPath + "";
             List<Task> tareas = new List<Task>();
             
-
             int totalActualizado = 0;
             try
             {
                 using (OleDbConnection con = new OleDbConnection(constr))
                 {
 
-
-
-                    await con.OpenAsync();
+                    con.Open();
                     foreach (ResumenPersonalAFoliarDTO nuevoRegistro in ResumenPersonalFoliar)
                     {
                         string ExecutarQuery = "";
@@ -253,34 +287,71 @@ namespace DAP.Foliacion.Datos.ClasesParaDBF
                         }
 
                         OleDbCommand cmd = new OleDbCommand(ExecutarQuery, con);
-                        //var a2 = cmd.Parameters.AddWithValue("@RFC", nuevoRegistro.RFC);
-                        int modificado = await cmd.ExecuteNonQueryAsync();
+                        int modificado = cmd.ExecuteNonQuery();
 
                         if (modificado == 1)
                         {
                             totalActualizado += modificado;
                         }
-
-                       // tareas.Add(new OleDbCommand(ExecutarQuery, con).ExecuteNonQueryAsync());
-
                     }
-
-                   // await Task.WhenAll(tareas);
-
                      con.Close();
-
-
-                   // return Convert.ToString(tareas.Count());
                 }
             }
             catch (System.Data.OleDb.OleDbException E)
             {
                 return E.Message.ToString();
-
-                //Debug.WriteLine("Ocurrio un error :" + E.Message.ToString());
             }
             return Convert.ToString( totalActualizado);
         }
+
+        public static string FoliarBaseEnDBFTodasFormasPago(string RutaPath, string NombreArchivo, List<ResumenPersonalAFoliarDTO> ResumenPersonalFoliar, bool EsPena)
+        {
+            string constr = "Provider=VFPOLEDB.1 ;Data Source=" + RutaPath + "";
+            List<Task> tareas = new List<Task>();
+
+            int totalActualizado = 0;
+            try
+            {
+                using (OleDbConnection con = new OleDbConnection(constr))
+                {
+
+                    con.Open();
+                    foreach (ResumenPersonalAFoliarDTO nuevoRegistro in ResumenPersonalFoliar)
+                    {
+                        string ExecutarQuery = "";
+                        if (EsPena)
+                        {
+                            ExecutarQuery = "UPDATE [" + NombreArchivo + "] SET Num_che = '" + nuevoRegistro.NumChe + "', Banco_x = '" + nuevoRegistro.BancoX + "', Cuenta_x = '" + nuevoRegistro.CuentaX + "' , Observa = '" + nuevoRegistro.Observa + "' WHERE NUM = '" + nuevoRegistro.CadenaNumEmpleado + "' and LIQUIDO = " + nuevoRegistro.Liquido + " and DELEG = '" + nuevoRegistro.Delegacion + "' and Benef = '" + nuevoRegistro.NumBeneficiario + "' ";
+
+                        }
+                        else
+                        {
+                            ExecutarQuery = "UPDATE [" + NombreArchivo + "] SET Num_che = '" + nuevoRegistro.NumChe + "', Banco_x = '" + nuevoRegistro.BancoX + "', Cuenta_x = '" + nuevoRegistro.CuentaX + "' , Observa = '" + nuevoRegistro.Observa + "' WHERE NUM = '" + nuevoRegistro.CadenaNumEmpleado + "' and LIQUIDO = " + nuevoRegistro.Liquido + " and DELEG = '" + nuevoRegistro.Delegacion + "' ";
+
+                        }
+
+                        OleDbCommand cmd = new OleDbCommand(ExecutarQuery, con);
+                        int modificado = cmd.ExecuteNonQuery();
+
+                        if (modificado == 1)
+                        {
+                            totalActualizado += modificado;
+                        }
+                    }
+                    con.Close();
+                }
+            }
+            catch (System.Data.OleDb.OleDbException E)
+            {
+                return E.Message.ToString();
+            }
+            return Convert.ToString(totalActualizado);
+        }
+        /************************************************************************************************************************************************************************************************************************************/
+        /************************************************************************************************************************************************************************************************************************************/
+
+
+
 
 
         public static string SuspenderPagomatico(string RutaPath, string NombreArchivo, Tbl_Pagos nuevoRegistro, bool EsPena, string CadenaNumEmpleado)
@@ -328,6 +399,55 @@ namespace DAP.Foliacion.Datos.ClasesParaDBF
             }
             return Convert.ToString(totalActualizado);
         }
+
+
+        public static string ReponerCheque_MEJORADO(string RutaPath, string NombreArchivo, Tbl_Pagos nuevoRegistro, bool EsPena, string CadenaNumEmpleado , string ReposicionNuevoFolio)
+        {
+            //EjemploDePath:  string pathPruebaSERVER208 = @"F:\SAGITARI\GENERAL\ARCHIVOS\";
+
+
+            // string constr = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source="+RutaPath+";Extended Properties=dBASE 5.0;";
+            string constr = "Provider=VFPOLEDB.1 ;Data Source=" + RutaPath + "";
+            List<Task> tareas = new List<Task>();
+
+
+            int totalActualizado = 0;
+            try
+            {
+                using (OleDbConnection con = new OleDbConnection(constr))
+                {
+                    con.Open();
+
+                    string executaQuery = "";
+
+                    if ( Convert.ToBoolean(nuevoRegistro.EsPenA) )
+                    {
+                        executaQuery = "UPDATE ["+NombreArchivo+"] SET NUM_CHE = '"+ReposicionNuevoFolio+"'  WHERE NUM = '" + CadenaNumEmpleado + "' and Liquido = " + nuevoRegistro.ImporteLiquido + " and deleg = '" + nuevoRegistro.Delegacion + "' and BENEF = '" + nuevoRegistro.NumBeneficiario + "'";
+                    }
+                    else
+                    {
+                        executaQuery = "UPDATE ["+NombreArchivo+"] SET NUM_CHE = '"+ReposicionNuevoFolio+"'  WHERE NUM = '" + CadenaNumEmpleado + "' and Liquido = " + nuevoRegistro.ImporteLiquido + " and deleg = '" + nuevoRegistro.Delegacion + "'";
+                    }
+
+                    OleDbCommand cmd = new OleDbCommand(executaQuery, con);
+                    int modificado = cmd.ExecuteNonQuery();
+
+                    if (modificado == 1)
+                    {
+                        totalActualizado += modificado;
+                    }
+
+                    con.Close();
+                }
+            }
+            catch (System.Data.OleDb.OleDbException E)
+            {
+                return E.Message.ToString();
+
+            }
+            return Convert.ToString(totalActualizado);
+        }
+
 
         public static string ReponerFormaPago(string RutaPath, string ExecutarQuery)
         {
@@ -449,12 +569,13 @@ namespace DAP.Foliacion.Datos.ClasesParaDBF
 
 
 
+    
         /**********************************************************************************************************************************************************************************************************************************************/
         /**********************************************************************************************************************************************************************************************************************************************/
         /*************************************************************************************          Limpiar un registro de la base EN DBF para limpiar campos           ***************************************************************************************/
         /**********************************************************************************************************************************************************************************************************************************************/
         /**********************************************************************************************************************************************************************************************************************************************/
-        public static string LimpiarUnRegitroCamposFoliacionBaseDBF(string RutaPath, string NombreArchivo, bool EsPena, string numEmpleado5Digitos , decimal ImporteLiquido , string Delegacion , string NumBeneficiario)
+        public static string LimpiarUnRegitroCamposFoliacionBaseDBF(string RutaPath, string NombreArchivo, bool EsPena, string numEmpleado5Digitos, decimal ImporteLiquido, string Delegacion, string NumBeneficiario)
         {
             string constr = "Provider=VFPOLEDB.1 ;Data Source=" + RutaPath + "";
 
@@ -466,22 +587,22 @@ namespace DAP.Foliacion.Datos.ClasesParaDBF
                     string ExecutarQuery = "";
                     if (EsPena)
                     {
-                        ExecutarQuery = "UPDATE [" + NombreArchivo + "] SET NUM_CHE = '' , BANCO_X = '' , CUENTA_X = '' , OBSERVA = ''  WHERE NUM = '"+numEmpleado5Digitos + "' and LIQUIDO = "+ImporteLiquido+" and DELEG = '"+Delegacion+"' and Benef = '"+NumBeneficiario+"' ";
+                        ExecutarQuery = "UPDATE [" + NombreArchivo + "] SET NUM_CHE = '' , BANCO_X = '' , CUENTA_X = '' , OBSERVA = ''  WHERE NUM = '" + numEmpleado5Digitos + "' and LIQUIDO = " + ImporteLiquido + " and DELEG = '" + Delegacion + "' and Benef = '" + NumBeneficiario + "' ";
                     }
                     else
                     {
-                        ExecutarQuery = "UPDATE [" + NombreArchivo + "] SET NUM_CHE = '' , BANCO_X = '' , CUENTA_X = '' , OBSERVA = ''   WHERE NUM = '"+numEmpleado5Digitos+"' and LIQUIDO = "+ImporteLiquido+" and DELEG = '"+Delegacion+"' ";
+                        ExecutarQuery = "UPDATE [" + NombreArchivo + "] SET NUM_CHE = '' , BANCO_X = '' , CUENTA_X = '' , OBSERVA = ''   WHERE NUM = '" + numEmpleado5Digitos + "' and LIQUIDO = " + ImporteLiquido + " and DELEG = '" + Delegacion + "' ";
                     }
 
 
                     con.Open();
-                        OleDbCommand cmd = new OleDbCommand(ExecutarQuery, con);
-                        int modificado = cmd.ExecuteNonQuery();
+                    OleDbCommand cmd = new OleDbCommand(ExecutarQuery, con);
+                    int modificado = cmd.ExecuteNonQuery();
 
-                        if (modificado == 1)
-                        {
-                            totalActualizado += modificado;
-                        }
+                    if (modificado == 1)
+                    {
+                        totalActualizado += modificado;
+                    }
 
                     con.Close();
                 }
@@ -495,6 +616,39 @@ namespace DAP.Foliacion.Datos.ClasesParaDBF
 
 
 
+
+
+
+        /**********************************************************************************************************************************************************************************************************************************************/
+        /**********************************************************************************************************************************************************************************************************************************************/
+        /************************************************************          Limpiar campos  de registro de la base EN DBF (funcion para recuperar un folio mal foliado y recrese al inventario )         *******************************************/
+        /**********************************************************************************************************************************************************************************************************************************************/
+        /**********************************************************************************************************************************************************************************************************************************************/
+        public static string LimpiarBaseDBF_IncumplimientoCalidadFoliacion(string RutaPath, string NombreArchivo, string condicionACumplir)
+        {
+            string constr = "Provider=VFPOLEDB.1 ;Data Source=" + RutaPath + "";
+
+            int totalActualizado = 0;
+            try
+            {
+                using (OleDbConnection con = new OleDbConnection(constr))
+                {
+                    string ExecutarQuery = ExecutarQuery = "UPDATE [" + NombreArchivo + "] SET NUM_CHE = '' , BANCO_X = '' , CUENTA_X = '' , OBSERVA = ''   WHERE " + condicionACumplir + " ";
+
+
+                    con.Open();
+                    OleDbCommand cmd = new OleDbCommand(ExecutarQuery, con);
+                    totalActualizado = cmd.ExecuteNonQuery();
+
+                    con.Close();
+                }
+            }
+            catch (System.Data.OleDb.OleDbException E)
+            {
+                return E.Message.ToString();
+            }
+            return Convert.ToString(totalActualizado);
+        }
 
     }
 

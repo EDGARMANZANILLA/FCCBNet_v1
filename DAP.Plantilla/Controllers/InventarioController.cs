@@ -23,23 +23,61 @@ namespace DAP.Foliacion.Plantilla.Controllers
 
             List<InventarioModel> BancosMostrar = new List<InventarioModel>();
 
-            var InventariosActivos = Negocios.InventarioNegocios.ObtenerInventarioActivo();  
-            foreach (var inventarioBanco in InventariosActivos)
+            var inventariosActivos = Negocios.InventarioNegocios.ObtenerInventarioActivo().ToList();
+
+            var invertariosActivos2022 = inventariosActivos.Where(x => x.FechaCreacion.Year == 2022);
+
+            var invertariosActivos2021 = inventariosActivos.Where(x => x.FechaCreacion.Year == 2021);
+             
+            foreach (var inventarioBanco in invertariosActivos2022)
             {
                 InventarioModel NuevoBanco = new InventarioModel();
-
-              
                 NuevoBanco.IdCuentaBancaria = inventarioBanco.Id;
-                NuevoBanco.NombreBanco = inventarioBanco.NombreBanco;
+                NuevoBanco.NombreBanco = inventarioBanco.NombreBanco +" || "+ inventarioBanco.FechaCreacion.Year;
                 NuevoBanco.Cuenta = inventarioBanco.Cuenta;
-                NuevoBanco.FormasDisponibles = inventarioBanco.Tbl_Inventario.FormasDisponibles;
+                NuevoBanco.FormasDisponibles = ""+ inventarioBanco.Tbl_Inventario.FormasDisponibles;
                 NuevoBanco.UltimoFolioInventario = inventarioBanco.Tbl_Inventario.UltimoFolioInventario;
                 NuevoBanco.UltimoFolioUtilizado = inventarioBanco.Tbl_Inventario.UltimoFolioUtilizado;
                 NuevoBanco.EstimadoMeses = inventarioBanco.Tbl_Inventario.EstimadoMeses;
 
                 BancosMostrar.Add(NuevoBanco);
 
-             }
+            }
+
+
+            if (invertariosActivos2021.Count() > 0) 
+            {
+                InventarioModel NuevoBanco = new InventarioModel();
+                NuevoBanco.IdCuentaBancaria = 0;
+                NuevoBanco.NombreBanco = "";
+                NuevoBanco.Cuenta = "";
+                NuevoBanco.FormasDisponibles = "";
+                NuevoBanco.UltimoFolioInventario ="";
+                NuevoBanco.UltimoFolioUtilizado = "";
+                NuevoBanco.EstimadoMeses = null ;
+
+                BancosMostrar.Add(NuevoBanco);
+
+                foreach (var inventarioBanco in invertariosActivos2021)
+                {
+                    InventarioModel NuevoBanco2021 = new InventarioModel();
+                    NuevoBanco2021.IdCuentaBancaria = inventarioBanco.Id;
+                    NuevoBanco2021.NombreBanco = inventarioBanco.NombreBanco + " || " + inventarioBanco.FechaCreacion.Year;
+                    NuevoBanco2021.Cuenta = inventarioBanco.Cuenta;
+                    NuevoBanco2021.FormasDisponibles = "" + inventarioBanco.Tbl_Inventario.FormasDisponibles;
+                    NuevoBanco2021.UltimoFolioInventario = inventarioBanco.Tbl_Inventario.UltimoFolioInventario;
+                    NuevoBanco2021.UltimoFolioUtilizado = inventarioBanco.Tbl_Inventario.UltimoFolioUtilizado;
+                    NuevoBanco2021.EstimadoMeses = inventarioBanco.Tbl_Inventario.EstimadoMeses;
+
+                    BancosMostrar.Add(NuevoBanco2021);
+
+                }
+
+            }
+
+
+
+
 
 
             return View(BancosMostrar);
@@ -70,20 +108,21 @@ namespace DAP.Foliacion.Plantilla.Controllers
 
             ViewBag.IdBancoSeleccionado = IdCuentaBancaria;
 
+            ViewBag.ResumenIncidencias = Negocios.InventarioNegocios.ObtenerResumenIncidenciasDeBancoSeleccionado(IdCuentaBancaria);
+
             return View();
         }
         public ActionResult Inhabilitar(int IdCuentaBancaria)
         {
             //  ViewBag.NombreBanco = NombreBanco;
-
             ViewBag.NombreBancoSeleccionado = Negocios.InventarioNegocios.ObtenerNombreBanco(IdCuentaBancaria);
-
             ViewBag.IdBancoSeleccionado = IdCuentaBancaria;
 
 
 
-            /*Pendiente*/
-            ViewBag.OrdenesEncontradas = Negocios.InventarioNegocios.ObtenerNumeroOrdenesBancoActivo(1);
+            int IdInventario = Negocios.InventarioNegocios.ObtenerIdInventarioPorIdCuentaBancaria(IdCuentaBancaria);
+           
+            ViewBag.OrdenesEncontradas = Negocios.InventarioNegocios.ObtenerNumeroOrdenesBancoActivo(IdInventario);
 
 
             return View();
@@ -152,7 +191,8 @@ namespace DAP.Foliacion.Plantilla.Controllers
 
                 foreach (AgregarInventarioModel nuevoContenedor in listaContenedores.OrderBy( x => x.iteradorContenedor)) 
                 {
-                    bandera = Negocios.InventarioNegocios.GuardarInventarioContenedores( IdBanco, NumOrden, nuevoContenedor.iteradorContenedor, nuevoContenedor.folioInicial, nuevoContenedor.folioFinal, nuevoContenedor.TotalFormas, DAP.Plantilla.ObjetosExtras.ObtenerHoraReal.ObtenerDateTimeFechaReal());
+                    DateTime FechaActual = DateTime.Now;
+                    bandera = Negocios.InventarioNegocios.GuardarInventarioContenedores( IdBanco, NumOrden, nuevoContenedor.iteradorContenedor, nuevoContenedor.folioInicial, nuevoContenedor.folioFinal, nuevoContenedor.TotalFormas, FechaActual);
                 }
 
             }
@@ -168,13 +208,6 @@ namespace DAP.Foliacion.Plantilla.Controllers
 
 
     
-
-
-        ////Metodos para Solicitar Formas de pago para uno o mas de un banco
-        //public JsonResult ObtenerCuentaBancaria(string BancoSeleccionado) 
-        //{
-        //    return Json(Negocios.InventarioNegocios.ObtenerCuentaBancariaPorNombreBanco(BancoSeleccionado), JsonRequestBehavior.AllowGet);
-        //}
 
 
 
@@ -338,13 +371,13 @@ namespace DAP.Foliacion.Plantilla.Controllers
 
 
         /*************************************************************************************************************************************************************************************************/
-        /************************************************************************************************************************************************************************************************/
-        /*************************************************************          DetalleBanco         **************************************************************************************************/
-        /************************************************************************************************************************************************************************************************/
-        /************************************************************************************************************************************************************************************************/
+        /*************************************************************************************************************************************************************************************************/
+        /*************************************************************          DetalleBanco         *****************************************************************************************************/
+        /*************************************************************************************************************************************************************************************************/
+        /*************************************************************************************************************************************************************************************************/
 
         //Carga de datos al datatable por medio de httpRequest: POST (De esa manera data table nos envia su info como draw, start)
-   
+
         public JsonResult Paginar_CargarDetalleBanco() 
         {
             int IdCuentaBancaria = (int)Session["IdCuentaBancaria"];
@@ -362,7 +395,11 @@ namespace DAP.Foliacion.Plantilla.Controllers
              int pageSize, skip, recordsTotal;
 
             pageSize = length != null ? Convert.ToInt32(length) : 0;
+
             skip = start != null ? Convert.ToInt32(start) : 0;
+       
+
+
             recordsTotal = 0;
 
 
@@ -405,11 +442,16 @@ namespace DAP.Foliacion.Plantilla.Controllers
                 {
                     DetalleBancoModel nuevoDetalle = new DetalleBancoModel();
 
+                    nuevoDetalle.IdTblDetalle = detalle.Id;
                     nuevoDetalle.NumeroOrden = detalle.Tbl_InventarioContenedores.NumOrden;
                     nuevoDetalle.NumeroContenedor = detalle.Tbl_InventarioContenedores.NumContenedor;
                     nuevoDetalle.NumeroFolio = detalle.NumFolio;
 
-                    if (detalle.IdIncidencia != null)
+                    nuevoDetalle.TipoNumeroIncidencia = detalle.IdIncidencia == null ? 0 : Convert.ToInt32( detalle.IdIncidencia);
+
+
+
+                    if (detalle.IdIncidencia != null && detalle.IdIncidencia != 2)
                         nuevoDetalle.Incidencia = detalle.Tbl_InventarioTipoIncidencia.Descrip_Incidencia;
 
                     if (detalle.IdEmpleado != null)
@@ -418,13 +460,37 @@ namespace DAP.Foliacion.Plantilla.Controllers
                     if (detalle.FechaIncidencia != null)
                         nuevoDetalle.FechaIncidencia = detalle.FechaIncidencia?.ToString("dd/MM/yyyy");
 
-                    listaDetalle.Add(nuevoDetalle);
+                    if(detalle.FechaAsignacionExterna != null)
+                        nuevoDetalle.FechaAsignacionExterna = detalle.FechaAsignacionExterna?.ToString("dd/MM/yyyy");
+
+                listaDetalle.Add(nuevoDetalle);
                 }
           
 
             return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = listaDetalle });
 
         }
+
+
+
+        /***  Recuperar folio de incidencia  ***/
+        public JsonResult RecuperarFolioDeIncidencia(int recuperarIdTblDetalle)
+        {
+            bool bandera = false;
+            try
+            {
+
+                bandera = InventarioNegocios.RecuperaFolioSeleccionadoxIdInventarioDetalle(recuperarIdTblDetalle);
+
+            }
+            catch (Exception e)
+            {
+                bandera = false;
+            }
+
+            return Json(bandera, JsonRequestBehavior.AllowGet);
+        }
+
 
 
 
@@ -588,7 +654,7 @@ namespace DAP.Foliacion.Plantilla.Controllers
         {
             ////Obtener y convertir a 
             //string fechaExterna = Convert.ToString(ObtenerFechaServerGoogle());
-            DateTime AnioCurso = ObtenerHoraReal.ObtenerDateTimeFechaReal();/*Convert.ToDateTime(fechaExterna);*/
+            DateTime AnioCurso = DateTime.Now; /*Convert.ToDateTime(fechaExterna);*/
 
 
             string nombreMes = "";
@@ -635,7 +701,8 @@ namespace DAP.Foliacion.Plantilla.Controllers
 
 
 
-            var datosReporte = Negocios.InventarioNegocios.ObtenerInventarioGeneralDatosReporte(MesSelecionado, AnioCurso.Year);
+            //var datosReporte = Negocios.InventarioNegocios.ObtenerInventarioGeneralDatosReporte(MesSelecionado, AnioCurso.Year);
+            var datosReporte = Negocios.InventarioNegocios.ObtenerInventarioGeneralDatosReporte_Prueba(MesSelecionado, AnioCurso.Year);
 
 
             DAP.Plantilla.Reportes.Datasets.FormasChequesExistentes dtsFormasExistentes = new DAP.Plantilla.Reportes.Datasets.FormasChequesExistentes();

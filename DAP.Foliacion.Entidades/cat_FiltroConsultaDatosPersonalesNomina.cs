@@ -17,8 +17,8 @@ namespace DAP.Foliacion.Entidades
         public int Id { get; set; }
         public bool EsPena { get; set; }
         public Nullable<bool> EsPagomatico { get; set; }
-        public Nullable<bool> Cheque { get; set; }
-        public Nullable<int> Delegacion { get; set; }
+        public Nullable<bool> ContieneAzteca { get; set; }
+        public Nullable<bool> OtroBanco { get; set; }
         public string Consulta { get; set; }
     }
 }

@@ -93,10 +93,17 @@
 
 
 
-        <div class="row offset-0  offset-sm-1 offset-lg-2  offset-xl-3  marginbottom">
+        <div class="row offset-0  offset-sm-1 offset-lg-1  offset-xl-1  marginbottom">
 
             <div class="col-12 col-sm-3 orientacion">
-                <label for="">Estado Cheque:</label>
+                <label for="">Tipo Pago:</label>
+                <br>
+                <span id="TipoPago" class="text-center">@Model.TipoPago</span>
+
+            </div>
+
+            <div class="col-12 col-sm-3 orientacion">
+                <label for="">Estado Pago:</label>
                 <br>
                 <span id="EstadoCheque" class="text-center">@Model.EstadoCheque</span>
 
@@ -110,7 +117,7 @@
 
             </div>
 
-            <div class="col-12 col-sm-6 orientacion">
+            <div class="col-12 col-sm-3 orientacion">
                 <label for="">Cuenta Pagadora:</label>
                 <br>
                 <span id="CuentaPagadora" class="text-center">@Model.CuentaPagadora</span>
@@ -127,11 +134,11 @@
         {
 
 
-            <div class="row offset-0  offset-sm-1 offset-lg-2  offset-xl-3  marginbottom">
+            <div class="row offset-0  offset-sm-1 offset-lg-1  offset-xl-1  marginbottom">
 
 
                 <div class="col-12 col-sm-3 orientacion">
-                    <label>Es Pension A:</label>
+                    <label>Es P. A :</label>
                     <br>
                     <span id="EsPenA">@Model.EsPenA </span>
 
@@ -140,16 +147,23 @@
 
 
                 <div class="col-12 col-sm-3  orientacion">
-                    <label for="">Num Beneficiario</label>
+                    <label for="">Num Benef P. A :</label>
                     <br>
                     <span id="NumBeneficiario">@Model.NumBeneficiarioPenA </span>
 
                 </div>
 
-                <div class="col-12 col-sm-6  orientacion">
-                    <label for="">Beneficiario Pension Alim:</label>
+                <div class="col-12 col-sm-3  orientacion">
+                    <label for="">Benef P. A :</label>
                     <br>
                     <span id="NombreBenePenA">@Model.NombreBeneficiarioPenA</span>
+
+                </div>
+
+                <div class="col-12 col-sm-3 orientacion">
+                    <label for="">Pago Suspendido :</label>
+                    <br>
+                    <span id="PagoSuspendido" class="text-center">@Model.EsSuspencion</span>
 
                 </div>
 
@@ -158,6 +172,23 @@
 
         }
 
+
+        @if (@Model.EsPenA != true)
+        {
+
+            <div class="row offset-0  offset-sm-1 offset-lg-1  offset-xl-1  marginbottom">
+
+
+                <div class="col-12 col-sm-3 orientacion">
+                    <label for="">Pago Suspendido:</label>
+                    <br>
+                    <span id="PagoSuspendido" class="text-center">@Model.EsSuspencion</span>
+
+                </div>
+
+            </div>
+
+        }
     </div>
 
 

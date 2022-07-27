@@ -11,6 +11,7 @@ function DibujarTablaDetalleProblemasCheques() {
         "<tr class='text-center text-uppercase'>" +
 
         "<th>Id </th>" +
+        "<th>Nombre Cuenta Banco</th>" +
         "<th>Folio</th>" +
         "<th>Incidencia</th>" +
         "<th>Fecha Incidencia</th>" +
@@ -49,6 +50,7 @@ function LlenarTablaDetalleProblemasCheques(datos) {
         "data": datos,
         "columns": [
             { "data": "Id" },
+            { "data": "NombreBancoCuenta" },
             { "data": "Folio" },
             { "data": "Incidencia" },
             { "data": "FechaIncidencia" }
@@ -58,9 +60,10 @@ function LlenarTablaDetalleProblemasCheques(datos) {
 
 
             { className: "text-center col-1", visible: true, "targets": 0, },
-            { className: "text-center col-1", visible: true, "targets": 1, },
-            { className: "text-center col-2", visible: true, "targets": 2, },
+            { className: "text-center col-3", visible: true, "targets": 1, },
+            { className: "text-center col-1", visible: true, "targets": 2, },
             { className: "text-center col-2", visible: true, "targets": 3, },
+            { className: "text-center col-2", visible: true, "targets": 4, }
 
         ],
 
@@ -170,10 +173,10 @@ function PintarConsultaTablaResumenNominaChequesEnModal(datos) {
             {
                 render: function (data, type, row) {
                     //console.log(row);
-                    //if (row.IdEstaFoliada < 2) {
-                    return `<h4 class="bg-success btn  text-uppercase text-light"  onclick="DelegacionSelecionadaCheque(${row.IdNomina}, ${row.IdDelegacion},  ${row.GrupoFoliacion},  ${row.Sindicato},  ${row.Confianza} ,  ${row.Otros},  '${row.Coment}' , '${row.NombreDelegacion}' )"> Seleccionar Delegacion <i class="fas fa-sort-numeric-down"></i>  </h4>`;
+                    if (!row.EstaFoliadoCorrectamente) {
+                            return `<h4 class="bg-success btn  text-uppercase text-light"  onclick="DelegacionSelecionadaCheque(${row.IdNomina}, ${row.IdDelegacion},  ${row.GrupoFoliacion},  ${row.Sindicato},  ${row.Confianza} ,  ${row.Otros},  '${row.Coment}' , '${row.NombreDelegacion}' )"> Seleccionar Delegacion <i class="fas fa-sort-numeric-down"></i>  </h4>`;
                     // return `<h4 class="bg-success btn"  onclick="DelegacionSelecionadaCheque('${row.NombreDelegacion}')" > Seleccionar Delegacion </h4>`;
-                    //}
+                    }
                     return '';
                 }
 
@@ -220,7 +223,7 @@ function verResumenXDelegacionNominaCheque() {
         // console.log(EnviarDatos)
         MensajeCargando();
         $.ajax({
-            url: 'Foliar/ObtenerResumenxDelegacionNominaCheques',
+            url: 'Foliar/ObtenerResumenDetalle_NominaCheques',
             data: EnviarDatos,
             type: "POST",
             contentType: "application/json; charset=utf-8",
@@ -392,6 +395,18 @@ function DelegacionSelecionadaCheque(IdNomina, IdDelegacion, GrupoFoliacion, Sin
     $('#DetalleDelegacionNominaCheque').modal('hide');
     document.getElementById('VistaFormasPago').style.display = "none";
     document.getElementById('ParteBancariaFoliacion').style.display = "block";
+
+    /* poner en blanco campos para una nueva foliacion*/
+    document.getElementById('SeleccionarCuentaBancaria').selectedIndex = "";
+    document.getElementById('rangoInicial').value = "";
+    document.getElementById('rangoFinal').value = "...";
+    document.getElementById('registrosFoliados').value = "...";
+
+    document.getElementById('checkInhabilitar').checked = false;
+    document.getElementById('cambiaColorInhabilitar').className = 'btn btn-lg btn-outline-primary';
+
+    document.getElementById('FolioInicialInhabilitado').value = "";
+    document.getElementById('FolioFinalInhabilitado').value = "";
 }
 
 
@@ -399,7 +414,7 @@ function CambiarColor()
 {
     let hayInhabilitado = document.getElementById('checkInhabilitar').checked
 
-    console.log(hayInhabilitado);
+    //console.log(hayInhabilitado);
     if (hayInhabilitado)
     {
         document.getElementById('cambiaColorInhabilitar').className = 'btn btn-lg btn-primary';
@@ -410,6 +425,8 @@ function CambiarColor()
     }
 
 }
+
+
 
 function FoliarNominaCheque() {
     let idBancoPagadorSeleccionado = document.getElementById("SeleccionarCuentaBancaria").value
@@ -427,13 +444,13 @@ function FoliarNominaCheque() {
     if (idBancoPagadorSeleccionado != '') {
 
 
-
         if (rangoInicialSeleccionado != '') {
 
 
             if (hayInhabilitado) {
 
-
+              //  console.log(rangoInhabilitadoInicial)
+               // console.log(rangoInhabilitadoFinal)
                 if (rangoInhabilitadoFinal != '' && rangoInhabilitadoInicial != '') {
 
                     if (parseInt(rangoInhabilitadoFinal) >= parseInt(rangoInhabilitadoInicial)) {
@@ -444,7 +461,7 @@ function FoliarNominaCheque() {
                       //  console.log("Inhabilitado FINAL", parseInt(rangoInhabilitadoFinal))
                         if (parseInt(rangoInhabilitadoInicial) > parseInt(rangoInicialSeleccionado)) {
 
-                            console.log("TOdi bien");
+                           // console.log("TOdi bien");
                             bandera = true;
 
                         } else {
@@ -488,107 +505,111 @@ function FoliarNominaCheque() {
         MensajeErrorSweet('Intente seleccionando un banco nuevamente', 'No se selecciono un banco');
     }
 
-    let textoResumenAMostrar = "";
 
-    if (hayInhabilitado)
+
+
+
+
+    // es para saber que las primeras validaciones estan correctas
+    if (bandera)
     {
-        textoResumenAMostrar = "Se iniciara a foliar desde el folio " + rangoInicialSeleccionado + " , del banco " + textoCBancaria + " , con la Inhabilitacion Activa en el folio inicial : " + rangoInhabilitadoInicial + " y el folio final : " + rangoInhabilitadoFinal + "  ";
-    } else
-    {
-        textoResumenAMostrar = "Se iniciara a foliar desde el folio " + rangoInicialSeleccionado + " , del banco " + textoCBancaria + " , con la Inhabilitacion Desactivada  ";
-    }
 
+        let textoResumenAMostrar = "";
 
-    Swal.fire({
-        title: '¿Esta Seguro de Foliar?',
-        text: textoResumenAMostrar,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Foliar',
-        cancelButtonText: 'Cancelar'
-    }).then((result) => {
-        if (result.isConfirmed) {
-
-
-           if (bandera) {
-                let datosNominaFoliarCheque = {
-                    IdNomina: + IdNominaSeleccionada,
-                    IdDelegacion: + IdDelegacionSeleccionada,
-                    IdGrupoFoliacion: + IdGrupoFoliacion,
-                    Sindicato: + sindicatoSeleccionado,
-                    Confianza: + confianzaSeleccionado,
-                    Otros: + OtrosSeleccionado,
-                    IdBancoPagador: + idBancoPagadorSeleccionado,
-                    RangoInicial: +  rangoInicialSeleccionado,
-                    Inhabilitado: hayInhabilitado,
-                    RangoInhabilitadoInicial: + rangoInhabilitadoInicial,
-                    RangoInhabilitadoFinal: + rangoInhabilitadoFinal,
-                    Quincena: document.getElementById("QuincenaFormasPago").innerText
-
-                };
-
-              //  console.log("Ire a foliar");
-              //  console.log(datosNominaFoliarCheque);
-
-
-
-                MensajeCargando();
-                $.ajax({
-                    url: 'Foliar/FoliarNominaFormaPago',
-                    data: JSON.stringify(datosNominaFoliarCheque),
-                    type: "POST",
-                    contentType: "application/json; charset=utf-8",
-                    success: function (response) {
-
-
-                        if (response.resultServer == 0) {
-
-
-                            $("#TablaProblemasCheques").empty();
-                            DibujarTablaDetalleProblemasCheques();
-                            LlenarTablaDetalleProblemasCheques(response.FoliosConIncidencias);
-                            $('#DetalleProblemasConCHEQUES').modal('show');
-
-                        } else if (response.resultServer == 1) {
-
-                            MensajeCorrectoSweet("Se ha foliado la nomina correctamente");
-
-                            document.getElementById("rangoFinal").innerText = response.resultadoFoliacion[0].UltimoFolioUsado;
-                            document.getElementById("registrosFoliados").innerText = response.resultadoFoliacion[0].RegistrosFoliados;
-
-
-                            ActualizaTablaResumenFoliar();
-                            verResumenXDelegacionNominaCheque();
-
-                        } else if (response.resultServer == 5) {
-                            MensajeErrorSweet(response.DBFAbierta[0].Detalle, response.DBFAbierta[0].Solucion);
-                        }
-
-
-                        OcultarMensajeCargando();
-
-                    }, error: function (jqXHR, textStatus) {
-
-                        MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus);
-                        OcultarMensajeCargando();
-                    }
-                });
-
-
-
-           }
-
-
-
-
-
-
-
-
+        if (hayInhabilitado) {
+            textoResumenAMostrar = "Se iniciara a foliar desde el folio " + rangoInicialSeleccionado + " , del banco " + textoCBancaria + " , con la Inhabilitacion Activa en el folio inicial : " + rangoInhabilitadoInicial + " y el folio final : " + rangoInhabilitadoFinal + "  ";
+        } else {
+            textoResumenAMostrar = "Se iniciara a foliar desde el folio " + rangoInicialSeleccionado + " , del banco " + textoCBancaria + " , con la Inhabilitacion Desactivada  ";
         }
-    })
+
+
+        Swal.fire({
+            title: '¿Esta Seguro de Foliar?',
+            text: textoResumenAMostrar,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Foliar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+
+                if (bandera) {
+                    let datosNominaFoliarCheque = {
+                        IdNomina: + IdNominaSeleccionada,
+                        IdDelegacion: + IdDelegacionSeleccionada,
+                        IdGrupoFoliacion: + IdGrupoFoliacion,
+                        Sindicato: + sindicatoSeleccionado,
+                        Confianza: + confianzaSeleccionado,
+                        Otros: + OtrosSeleccionado,
+                        IdBancoPagador: + idBancoPagadorSeleccionado,
+                        RangoInicial: +  rangoInicialSeleccionado,
+                        Inhabilitado: hayInhabilitado,
+                        RangoInhabilitadoInicial: + rangoInhabilitadoInicial,
+                        RangoInhabilitadoFinal: + rangoInhabilitadoFinal,
+                        Quincena: document.getElementById("QuincenaFormasPago").innerText
+
+                    };
+
+                    //  console.log("Ire a foliar");
+                    //  console.log(datosNominaFoliarCheque);
+
+
+
+                    MensajeCargando();
+                    $.ajax({
+                        url: 'Foliar/FoliarNominaFormaPago',
+                        data: JSON.stringify(datosNominaFoliarCheque),
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (response) {
+                            //console.log(response);
+                            //console.log(response.DbfAbierta);
+                            //console.log(response.DbfAbierta[0].Detalle);
+
+                            if (response.resultServer == 0) {
+
+
+                                $("#TablaProblemasCheques").empty();
+                                DibujarTablaDetalleProblemasCheques();
+                                LlenarTablaDetalleProblemasCheques(response.FoliosConIncidencias);
+                                $('#DetalleProblemasConCHEQUES').modal('show');
+
+                            } else if (response.resultServer == 200) {
+
+                                MensajeCorrectoSweet("Se ha foliado la nomina correctamente");
+
+                                document.getElementById("rangoFinal").innerText = response.resultadoFoliacion[0].UltimoFolioUsado;
+                                document.getElementById("registrosFoliados").innerText = response.resultadoFoliacion[0].RegistrosFoliados;
+
+
+                                ActualizaTablaResumenFoliar();
+                                verResumenXDelegacionNominaCheque();
+
+                            } else if (response.resultServer == 500) {
+
+                                MensajeErrorSweet( response.DBFAbierta[0].Detalle , response.DBFAbierta[0].Solucion);
+
+                            } else if (response.resultServer == 501) {
+                                MensajeInformacionSweet(response.FoliosSaltados);
+                            }
+
+
+
+                            OcultarMensajeCargando();
+
+                        }, error: function (jqXHR, textStatus) {
+
+                            MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus);
+                            OcultarMensajeCargando();
+                        }
+                    });
+
+
+
+                }
 
 
 
@@ -597,95 +618,23 @@ function FoliarNominaCheque() {
 
 
 
-
-
-
-
-
-
-
-
-    //if (bandera) {
-    //    let datosNominaFoliarCheque = {
-    //        IdNomina: + IdNominaSeleccionada,
-    //        IdDelegacion: + IdDelegacionSeleccionada,
-    //        IdGrupoFoliacion: + IdGrupoFoliacion,
-    //        Sindicato: + sindicatoSeleccionado,
-    //        Confianza: + confianzaSeleccionado,
-    //        Otros: + OtrosSeleccionado,
-    //        IdBancoPagador: + idBancoPagadorSeleccionado,
-    //        RangoInicial: +  rangoInicialSeleccionado,
-    //        Inhabilitado: hayInhabilitado,
-    //        RangoInhabilitadoInicial: + rangoInhabilitadoInicial,
-    //        RangoInhabilitadoFinal: + rangoInhabilitadoFinal,
-    //        Quincena: document.getElementById("QuincenaFormasPago").innerText
-
-    //    };
-
-    //    console.log("Ire a foliar");
-    //    console.log(datosNominaFoliarCheque);
-
-
-
-    //    MensajeCargando();
-    //    $.ajax({
-    //        url: 'Foliar/FoliarNominaFormaPago',
-    //        data: JSON.stringify(datosNominaFoliarCheque),
-    //        type: "POST",
-    //        contentType: "application/json; charset=utf-8",
-    //        success: function (response) {
-
-
-    //            if (response.resultServer == 0) {
-
-
-    //                $("#TablaProblemasCheques").empty();
-    //                DibujarTablaDetalleProblemasCheques();
-    //                LlenarTablaDetalleProblemasCheques(response.FoliosConIncidencias);
-    //                $('#DetalleProblemasConCHEQUES').modal('show');
-
-    //            } else if (response.resultServer == 1) {
-
-    //                MensajeCorrectoSweet("Se ha foliado la nomina correctamente");
-
-    //                document.getElementById("rangoFinal").innerText = response.resultadoFoliacion[0].UltimoFolioUsado;
-    //                document.getElementById("registrosFoliados").innerText = response.resultadoFoliacion[0].RegistrosFoliados;
-
-
-    //                ActualizaTablaResumenFoliar();
-    //                verResumenXDelegacionNominaCheque();
-
-    //            } else if (response.resultServer == 5) {
-    //                MensajeErrorSweet(response.DBFAbierta[0].Detalle, response.DBFAbierta[0].Solucion);
-    //            }
-
-
-    //            OcultarMensajeCargando();
-
-    //        }, error: function (jqXHR, textStatus) {
-
-    //            MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus);
-    //            OcultarMensajeCargando();
-    //        }
-    //    });
-
-
-
-    //}
-
-
-
-
-
-
-
-
+            }
+        })
+    }
 
 
 
 
 
 }
+
+
+
+
+
+
+
+
 
 function RegresarVistaFormaPago() {
     document.getElementById('ParteBancariaFoliacion').style.display = "none";

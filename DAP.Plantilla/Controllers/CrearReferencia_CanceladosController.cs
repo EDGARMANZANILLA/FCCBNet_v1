@@ -215,7 +215,7 @@ namespace DAP.Plantilla.Controllers
         /*******************************************************************************************************************************************************************************************************/
         /*******************************************************************************************************************************************************************************************************/
 
-        public FileContentResult DescargarReporteNominaAnual(int IdReferencia)
+        public ActionResult DescargarReporteNominaAnual_AXIOS(int IdReferencia)
         {
             byte[] bytes = null;
 
@@ -228,6 +228,8 @@ namespace DAP.Plantilla.Controllers
 
             string pathdestino = null;
             string slash = @"\";
+            string ultimosDosDigitosAnio;
+            string  referenciaSinAnio;
             Directory.CreateDirectory(pathACrear);
             if (Directory.Exists(pathACrear))
             {
@@ -239,9 +241,13 @@ namespace DAP.Plantilla.Controllers
 
                     decimal sumaTotalGeneralSinCAPAE = 0;
                     DAP.Plantilla.Reportes.Datasets.DsNominaAnual nominaAnual = new DAP.Plantilla.Reportes.Datasets.DsNominaAnual();
-                    nominaAnual.datosReferencia.AdddatosReferenciaRow(datosReferencia.Numero_Referencia, Convert.ToString(anioSeleccionado));
+
+                    ultimosDosDigitosAnio = anioSeleccionado.ToString().Substring(2,2);
+                    referenciaSinAnio = datosReferencia.Numero_Referencia.Substring(2);
+                    nominaAnual.datosReferencia.AdddatosReferenciaRow(ultimosDosDigitosAnio + referenciaSinAnio, Convert.ToString(anioSeleccionado));
                     foreach (var nuevoregistro in nominaAnualRegistros)
                     {
+                       
                         nominaAnual.NominaAnual.AddNominaAnualRow(nuevoregistro.Quincena, nuevoregistro.Cheque, nuevoregistro.Num, nuevoregistro.NombreBenefirioCheque, nuevoregistro.Deleg, nuevoregistro.Liquido, nuevoregistro.NombreNomina);
 
                         if (!nuevoregistro.NombreNomina.Contains("XX - NOMINAS DE CAPAE"))
@@ -259,27 +265,56 @@ namespace DAP.Plantilla.Controllers
                 }
 
                 string server = Server.MapPath("~/");
-                string pathZip =  server + @"Reportes\IpdParaDescargas\NominasAnuales" + datosReferencia.Numero_Referencia + ".Zip";
-               // string pathZip = Path.Combine(Server.MapPath("~/"), "/Reportes/IpdParaDescargas/NominasAnuales"+datosReferencia.Numero_Referencia+".Zip");
-                
-               // string pathZip = @"C:\Users\Israel\Desktop\RAMA DE FOLIACION\FoliacionRemasterizado\DAP.Plantilla\Reportes\IpdParaDescargas\NominasAnuales" + datosReferencia.Numero_Referencia + ".Zip";
+                string pathZip = server + @"Reportes\IpdParaDescargas\NominasAnuales"+datosReferencia.Numero_Referencia+".Zip";
 
 
-                ZipFile.CreateFromDirectory(pathACrear, pathZip);
-
-                if (System.IO.File.Exists(pathZip))
+                try
                 {
-                    bytes = System.IO.File.ReadAllBytes(pathZip);
-                    System.IO.File.Delete(pathZip);
-                    Directory.Delete(pathACrear, true);
+
+                    if (Response.IsClientConnected)
+                    {
+
+                        if (!Directory.Exists(pathZip))
+                        {
+                            ZipFile.CreateFromDirectory(pathACrear, pathZip);
+                            Response.Clear();
+                            Response.BufferOutput = false;
+                           // Response.ContentType = "application/zip";
+                            //Response.ContentType = "application/octet-stream";
+
+                            //Response.AppendHeader("content-disposition", "attachment; filename= ReporteAnualesCC_"+datosReferencia.Numero_Referencia+".zip");
+                            // AddHeader("content-disposition", "attachment; filename=  Partida_" + partidasADescargar + "_.zip");
+                            Response.TransmitFile(pathZip);
+                            Response.Flush();
+                            Response.End();
+
+                        }
+                    }
                 }
+                catch (Exception E)
+                {
+                    return Content(E.Message);
+                }
+                finally
+                {
+                    if (System.IO.File.Exists(pathZip))
+                    {
+                        // bytes = System.IO.File.ReadAllBytes(pathZip);
+                        System.IO.File.Delete(pathZip);
+                        Directory.Delete(pathACrear, true);
+                        Response.Close();
+                    }
+
+                }
+
             }
 
-            return File(bytes, "application /zip", "NominasAnuales_" + datosReferencia.Numero_Referencia + ".Zip");
+            return Content("No hay datos que cargar");
         }
 
+  
 
-        public FileContentResult DescargarReporteCuentaBancariaAnual(int IdReferencia)
+        public ActionResult DescargarReporteCuentaBancariaAnual_AXIOS(int IdReferencia)
         {
             byte[] bytes = null;
 
@@ -288,11 +323,13 @@ namespace DAP.Plantilla.Controllers
             string pathPrincipal = Path.Combine(Server.MapPath("~/"), @"Reportes\IpdParaDescargas");
             //string pathPrincipal = @"C:\Users\Israel\Desktop\RAMA DE FOLIACION\FoliacionRemasterizado\DAP.Plantilla\Reportes\IpdParaDescargas";
 
-            string pathACrear = Path.Combine( Server.MapPath("~/") , @"Reportes\IpdParaDescargas\ReporteCuentaBancariaAnual");
+            string pathACrear = Path.Combine(Server.MapPath("~/"), @"Reportes\IpdParaDescargas\ReporteCuentaBancariaAnual");
             //string pathACrear = @"C:\Users\Israel\Desktop\RAMA DE FOLIACION\FoliacionRemasterizado\DAP.Plantilla\Reportes\IpdParaDescargas\ReporteCuentaBancariaAnual";
 
             string pathdestino = null;
             string slash = @"\";
+            string ultimosDosDigitosAnio;
+            string referenciaSinAnio;
             Directory.CreateDirectory(pathACrear);
             if (Directory.Exists(pathACrear))
             {
@@ -300,43 +337,80 @@ namespace DAP.Plantilla.Controllers
                 {
                     //var registrosPorAnio = pagosEncontrados.Where(x => x.Anio == 2022).ToList();
 
-                  //  var nominaAnualRegistros = CrearReferencia_CanceladosNegocios.ObtenerRegistrosNominaAnual(IdReferencia, anioSeleccionado);
+                    //  var nominaAnualRegistros = CrearReferencia_CanceladosNegocios.ObtenerRegistrosNominaAnual(IdReferencia, anioSeleccionado);
                     var registrosCuentabancariaObtenidos = CrearReferencia_CanceladosNegocios.ObtenerRegistrosBancosAnual(IdReferencia, anioSeleccionado);
 
                     DAP.Plantilla.Reportes.Datasets.DSCuentaBancariaAnual_CC cuentaBancariaAnual = new DAP.Plantilla.Reportes.Datasets.DSCuentaBancariaAnual_CC();
-                    cuentaBancariaAnual.DatosReferencia.AddDatosReferenciaRow(datosReferencia.Numero_Referencia, Convert.ToString(anioSeleccionado));
+                    //cuentaBancariaAnual.DatosReferencia.AddDatosReferenciaRow(datosReferencia.Numero_Referencia, Convert.ToString(anioSeleccionado));
+
+                    ultimosDosDigitosAnio = anioSeleccionado.ToString().Substring(2, 2);
+                    referenciaSinAnio = datosReferencia.Numero_Referencia.Substring(2);
+                    cuentaBancariaAnual.DatosReferencia.AddDatosReferenciaRow(ultimosDosDigitosAnio+referenciaSinAnio, Convert.ToString(anioSeleccionado));
                     foreach (var nuevoregistro in registrosCuentabancariaObtenidos)
                     {
-                        cuentaBancariaAnual.NominaPorBanco.AddNominaPorBancoRow(nuevoregistro.NombreNomina, nuevoregistro.SumaLiquido, nuevoregistro.TotalRegistros , nuevoregistro.NombreCuentaBanco);
+                        cuentaBancariaAnual.NominaPorBanco.AddNominaPorBancoRow(nuevoregistro.NombreNomina, nuevoregistro.SumaLiquido, nuevoregistro.TotalRegistros, nuevoregistro.NombreCuentaBanco);
                     }
 
-                    pathdestino = pathACrear + slash + "CuentaBancariaAnual"+anioSeleccionado+".pdf";
+                    pathdestino = pathACrear + slash + "CuentaBancariaAnual" + anioSeleccionado + ".pdf";
                     ReportDocument rd = new ReportDocument();
                     rd.Load(Path.Combine(Server.MapPath("~/"), "Reportes/Crystal/ReporteCuentaBancariaAnualCC.rpt"));
                     rd.SetDataSource(cuentaBancariaAnual);
                     rd.ExportToDisk(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat, pathdestino);
                 }
 
-                string pathZip = pathPrincipal+slash+"CuentasBancariasAnuales_"+datosReferencia.Numero_Referencia+".Zip";
+                string pathZip = pathPrincipal + slash + "CuentasBancariasAnuales_" + datosReferencia.Numero_Referencia + ".Zip";
 
 
-                ZipFile.CreateFromDirectory(pathACrear, pathZip);
-
-                if (System.IO.File.Exists(pathZip))
+                try
                 {
-                    bytes = System.IO.File.ReadAllBytes(pathZip);
-                    System.IO.File.Delete(pathZip);
-                    Directory.Delete(pathACrear, true);
+
+                    if (Response.IsClientConnected)
+                    {
+
+                        if (!Directory.Exists(pathZip))
+                        {
+                            ZipFile.CreateFromDirectory(pathACrear, pathZip);
+                            Response.Clear();
+                            Response.BufferOutput = false;
+                            //Response.ContentType = "application/zip";
+                            //Response.ContentType = "application/octet-stream";
+
+                           // Response.AppendHeader("content-disposition", "attachment; filename= ReporteAnualesCC_" + datosReferencia.Numero_Referencia + ".zip");
+                            // AddHeader("content-disposition", "attachment; filename=  Partida_" + partidasADescargar + "_.zip");
+                            Response.TransmitFile(pathZip);
+                            Response.Flush();
+                            Response.End();
+
+                        }
+                    }
                 }
+                catch (Exception E)
+                {
+                    return Content(E.Message);
+                }
+                finally
+                {
+                    if (System.IO.File.Exists(pathZip))
+                    {
+                        // bytes = System.IO.File.ReadAllBytes(pathZip);
+                        System.IO.File.Delete(pathZip);
+                        Directory.Delete(pathACrear, true);
+                        Response.Close();
+                    }
+
+                }
+
+
+
             }
 
 
 
-            return File(bytes, "application/zip", "ReporteCuentasBancariasAnuales_"+datosReferencia.Numero_Referencia+".Zip");
+            return Content("No hay datos que cargar");
         }
 
 
-        public FileContentResult DescargarReportePensionAlimenticia(int IdReferencia)
+        public ActionResult DescargarReportePensionAlimenticia_AXIOS(int IdReferencia)
         {
             byte[] bytes = null;
 
@@ -347,6 +421,8 @@ namespace DAP.Plantilla.Controllers
 
             string pathdestino = null;
             string slash = @"\";
+            string ultimosDosDigitosAnio;
+            string referenciaSinAnio;
             Directory.CreateDirectory(pathACrear);
             if (Directory.Exists(pathACrear))
             {
@@ -363,7 +439,13 @@ namespace DAP.Plantilla.Controllers
                        
                         decimal sumaGeneral = 0;
                         DAP.Plantilla.Reportes.Datasets.DsPensionAlimenticiaCC dsRepoPensionAlimenticia = new DAP.Plantilla.Reportes.Datasets.DsPensionAlimenticiaCC();
-                        dsRepoPensionAlimenticia.DatosReferencia.AddDatosReferenciaRow(datosReferencia.Numero_Referencia, ""+anioRecorrido+"");
+
+                        ultimosDosDigitosAnio = anioRecorrido.ToString().Substring(2, 2);
+                        referenciaSinAnio = datosReferencia.Numero_Referencia.Substring(2);
+
+                        //dsRepoPensionAlimenticia.DatosReferencia.AddDatosReferenciaRow(datosReferencia.Numero_Referencia, ""+anioRecorrido+"");
+
+                        dsRepoPensionAlimenticia.DatosReferencia.AddDatosReferenciaRow(ultimosDosDigitosAnio + referenciaSinAnio, "" + anioRecorrido + "");
                         foreach (var nuevoregistro in registrosPensionAlimenticia)
                         {
                             sumaGeneral += nuevoregistro.Liquido;
@@ -388,20 +470,49 @@ namespace DAP.Plantilla.Controllers
                 string pathZip = pathPrincipal + slash + "PensionesAlimenticias_" + datosReferencia.Numero_Referencia + ".Zip";
 
 
-                ZipFile.CreateFromDirectory(pathACrear, pathZip);
 
-                if (System.IO.File.Exists(pathZip))
+                try
                 {
-                    bytes = System.IO.File.ReadAllBytes(pathZip);
-                    System.IO.File.Delete(pathZip);
-                    Directory.Delete(pathACrear, true);
-                }
 
+                    if (Response.IsClientConnected)
+                    {
+
+                        if (!Directory.Exists(pathZip))
+                        {
+                            ZipFile.CreateFromDirectory(pathACrear, pathZip);
+                            Response.Clear();
+                            Response.BufferOutput = false;
+                            //Response.ContentType = "application/zip";
+                            //Response.ContentType = "application/octet-stream";
+
+                            // Response.AppendHeader("content-disposition", "attachment; filename= ReporteAnualesCC_" + datosReferencia.Numero_Referencia + ".zip");
+                            // AddHeader("content-disposition", "attachment; filename=  Partida_" + partidasADescargar + "_.zip");
+                            Response.TransmitFile(pathZip);
+                            Response.Flush();
+                            Response.End();
+
+                        }
+                    }
+                }
+                catch (Exception E)
+                {
+                    return Content(E.Message);
+                }
+                finally
+                {
+                    if (System.IO.File.Exists(pathZip))
+                    {
+                        // bytes = System.IO.File.ReadAllBytes(pathZip);
+                        System.IO.File.Delete(pathZip);
+                        Directory.Delete(pathACrear, true);
+                        Response.Close();
+                    }
+
+                }
 
             }
 
-
-            return File(bytes, "application/zip", "PensionesAlimenticiasAnuales_"+datosReferencia.Numero_Referencia+".Zip");
+            return Content("No hay datos que cargar");
         }
 
 
@@ -413,73 +524,9 @@ namespace DAP.Plantilla.Controllers
         /*******************************************************************************************************************************************************************************************************/
 
 
-        public ActionResult DescargarIPD(int IdReferencia)
-        {
-            // string path = Path.Combine(Server.MapPath("~/"), "Reportes/IpdParaDescargas/IPDVacio.dbf");
-            string path = Path.Combine(Server.MapPath("~/"), "Reportes/IpdParaDescargas");
-
-            string nombreReferecnia = CrearReferencia_CanceladosNegocios.ObtenerNombreReferecnia(IdReferencia);
 
 
-
-            string pathOrigen = path + "/IPDVacio.dbf";
-            string pathDestino = path + "/" + nombreReferecnia + ".dbf";
-
-
-            string resultado = CrearReferencia_CanceladosNegocios.GenerarNuevoIPD(pathOrigen, pathDestino, nombreReferecnia, IdReferencia);
-
-
-
-            if (resultado.Contains("CORRECTO"))
-            {
-                // Verifico si el cliente aún sigue conectado a la applicación en dado caso que no sea así no descargará el
-
-
-                try
-                {
-                    if (Response.IsClientConnected)
-                    {
-                        // Obtengo la información del archivo
-                        FileInfo info = new FileInfo(pathDestino);
-
-                        string rr = info.Length.ToString();
-                        // En response adjunto los datos del archivo y los transmito al cliente
-                        Response.ClearContent();
-
-                        Response.AppendHeader("Content-Disposition", "attachment;filename=" + pathDestino);
-
-                        Response.AddHeader("Content-Length", info.Length.ToString());
-
-                        Response.ContentType = "application/dbf";
-
-                        Response.TransmitFile(pathDestino);
-
-                        Response.Flush();
-
-                        Response.End();
-                    }
-                }
-                catch (Exception E)
-                {
-                    return Content(E.Message);
-                }
-                finally
-                {
-                    if (System.IO.File.Exists(pathDestino))
-                    {
-                        System.IO.File.Delete(pathDestino);
-                    }
-                    Response.Close();
-                }
-
-
-            }
-
-            return Content("No hay datos que cargar");
-        }
-
-
-        public FileContentResult DescargarIPDPorAnio(int IdReferencia)
+        public ActionResult DescargarIPDPorAnio_AXIOS(int IdReferencia)
         {
             byte[] bytes = null;
 
@@ -498,29 +545,67 @@ namespace DAP.Plantilla.Controllers
             {
                 foreach (int anioSeleccionado in aniosContenidos)
                 {
-                    string nombreArchivoDBFAnual = "IPD_"+datosReferencia.Numero_Referencia+"_"+anioSeleccionado;
-                    string pathDestino = pathACrear + "/"+nombreArchivoDBFAnual+".dbf";
+                    string dosDigitosAnio = Convert.ToString(anioSeleccionado).Substring(2, 2);
+                    string referenciaSinAnio = datosReferencia.Numero_Referencia.Substring(2);
 
-                    bool resultadoBandera = CrearReferencia_CanceladosNegocios.GeneralNuevoIPDxAnio(pathPrincipal , pathOrigen, pathDestino, anioSeleccionado, nombreArchivoDBFAnual, datosReferencia.Numero_Referencia,  IdReferencia);
+                    string nombreArchivoDBFAnual = "IPD" + dosDigitosAnio + referenciaSinAnio;
+                    string pathDestino = pathACrear + "/" + nombreArchivoDBFAnual + ".dbf";
 
-                    if (!resultadoBandera) 
-                    {
-                        return File(CrearReferencia_CanceladosNegocios.ObtenerLogErrorParaUsuario(pathPrincipal+"/ERROR.txt"), "text/plain", "ERROR_"+datosReferencia.Numero_Referencia+"_"+anioSeleccionado+".txt");
+                    bool resultadoBandera = CrearReferencia_CanceladosNegocios.GeneralNuevoIPDxAnio(pathPrincipal, pathOrigen, pathDestino, anioSeleccionado, nombreArchivoDBFAnual, datosReferencia.Numero_Referencia, IdReferencia);
+
+                    if (!resultadoBandera)
+                    {   TextWriter Escribir = new StreamWriter(pathACrear + "/LEER_ERRORES_IPD"+anioSeleccionado+".txt");
+                        Escribir.WriteLine("Ocurrio un error al general el IPD: "+datosReferencia.Numero_Referencia+"_"+anioSeleccionado+", intente de nuevo o contacte con un desarrollador");
+                        Escribir.Close();
                     }
                 }
 
-                string pathZip = pathPrincipal + slash + "IPD_Anuales_"+datosReferencia.Numero_Referencia+".Zip";
-                ZipFile.CreateFromDirectory(pathACrear, pathZip);
+                string pathZip = pathPrincipal + slash + "IPD_Anuales_" + datosReferencia.Numero_Referencia + ".Zip";
 
-                if (System.IO.File.Exists(pathZip))
+
+                try
                 {
-                    bytes = System.IO.File.ReadAllBytes(pathZip);
-                    System.IO.File.Delete(pathZip);
-                    Directory.Delete(pathACrear, true);
+
+                    if (Response.IsClientConnected)
+                    {
+
+                        if (!Directory.Exists(pathZip))
+                        {
+                            ZipFile.CreateFromDirectory(pathACrear, pathZip);
+                            Response.Clear();
+                            Response.BufferOutput = false;
+                            // Response.ContentType = "application/zip";
+                            //Response.ContentType = "application/octet-stream";
+
+                            //Response.AppendHeader("content-disposition", "attachment; filename= IPD_Anuales_"+datosReferencia.Numero_Referencia+".zip");
+                            // AddHeader("content-disposition", "attachment; filename=  Partida_" + partidasADescargar + "_.zip");
+                            Response.TransmitFile(pathZip);
+                            Response.Flush();
+                            Response.End();
+
+                        }
+                    }
                 }
+                catch (Exception E)
+                {
+                    return Content(E.Message);
+                    Response.Close();
+                }
+                finally
+                {
+                    if (System.IO.File.Exists(pathZip))
+                    {
+                       // bytes = System.IO.File.ReadAllBytes(pathZip);
+                        System.IO.File.Delete(pathZip);
+                        Directory.Delete(pathACrear, true);
+                        Response.Close();
+                    }
+
+                }
+
             }
 
-            return File(bytes, "application/zip", "IPD_Anuales_" + datosReferencia.Numero_Referencia + ".Zip");
+            return Content("No hay datos que cargar");
         }
 
 
@@ -663,7 +748,8 @@ namespace DAP.Plantilla.Controllers
         /*******************************************************************************************************************************************************************************************************/
         /*******************************************************************************************************************************************************************************************************/
 
-        public FileContentResult DescargarIPDCompensadoPorAnio(int IdReferencia)
+   
+        public ActionResult DescargarIPDCompensadoPorAnio_AXIOS(int IdReferencia)
         {
             byte[] bytes = null;
 
@@ -682,7 +768,11 @@ namespace DAP.Plantilla.Controllers
             {
                 foreach (int anioSeleccionado in aniosContenidos)
                 {
-                    string nombreArchivoDBFAnual = "IPDC_"+datosReferencia.Numero_Referencia+"_"+anioSeleccionado;
+                    string dosDigitosAnio = Convert.ToString(anioSeleccionado).Substring(2, 2);
+                    string referenciaSinAnio = datosReferencia.Numero_Referencia.Substring(2);
+
+                    string nombreArchivoDBFAnual = "IPD" + dosDigitosAnio + referenciaSinAnio + "c";
+
                     string pathDestino = pathACrear + "/" + nombreArchivoDBFAnual + ".dbf";
 
                     bool resultadoBandera = CrearReferencia_CanceladosNegocios.GeneralNuevoIPDCxAnio(pathACrear, pathOrigen, pathDestino, anioSeleccionado, nombreArchivoDBFAnual, datosReferencia.Numero_Referencia, IdReferencia);
@@ -690,19 +780,53 @@ namespace DAP.Plantilla.Controllers
                 }
 
                 string pathZip = pathPrincipal + slash + "IPDC_Anuales_" + datosReferencia.Numero_Referencia + ".Zip";
-                ZipFile.CreateFromDirectory(pathACrear, pathZip);
+               // ZipFile.CreateFromDirectory(pathACrear, pathZip);
 
-                if (System.IO.File.Exists(pathZip))
+
+
+
+                try
                 {
-                    bytes = System.IO.File.ReadAllBytes(pathZip);
-                    System.IO.File.Delete(pathZip);
-                    Directory.Delete(pathACrear, true);
+
+                    if (Response.IsClientConnected)
+                    {
+
+                        if (!Directory.Exists(pathZip))
+                        {
+                            ZipFile.CreateFromDirectory(pathACrear, pathZip);
+                            Response.Clear();
+                            Response.BufferOutput = false;
+                            Response.ContentType = "application/zip";
+                            //Response.ContentType = "application/octet-stream";
+
+                            //Response.AppendHeader("content-disposition", "attachment; filename= IPDCompensados_Anuales_"+datosReferencia.Numero_Referencia+".Zip");
+                            // AddHeader("content-disposition", "attachment; filename=  Partida_" + partidasADescargar + "_.zip");
+                            Response.TransmitFile(pathZip);
+                            Response.Flush();
+                            Response.End();
+
+                        }
+                    }
                 }
+                catch (Exception E)
+                {
+                    return Content(E.Message);
+                }
+                finally
+                {
+                    if (System.IO.File.Exists(pathZip))
+                    {
+                        // bytes = System.IO.File.ReadAllBytes(pathZip);
+                        System.IO.File.Delete(pathZip);
+                        Directory.Delete(pathACrear, true);
+                        Response.Close();
+                    }
+
+                }
+
             }
-
-            return File(bytes, "application/zip", "IPDCompensados_Anuales_" + datosReferencia.Numero_Referencia + ".Zip");
+            return Content("No hay datos que cargar");
         }
-
 
 
     }

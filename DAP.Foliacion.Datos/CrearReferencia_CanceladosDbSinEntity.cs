@@ -20,7 +20,7 @@ namespace DAP.Foliacion.Datos
 
             try
             {
-                using (System.Data.SqlClient.SqlConnection connection = new System.Data.SqlClient.SqlConnection(ObtenerConexionesDB.obtenerCadenaConexionDeploy()))
+                using (System.Data.SqlClient.SqlConnection connection = new System.Data.SqlClient.SqlConnection(ObtenerConexionesDB.obtnercadenaConexionAlpha()))
                 {
                     connection.Open();
                     System.Data.SqlClient.SqlCommand command = new System.Data.SqlClient.SqlCommand(executaQuery, connection);
@@ -71,28 +71,38 @@ namespace DAP.Foliacion.Datos
         //**********************************                            obtiene los datos de A-N que se muestran arriba de este comentario         *************************************/
         public static DatosAnIPD_DTO ObtenerDatosAN_IPD(string AnioInterfas,  string AN , string Num)
         {
-            string executaQuery = "select num,  partida, foliocfdi ,  cve_presup ,p_isste  'Patronal_ISSTE' ,  p_isstecam  'Patronal_ISSSTECAM'  ,   'F'  'TipoPago' ,   CLA_PTO  from interfaces" + AnioInterfas+".dbo."+AN+" where num = '"+Num+"'";
+         //   string executaQuery = "select num,  partida, foliocfdi ,  cve_presup ,p_isste  'Patronal_ISSTE' ,  p_isstecam  'Patronal_ISSSTECAM'  ,   'F'  'TipoPago' ,   CLA_PTO  from interfaces" + AnioInterfas+".dbo."+AN+" where num = '"+Num+"'";
+
+            string primeraConsultaAexecutar = "SELECT * From interfaces"+AnioInterfas+".dbo."+AN+" where num = "+Num+"";
 
             try
             {
-                using (System.Data.SqlClient.SqlConnection connection = new System.Data.SqlClient.SqlConnection(ObtenerConexionesDB.obtenerCadenaConexionDeploy()))
+                using (System.Data.SqlClient.SqlConnection connection = new System.Data.SqlClient.SqlConnection(ObtenerConexionesDB.obtnercadenaConexionAlpha()))
                 {
                     connection.Open();
-                    System.Data.SqlClient.SqlCommand command = new System.Data.SqlClient.SqlCommand(executaQuery, connection);
+                    System.Data.SqlClient.SqlCommand command = new System.Data.SqlClient.SqlCommand(primeraConsultaAexecutar, connection);
                     System.Data.SqlClient.SqlDataReader reader = command.ExecuteReader();
+
+                    var columns = Enumerable.Range(0, reader.FieldCount).Select(reader.GetName).ToList();
+
+                    var ColumnasMayus = columns.Select(a => a.ToUpper()).ToList();
+
+                    //var d = reader.GetSchemaTable();
 
                     while (reader.Read())
                     {
                         DatosAnIPD_DTO nuevoAnEncontrado = new DatosAnIPD_DTO();
 
-                        nuevoAnEncontrado.Num = reader[0].ToString().Trim();
-                        nuevoAnEncontrado.Partida = reader[1].ToString().Trim();
-                        nuevoAnEncontrado.FolioCfdi = reader[2].ToString().Trim();
-                        nuevoAnEncontrado.Cve_Presup = reader[3].ToString().Trim();
-                        nuevoAnEncontrado.Patronal_ISSTE = Convert.ToDecimal( reader[4].ToString().Trim() );
-                        nuevoAnEncontrado.Patronal_ISSSTECAM = Convert.ToDecimal( reader[5].ToString().Trim());
-                        nuevoAnEncontrado.TipoPago = reader[6].ToString().Trim();
-                        nuevoAnEncontrado.Cla_Pto = reader[7].ToString().Trim();
+                        nuevoAnEncontrado.Num = reader["NUM"].ToString().Trim();
+                        nuevoAnEncontrado.Partida = reader["PARTIDA"].ToString().Trim();
+                        nuevoAnEncontrado.FolioCfdi = reader["FOLIOCFDI"].ToString().Trim();
+                        nuevoAnEncontrado.Cve_Presup = reader["CVE_PRESUP"].ToString().Trim();
+                        nuevoAnEncontrado.Patronal_ISSTE = ColumnasMayus.Contains("P_ISSTE") ? Convert.ToDecimal(reader["P_ISSTE"].ToString()) : 0;
+                        //nuevoAnEncontrado.Patronal_ISSTE = Convert.ToDecimal( reader[4].ToString().Trim() );
+                        //nuevoAnEncontrado.Patronal_ISSSTECAM = Convert.ToDecimal( reader[5].ToString().Trim());
+                        nuevoAnEncontrado.Patronal_ISSSTECAM = ColumnasMayus.Contains("P_ISSTECAM") ? Convert.ToDecimal(reader["P_ISSTECAM"].ToString()):0;
+                        nuevoAnEncontrado.TipoPago = /*reader[6].ToString().Trim()*/ "F";
+                        nuevoAnEncontrado.Cla_Pto = reader["CLA_PTO"].ToString().Trim();
 
 
 
@@ -134,7 +144,7 @@ namespace DAP.Foliacion.Datos
             List<DatosApercepcionesIPD_DTO> percepciones = new List<DatosApercepcionesIPD_DTO>();
             try
             {
-                using (System.Data.SqlClient.SqlConnection connection = new System.Data.SqlClient.SqlConnection(ObtenerConexionesDB.obtenerCadenaConexionDeploy()))
+                using (System.Data.SqlClient.SqlConnection connection = new System.Data.SqlClient.SqlConnection(ObtenerConexionesDB.obtnercadenaConexionAlpha()))
                 {
                     connection.Open();
                     System.Data.SqlClient.SqlCommand command = new System.Data.SqlClient.SqlCommand(executaQuery, connection);
@@ -147,7 +157,11 @@ namespace DAP.Foliacion.Datos
                         percepcionesEncontradas.Monto = Convert.ToDecimal( reader[1].ToString().Trim() );
                         percepcionesEncontradas.cvegasto = reader[2].ToString().Trim();
 
-                        percepciones.Add(percepcionesEncontradas);
+                        if(percepcionesEncontradas.Monto > 0) 
+                        {
+                            percepciones.Add(percepcionesEncontradas);
+                        }
+                    
                     }
                 }
 
@@ -179,7 +193,7 @@ namespace DAP.Foliacion.Datos
             List<DatosAdeducionesIPD_DTO> deducciones = new List<DatosAdeducionesIPD_DTO>();
             try
             {
-                using (System.Data.SqlClient.SqlConnection connection = new System.Data.SqlClient.SqlConnection(ObtenerConexionesDB.obtenerCadenaConexionDeploy()))
+                using (System.Data.SqlClient.SqlConnection connection = new System.Data.SqlClient.SqlConnection(ObtenerConexionesDB.obtnercadenaConexionAlpha()))
                 {
                     connection.Open();
                     System.Data.SqlClient.SqlCommand command = new System.Data.SqlClient.SqlCommand(executaQuery, connection);
@@ -322,7 +336,7 @@ namespace DAP.Foliacion.Datos
                             CuentasBancariasAnualesDTO nuevoRegistro = new CuentasBancariasAnualesDTO();
                             nuevoRegistro.NombreNomina = reader[0].ToString().Trim();
                             nuevoRegistro.SumaLiquido = Convert.ToDecimal( reader[1].ToString().Trim());
-                            nuevoRegistro.TotalRegistros = reader[2].ToString().Trim();
+                            nuevoRegistro.TotalRegistros = Convert.ToInt32( reader[2].ToString().Trim() );
                             nuevoRegistro.NombreCuentaBanco = reader[3].ToString().Trim() + " - CTA : "+ reader[4].ToString().Trim();
 
                             registrosAnuales.Add(nuevoRegistro);

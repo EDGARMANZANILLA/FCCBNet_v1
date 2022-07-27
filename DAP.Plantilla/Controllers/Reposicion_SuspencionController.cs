@@ -161,7 +161,7 @@ namespace DAP.Plantilla.Controllers
             string quePuedoHacer = Reposicion_SuspencionNegocios.VerificaFormaPagoEsActivoYQueSePuedeHacer(IdRegistroPago);
 
 
-            int respuestaServidor =0;
+            int respuestaServidor =500;
             string solucion = "";
             if (quePuedoHacer.ToUpper().Trim().Equals(("SUSPENDER").ToUpper().Trim()))
             {
@@ -171,22 +171,19 @@ namespace DAP.Plantilla.Controllers
 
                 if (respuesta.Contains("LA BASE"))
                 {
-                    respuestaServidor = 0;
                     solucion = respuesta;
                 }
                 else if (respuesta.Contains("Error"))
                 {
-                    respuestaServidor = 1;
                     solucion = "No se pudo suspender la dispersion seleccionada";
                 }
                 else if (respuesta.Contains("Correcto"))
                 {
-                    respuestaServidor = 2;
+                    respuestaServidor = 200;
                     solucion = "Se a suspendido de manera exitosa ";
                 }
                 else
                 {
-                    respuestaServidor = 1;
                     solucion = respuesta;
                 }
 
@@ -194,12 +191,10 @@ namespace DAP.Plantilla.Controllers
             }
             else if (quePuedoHacer.ToUpper().Trim().Equals(("REPONER").ToUpper().Trim()))
             {
-                respuestaServidor = 1;
                 solucion = "Este pago ya no forma parte de una dispersion por ende no se puede suspender por sistema, informe al administrativo correspondiente para la retencion del cheque";
             }
             else if (quePuedoHacer.ToUpper().Trim().Equals(("REFERENCIACANCELADO").ToUpper().Trim()))
             {
-                respuestaServidor = 1;
                 solucion = "Este pago se encuentra es un proceso de cancelacion verifique por favor ";
             }
 
@@ -216,11 +211,9 @@ namespace DAP.Plantilla.Controllers
 
         public ActionResult ReponerIdFormaPago(int IdRegistroPago,  int ReponerNuevoFolio)
         {
-
             string quePuedoHacer = Reposicion_SuspencionNegocios.VerificaFormaPagoEsActivoYQueSePuedeHacer(IdRegistroPago);
 
-
-            int respuestaServidor = 0;
+            int respuestaServidor = 500;
             string solucion = "";
             if (quePuedoHacer.ToUpper().Trim().Equals(("REPONER").ToUpper().Trim()))
             {
@@ -229,22 +222,19 @@ namespace DAP.Plantilla.Controllers
 
                 if (respuesta.Contains("LA BASE"))
                 {
-                    respuestaServidor = 0;
                     solucion = respuesta;
                 }
                 else if (respuesta.Contains("Error"))
                 {
-                    respuestaServidor = 1;
                     solucion = "No se pudo suspender la dispersion seleccionada";
                 }
                 else if (respuesta.Contains("CORRECTO"))
                 {
-                    respuestaServidor = 2;
+                    respuestaServidor = 200;
                     solucion = "Se a repuesto de manera exitosa el folio : " + ReponerNuevoFolio;
                 }
                 else
                 {
-                    respuestaServidor = 1;
                     solucion = respuesta;
                 }
 
@@ -254,17 +244,14 @@ namespace DAP.Plantilla.Controllers
             }
             else if (quePuedoHacer.ToUpper().Trim().Equals(("REFERENCIACANCELADO").ToUpper().Trim()))
             {
-                respuestaServidor = 1;
                 solucion = "Asegurese de removerlo de la referencia primero antes de reponer " + "  ''No se puede reponer porque se encuentra cargado a una referencia de cancelacion''";
             }
             else if (quePuedoHacer.ToUpper().Trim().Equals(("NO_EXISTE").ToUpper().Trim()))
             {
-                respuestaServidor = 1;
                 solucion = "'No se pudo pudo encontrar el pago seleccionado' " + " Contacte con el desarrollador";
             }
             else 
             {
-                respuestaServidor = 1;
                 solucion = "Asegurese de haber suspendido la dispercion antes de querer reponer la forma de pago " + " ' No se puede reponer esta forma de pago, porque aun es una dispersion'";
             }
 

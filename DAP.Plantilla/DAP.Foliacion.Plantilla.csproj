@@ -185,12 +185,6 @@
       <DependentUpon>FormasDeChequesExistentes.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Reportes\Crystal\NominasParaFoliacion.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>NominasParaFoliacion.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Reportes\Crystal\ReporteCuentaBancariaAnualCC.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -2073,6 +2067,8 @@
     <Content Include="Reportes\Datasets\SolicitudFormasPago.xss">
       <DependentUpon>SolicitudFormasPago.xsd</DependentUpon>
     </Content>
+    <Content Include="Reportes\IpdParaDescargas\IPDCVacio.DBF" />
+    <Content Include="Reportes\IpdParaDescargas\IPDVacio.DBF" />
     <None Include="Scripts\jquery-3.5.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.5.1.js" />
     <Content Include="Scripts\jquery-3.5.1.min.js" />
@@ -2089,6 +2085,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\Mensajes.js" />
+    <Content Include="Scripts\Modal.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\PDFObject\pdfobject.js" />
@@ -2328,38 +2325,34 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Reportes\Crystal\FormasDeChequesExistentes.rpt">
+    <Content Include="Reportes\Crystal\FormasDeChequesExistentes.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>FormasDeChequesExistentes.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reportes\Crystal\NominasParaFoliacion.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>NominasParaFoliacion.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reportes\Crystal\ReporteCuentaBancariaAnualCC.rpt">
+    </Content>
+    <Content Include="Reportes\Crystal\ReporteCuentaBancariaAnualCC.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>ReporteCuentaBancariaAnualCC.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reportes\Crystal\ReporteNominaAnualCC.rpt">
+    </Content>
+    <Content Include="Reportes\Crystal\ReporteNominaAnualCC.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>ReporteNominaAnualCC.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reportes\Crystal\ReportePensionAlimenticiaCC.rpt">
+    </Content>
+    <Content Include="Reportes\Crystal\ReportePensionAlimenticiaCC.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>ReportePensionAlimenticiaCC.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reportes\Crystal\ReportesCC\IPD\ReporteTGCxNomina.rpt">
+    </Content>
+    <Content Include="Reportes\Crystal\ReportesCC\IPD\ReporteTGCxNomina.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>ReporteTGCxNomina.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reportes\Crystal\RevicionFoliacionNomina.rpt">
+    </Content>
+    <Content Include="Reportes\Crystal\RevicionFoliacionNomina.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>RevicionFoliacionNomina.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reportes\Crystal\SolicitarFormasDePagoBancos.rpt">
+    </Content>
+    <Content Include="Reportes\Crystal\SolicitarFormasDePagoBancos.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>SolicitarFormasDePagoBancos.cs</LastGenOutput>
-    </EmbeddedResource>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

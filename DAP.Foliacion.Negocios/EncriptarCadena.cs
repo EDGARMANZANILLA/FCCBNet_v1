@@ -18,6 +18,10 @@ namespace DAP.Foliacion.Negocios
         //SAIG2021 llave
         string key = "Gz7Fwm0ej4m+jgMiVYSv8g==";
 
+
+
+
+
         public string EncriptarCadenaInicial(string cadena)
         {
             //arreglo de bytes donde guardaremos la llave

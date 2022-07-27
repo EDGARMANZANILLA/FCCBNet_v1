@@ -22,6 +22,7 @@ namespace DAP.Foliacion.Entidades
     
         public int Id { get; set; }
         public int Anio { get; set; }
+        public int NReferencia { get; set; }
         public string Numero_Referencia { get; set; }
         public System.DateTime Fecha_Creacion { get; set; }
         public string Creado_Por { get; set; }

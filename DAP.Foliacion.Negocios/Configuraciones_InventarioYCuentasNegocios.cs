@@ -181,51 +181,26 @@ namespace DAP.Foliacion.Negocios
         }
 
 
-        public static bool AgregarCuentaBancariaEInventario(string NombreCuenta, string NumeroCuenta, string Abreviatura, int TipoPago, DateTime fechaActual)
+        public static bool AgregarCuentaBancariaEInventario(string NombreCuenta, string NumeroCuenta, string Abreviatura, int TipoPago, DateTime fechaActual , bool TendraChequera)
         {
             bool bandera = false;
 
             var transaccion = new Transaccion();
 
 
-            if (TipoPago == 1)
+            var repositorioInventario = new Repositorio<Tbl_Inventario>(transaccion);
+
+
+            if (TendraChequera)
             {
-
-
-                var repositorioCuentaBancaria = new Repositorio<Tbl_CuentasBancarias>(transaccion);
-
-                Tbl_CuentasBancarias NuevaCuenta = new Tbl_CuentasBancarias();
-                NuevaCuenta.NombreBanco = NombreCuenta.ToUpper();
-                NuevaCuenta.Abreviatura = Abreviatura.ToUpper();
-                NuevaCuenta.Cuenta = NumeroCuenta;
-                NuevaCuenta.IdCuentaBancaria_TipoPagoCuenta = TipoPago;
-                NuevaCuenta.IdInventario = null;
-                NuevaCuenta.FechaCreacion = fechaActual;
-                NuevaCuenta.FechaBaja = null;
-                NuevaCuenta.Activo = true;
-
-                Tbl_CuentasBancarias cuentaAgregada = repositorioCuentaBancaria.Agregar(NuevaCuenta);
-
-
-                if (cuentaAgregada.Id > 0)
-                    bandera = true;
-            }
-
-
-
-
-            if (TipoPago > 1) {
-                var repositorioInventario = new Repositorio<Tbl_Inventario>(transaccion);
 
                 Tbl_Inventario nuevoInventario = new Tbl_Inventario();
                 nuevoInventario.FormasDisponibles = 0;
                 nuevoInventario.UltimoFolioInventario = null;
+                nuevoInventario.UltimoFolioUtilizado = null;
                 nuevoInventario.Activo = true;
 
                 Tbl_Inventario inventarioAgregado = repositorioInventario.Agregar(nuevoInventario);
-
-
-
 
 
                 var repositorioCuentaBancaria = new Repositorio<Tbl_CuentasBancarias>(transaccion);
@@ -236,6 +211,7 @@ namespace DAP.Foliacion.Negocios
                 NuevaCuenta.Cuenta = NumeroCuenta;
                 NuevaCuenta.IdCuentaBancaria_TipoPagoCuenta = TipoPago;
                 NuevaCuenta.IdInventario = inventarioAgregado.Id;
+                NuevaCuenta.CuentaConChequera = true;
                 NuevaCuenta.FechaCreacion = fechaActual;
                 NuevaCuenta.FechaBaja = null;
                 NuevaCuenta.Activo = true;
@@ -246,6 +222,29 @@ namespace DAP.Foliacion.Negocios
                 if (cuentaAgregada.Id > 0)
                     bandera = true;
             }
+            else
+            {
+ 
+                    var repositorioCuentaBancaria = new Repositorio<Tbl_CuentasBancarias>(transaccion);
+
+                    Tbl_CuentasBancarias NuevaCuenta = new Tbl_CuentasBancarias();
+                    NuevaCuenta.NombreBanco = NombreCuenta.ToUpper();
+                    NuevaCuenta.Abreviatura = Abreviatura.ToUpper();
+                    NuevaCuenta.Cuenta = NumeroCuenta;
+                    NuevaCuenta.IdCuentaBancaria_TipoPagoCuenta = TipoPago;
+                    NuevaCuenta.IdInventario = null;
+                    NuevaCuenta.FechaCreacion = fechaActual;
+                    NuevaCuenta.FechaBaja = null;
+                    NuevaCuenta.Activo = true;
+
+                    Tbl_CuentasBancarias cuentaAgregada = repositorioCuentaBancaria.Agregar(NuevaCuenta);
+
+
+                    if (cuentaAgregada.Id > 0)
+                        bandera = true;
+                
+            }
+
 
 
             return bandera;
@@ -581,6 +580,8 @@ namespace DAP.Foliacion.Negocios
             return bandera;
         }
 
+        
+
 
         public static bool EliminarCuentaBancariaActiva(int IdCuentaBancaria, DateTime FechaBaja)
         {
@@ -861,6 +862,8 @@ namespace DAP.Foliacion.Negocios
 
 
 
+
+ 
 
     }
 }

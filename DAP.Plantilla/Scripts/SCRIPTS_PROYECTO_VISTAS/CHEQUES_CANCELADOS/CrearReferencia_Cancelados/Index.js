@@ -614,9 +614,9 @@ function AbrirReporteInicial(urlControler)
 
 
    // href = "/CrearReferencia_Cancelados/DescargarReporteNominaAnual?IdReferencia=1
-    document.getElementById('descargaNominaAnual').setAttribute('href', urlControler +"DescargarReporteNominaAnual"+  "?IdReferencia=" + IdSeleccionado);
-    document.getElementById('descargaCBAnual').setAttribute('href', urlControler +"DescargarReporteCuentaBancariaAnual"+  "?IdReferencia=" + IdSeleccionado);
-    document.getElementById('descargaPenA').setAttribute('href', urlControler +"DescargarReportePensionAlimenticia"+  "?IdReferencia=" + IdSeleccionado);
+   // document.getElementById('descargaNominaAnual').setAttribute('href', urlControler +"DescargarReporteNominaAnual"+  "?IdReferencia=" + IdSeleccionado);
+  //  document.getElementById('descargaCBAnual').setAttribute('href', urlControler +"DescargarReporteCuentaBancariaAnual"+  "?IdReferencia=" + IdSeleccionado);
+  //  document.getElementById('descargaPenA').setAttribute('href', urlControler +"DescargarReportePensionAlimenticia"+  "?IdReferencia=" + IdSeleccionado);
 
 
     // DescargarReporteCuentaBancariaAnual
@@ -627,8 +627,8 @@ function AbrirReporteInicial(urlControler)
 function AbrirReporteIPD(urlControler) {
     let IdSeleccionado = document.getElementById("IdReferenciaCanceladoSelecionado").innerHTML;
 
-    document.getElementById('TotalesIPDPorNomina').setAttribute('href', urlControler +"DescargarTGCxNomina"+"?IdReferencia="+IdSeleccionado);
-    document.getElementById('IPD').setAttribute('href', urlControler +"DescargarIPDPorAnio"+"?IdReferencia="+IdSeleccionado);
+   // document.getElementById('TotalesIPDPorNomina').setAttribute('href', urlControler +"DescargarTGCxNomina"+"?IdReferencia="+IdSeleccionado);
+  // document.getElementById('IPD').setAttribute('href', urlControler +"DescargarIPDPorAnio"+"?IdReferencia="+IdSeleccionado);
    // document.getElementById('TotalesIPDPorBanco').setAttribute('href', urlControler +"DescargarTGCxBanco"+"?IdReferencia="+IdSeleccionado);
 
     $('#ReportesIPD').modal('show');
@@ -636,7 +636,7 @@ function AbrirReporteIPD(urlControler) {
 
 function AbrirReporteIPDCOMPENSADO(urlControler) {
     let IdSeleccionado = document.getElementById("IdReferenciaCanceladoSelecionado").innerHTML;
-    document.getElementById('DescargarIPDCxAnio').setAttribute('href', urlControler+"DescargarIPDCompensadoPorAnio"+"?IdReferencia="+IdSeleccionado);
+  //  document.getElementById('DescargarIPDCxAnio').setAttribute('href', urlControler+"DescargarIPDCompensadoPorAnio"+"?IdReferencia="+IdSeleccionado);
 
     $('#ReportesIPD_COMPENSADO').modal('show');
 }
@@ -653,7 +653,8 @@ async function exportarIPD(url) {
 
     let IdSeleccionado = document.getElementById("IdReferenciaCanceladoSelecionado").innerHTML;
     let nombreRefeCancelacion = document.getElementById("NombreReferenciaCancelado").innerHTML;
-    // console.log(IdSeleccionado)
+    console.log(IdSeleccionado)
+    console.log(nombreRefeCancelacion)
 
     //console.log("Download")
     //console.log(url)
@@ -675,7 +676,7 @@ async function exportarIPD(url) {
     }).then((response) => {
 
        
-       // console.log(response.data)
+        console.log(response.data)
        // alert("Listo");
 
         const url = window.URL
@@ -683,7 +684,8 @@ async function exportarIPD(url) {
         const link = document.createElement('a');
 
         link.href = url;
-        link.setAttribute('download', `ipd${nombreRefeCancelacion}.dbf`);
+       // link.setAttribute('download', `ipd${nombreRefeCancelacion}.dbf`);
+        link.setAttribute('download', `IPD_Anuales_${nombreRefeCancelacion}.Zip`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -749,4 +751,121 @@ function CheCancRPNominaAnual() {
 /******************************************************             funciones para Descargar IPDcompensado               ******************************************************/
 /******************************************************************************************************************************************************************************************/
 /******************************************************************************************************************************************************************************************/
+
+async function exportarIPDCompensado(url) {
+
+    let IdSeleccionado = document.getElementById("IdReferenciaCanceladoSelecionado").innerHTML;
+    let nombreRefeCancelacion = document.getElementById("NombreReferenciaCancelado").innerHTML;
+    console.log(IdSeleccionado)
+    console.log(nombreRefeCancelacion)
+
+    //console.log("Download")
+    //console.log(url)
+
+
+    // Genero una petición con axios que me regresará una archivo Blob (Binary Large Object) como respuesta
+    // y una vez obtenido el archivo crea un ancla temporal el cúal su función será descargar el archivo
+    // generado por medio del window.URL.createObjectURL
+
+    MensajeCargando();
+
+    axios({
+        url: url,
+        method: 'GET',
+        responseType: 'blob',
+        params: {
+            IdReferencia: IdSeleccionado,
+        }
+    }).then((response) => {
+
+
+        console.log(response.data)
+        // alert("Listo");
+
+       // const url = window.URL.createObjectURL(new Blob([response.data]));
+        const url = window.URL.createObjectURL(response.data);
+        const link = document.createElement('a');
+
+        link.href = url;
+        // link.setAttribute('download', `ipd${nombreRefeCancelacion}.dbf`);
+        link.setAttribute('download', `IPD_COMPENSADO_Anuales_${nombreRefeCancelacion}.Zip`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+
+
+    }).catch(error => {
+        console.log(error)
+        //cargar(false)
+    }).finally(() => {
+        OcultarMensajeCargando();
+    })
+}
+
+
+
+
+
+async function exportarZIP(url , numero) {
+
+    let IdSeleccionado = document.getElementById("IdReferenciaCanceladoSelecionado").innerHTML;
+    let nombreRefeCancelacion = document.getElementById("NombreReferenciaCancelado").innerHTML;
+    //console.log(IdSeleccionado)
+    //console.log(nombreRefeCancelacion)
+
+    //console.log(numero)
+    //console.log(url)
+
+    let nombreReporte;
+    switch (numero) {
+        case 1:
+            nombreReporte = "ReporteNominaAnualCC_"+nombreRefeCancelacion+".Zip";
+            break;
+        case 2:
+            nombreReporte = "ReporteCuentaBancariaAnualCC_"+nombreRefeCancelacion+".Zip";  
+            break;
+        case 3:
+            nombreReporte = "ReportePensionAlimenticiaCC_"+nombreRefeCancelacion+".Zip";
+            break;
+    }
+
+    // Genero una petición con axios que me regresará una archivo Blob (Binary Large Object) como respuesta
+    // y una vez obtenido el archivo crea un ancla temporal el cúal su función será descargar el archivo
+    // generado por medio del window.URL.createObjectURL
+
+    MensajeCargando();
+
+    axios({
+        url: url,
+        method: 'GET',
+        responseType: 'blob',
+        params: {
+            IdReferencia: IdSeleccionado
+        }
+    }).then((response) => {
+
+
+        // console.log(response.data)
+        // alert("Listo");
+
+        const url = window.URL.createObjectURL(response.data);
+        const link = document.createElement('a');
+
+        link.href = url;
+        // link.setAttribute('download', `ipd${nombreRefeCancelacion}.dbf`);
+        link.setAttribute('download', nombreReporte);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+
+
+    }).catch(error => {
+        console.log(error)
+        //cargar(false)
+    }).finally(() => {
+        OcultarMensajeCargando();
+    })
+}
 

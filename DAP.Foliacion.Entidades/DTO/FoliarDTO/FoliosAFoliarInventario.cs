@@ -13,6 +13,7 @@ namespace DAP.Foliacion.Entidades.DTO.FoliarDTO
         public string Incidencia { get; set; }
         public int IdContenedor { get; set; }
         public string FechaIncidencia { get; set; }
+        public string NombreBancoCuenta { get; set; }
     
     }
 }

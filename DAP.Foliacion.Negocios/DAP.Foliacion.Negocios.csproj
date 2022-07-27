@@ -99,6 +99,8 @@
     <Compile Include="FoliarNegocios.cs" />
     <Compile Include="InventarioNegocios.cs" />
     <Compile Include="NetworkConnection.cs" />
+    <Compile Include="ObtenerConsultasChequesFoliarNegocios\consultasCheques.cs" />
+    <Compile Include="ObtenerConsultasPagomaticosFoliarNegocios\consultasPagomaticos.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reposicion_SuspencionNegocios.cs" />
   </ItemGroup>
@@ -115,6 +117,9 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ValidaEntidadesActualizar\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

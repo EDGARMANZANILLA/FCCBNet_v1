@@ -43,7 +43,8 @@ namespace DAP.Foliacion.Datos
 
         public static string ObtenerNombreDBValidacionFoliosDeploy() 
         {
-            return "FoliacionDeploy";
+            //return "FoliacionDeploy";
+            return "FCCBNetDB";
         }
     }
 }

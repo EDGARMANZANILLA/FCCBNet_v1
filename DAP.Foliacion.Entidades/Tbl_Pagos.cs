@@ -42,11 +42,12 @@ namespace DAP.Foliacion.Entidades
         public Nullable<int> IdTbl_Referencias_Cancelaciones { get; set; }
         public Nullable<bool> TieneSeguimientoHistorico { get; set; }
         public bool Activo { get; set; }
+        public Nullable<bool> TieneSuspensionDispersion { get; set; }
     
         public virtual Cat_EstadosPago_Pagos Cat_EstadosPago_Pagos { get; set; }
         public virtual Cat_FormasPago_Pagos Cat_FormasPago_Pagos { get; set; }
-        public virtual Tbl_CuentasBancarias Tbl_CuentasBancarias { get; set; }
-        public virtual Tbl_InventarioDetalle Tbl_InventarioDetalle { get; set; }
         public virtual Tbl_Referencias_Cancelaciones Tbl_Referencias_Cancelaciones { get; set; }
+        public virtual Tbl_InventarioDetalle Tbl_InventarioDetalle { get; set; }
+        public virtual Tbl_CuentasBancarias Tbl_CuentasBancarias { get; set; }
     }
 }

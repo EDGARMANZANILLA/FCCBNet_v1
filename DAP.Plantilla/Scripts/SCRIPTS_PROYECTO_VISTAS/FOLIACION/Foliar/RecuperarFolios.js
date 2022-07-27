@@ -24,13 +24,14 @@ function DibujarResumenRecuperarFolios() {
     );
 };
 
+let tablaRecuperarFolios;
 function PintarResumenRecuperarFolios(datos) {
-    $('#TablaRecuperarFolios').DataTable({
+     tablaRecuperarFolios = $('#TablaRecuperarFolios').DataTable({
         "ordering": true,
         "info": true,
         "searching": false,
         "paging": true,
-        "lengthMenu": [5, 10],
+        "lengthMenu": [10, 20],
         "language":
         {
             "processing": "Procesando...",
@@ -64,7 +65,8 @@ function PintarResumenRecuperarFolios(datos) {
             {
                 render: function (data, type, row) {
                     //console.log(row);
-                    return '<button class="btn btn-lg btn-info text-light"  onclick="RecuperarFolioSeleccionado('+row.IdPago+')"  > <i class="fas fa-undo"></i> </button>';
+                   // return '<button class="btn btn-lg btn-info text-light RecuperarFolioSeleccionado"  onclick="RecuperarFolioSeleccionado('+row.IdPago+')"  > <i class="fas fa-undo"></i> </button>';
+                    return '<button class="btn btn-lg btn-info text-light RecuperarFolioSeleccionado" > <i class="fas fa-undo"></i> </button>';
 
                 }
 
@@ -99,14 +101,16 @@ function PintarResumenRecuperarFolios(datos) {
 
 function RecuperarFolios()
 {
+    //limpia el data table que se creo si esta creado para  hacerle saber al cliente que los datos se actualizaron
+    $("#TablaResumenRecuperarFolios").empty();
     let cuentaBancariaARecuperar = document.getElementById("RecuperFoliosCuentaBancaria").value;
    let rpFoliosRangoInicial = document.getElementById("recuperarFoliosRangoInicial").value;
     let rpFoliosRangoFinal = document.getElementById("recuperarFoliosRangoFinal").value;
 
-    console.log( cuentaBancariaARecuperar);
-    console.log("Cuentabancaria", cuentaBancariaARecuperar);
-    console.log( "RangoInicial" , rpFoliosRangoInicial);
-    console.log("Rango Final",  rpFoliosRangoFinal);
+    //console.log( cuentaBancariaARecuperar);
+    //console.log("Cuentabancaria", cuentaBancariaARecuperar);
+    //console.log( "RangoInicial" , rpFoliosRangoInicial);
+    //console.log("Rango Final",  rpFoliosRangoFinal);
 
 
     if (cuentaBancariaARecuperar != "")
@@ -169,11 +173,19 @@ function RecuperarFolios()
 
 
 
-function RecuperarFolioSeleccionado(RecuperarFolioIdPago)
-{
-    console.log(RecuperarFolioIdPago);
 
 
+
+$(document).on("click", ".RecuperarFolioSeleccionado", function () {
+
+
+    let recuperarFolio = tablaRecuperarFolios.row($(this).parents("tr")).data();
+
+
+    let datoALimpiar = tablaRecuperarFolios.row($(this).parents("tr"));
+  
+
+    
     Swal.fire({
         title: "¿Esta seguro de recuperar este folio?",
         text: "Al restaurar este folio a su origen se quitara tanto de la base como el A-N de la bitacora por ende deberia volver a foliar el registro",
@@ -186,7 +198,7 @@ function RecuperarFolioSeleccionado(RecuperarFolioIdPago)
         if (result.isConfirmed) {
 
             let enviarDatos = {
-                IdPago: parseInt(RecuperarFolioIdPago)
+                IdPago: parseInt(recuperarFolio.IdPago)
             };
 
 
@@ -199,13 +211,19 @@ function RecuperarFolioSeleccionado(RecuperarFolioIdPago)
                 success: function (response) {
 
 
-                    console.log(response);
+                    //console.log(response);
+
+                    if (response.resultServer == 200) {
+                        MensajeCorrecto_sinClickSweet("Se recupero el folio exitosamente");
+                        datoALimpiar.remove().draw();
+                        
+                    } else
+                    {
+                        MensajeErrorSweet(response.texto);
+                    }
 
 
-                    $("#TablaResumenRecuperarFolios").empty();
-                    DibujarResumenRecuperarFolios();
-                    PintarResumenRecuperarFolios(response);
-
+                    
                     OcultarMensajeCargando();
 
                 }, error: function (jqXHR, textStatus) {
@@ -221,6 +239,8 @@ function RecuperarFolioSeleccionado(RecuperarFolioIdPago)
     })
 
 
-}
 
+   // console.log(datoAEliminar.IdPago)
+
+});
 

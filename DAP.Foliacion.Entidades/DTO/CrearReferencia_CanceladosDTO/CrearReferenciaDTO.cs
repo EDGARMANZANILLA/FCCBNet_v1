@@ -12,6 +12,7 @@ namespace DAP.Foliacion.Entidades.DTO.CrearReferencia_CanceladosDTO
         public int Id { get; set; }
         public int Id_Iterador { get; set; }
         public int Anio { get; set; }
+        public string NReferencia { get; set; }
         public string Numero_Referencia { get; set; }
         public string Fecha_Creacion { get; set; }
         public string Creado_Por { get; set; }

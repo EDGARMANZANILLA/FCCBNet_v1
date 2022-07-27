@@ -266,6 +266,10 @@ function Anexar_Solicitud() {
             DibujarTablaAjax();
             PintarConsultas(listaBancosSolicitados);
 
+             //blanquea los campos de las opciones del banco a cargar 
+            document.getElementById("SeleccionBancoSolicitud").value = '';
+             document.getElementById('CantidadFormas').value = '';
+             document.getElementById("FInicial").value = '';
 
 
         } else {
@@ -278,6 +282,13 @@ function Anexar_Solicitud() {
         MensajeWarningSweet('Seleccione un banco');
     }
 
+}
+
+
+
+function RecargarPaginaInventarioSolicitud()
+{
+    RecargarSoloPaginaActual();
 }
 
 
@@ -396,61 +407,68 @@ $(document).on("click", ".editar", function () {
 
 function CrearSolicitudFormasPago() {
 
+
+
+
+
+
     if (listaBancosSolicitados.length > 0) {
-        MensajeCargando();
-        $.ajax({
-            url: 'CrearNuevaSolicitud',
-            data: JSON.stringify(listaBancosSolicitados),
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            success: function (msg) {
-                OcultarMensajeCargando();
-                //console.log("msg", msg);
-                if (msg == true) {
-                    $('#Descargar').modal('show');
-
-                } else {
-                    Swal.fire({
-                        backdrop: true,
-                        allowEnterKey: false,
-                        allowOutsideClick: false,
-                        icon: 'error',
-                        title: 'No se pudo crear la solicitud; Intente de nuevo!',
-
-                    })
-                }
 
 
 
-            },
-            error: function (msg) {
+        Swal.fire({
+            title: '¿Esta seguro que desea crear una nueva solicitud para nuevas formas de pago?',
+            text: '¿Seguro, Seguro?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si , Crear Solicitud!',
+            cancelButtonText: 'No, cancelar!',
+            footer: '<a href="#">Contactar al desarrollador?</a>'
+        }).then((result) => {
+            if (result.isConfirmed) {
 
-                OcultarMensajeCargando();
-                Swal.fire({
-                    backdrop: true,
-                    allowEnterKey: false,
-                    allowOutsideClick: false,
-                    icon: 'error',
-                    title: 'Ocurrio un problema intente de nuevo',
 
-                })
+                MensajeCargando();
+                $.ajax({
+                    url: 'CrearNuevaSolicitud',
+                    data: JSON.stringify(listaBancosSolicitados),
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (msg) {
+                       
+                        //console.log("msg", msg);
+                        if (msg == true) {
+                            $('#Descargar').modal('show');
+
+                        } else {
+
+                            MensajeErrorSweet('Intente de nuevo o contacte con el desarrollador', 'No se pudo crear la solicitud dentro del servidor');
+
+                        }
+                        OcultarMensajeCargando();
+
+                    },
+                    error: function (msg) {
+                       
+                        MensajeErrorSweet('Intente de nuevo o contacte con el desarrollador', 'Error de peticion al servidor');
+                        OcultarMensajeCargando();
+                    }
+                });
+
+
             }
-        });
+        })
+
 
 
 
     } else {
 
-        Swal.fire({
-            backdrop: true,
-            allowEnterKey: false,
-            allowOutsideClick: false,
-            icon: 'warning',
-            title: 'Agregue un banco a la solicitud',
-
-        })
+        
+        MensajeWarningSweet('Agregue un banco a la solicitud');
     }
-
 
 
 

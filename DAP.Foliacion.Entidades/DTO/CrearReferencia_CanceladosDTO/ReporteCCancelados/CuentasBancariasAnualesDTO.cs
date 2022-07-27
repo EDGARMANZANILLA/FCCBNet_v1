@@ -10,7 +10,7 @@ namespace DAP.Foliacion.Entidades.DTO.CrearReferencia_CanceladosDTO.ReporteCCanc
     {
         public string NombreNomina { get; set; }
         public decimal SumaLiquido { get; set; }
-        public string TotalRegistros { get; set; }
+        public int TotalRegistros { get; set; }
         public string NombreCuentaBanco { get; set; }
     }
 }

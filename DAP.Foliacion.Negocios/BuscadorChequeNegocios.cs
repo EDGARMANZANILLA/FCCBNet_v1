@@ -48,11 +48,11 @@ namespace DAP.Foliacion.Negocios
                             nuevoResultadoNumEmpleado.id = resultado.Id;
                             if (resultado.EsPenA == true)
                             {
-                                nuevoResultadoNumEmpleado.text = "Folio : " + resultado.FolioCheque + " " + resultadoIdBanco.Abreviatura + " || Liquido : "+resultado.ImporteLiquido +" || Num : " + resultado.NumEmpleado + " || Empleado : "+resultado.NombreEmpleado+" || Beneficiario PenA : " + resultado.BeneficiarioPenA;
+                                nuevoResultadoNumEmpleado.text = "Folio : " + resultado.FolioCheque + " || " + resultadoIdBanco.NombreBanco + " || Liquido : "+resultado.ImporteLiquido +" || Num : " + resultado.NumEmpleado + " || Empleado : "+resultado.NombreEmpleado+" || Beneficiario PenA : " + resultado.BeneficiarioPenA;
                             }
                             else 
                             {
-                                nuevoResultadoNumEmpleado.text = "Folio : " + resultado.FolioCheque + " "+resultadoIdBanco.Abreviatura +" || Liquido : " + resultado.ImporteLiquido + " || Num : " + resultado.NumEmpleado + " || Beneficiario : " + resultado.NombreEmpleado;
+                                nuevoResultadoNumEmpleado.text = "Folio : " + resultado.FolioCheque + " || " + resultadoIdBanco.NombreBanco +" || Liquido : " + resultado.ImporteLiquido + " || Num : " + resultado.NumEmpleado + " || Beneficiario : " + resultado.NombreEmpleado;
                             }
 
                             registrosEncontrados.Add(nuevoResultadoNumEmpleado);

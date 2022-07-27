@@ -31,11 +31,12 @@ namespace DAP.Foliacion.Entidades.DTO.BuscardorChequeDTO
       
 
 
+        public string TipoPago { get; set; }
         public string EstadoCheque { get; set; }
         public string BancoPagador { get; set; }
         public string CuentaPagadora { get; set; }
-
-
+        public string EsSuspencion { get; set; }
+        
 
 
         public bool ? EsPenA { get; set; }
