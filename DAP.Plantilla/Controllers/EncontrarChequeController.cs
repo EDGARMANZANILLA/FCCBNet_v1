@@ -5,7 +5,6 @@ using DAP.Plantilla.Models.BuscardorChequeModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace DAP.Plantilla.Controllers
@@ -55,7 +54,6 @@ namespace DAP.Plantilla.Controllers
                     RespuestaServidor = "500",
                     MensajeError = "Ocurrio un error verifique que la quincena sea correcta"
                 });
-
 
             }
 
@@ -160,7 +158,7 @@ namespace DAP.Plantilla.Controllers
 
 
 
-        public ActionResult AgregarRemover_IdFormaPagoAReferenciaCancelado(int IdReferenciaCancelado , int IdRegistroCancelar) 
+        public ActionResult AgregarRemover_IdFormaPagoAReferenciaCancelado(int IdReferenciaCancelado, int IdRegistroCancelar)
         {
             //Mensajes de ERRORES
             // 1 => /No es un cheque sino una dispercion (APLICA PARA AGREGAR, ACTUALIZAR O REVOCAR UN CHEQUE DE LA REFERENCIA DE CANCELACION)
@@ -180,13 +178,13 @@ namespace DAP.Plantilla.Controllers
 
             if (IdReferenciaCancelado != 0)
             {
-                errorRecibido= BuscadorChequeNegocios.AgregarActualizarCheque_ReferenciaCancelado( IdReferenciaCancelado,  IdRegistroCancelar);
+                errorRecibido = BuscadorChequeNegocios.AgregarActualizarCheque_ReferenciaCancelado(IdReferenciaCancelado, IdRegistroCancelar);
             }
-            else if( IdReferenciaCancelado == 0) 
+            else if (IdReferenciaCancelado == 0)
             {
-                errorRecibido = BuscadorChequeNegocios.RevocarCheque_ReferenciaCancelado( IdRegistroCancelar);
+                errorRecibido = BuscadorChequeNegocios.RevocarCheque_ReferenciaCancelado(IdRegistroCancelar);
             }
-                    // BuscadorChequeNegocios.AgregarChequeAReferenciaCancelado(IdReferenciaCancelado, IdRegistroCancelar);
+            // BuscadorChequeNegocios.AgregarChequeAReferenciaCancelado(IdReferenciaCancelado, IdRegistroCancelar);
 
             switch (errorRecibido)
             {
@@ -207,7 +205,7 @@ namespace DAP.Plantilla.Controllers
                     mensaje = "No se puede revocar una forma de pago de una referencia, si nunca se a estado en una ";
                     solucion = "Asegurese que la forma de pago se encuentre cargada en una referencia";
                     break;
-                
+
                 //Mensajes Exitosos
                 case 6:
                     mensaje = "se a ingresado la forma de pago a la referencia seleccionada correctamente";
@@ -218,7 +216,7 @@ namespace DAP.Plantilla.Controllers
                 case 8:
                     mensaje = "La referencia fue removida exitosamente "; ;
                     break;
-              
+
 
                 default:
                     mensaje = "La peticion no fue procesada exitodamente";

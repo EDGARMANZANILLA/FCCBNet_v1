@@ -184,19 +184,19 @@
 
 
                 @*<li>
-                    <a href="#pageConfiguracion" title="Pages" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                        <em class="fas fa-tools"></em>
-                        CONFIGURACION
+                        <a href="#pageConfiguracion" title="Pages" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                            <em class="fas fa-tools"></em>
+                            CONFIGURACION
 
-                    </a>
-                    <ul class="collapse list-unstyled" id="pageConfiguracion">
-                        <li>
-                            <a href="@Url.Action("Index","Configuraciones_InventarioYCuentas")">INVENTARIO</a>
-                        </li>
+                        </a>
+                        <ul class="collapse list-unstyled" id="pageConfiguracion">
+                            <li>
+                                <a href="@Url.Action("Index","Configuraciones_InventarioYCuentas")">INVENTARIO</a>
+                            </li>
 
 
-                    </ul>
-                </li>*@
+                        </ul>
+                    </li>*@
 
             </ul>
             <!-- Fin del area de menus y sub menus-->
@@ -296,22 +296,30 @@
                 /* $('footer').css(background: #000000);*/
 
             });
-
-
         });
 
     </script>
-    <script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/FOLIACION/Inventario/Index.js" > </script>
-    <script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/FOLIACION/Inventario/Solicitar.js" > </script>
+    <script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/FOLIACION/Inventario/Index.js"></script>
+    <script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/FOLIACION/Inventario/Solicitar.js"></script>
     @*<script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/Inventario/Agregar.js" > </script>*@
-    <script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/FOLIACION/Inventario/Inhabilitar.js" > </script>
-    <script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/FOLIACION/Inventario/Asignar.js" > </script>
-    <script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/FOLIACION/Inventario/DetalleBanco.js" > </script>
+    <script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/FOLIACION/Inventario/Inhabilitar.js"></script>
+    <script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/FOLIACION/Inventario/Asignar.js"></script>
+    <script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/FOLIACION/Inventario/DetalleBanco.js"></script>
     @*FOLIACION*@
     @*<script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/Foliar/Index.js"> </script>*@
-    <script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/FOLIACION/Foliar/FoliarXPagomatico.js"> </script>
-    <script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/FOLIACION/Foliar/FoliarXFormasPago.js"> </script>
-    <script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/FOLIACION/Foliar/RecuperarFolios.js"> </script>
+
+    @*
+
+
+        <script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/FOLIACION/Foliar/FoliarXPagomatico.js"> </script>
+        <script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/FOLIACION/Foliar/FoliarXFormasPago.js"> </script>
+
+
+    *@
+
+    <script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/FOLIACION/Foliar/RecuperarFolios.js"></script>
+
+    @Scripts.Render("~/bundles/scriptProyecto")
     @RenderSection("Scripts", required: false)
 
 </body>

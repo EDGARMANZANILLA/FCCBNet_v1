@@ -20,11 +20,22 @@ namespace DAP.Plantilla
                         "~/Scripts/modernizr-*"));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.js"));
+                      "~/Scripts/bootstrap.js"
+                      ));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
+
+
+            bundles.Add(new ScriptBundle("~/bundles/scriptProyecto").Include(
+                    "~/Scripts/SCRIPTS_PROYECTO_VISTAS/FOLIACION/Foliar/FoliarXFormasPago.js",
+                    "~/Scripts/SCRIPTS_PROYECTO_VISTAS/FOLIACION/Foliar/FoliarXPagomatico.js"
+                    ));
+
+
+            
+            BundleTable.EnableOptimizations = true;
         }
     }
 }

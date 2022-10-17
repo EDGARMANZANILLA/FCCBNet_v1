@@ -470,28 +470,42 @@ namespace DAP.Plantilla.Controllers
         //***************************************************************************************************************************************************************************//
         public async System.Threading.Tasks.Task<ActionResult> FoliarPorIdNominaPagomatico (int IdNomina, string NumeroQuincena) 
         {
-            int anioInterfaz = ObtenerAnioDeQuincena(NumeroQuincena);
-            //List<AlertasAlFolearPagomaticosDTO> errores = await FoliarNegocios.FolearPagomaticoPorNomina(IdNomina, anioInterfaz, NumeroQuincena);
-            List<AlertasAlFolearPagomaticosDTO> errores = await FoliarNegocios.FolearPagomaticoPorNomina_TIEMPO_DE_RESPUESTA_MEJORADO(IdNomina, anioInterfaz, NumeroQuincena);
-
-            var DBFAbierta = errores.Where(x => x.IdAtencion == 4).Select( x => new { x.Id_Nom, x.Detalle, x.Solucion } ).ToList();
-
-            if (DBFAbierta.Count() > 0)
+            try
             {
-                return Json(new
+                int anioInterfaz = ObtenerAnioDeQuincena(NumeroQuincena);
+                //List<AlertasAlFolearPagomaticosDTO> errores = await FoliarNegocios.FolearPagomaticoPorNomina(IdNomina, anioInterfaz, NumeroQuincena);
+                List<AlertasAlFolearPagomaticosDTO> errores = await FoliarNegocios.FolearPagomaticoPorNomina_TIEMPO_DE_RESPUESTA_MEJORADO(IdNomina, anioInterfaz, NumeroQuincena);
+
+                var DBFAbierta = errores.Where(x => x.IdAtencion == 4).Select(x => new { x.Id_Nom, x.Detalle, x.Solucion }).ToList();
+
+                if (DBFAbierta.Count() > 0)
                 {
-                    bandera = false,
-                    DBFAbierta = DBFAbierta
-                });
+                    return Json(new
+                    {
+                        bandera = false,
+                        DBFAbierta = DBFAbierta
+                    });
+                }
+                else
+                {
+                    return Json(new
+                    {
+                        bandera = true,
+                        resultadoServer = EstanFoliadasTodasNominaPagomatico(NumeroQuincena)
+                    });
+                }
             }
-            else 
+            catch (Exception E) 
             {
+                int a = 0;
+
                 return Json(new
                 {
                     bandera = true,
                     resultadoServer = EstanFoliadasTodasNominaPagomatico(NumeroQuincena)
                 });
             }
+            
         }
 
   

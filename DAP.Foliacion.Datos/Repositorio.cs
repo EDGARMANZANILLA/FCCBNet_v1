@@ -229,8 +229,12 @@ namespace DAP.Foliacion.Datos
         {
             try
             {
-                ConjuntoEntidades.BulkInsert(EntidadesAAgregar);
-                return EntidadesAAgregar.Count();
+              //  ConjuntoEntidades.BulkInsert(EntidadesAAgregar);
+                var entidadesAgregadasAlContexto = ConjuntoEntidades.AddRange(EntidadesAAgregar);
+                _contexto.SaveChanges();
+                return entidadesAgregadasAlContexto.Count();
+                //_contexto.BulkInsert(EntidadesAAgregar);
+               // return EntidadesAAgregar.Count();
             }
             catch (System.Data.Entity.Validation.DbEntityValidationException e)
             {

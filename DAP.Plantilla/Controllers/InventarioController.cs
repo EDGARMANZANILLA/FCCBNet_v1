@@ -13,13 +13,16 @@ using System.Runtime.Remoting.Contexts;
 using System.Net.Http;
 using DAP.Plantilla.ObjetosExtras;
 
+
 namespace DAP.Foliacion.Plantilla.Controllers
 {
+  
     public class InventarioController : Controller
     {
         // GET: Inventario
         public ActionResult Index()
         {
+            var respon = HttpContext.Response;
 
             List<InventarioModel> BancosMostrar = new List<InventarioModel>();
 
