@@ -325,31 +325,17 @@
 
                     } else {
 
-                        Swal.fire({
-                            backdrop: true,
-                            allowEnterKey: false,
-                            allowOutsideClick: false,
-                            icon: 'info',
-                            text: 'Selecione un nombre del banco y una abreviatura',
-                        })
+                      
 
+                        MensajeInformacionSweet('Selecione un nombre del banco y una abreviatura');
                     }
 
                 } else
                 {
 
-                    Swal.fire({
-                        backdrop: true,
-                        allowEnterKey: false,
-                        allowOutsideClick: false,
-                        icon: 'info',
-                        text: 'Selecione una cuenta bancaria y un tipo de pago',
-                    })
+                    MensajeInformacionSweet('Selecione una cuenta bancaria y un tipo de pago');
 
                 }
-
-
-
 
             }
         );

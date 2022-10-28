@@ -134,7 +134,7 @@ namespace DAP.Foliacion.Datos.ClasesParaDBF
             {
                 return E.Message.ToString();
 
-                Debug.WriteLine("Ocurrio un error :" + E.Message.ToString());
+               // Debug.WriteLine("Ocurrio un error :" + E.Message.ToString());
             }
             return Convert.ToString(ElementosModificados);
         }
@@ -336,6 +336,10 @@ namespace DAP.Foliacion.Datos.ClasesParaDBF
                         if (modificado == 1)
                         {
                             totalActualizado += modificado;
+                        }
+                        else 
+                        {
+                            int noEntre = modificado;
                         }
                     }
                     con.Close();

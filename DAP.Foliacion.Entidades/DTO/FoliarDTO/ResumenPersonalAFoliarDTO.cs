@@ -17,7 +17,8 @@ namespace DAP.Foliacion.Entidades.DTO.FoliarDTO
         public string Delegacion { get; set; }
 
         //Llenado de datos restantes para poder tener un update completo para formas de pago 
-        public int NumChe { get; set; }
+        public string NumChe { get; set; }
+        public string NumChe8DigitosPAGOMATIVO { get; set; }
         public string BancoX { get; set; }
         public string CuentaX { get; set; }
         public string Observa  { get; set; }

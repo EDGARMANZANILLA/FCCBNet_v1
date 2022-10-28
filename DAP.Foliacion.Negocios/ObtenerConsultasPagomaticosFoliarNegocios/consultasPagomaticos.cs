@@ -55,13 +55,13 @@ namespace DAP.Foliacion.Negocios.ObtenerConsultasPagomaticosFoliarNegocios
 
 
 
-        public static string ValidaBancosExistentenEnNominaSeleccionada_FoliacionPagomaticos(List<Tbl_CuentasBancarias> BancosSelecionados, List<string> BancosContenidosEnAN)
+        public static string ValidaBancosExistentenEnNominaSeleccionada_FoliacionPagomaticos(List<Tbl_CuentasBancarias> BancosDisponiblesAnio, List<string> BancosContenidosEnAN)
         {
             string condicion = "";
             int i = 0;
             foreach (string Nuevobanco in BancosContenidosEnAN)
             {
-                Tbl_CuentasBancarias bancoEncontradoEnCampo = BancosSelecionados.Where(x => x.NombreCampoEn_AN == Nuevobanco).FirstOrDefault();
+                Tbl_CuentasBancarias bancoEncontradoEnCampo = BancosDisponiblesAnio.Where(x => x.NombreCampoEn_AN == Nuevobanco).FirstOrDefault();
 
                 if (bancoEncontradoEnCampo != null) 
                 {
@@ -88,66 +88,25 @@ namespace DAP.Foliacion.Negocios.ObtenerConsultasPagomaticosFoliarNegocios
 
 
 
-        public static string ObtenerRegitrosFoliados_NominaPagomatico(string AN, int AnioInterface)
+        public static string ObtenerRegitrosFoliados_NominaPagomatico(string visitaAnioInterface, string AN, string condicionBancosParaSerPagomatico)
         {
-                List<string> bancosContenidosEnAn = FoliarConsultasDBSinEntity.VerificarCamposBancoContieneAN( AN, AnioInterface);
-
-                string condicionDeBancos = ConvertirListaBancosEnCondicionParaPagomaticos(bancosContenidosEnAn);
-
-                string query = "";
-                    if (AnioInterface == Convert.ToInt32(DateTime.Now.Year))
-                    {
-                        query = "select count(*) from interfaces.dbo."+AN+ " where (Num_che <> '' or  OBSERVA <> '' or BANCO_X <> '' or CUENTA_X <> '') and ("+condicionDeBancos+")";
-                    }
-                    else
-                    {
-                        query = " select count(*) from interfaces"+AnioInterface+".dbo."+AN+ " where (Num_che <> '' or  OBSERVA <> '' or BANCO_X <> '' or CUENTA_X <> '') and ("+condicionDeBancos+") ";
-                    }
-                
-            return query;
+            return " select count(*) from interfaces"+visitaAnioInterface+".dbo." + AN + " where (Num_che <> '' or  OBSERVA <> '' or BANCO_X <> '' or CUENTA_X <> '') and ("+condicionBancosParaSerPagomatico+") ";
         }
 
 
 
 
-        public static string ObtenerRegistrosAFoliar_NominaPagomatico(string AN, int AnioInterface)
+        public static string ObtenerRegistrosAFoliar_NominaPagomatico(string visitaAnioInterface, string AN, string condicionBancosParaSerPagomatico)
         {
-            List<string> bancosContenidosEnAn = FoliarConsultasDBSinEntity.VerificarCamposBancoContieneAN(AN, AnioInterface);
-            string condicionDeBancos = ConvertirListaBancosEnCondicionParaPagomaticos(bancosContenidosEnAn);
-            string query = "";
-
-                    if (AnioInterface == Convert.ToInt32(DateTime.Now.Year))
-                    {
-                        query = " select count(*) from interfaces.dbo." +AN+" where "+condicionDeBancos+" ";
-                    }
-                    else
-                    {
-                        query = "select count(*) from interfaces" + AnioInterface + ".dbo."+AN+" where "+condicionDeBancos+" ";
-                    }
-            
-            return query;
+            return "select count(*) from interfaces"+visitaAnioInterface+".dbo."+AN+" where "+condicionBancosParaSerPagomatico+" ";
         }
 
 
 
-        public static string ObtenerConsultaDetalleDatosPersonalesNomina_ReportePagomatico(string AN, int AnioInterface)
+        public static string ObtenerConsultaDetalleDatosPersonalesNomina_ReportePagomatico(string visitaAnioInterface, string AN, string condicionBancosParaSerPagomatico)
         {
-            List<string> bancosContenidosEnAn = FoliarConsultasDBSinEntity.VerificarCamposBancoContieneAN(AN, AnioInterface);
-            string condicionDeBancos = ConvertirListaBancosEnCondicionParaPagomaticos(bancosContenidosEnAn);
-            string query = "";
-
-
-            if (AnioInterface == Convert.ToInt32(DateTime.Now.Year))
-            {
-                query = "SELECT Substring(PARTIDA,2,5), NUM, NOMBRE, DELEG, NUM_CHE, LIQUIDO, BANCO_X, CUENTA_X  FROM interfaces.dbo." + AN + " where " + condicionDeBancos + " ";
-            }
-            else
-            {
-                query = "SELECT Substring(PARTIDA,2,5), NUM, NOMBRE, DELEG, NUM_CHE, LIQUIDO, BANCO_X, CUENTA_X  FROM interfaces" + AnioInterface + ".dbo." + AN + " where " + condicionDeBancos + " ";
-            }
-
-            return query;
-
+        
+            return "SELECT Substring(PARTIDA,2,5), NUM, NOMBRE, DELEG, NUM_CHE, LIQUIDO, BANCO_X, CUENTA_X , OBSERVA FROM interfaces" + visitaAnioInterface+".dbo."+AN+" where  "+condicionBancosParaSerPagomatico+"  order by num ";
         }
 
 
@@ -195,6 +154,35 @@ namespace DAP.Foliacion.Negocios.ObtenerConsultasPagomaticosFoliarNegocios
 
         }
 
+
+        /******************************************************************************************************************************************************************************************/
+        /********************************                   CONSULTA PARA LA REFOLIACION DE UN NOMINA CON PAGOMATICOS                **************************************************************/
+        /******************************************************************************************************************************************************************************************/
+        public static string ObtenerConsultaDetalle_ReFoliacionPagomatico(string visitaAnioInterface , string AN,  bool EsPenA, string condicionDeIdCuentaBancaria, string condicionBancosParaSerPagomatico)
+        {
+        //    List<string> bancosContenidosEnAn = FoliarConsultasDBSinEntity.VerificarCamposBancoContieneAN(AN, AnioInterface);
+        //    string condicionDeBancos = ConvertirListaBancosEnCondicionParaPagomaticos(bancosContenidosEnAn);
+
+        //    string condicionDeIdCuentaBancaria = ValidaBancosExistentenEnNominaSeleccionada_FoliacionPagomaticos(BancosSelecionados, bancosContenidosEnAn);
+
+
+            // string condicionDeIdCuentaBancaria = ConvertirListaBancosEnCondicionPara_FoliacionPagomaticos(BancosSelecionados);
+
+            string query = "";
+
+            if (EsPenA)
+            {
+                query = "select   NUM, RFC, NOMBRE, LIQUIDO, "+condicionDeIdCuentaBancaria+" , DELEG , Partida , FolioCFDI , BENEF 'BENEFICIARIO'  from interfaces"+visitaAnioInterface+".dbo."+AN+" where  "+condicionBancosParaSerPagomatico+" ORDER BY NUM ";
+            }
+            else
+            {
+                query = "select   NUM, RFC, NOMBRE, LIQUIDO, "+condicionDeIdCuentaBancaria+" , DELEG , Partida , FolioCFDI  from interfaces"+visitaAnioInterface+".dbo."+AN+" where  "+condicionBancosParaSerPagomatico+" ORDER BY NUM ";
+            }
+
+
+            return query;
+
+        }
 
 
     }

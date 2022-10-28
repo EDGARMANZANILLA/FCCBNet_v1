@@ -129,28 +129,50 @@ function RecuperarFolios()
                     };
 
                     MensajeCargando();
-                    $.ajax({
-                        url: '/Foliar/BuscarChequesARecuperar',
-                        data: JSON.stringify(enviarDatos),
-                        type: "POST",
-                        contentType: "application/json; charset=utf-8",
-                        success: function (response) {
 
-
-                            console.log(response);
+                    axios.post('/Foliar/BuscarChequesARecuperar', {
+                        IdCuentaBancaria: parseInt(cuentaBancariaARecuperar),
+                        RangoInicial: parseInt(rpFoliosRangoInicial),
+                        RangoFinal: parseInt(rpFoliosRangoFinal)
+                    })
+                    .then(function (response) {
 
 
                             $("#TablaResumenRecuperarFolios").empty();
-                            DibujarResumenRecuperarFolios();
-                            PintarResumenRecuperarFolios(response);
+                        DibujarResumenRecuperarFolios();
+                        PintarResumenRecuperarFolios(response.data);
 
                             OcultarMensajeCargando();
 
-                        }, error: function (jqXHR, textStatus) {
-                            MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
+                    })
+                    .catch(function (error) {
+                            MensajeErrorSweet("Ocurrio un error intente de nuevo " + error)
                             OcultarMensajeCargando();
-                        }
                     });
+
+
+                    //$.ajax({
+                    //    url: '/Foliar/BuscarChequesARecuperar',
+                    //    data: JSON.stringify(enviarDatos),
+                    //    type: "POST",
+                    //    contentType: "application/json; charset=utf-8",
+                    //    success: function (response) {
+
+
+                    //        console.log(response);
+
+
+                    //        $("#TablaResumenRecuperarFolios").empty();
+                    //        DibujarResumenRecuperarFolios();
+                    //        PintarResumenRecuperarFolios(response);
+
+                    //        OcultarMensajeCargando();
+
+                    //    }, error: function (jqXHR, textStatus) {
+                    //        MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
+                    //        OcultarMensajeCargando();
+                    //    }
+                    //});
 
                 } else {
                     MensajeErrorSweet("Corrija", "El Rango final no debe ser menor al rango inicial");
@@ -203,34 +225,60 @@ $(document).on("click", ".RecuperarFolioSeleccionado", function () {
 
 
             MensajeCargando();
-            $.ajax({
-                url: '/Foliar/RestaurarFolioChequeDeIdPagoSeleccionado',
-                data: JSON.stringify(enviarDatos),
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                success: function (response) {
+
+            axios.post('/Foliar/RestaurarFolioChequeDeIdPagoSeleccionado', {
+                IdPago: parseInt(recuperarFolio.IdPago)
+            })
+            .then(function (response) {
 
 
-                    //console.log(response);
+                if (response.data.resultServer == 200) {
+                    MensajeCorrecto_sinClickSweet("Se recupero el folio exitosamente");
+                    datoALimpiar.remove().draw();
 
-                    if (response.resultServer == 200) {
-                        MensajeCorrecto_sinClickSweet("Se recupero el folio exitosamente");
-                        datoALimpiar.remove().draw();
+                } else {
+                    MensajeErrorSweet(response.data.texto);
+                }
+
+
+
+                OcultarMensajeCargando();
+
+            })
+            .catch(function (error) {
+                    MensajeErrorSweet("Ocurrio un error intente de nuevo " + error)
+                    OcultarMensajeCargando();
+            });
+
+
+            //$.ajax({
+            //    url: '/Foliar/RestaurarFolioChequeDeIdPagoSeleccionado',
+            //    data: JSON.stringify(enviarDatos),
+            //    type: "POST",
+            //    contentType: "application/json; charset=utf-8",
+            //    success: function (response) {
+
+
+            //        //console.log(response);
+
+            //        if (response.resultServer == 200) {
+            //            MensajeCorrecto_sinClickSweet("Se recupero el folio exitosamente");
+            //            datoALimpiar.remove().draw();
                         
-                    } else
-                    {
-                        MensajeErrorSweet(response.texto);
-                    }
+            //        } else
+            //        {
+            //            MensajeErrorSweet(response.texto);
+            //        }
 
 
                     
-                    OcultarMensajeCargando();
+            //        OcultarMensajeCargando();
 
-                }, error: function (jqXHR, textStatus) {
-                    MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
-                    OcultarMensajeCargando();
-                }
-            });
+            //    }, error: function (jqXHR, textStatus) {
+            //        MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
+            //        OcultarMensajeCargando();
+            //    }
+            //});
 
 
 

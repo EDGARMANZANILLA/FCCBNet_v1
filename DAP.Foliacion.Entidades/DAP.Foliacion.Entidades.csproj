@@ -108,6 +108,7 @@
     <Compile Include="DTO\FoliarDTO\DatosCompletosBitacoraDTO.cs" />
     <Compile Include="DTO\FoliarDTO\DatosReporteRevisionNominaDTO.cs" />
     <Compile Include="DTO\FoliarDTO\DatosRevicionTodasNominasDTO.cs" />
+    <Compile Include="DTO\FoliarDTO\FoliacionChequesDTO\ResumenPersonalAFoliarChequesDTO.cs" />
     <Compile Include="DTO\FoliarDTO\FoliacionPagomatico\ActualizarFoliacionPagomaticoTblPagoDTO.cs" />
     <Compile Include="DTO\FoliarDTO\FoliacionPagomatico\InsertarFoliacionPagomaticoTblPagoDTO.cs" />
     <Compile Include="DTO\FoliarDTO\FoliarFormasPagoDTO.cs" />

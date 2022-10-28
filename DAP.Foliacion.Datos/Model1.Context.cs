@@ -13,6 +13,7 @@ namespace DAP.Foliacion.Datos
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     using DAP.Foliacion.Entidades;
+    
     public partial class FoliacionInterfacesCargadasPruebaDBEntities : DbContext
     {
         public FoliacionInterfacesCargadasPruebaDBEntities()
@@ -27,24 +28,24 @@ namespace DAP.Foliacion.Datos
     
         public virtual DbSet<Cat_EstadoCancelados_Pagos> Cat_EstadoCancelados_Pagos { get; set; }
         public virtual DbSet<Cat_EstadosPago_Pagos> Cat_EstadosPago_Pagos { get; set; }
+        public virtual DbSet<cat_FiltroConsultaDatosPersonalesNomina> cat_FiltroConsultaDatosPersonalesNomina { get; set; }
         public virtual DbSet<cat_FiltroGrupoImpresionDelegaciones> cat_FiltroGrupoImpresionDelegaciones { get; set; }
         public virtual DbSet<Cat_FormasPago_Pagos> Cat_FormasPago_Pagos { get; set; }
+        public virtual DbSet<cat_ReportesCCancelados> cat_ReportesCCancelados { get; set; }
         public virtual DbSet<ExepcionesCargaInterface> ExepcionesCargaInterfaces { get; set; }
         public virtual DbSet<LOG_EXCEPCIONES> LOG_EXCEPCIONES { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<Tbl_CuentaBancarias_TipoPagoCuenta> Tbl_CuentaBancarias_TipoPagoCuenta { get; set; }
+        public virtual DbSet<Tbl_CuentasBancarias> Tbl_CuentasBancarias { get; set; }
         public virtual DbSet<Tbl_HistoricoQuincenasRegistradas> Tbl_HistoricoQuincenasRegistradas { get; set; }
         public virtual DbSet<Tbl_Inventario> Tbl_Inventario { get; set; }
         public virtual DbSet<Tbl_InventarioAsignacionPersonal> Tbl_InventarioAsignacionPersonal { get; set; }
         public virtual DbSet<Tbl_InventarioContenedores> Tbl_InventarioContenedores { get; set; }
+        public virtual DbSet<Tbl_InventarioDetalle> Tbl_InventarioDetalle { get; set; }
         public virtual DbSet<Tbl_InventarioTipoIncidencia> Tbl_InventarioTipoIncidencia { get; set; }
-        public virtual DbSet<Tbl_SeguimientoHistoricoFormas_Pagos> Tbl_SeguimientoHistoricoFormas_Pagos { get; set; }
-        public virtual DbSet<Tbl_Solicitudes> Tbl_Solicitudes { get; set; }
-        public virtual DbSet<cat_ReportesCCancelados> cat_ReportesCCancelados { get; set; }
         public virtual DbSet<Tbl_Pagos> Tbl_Pagos { get; set; }
         public virtual DbSet<Tbl_Referencias_Cancelaciones> Tbl_Referencias_Cancelaciones { get; set; }
-        public virtual DbSet<Tbl_InventarioDetalle> Tbl_InventarioDetalle { get; set; }
-        public virtual DbSet<cat_FiltroConsultaDatosPersonalesNomina> cat_FiltroConsultaDatosPersonalesNomina { get; set; }
-        public virtual DbSet<Tbl_CuentasBancarias> Tbl_CuentasBancarias { get; set; }
+        public virtual DbSet<Tbl_SeguimientoHistoricoFormas_Pagos> Tbl_SeguimientoHistoricoFormas_Pagos { get; set; }
+        public virtual DbSet<Tbl_Solicitudes> Tbl_Solicitudes { get; set; }
     }
 }

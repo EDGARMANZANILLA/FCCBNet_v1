@@ -217,51 +217,71 @@ function verResumenXDelegacionNominaCheque() {
     let quincenaCheque = document.getElementById("QuincenaFormasPago").innerText;
 
     if (nominaSeleccionadaUsuario != '') {
-        //console.log(quincenaCheque)
+        console.log(quincenaCheque)
 
-        let EnviarDatos = "{'IdNomina': '" + nominaSeleccionadaUsuario + "', 'Quincena': '" + quincenaCheque + "'}";
-        // console.log(EnviarDatos)
-        MensajeCargando();
-        $.ajax({
-            url: 'Foliar/ObtenerResumenDetalle_NominaCheques',
-            data: EnviarDatos,
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            success: function (response) {
-
-                //   console.log(response);
-                //  console.log(response.TablaModal);
+        axios.post('/Foliar/ObtenerResumenDetalle_NominaCheques', {
+            IdNomina: nominaSeleccionadaUsuario ,
+            Quincena: quincenaCheque
+        })
+        .then(function (response) {
 
                 $("#TablaResumenNomina").empty();
                 DibujarResumenNominaCheques();
-                PintarConsultaTablaResumenNominaChequesEnModal(response)
-
-
+                PintarConsultaTablaResumenNominaChequesEnModal(response.data)
 
                 document.getElementById('NombreCabezeraModal').innerText = document.getElementById("SeleccionarNominaFoliar").options[document.getElementById('SeleccionarNominaFoliar').selectedIndex].text;
-
-                ////si la nomina es general o desc no se mostraran los botones de sindicalizado y confianza
-                //if (response.NominaEsGenODesc) {
-
-                //    document.getElementById('NominaSinSindicato').style.display = 'none';
-                //    document.getElementById('CampoSindicato').style.display = 'block';
-                //} else {
-
-                //    document.getElementById('CampoSindicato').style.display = 'none';
-                //    document.getElementById('NominaSinSindicato').style.display = 'block';
-                //    document.getElementById('NominaSinSindicato').innerText = "Nomina sin sindicato para asignar folios";
-                //}
-
-
                 $('#DetalleDelegacionNominaCheque').modal('show');
-
                 OcultarMensajeCargando();
 
-            }, error: function (jqXHR, textStatus) {
-                MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
-                OcultarMensajeCargando();
-            }
+        })
+            .catch(function (error) {
+                MensajeErrorSweet("Intente de nuevo ", error)
+            OcultarMensajeCargando();
         });
+
+        //let EnviarDatos = "{'IdNomina': '" + nominaSeleccionadaUsuario + "', 'Quincena': '" + quincenaCheque + "'}";
+        //// console.log(EnviarDatos)
+        //MensajeCargando();
+        //$.ajax({
+        //    url: 'Foliar/ObtenerResumenDetalle_NominaCheques',
+        //    data: EnviarDatos,
+        //    type: "POST",
+        //    contentType: "application/json; charset=utf-8",
+        //    success: function (response) {
+
+        //        //   console.log(response);
+        //        //  console.log(response.TablaModal);
+
+        //        $("#TablaResumenNomina").empty();
+        //        DibujarResumenNominaCheques();
+        //        PintarConsultaTablaResumenNominaChequesEnModal(response)
+
+
+
+        //        document.getElementById('NombreCabezeraModal').innerText = document.getElementById("SeleccionarNominaFoliar").options[document.getElementById('SeleccionarNominaFoliar').selectedIndex].text;
+
+        //        ////si la nomina es general o desc no se mostraran los botones de sindicalizado y confianza
+        //        //if (response.NominaEsGenODesc) {
+
+        //        //    document.getElementById('NominaSinSindicato').style.display = 'none';
+        //        //    document.getElementById('CampoSindicato').style.display = 'block';
+        //        //} else {
+
+        //        //    document.getElementById('CampoSindicato').style.display = 'none';
+        //        //    document.getElementById('NominaSinSindicato').style.display = 'block';
+        //        //    document.getElementById('NominaSinSindicato').innerText = "Nomina sin sindicato para asignar folios";
+        //        //}
+
+
+        //        $('#DetalleDelegacionNominaCheque').modal('show');
+
+        //        OcultarMensajeCargando();
+
+        //    }, error: function (jqXHR, textStatus) {
+        //        MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
+        //        OcultarMensajeCargando();
+        //    }
+        //});
 
     } else {
         MensajeWarningSweet("¡Asegurese de seleccionar una nomina!");
@@ -283,32 +303,47 @@ function ImprimeNominaDelegacion(IdNomina, IdDelegacion, GrupoFoliacion, Sindica
         Quincena: document.getElementById("QuincenaFormasPago").innerText
     };
 
-    //console.log(generarReporteDelegacion);
-    //console.log(JSON.stringify(generarReporteDelegacion));
 
-
-    MensajeCargando();
-    $.ajax({
-        url: 'Foliar/RevisarReportePDFChequeIdNominaPorDelegacion',
-        data: JSON.stringify(generarReporteDelegacion),
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        success: function (response) {
-
-
+    axios.post('/Foliar/RevisarReportePDFChequeIdNominaPorDelegacion', {
+        GenerarReporteDelegacion: generarReporteDelegacion
+    })
+    .then(function (response) {
             $("VisorPdfCheque").empty();
             /// PDFObject.embed(response, "#example");
-            PDFObject.embed("data:application/pdf;base64," + response + " ", "#VisorPdfCheque");
+            PDFObject.embed("data:application/pdf;base64," + response.data + " ", "#VisorPdfCheque");
             //PDFObject.embed("../Reportes/ReportesPDFSTemporales/RevicionNomina" + nominaSeleccionadaFoliar.value + ".pdf", "#example");
             $('#ModalPDFVisualizadorCheque').modal('show');
 
             OcultarMensajeCargando();
-
-        }, error: function (jqXHR, textStatus) {
-            MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus+ jqXHR)
-            OcultarMensajeCargando();
-        }
+    })
+    .catch(function (error) {
+            MensajeErrorSweet("Ocurrio un error intente de nuevo ", error)
+        OcultarMensajeCargando();
     });
+
+
+    //MensajeCargando();
+    //$.ajax({
+    //    url: 'Foliar/RevisarReportePDFChequeIdNominaPorDelegacion',
+    //    data: JSON.stringify(generarReporteDelegacion),
+    //    type: "POST",
+    //    contentType: "application/json; charset=utf-8",
+    //    success: function (response) {
+
+
+    //        $("VisorPdfCheque").empty();
+    //        /// PDFObject.embed(response, "#example");
+    //        PDFObject.embed("data:application/pdf;base64," + response + " ", "#VisorPdfCheque");
+    //        //PDFObject.embed("../Reportes/ReportesPDFSTemporales/RevicionNomina" + nominaSeleccionadaFoliar.value + ".pdf", "#example");
+    //        $('#ModalPDFVisualizadorCheque').modal('show');
+
+    //        OcultarMensajeCargando();
+
+    //    }, error: function (jqXHR, textStatus) {
+    //        MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus+ jqXHR)
+    //        OcultarMensajeCargando();
+    //    }
+    //});
 
 
 
@@ -326,32 +361,50 @@ function ImprimirNominaCheques() {
             Quincena: document.getElementById("QuincenaFormasPago").innerText
         };
 
-       // console.log(generarReporteNomina);
-       // console.log(JSON.stringify(generarReporteNomina));
-
-
+        let quincenaCargada = document.getElementById("QuincenaFormasPago").innerText
         MensajeCargando();
-        $.ajax({
-            url: 'Foliar/RevisarReportePDFChequeIdNomina',
-            data: JSON.stringify(generarReporteNomina),
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            success: function (response) {
-
+        axios.post('/Foliar/RevisarReportePDFChequeIdNomina', {
+            IdNomina: IdnominaSeleccionadaUser,
+            Quincena: quincenaCargada
+        })
+        .then(function (response) {
 
                 $("VisorPdfCheque").empty();
                 /// PDFObject.embed(response, "#example");
-                PDFObject.embed("data:application/pdf;base64," + response + " ", "#VisorPdfCheque");
+                PDFObject.embed("data:application/pdf;base64," + response.data + " ", "#VisorPdfCheque");
                 //PDFObject.embed("../Reportes/ReportesPDFSTemporales/RevicionNomina" + nominaSeleccionadaFoliar.value + ".pdf", "#example");
                 $('#ModalPDFVisualizadorCheque').modal('show');
 
                 OcultarMensajeCargando();
-
-            }, error: function (jqXHR, textStatus) {
-                MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
-                OcultarMensajeCargando();
-            }
+        })
+            .catch(function (error) {
+                MensajeErrorSweet("Intente de nuevo ", error)
+            OcultarMensajeCargando();
         });
+
+
+        //MensajeCargando();
+        //$.ajax({
+        //    url: 'Foliar/RevisarReportePDFChequeIdNomina',
+        //    data: JSON.stringify(generarReporteNomina),
+        //    type: "POST",
+        //    contentType: "application/json; charset=utf-8",
+        //    success: function (response) {
+
+
+        //        $("VisorPdfCheque").empty();
+        //        /// PDFObject.embed(response, "#example");
+        //        PDFObject.embed("data:application/pdf;base64," + response + " ", "#VisorPdfCheque");
+        //        //PDFObject.embed("../Reportes/ReportesPDFSTemporales/RevicionNomina" + nominaSeleccionadaFoliar.value + ".pdf", "#example");
+        //        $('#ModalPDFVisualizadorCheque').modal('show');
+
+        //        OcultarMensajeCargando();
+
+        //    }, error: function (jqXHR, textStatus) {
+        //        MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
+        //        OcultarMensajeCargando();
+        //    }
+        //});
 
 
     } else {
@@ -524,7 +577,7 @@ function FoliarNominaCheque() {
 
 
         Swal.fire({
-            title: '¿Esta Seguro de Foliar?',
+            title: '¿Esta Seguro de Foliar los Cheques?',
             text: textoResumenAMostrar,
             icon: 'warning',
             showCancelButton: true,
@@ -556,56 +609,95 @@ function FoliarNominaCheque() {
                     //  console.log("Ire a foliar");
                     //  console.log(datosNominaFoliarCheque);
 
-
-
-                    MensajeCargando();
-                    $.ajax({
-                        url: 'Foliar/FoliarNominaFormaPago',
-                        data: JSON.stringify(datosNominaFoliarCheque),
-                        type: "POST",
-                        contentType: "application/json; charset=utf-8",
-                        success: function (response) {
-                            //console.log(response);
-                            //console.log(response.DbfAbierta);
-                            //console.log(response.DbfAbierta[0].Detalle);
-
-                            if (response.resultServer == 0) {
+                    axios.post('/Foliar/FoliarNominaFormaPago', {
+                        NuevaFoliacionNomina: datosNominaFoliarCheque
+                       
+                    })
+                    .then(function (response) {
+                            if (response.data.resultServer == 0) {
 
 
                                 $("#TablaProblemasCheques").empty();
                                 DibujarTablaDetalleProblemasCheques();
-                                LlenarTablaDetalleProblemasCheques(response.FoliosConIncidencias);
+                                LlenarTablaDetalleProblemasCheques(response.data.FoliosConIncidencias);
                                 $('#DetalleProblemasConCHEQUES').modal('show');
 
-                            } else if (response.resultServer == 200) {
+                            } else if (response.data.resultServer == 200) {
 
                                 MensajeCorrectoSweet("Se ha foliado la nomina correctamente");
 
-                                document.getElementById("rangoFinal").innerText = response.resultadoFoliacion[0].UltimoFolioUsado;
-                                document.getElementById("registrosFoliados").innerText = response.resultadoFoliacion[0].RegistrosFoliados;
+                                document.getElementById("rangoFinal").innerText = response.data.resultadoFoliacion[0].UltimoFolioUsado;
+                                document.getElementById("registrosFoliados").innerText = response.data.resultadoFoliacion[0].RegistrosFoliados;
 
 
                                 ActualizaTablaResumenFoliar();
                                 verResumenXDelegacionNominaCheque();
 
-                            } else if (response.resultServer == 500) {
+                            } else if (response.data.resultServer == 500) {
 
-                                MensajeErrorSweet( response.DBFAbierta[0].Detalle , response.DBFAbierta[0].Solucion);
+                                MensajeErrorSweet(response.data.DBFAbierta[0].Detalle, response.data.DBFAbierta[0].Solucion);
 
                             } else if (response.resultServer == 501) {
-                                MensajeInformacionSweet(response.FoliosSaltados);
+                                MensajeInformacionSweet(response.data.FoliosSaltados);
                             }
 
 
-
                             OcultarMensajeCargando();
-
-                        }, error: function (jqXHR, textStatus) {
-
-                            MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus);
+                    })
+                    .catch(function (error) {
+                            MensajeErrorSweet("Ocurrio un error intente de nuevo ", error);
                             OcultarMensajeCargando();
-                        }
                     });
+
+
+                    //MensajeCargando();
+                    //$.ajax({
+                    //    url: 'Foliar/FoliarNominaFormaPago',
+                    //    data: JSON.stringify(datosNominaFoliarCheque),
+                    //    type: "POST",
+                    //    contentType: "application/json; charset=utf-8",
+                    //    success: function (response) {
+                    //        //console.log(response);
+                    //        //console.log(response.DbfAbierta);
+                    //        //console.log(response.DbfAbierta[0].Detalle);
+
+                    //        if (response.resultServer == 0) {
+
+
+                    //            $("#TablaProblemasCheques").empty();
+                    //            DibujarTablaDetalleProblemasCheques();
+                    //            LlenarTablaDetalleProblemasCheques(response.FoliosConIncidencias);
+                    //            $('#DetalleProblemasConCHEQUES').modal('show');
+
+                    //        } else if (response.resultServer == 200) {
+
+                    //            MensajeCorrectoSweet("Se ha foliado la nomina correctamente");
+
+                    //            document.getElementById("rangoFinal").innerText = response.resultadoFoliacion[0].UltimoFolioUsado;
+                    //            document.getElementById("registrosFoliados").innerText = response.resultadoFoliacion[0].RegistrosFoliados;
+
+
+                    //            ActualizaTablaResumenFoliar();
+                    //            verResumenXDelegacionNominaCheque();
+
+                    //        } else if (response.resultServer == 500) {
+
+                    //            MensajeErrorSweet( response.DBFAbierta[0].Detalle , response.DBFAbierta[0].Solucion);
+
+                    //        } else if (response.resultServer == 501) {
+                    //            MensajeInformacionSweet(response.FoliosSaltados);
+                    //        }
+
+
+
+                    //        OcultarMensajeCargando();
+
+                    //    }, error: function (jqXHR, textStatus) {
+
+                    //        MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus);
+                    //        OcultarMensajeCargando();
+                    //    }
+                    //});
 
 
 

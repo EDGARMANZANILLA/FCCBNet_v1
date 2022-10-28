@@ -332,6 +332,8 @@ namespace DAP.Plantilla.Reportes.Datasets {
             
             private global::System.Data.DataColumn columnNom;
             
+            private global::System.Data.DataColumn columnSuspen;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public DatosRevicionDataTable() {
@@ -439,6 +441,14 @@ namespace DAP.Plantilla.Reportes.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn SuspenColumn {
+                get {
+                    return this.columnSuspen;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -474,7 +484,7 @@ namespace DAP.Plantilla.Reportes.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public DatosRevicionRow AddDatosRevicionRow(string No, string Partida, string Nombre, string Deleg, string Cheque, string Importe, string CuentaBancaria, string Num, string Nom) {
+            public DatosRevicionRow AddDatosRevicionRow(string No, string Partida, string Nombre, string Deleg, string Cheque, string Importe, string CuentaBancaria, string Num, string Nom, string Suspen) {
                 DatosRevicionRow rowDatosRevicionRow = ((DatosRevicionRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         No,
@@ -485,7 +495,8 @@ namespace DAP.Plantilla.Reportes.Datasets {
                         Importe,
                         CuentaBancaria,
                         Num,
-                        Nom};
+                        Nom,
+                        Suspen};
                 rowDatosRevicionRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowDatosRevicionRow);
                 return rowDatosRevicionRow;
@@ -517,6 +528,7 @@ namespace DAP.Plantilla.Reportes.Datasets {
                 this.columnCuentaBancaria = base.Columns["CuentaBancaria"];
                 this.columnNum = base.Columns["Num"];
                 this.columnNom = base.Columns["Nom"];
+                this.columnSuspen = base.Columns["Suspen"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -540,6 +552,8 @@ namespace DAP.Plantilla.Reportes.Datasets {
                 base.Columns.Add(this.columnNum);
                 this.columnNom = new global::System.Data.DataColumn("Nom", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnNom);
+                this.columnSuspen = new global::System.Data.DataColumn("Suspen", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSuspen);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1087,6 +1101,22 @@ namespace DAP.Plantilla.Reportes.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string Suspen {
+                get {
+                    try {
+                        return ((string)(this[this.tableDatosRevicion.SuspenColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'Suspen\' de la tabla \'DatosRevicion\' es DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDatosRevicion.SuspenColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public bool IsNoNull() {
                 return this.IsNull(this.tableDatosRevicion.NoColumn);
             }
@@ -1191,6 +1221,18 @@ namespace DAP.Plantilla.Reportes.Datasets {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetNomNull() {
                 this[this.tableDatosRevicion.NomColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsSuspenNull() {
+                return this.IsNull(this.tableDatosRevicion.SuspenColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetSuspenNull() {
+                this[this.tableDatosRevicion.SuspenColumn] = global::System.Convert.DBNull;
             }
         }
         

@@ -2,7 +2,7 @@
 
 
 <!-- Vista del pagomatico-->
-<seccion id="VistaPagomatico" class="margenSection  card col-12  offset-md-1 col-md-10 text-center" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+<seccion id="VistaPagomatico" class="margenSection  card col-12  offset-md-1 col-md-10 " style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
     <br />
     <div class="col-5 text-left">
         <button type="button" class="btn btn-success btn text-center" onclick="RegresarIndexFoliacionDesdePagomatico()"> <i class="fas fa-arrow-left"></i>  Regresar</button>
@@ -16,7 +16,7 @@
     <div class="margenSection row">
 
         <div class="btn-block">
-            <h3>QUINCENA A FOLIAR EN PAGOMATICO</h3>
+            <h3 class="text-center">QUINCENA A FOLIAR EN PAGOMATICO</h3>
             <h5 id="QuincenaPagoMatico" class="azul">@ViewBag.NumeroQuincena</h5>
             <br />
         </div>
@@ -94,21 +94,29 @@
 
 
 
-    <div class="col-12 text-center" id="DetalleTodasLasNominas" style="display:none">
-        <button type="button" class="btn btn-lg btn-success" onclick="VerificarPagomaticoTodasNominas()"><i class="fas fa-poll"></i>  Ver detalles de nominas  <i class="fas fa-poll"></i></button>
+    <div class="col-12 text-center " id="DetalleTodasLasNominas" style="display:none">
 
+        <div class="col-12 text-center margenAlPie">
+             <button type="button" class="btn btn-lg btn-success" onclick="FolearQuincenaPagomatico()" title="Folea todas las nominas de la quincena seleccionada con algun pagomatico"><i class="fas fa-money-bill-alt"></i>  Foliar Pagomaticos </button>
+        </div>
+        
+        <div class="col-12 text-center">
+            <button type="button" class="btn btn-lg btn-success" onclick="VerificarPagomaticoTodasNominas()" title="Detalla todas las nominas dentro de la quincena seleccionada"> Ver detalles de nominas  <i class="fas fa-poll"></i></button>
+
+        </div>
     </div>
 
-    <div class="col-12 text-center" id="VerificarNomina" style="display:none">
-        <button type="button" class="btn btn-lg btn-success" onclick="VerificarNominaPagomatico()">  Ver detalle de nomina  <i class="fas fa-poll"></i>  </button>
-    </div>
-    </br>
+        <div class="col-12 text-center" id="VerificarNomina" style="display:none">
+            <button type="button" class="btn btn-lg btn-success" onclick="VerificarNominaPagomatico()" title="Detalla la nomina seleccionada ">  Ver detalle de nomina  <i class="fas fa-poll"></i>  </button>
+        </div>
+        </br>
 
 
-    <br>
+        <br>
 
 
-    <hr class="linea" />
+
+        <hr class="linea" />
 
 
 
@@ -142,4 +150,9 @@
 </style>
 
 
-
+<script>
+    //ver el js con el mismo nombre de la vista
+    document.getElementById("SeleccionarNominaFoliar").addEventListener("change", function (e) {
+        LimpiarTablaPagomatico();
+    });
+</script>

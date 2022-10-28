@@ -278,3 +278,15 @@ button {
 .dt-buttons {
     text-align: right;
 }
+
+
+
+.contenedor {
+    display: flex;
+    justify-content: center;
+}
+
+
+.hijo {
+    margin: 0 auto;
+}

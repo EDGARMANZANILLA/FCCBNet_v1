@@ -139,24 +139,26 @@ function ActualizaTablaResumenFoliar() {
     var datoEnviar = "{'Dato':' '}";
 
     MensajeCargando();
-    $.ajax({
-        url: 'Foliar/ActualizarTablaResumenBanco',
-        data: datoEnviar,
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        success: function (response) {
 
 
-            //estos metodos se encuentran el Js del Index de Foliar sirve para actualizar la tabla al terminar de folear
+    axios.post('/Foliar/ActualizarTablaResumenBanco', {
+        Dato:''
+    })
+        .then(function (response) {
             $("#TablaResumenInventario").empty();
             DibujarTablaResumenInventario();
-            PintarConsultaActualizaTablaResumenInventario(response);
+            PintarConsultaActualizaTablaResumenInventario(response.data);
 
             OcultarMensajeCargando();
+        })
+        .catch(function (error) {
+            MensajeErrorSweet('', "Error al cargar la tabla ResumenInventario" + error);
+            OcultarMensajeCargando();
+            
+        });
 
-        }
 
-    });
+ 
 
 }
 
@@ -168,74 +170,76 @@ function RetornarVistaParcial() {
 
     let quincena = document.getElementById("QuincenaFoliacion").value;
     let tipoFoliacion = document.getElementById("SeleccionarTipoFoliacion").value;
-
+ 
 
     if (tipoFoliacion != "" && quincena != "") {
         //devuelve la vista parcial de pagomatico para el nuevo render
-        if (tipoFoliacion == 1) {
-
-            let EnviarQuincenaPagomatico = "{'NumeroQuincena': '" + quincena + "'}";
-
-            //  console.log(EnviarQuincenaPagomatico);
-            MensajeCargando();
-            $.ajax({
-                url: 'Foliar/FoliarXPagomatico',
-                data: EnviarQuincenaPagomatico,
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                success: function (response) {
-
-                    if (response.RespuestaServidor === "500") {
-                        MensajeErrorSweet(response.MensajeError);
-                        $('#RenderVistaParcial').html('');
-                    } else {
-                        $('#RenderVistaParcial').html('');
-                        $('#RenderVistaParcial').html(response);
-                        document.getElementById("SeleccionVistas").style.display = "none";
-                        document.getElementById("VistaPagomatico").style.display = "block";
-                      
-                    }
+        if (tipoFoliacion == 1)
+        {
+           MensajeCargando();
+            axios.post('/Foliar/FoliarXPagomatico', {
+                NumeroQuincena: quincena
+            })
+            .then(function (response) {
 
 
+                if (response.data.RespuestaServidor === "500") {
+                    MensajeErrorSweet(response.data.MensajeError);
+                    $('#RenderVistaParcial').html('');
+                } else {
+                    $('#RenderVistaParcial').html('');
+                    $('#RenderVistaParcial').html(response.data);
+                    document.getElementById("SeleccionVistas").style.display = "none";
+                    document.getElementById("VistaPagomatico").style.display = "block";
 
-                    OcultarMensajeCargando();
                 }
+
+                OcultarMensajeCargando();
+            })
+            .catch(function (error) {
+                MensajeErrorSweet('', "Error en vista parcial pagomatico " + error);
+                OcultarMensajeCargando();
             });
 
 
-        }
 
-        //devuelve la vista parcial de formas de pago para el nuevo render
-        if (tipoFoliacion == 2) {
 
-            let EnviarQuincenaFormasPago = "{'Quincena': '" + quincena + "'}";
-            //console.log(EnviarQuincenaFormasPago);
+
+        } else if (tipoFoliacion == 2)
+        {
+
+
             MensajeCargando();
-            $.ajax({
-                url: 'Foliar/FoliarXFormasPago',
-                data: EnviarQuincenaFormasPago,
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                success: function (response) {
+            axios.post('/Foliar/FoliarXFormasPago', {
+                Quincena: quincena
+            })
+                .then(function (response) {
 
-                    if (response.RespuestaServidor === "500") {
-                        MensajeErrorSweet(response.MensajeError);
+
+                    if (response.data.RespuestaServidor === "500") {
+                        MensajeErrorSweet(response.data.MensajeError);
                         $('#RenderVistaParcial').html('');
                     } else {
-
                         $('#RenderVistaParcial').html('');
-                        $('#RenderVistaParcial').html(response);
+                        $('#RenderVistaParcial').html(response.data);
                         document.getElementById("SeleccionVistas").style.display = "none";
                         document.getElementById("VistaFormasPago").style.display = "block";
-                        
-
                     }
 
-                    OcultarMensajeCargando();
-                }
-            });
 
+                    OcultarMensajeCargando();
+                })
+                .catch(function (error) {
+                    MensajeErrorSweet('', "Error en vista parcial" + error)
+                    OcultarMensajeCargando();
+                   
+                });
+
+ 
         }
+
+     
+
 
 
     } else {

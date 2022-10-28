@@ -17,9 +17,9 @@ namespace DAP.Foliacion.Entidades
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Tbl_Inventario()
         {
+            this.Tbl_CuentasBancarias = new HashSet<Tbl_CuentasBancarias>();
             this.Tbl_InventarioContenedores = new HashSet<Tbl_InventarioContenedores>();
             this.Tbl_InventarioDetalle = new HashSet<Tbl_InventarioDetalle>();
-            this.Tbl_CuentasBancarias = new HashSet<Tbl_CuentasBancarias>();
         }
     
         public int Id { get; set; }
@@ -30,10 +30,10 @@ namespace DAP.Foliacion.Entidades
         public bool Activo { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Tbl_CuentasBancarias> Tbl_CuentasBancarias { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Tbl_InventarioContenedores> Tbl_InventarioContenedores { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Tbl_InventarioDetalle> Tbl_InventarioDetalle { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Tbl_CuentasBancarias> Tbl_CuentasBancarias { get; set; }
     }
 }

@@ -29,11 +29,36 @@ function DibujarTablaEsFoliada() {
 function PintarResultadoEsFoliada(datos) {
 
     $('#DetallesSiEstaFoliadaNominas').DataTable({
+        "dom": 'Blfrtip',
+        "buttons": [
+            {
+                extend: 'excel',
+                className: 'btn btn-primary ',
+                text: '<i class="fas fa-file-download"></i>  &nbsp  EXCEL',
+                filename: `Detalle_Nominas_EXEL`,
+                title: `DETALLE CON LAS SIGUIENTES NOMINAS : `
+            },
+            {
+                extend: 'pdf',
+                className: 'btn btn-primary ',
+                text: ' <i class="fas fa-download"></i>  &nbsp PDF ',
+                filename: `Detalle_Nominas_PDF`,
+                title: `DETALLE CON LAS SIGUIENTES NOMINAS :`
+            },
+            {
+                extend: 'print',
+                className: 'btn btn-primary ',
+                text: '<i class="fas fa-print"></i>  &nbsp Imprimir',
+                filename: `Detalle_Nominas_`,
+                title: `DETALLE CON LAS SIGUIENTES NOMINAS: `
+            }
+        ],
+        "bDestroy": true,
         "ordering": true,
         "info": true,
         "searching": true,
         "paging": true,
-        "lengthMenu": [10, 15, 30],
+        "lengthMenu": [5, 15, 20, 40],
         "language":
         {
             "processing": "Procesando...",
@@ -74,13 +99,18 @@ function PintarResultadoEsFoliada(datos) {
                         return '<h4 class="  text-success text-uppercase"> <i class="fas fa-check"></i>  </h4>';
                     } else if (data == 2) {
 
-                        return '<h4 class=" bg-warning btn text-uppercase text-light"  > NO HAY PAGOMATICOS POR FOLIAR  </h4>';
+                        return '<button class="btn btn-info  text-uppercase text-light" onclick="BaseSinPagomaticos()"  > S/N PAGOMATICOS  </button>';
                     } else if (data == 3) {
 
-                        return '<h4 class=" bg-warning btn text-uppercase text-light"  > NO SE ENCONTRO LA BASE EN ALPHA (Interfaces)  </h4>';
-                    } else if (data == 4) {
+                        return '<button class=" btn-danger btn text-uppercase text-light"  onclick="BaseNoImportada()" > Base no importada </button>';
+                    }
+                    else if (data == 4) {
 
-                        return '<h4 class=" bg-warning btn text-uppercase text-light"  > DBF SIN PERMISOS  </h4>';
+                        return '<button class=" btn-danger btn text-uppercase text-light"  onclick="ErrorSinRegistrosEnFCCBNet()"> ERROR </button>';
+                    }
+                    else if (data == 5) {
+
+                        return '<button class="btn btn-warning text-uppercase text-light"  onclick="RefoliarPagomatico('+row.Id_Nom+')"> Algo sucedio, ¡verifique! </button>';
                     }
                 }
             },
@@ -98,6 +128,7 @@ function PintarResultadoEsFoliada(datos) {
             {
                 render: function (data, type, row) {
                     if (row.IdEstaFoliada < 2) {
+                        //SOLO ENTRAN LAS NOMINAS QUE NO ESTEN FOLIADOS O LOS CUALES SI ESTAN FOLIADOS
                         return '<h4 class="bg-success btn  text-uppercase text-light"  onclick="ImprimeNomina(' + row.Id_Nom + ')"  > <i class="fas fa-print"></i> </h4>';
                     }
                     return '';
@@ -121,7 +152,7 @@ function PintarResultadoEsFoliada(datos) {
 
         ],
 
-        "order": [[5, 'desc']]
+        "order": [[1, 'asc']]
 
 
     });
@@ -132,10 +163,17 @@ function PintarResultadoEsFoliada(datos) {
 
 
 
+function LimpiarTablaResumenFoliados()
+{
+    $('#TablaEsFoliada').empty();
+}
+
+
 
 
 function VerificarNominaPagomatico() {
 
+    LimpiarTablaResumenFoliados();
 
     let VerificaIdNom = document.getElementById("SeleccionarNominaFoliar").value;
     let quincenaPagomaticoNom = document.getElementById("QuincenaFoliacion").value;
@@ -143,68 +181,62 @@ function VerificarNominaPagomatico() {
 
 
     MensajeCargando();
+    axios.post('/Foliar/EstaFoliadaIdNominaPagomatico', {
+        IdNom: VerificaIdNom ,
+        NumeroQuincena: quincenaPagomaticoNom
+    })
+    .then(function (response) {
 
-    let EnviaIdNom = "{'IdNom': '" + VerificaIdNom + "', 'NumeroQuincena': '" + quincenaPagomaticoNom + "'}";
-
-    $.ajax({
-        url: 'Foliar/EstaFoliadaIdNominaPagomatico',
-        data: EnviaIdNom,
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        success: function (response) {
-            //console.log(response);
-
-            if (response.RespuestaServidor == "201") {
-                $('#TablaEsFoliada').empty();
-                DibujarTablaEsFoliada();
-                PintarResultadoEsFoliada(response.DetalleTabla);
-            } else if (response.RespuestaServidor == "500") {
-                MensajeErrorSweet(response.Error);
-            }
-
-
-
-            OcultarMensajeCargando();
-
-        },
-        error: function (jqXHR, textStatus) {
-            MensajeErrorSweet("Ocurrio un error intente seleccionar la nomina de nuevo" + textStatus)
-            //alert('Error occured: ' + textStatus);
+        if (response.data.RespuestaServidor == "201") {
+            $('#TablaEsFoliada').empty();
+            DibujarTablaEsFoliada();
+            PintarResultadoEsFoliada(response.data.DetalleTabla);
+        } else if (response.data.RespuestaServidor == "500") {
+            MensajeErrorSweet(response.data.Error);
         }
 
+        //OcultarMensajeCargando();
+    })
+        .catch(function (error) {
+            MensajeErrorSweet("Intente la verificar de nuevo", "Ocurrio un error " + error);
+          
     });
+    OcultarMensajeCargando();
+
+   
 
 }
 
 function VerificarPagomaticoTodasNominas() {
+
+    LimpiarTablaResumenFoliados();
     let quincenaPagomatico = document.getElementById("QuincenaFoliacion").value;
    // console.log(quincenaPagomatico);
 
     MensajeCargando();
+    axios.post('/Foliar/EstanFoliadasTodasNominaPagomatico', {
+        NumeroQuincena:  quincenaPagomatico
+    })
+        .then(function (response) {
 
-    let EnviarQuincenaPagomatico = "{'NumeroQuincena': '" + quincenaPagomatico + "'}";
-
-    $.ajax({
-        url: 'Foliar/EstanFoliadasTodasNominaPagomatico',
-        data: EnviarQuincenaPagomatico,
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        success: function (response) {
-            if (response.RespuestaServidor == "201") {
+            if (response.data.RespuestaServidor == "201") {
                 $('#TablaEsFoliada').empty();
                 DibujarTablaEsFoliada();
-                PintarResultadoEsFoliada(response.DetalleTabla);
-
-            } else if (response.RespuestaServidor == "500") {
-                MensajeErrorSweet(response.Error);
+                PintarResultadoEsFoliada(response.data.DetalleTabla);
+            } else if (response.data.RespuestaServidor == "500") {
+                MensajeErrorSweet(response.data.Error);
             }
+
+            OcultarMensajeCargando();
+        })
+        .catch(function (error) {
+            MensajeErrorSweet("Intente la verificar de nuevo", "Ocurrio un error " + error);
             OcultarMensajeCargando();
 
-        }, error: function (jqXHR, textStatus) {
-            MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
-            OcultarMensajeCargando();
-        }
-    });
+        });
+  
+
+
 
 }
 
@@ -257,6 +289,86 @@ function CheckTodasNominas() {
 
 }
 
+function FolearQuincenaPagomatico()
+{
+   //VerificarPagomaticoTodasNominasDisponiblesFoliarPagomaticos();
+
+    let quincenaParaFoliar = document.getElementById("QuincenaFoliacion").value;
+
+    MensajeCargando();
+    axios.post('/Foliar/VerificarNominasQuincaDisponiblesFoliarPagomaticos', {
+        NumeroQuincena: quincenaParaFoliar
+    })
+        .then(function (response) {
+
+            //console.log(response.data);
+
+            LimpiarTablaResumenFoliados();
+            DibujarTablaEsFoliada();
+            PintarResultadoEsFoliada(response.data);
+            OcultarMensajeCargando();
+
+
+
+
+            Swal.fire({
+                title: '¿Estas seguro , seguro ?',
+                text: 'Este proceso tomara un tiempo largo de espera dado a que se folean todos los pagomaticos de toda la quincena',
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, Continuar!',
+                cancelButtonText: 'No, Cancelar!',
+                footer: '<a href="#">Contactar al desarrollador?</a>'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    MensajeCargando();
+                    axios.post('/Foliar/FoliarQuincenaPagomatico', {
+                        NumeroQuincena: quincenaParaFoliar
+                    })
+                        .then(function (response) {
+
+                            if (response.data.bandera) {
+                                MensajeCorrectoSweet(response.data.mensaje);
+                            } else {
+                                MensajeErrorSweet(response.data.mensaje, 'INCIDENCIAS ENCONTRADAS');
+                            }
+
+                            LimpiarTablaResumenFoliados();
+                            DibujarTablaEsFoliada();
+                            PintarResultadoEsFoliada(response.data.resultadoServer);
+                            OcultarMensajeCargando();
+
+                        })
+                        .catch(function (error) {
+                            MensajeErrorSweet(error);
+                            $('#TablaEsFoliada').empty();
+                            OcultarMensajeCargando();
+                            console.log(error);
+                        });
+
+
+
+                }
+            })
+
+
+
+        })
+    .catch(function (error) {
+            MensajeErrorSweet(error);
+            LimpiarTablaResumenFoliados();
+            OcultarMensajeCargando();
+
+            console.log(error);
+    });
+
+ 
+
+
+
+}
 
 
 
@@ -278,38 +390,63 @@ function FoliarNomina(IdNom) {
         /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
 
-            let EnviarRevicion = "{'IdNomina': '" + IdNom + "','NumeroQuincena': '" + quincenaParaFoliar + "'}";
 
             MensajeCargando();
-            $.ajax({
-                url: 'Foliar/FoliarPorIdNominaPagomatico',
-                data: EnviarRevicion,
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                success: function (response) {
-
-
-
-
-                    if (response.bandera) {
+            axios.post('/Foliar/FoliarPorIdNominaPagomatico', {
+                IdNomina: IdNom ,
+                NumeroQuincena: quincenaParaFoliar
+            })
+                .then(function (response) {
+                    if (response.data.bandera) {
                         $('#TablaEsFoliada').empty();
                         DibujarTablaEsFoliada();
-                        PintarResultadoEsFoliada(response.resultadoServer.Data.DetalleTabla);
+                        PintarResultadoEsFoliada(response.data.resultadoServer.Data.DetalleTabla);
                         MensajeCorrectoSweet("La nomina se folio correctamente");
 
                     } else {
-                        MensajeErrorSweet(response.DBFAbierta[0].Detalle, response.DBFAbierta[0].Solucion);
+                        MensajeErrorSweet(response.data.DBFAbierta[0].Detalle, response.data.DBFAbierta[0].Solucion);
                     }
 
                     OcultarMensajeCargando();
-
-
-                }, error: function (jqXHR, textStatus) {
-                    OcultarMensajeCargando();
-                    MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
-
-                }
+            })
+                .catch(function (error) {
+                    MensajeErrorSweet("Ocurrio un error intente de nuevo " + error)
+                OcultarMensajeCargando();
             });
+
+
+            //let EnviarRevicion = "{'IdNomina': '" + IdNom + "','NumeroQuincena': '" + quincenaParaFoliar + "'}";
+
+            //MensajeCargando();
+            //$.ajax({
+            //    url: 'Foliar/FoliarPorIdNominaPagomatico',
+            //    data: EnviarRevicion,
+            //    type: "POST",
+            //    contentType: "application/json; charset=utf-8",
+            //    success: function (response) {
+
+
+
+
+            //        if (response.bandera) {
+            //            $('#TablaEsFoliada').empty();
+            //            DibujarTablaEsFoliada();
+            //            PintarResultadoEsFoliada(response.resultadoServer.Data.DetalleTabla);
+            //            MensajeCorrectoSweet("La nomina se folio correctamente");
+
+            //        } else {
+            //            MensajeErrorSweet(response.DBFAbierta[0].Detalle, response.DBFAbierta[0].Solucion);
+            //        }
+
+            //        OcultarMensajeCargando();
+
+
+            //    }, error: function (jqXHR, textStatus) {
+            //        OcultarMensajeCargando();
+            //        MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
+
+            //    }
+            //});
 
 
 
@@ -328,32 +465,131 @@ function ImprimeNomina(IdNom) {
     let quincenaParaImprimir = document.getElementById("QuincenaFoliacion").value;
     //console.log(quincenaParaImprimir);
 
-    let EnviarRevicion = "{'IdNomina': '" + IdNom + "', 'Quincena': '" + quincenaParaImprimir + "'}";
-
-
     MensajeCargando();
-    $.ajax({
-        url: 'Foliar/RevisarReportePDFPagomaticoPorIdNomina',
-        data: EnviarRevicion,
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        success: function (response) {
-
+    axios.post('/Foliar/RevisarReportePDFPagomaticoPorIdNomina', {
+        IdNomina: IdNom ,
+        Quincena: quincenaParaImprimir
+    })
+    .then(function (response) {
 
             $("example").empty();
             /// PDFObject.embed(response, "#example");
-            PDFObject.embed("data:application/pdf;base64," + response + " ", "#example");
+            PDFObject.embed("data:application/pdf;base64," + response.data + " ", "#example");
             //PDFObject.embed("../Reportes/ReportesPDFSTemporales/RevicionNomina" + nominaSeleccionadaFoliar.value + ".pdf", "#example");
             $('#ModalPDFVisualizador').modal('show');
 
             OcultarMensajeCargando();
-        }, error: function (jqXHR, textStatus) {
-            MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus + " || "+ jqXHR)
+    })
+    .catch(function (error) {
+            MensajeErrorSweet("Ocurrio un error intente de nuevo " + error)
             OcultarMensajeCargando();
-        }
     });
+
+    let EnviarRevicion = "{'IdNomina': '" + IdNom + "', 'Quincena': '" + quincenaParaImprimir + "'}";
+
+
+    //MensajeCargando();
+    //$.ajax({
+    //    url: 'Foliar/RevisarReportePDFPagomaticoPorIdNomina',
+    //    data: EnviarRevicion,
+    //    type: "POST",
+    //    contentType: "application/json; charset=utf-8",
+    //    success: function (response) {
+
+
+    //        $("example").empty();
+    //        /// PDFObject.embed(response, "#example");
+    //        PDFObject.embed("data:application/pdf;base64," + response + " ", "#example");
+    //        //PDFObject.embed("../Reportes/ReportesPDFSTemporales/RevicionNomina" + nominaSeleccionadaFoliar.value + ".pdf", "#example");
+    //        $('#ModalPDFVisualizador').modal('show');
+
+    //        OcultarMensajeCargando();
+    //    }, error: function (jqXHR, textStatus) {
+    //        MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus + " || "+ jqXHR)
+    //        OcultarMensajeCargando();
+    //    }
+    //});
 
    // OcultarMensajeCargando();
 
 }
 
+
+function BaseNoImportada()
+{
+    MensajeErrorSweet('Informe al personal encargado de subir las bases ','NO SE IMPORTO LA BASE DBF HACIA SQL');
+}
+
+
+function BaseSinPagomaticos()
+{
+    MensajeWarningSweet('Esta base al parecer no contiene ningun pago con tarjeta', 'NO HAY PAGOMATICOS POR FOLIAR EN ESTA BASE')
+}
+
+function ErrorSinRegistrosEnFCCBNet()
+{
+    //4 LA BASE EN SQL ESTA FOLIADA POR ALGUNA RAZON, PERO NO HAY REGISTRO EN FCCBNetDB => VErificar con el desarrollador por que sucedio (Se resuelve limpiando la base de sql de AN)
+    MensajeErrorSweet("Limpie los campos de foliacion de la base AN en SQL", "LA BASE AN EN SQL ESTA FOLIADA POR ALGUNA RAZON, PERO NO HAY REGISTRO EN FCCBNetDB");
+}
+
+
+function RefoliarPagomatico(IdNom)
+{
+    //5 LA BASE EN SQL NO ESTA FOLIADA POR ALGUNA RAZON, PERO SI HAY REGISTROS EN FCCBNetDB que indican que en algun momento fue foleada => VErificar con el desarrollador por que sucedio (En este caso debe solo actualizar los datos)
+    console.log("ERROR 5 => LA BASE EN SQL NO ESTA FOLIADA POR ALGUNA RAZON, PERO SI HAY REGISTROS EN FCCBNetDB que indican que en algun momento fue foleada => Verifica con el desarrollador por que sucedio (En este caso debe solo actualizar los datos)");
+    Swal.fire({
+        title: '¿Esta seguro de querer folear los pagomaticos de nuevo?',
+        text: ' LA BASE EN SQL NO ESTA FOLIADA POR ALGUNA RAZON, PERO SI HAY REGISTROS EN FCCBNetDB',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, Folear de nuevo!',
+        cancelButtonText: 'No, cancelar!',
+        footer: '<a href="#">Contactar al desarrollador?</a>'
+    }).then((result) => {
+        if (result.isConfirmed) {
+
+           // MensajeEstamosEnConstrucion();
+            let quincenaParaFoliar = document.getElementById("QuincenaFoliacion").value;
+
+            MensajeCargando();
+            axios.post('/Foliar/ReFoliarPorIdNominaPagomatico', {
+                IdNomina: IdNom,
+                NumeroQuincena: quincenaParaFoliar
+            })
+                .then(function (response) {
+                   // console.log(response.data);
+                    
+
+                    if (response.data.bandera) {
+
+                        $('#TablaEsFoliada').empty();
+                        DibujarTablaEsFoliada();
+                        PintarResultadoEsFoliada(response.data.resultadoServer.Data.DetalleTabla);
+                        MensajeCorrectoSweet("La nomina se folio correctamente");
+
+                    } else {
+                        MensajeErrorSweet(response.data.DBFAbierta[0].Detalle, response.data.DBFAbierta[0].Solucion);
+                    }
+
+                    OcultarMensajeCargando();
+
+                })
+                .catch(function (error) {
+                    MensajeErrorSweet("error" + error);
+                    OcultarMensajeCargando();
+                   
+                });
+            
+
+        }
+    })
+}
+
+
+//Esta funcion se manda a llamar desde la vista a la que pertenece y solo sirve para limpiar la tabla informativa que se pinta 
+function LimpiarTablaPagomatico()
+{
+    $('#TablaEsFoliada').empty();
+}

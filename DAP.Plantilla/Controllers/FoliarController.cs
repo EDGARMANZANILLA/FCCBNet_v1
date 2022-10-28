@@ -13,6 +13,7 @@ using DAP.Foliacion.Entidades;
 using DAP.Plantilla.Models.FoliacionModels;
 using System.Security.Principal;
 using AutoMapper;
+using System.Threading.Tasks;
 
 namespace DAP.Plantilla.Controllers
 {
@@ -36,11 +37,11 @@ namespace DAP.Plantilla.Controllers
                 int anio = Convert.ToInt32( DateTime.Now.Year.ToString().Substring(0, 2) + NumeroQuincena.Substring(0, 2));
 
                 ViewBag.NumeroQuincena = NumeroQuincena;
-                Dictionary<int, string> ListaNombresQuincena = FoliarNegocios.ObtenerNominasXNumeroQuincena(NumeroQuincena, anio );
+                Dictionary<int, string> ListaNombresNominaQuincena = FoliarNegocios.ObtenerNombreNominasEnQuincena(NumeroQuincena, anio );
                 
-                if (ListaNombresQuincena.Count() > 0)
+                if (ListaNombresNominaQuincena.Count() > 0)
                 {
-                    return PartialView(ListaNombresQuincena);
+                    return PartialView(ListaNombresNominaQuincena);
                 }
 
             }
@@ -73,7 +74,7 @@ namespace DAP.Plantilla.Controllers
                 int anio = Convert.ToInt32(DateTime.Now.Year.ToString().Substring(0, 2) + Quincena.Substring(0, 2));
 
                 ViewBag.NumeroQuincena = Quincena;
-                Dictionary<int, string> ListaNombresNominaQuincena = FoliarNegocios.ObtenerNominasXNumeroQuincena(Quincena, anio);
+                Dictionary<int, string> ListaNombresNominaQuincena = FoliarNegocios.ObtenerNombreNominasEnQuincena(Quincena, anio);
                 ViewBag.BancosConTarjeta = FoliarNegocios.ObtenerBancoParaFormasPago();
 
                 if (ListaNombresNominaQuincena.Count() > 0)
@@ -123,16 +124,16 @@ namespace DAP.Plantilla.Controllers
 
         public ActionResult ObtenerNombreNominas(string NumeroQuincena)
         {
-            int anio = ObtenerAnioDeQuincena(NumeroQuincena);
+            int anio = FoliarNegocios.ObtenerAnioDeQuincena(NumeroQuincena);
 
-            var contenedoresEncontrados = FoliarNegocios.ObtenerNominasXNumeroQuincena(NumeroQuincena, anio);
+            var nombreNominasQuincena = FoliarNegocios.ObtenerNombreNominasEnQuincena(NumeroQuincena, anio);
 
 
             //Se crea la variable de session cada vez que inicia el proceso de foliar
 
 
 
-            return Json(contenedoresEncontrados, JsonRequestBehavior.AllowGet);
+            return Json(nombreNominasQuincena, JsonRequestBehavior.AllowGet);
         }
 
 
@@ -232,7 +233,7 @@ namespace DAP.Plantilla.Controllers
                     // 1 = le pertenece a las nominas general y descentralizada
                     // 2 = le pertenece a cualquier otra nomina que no se folea por sindicato y confianza
                     foliarNomina.IdGrupoFoliacion = NuevaFoliacionNomina.IdGrupoFoliacion;
-                    foliarNomina.AnioInterfaz = ObtenerAnioDeQuincena(NuevaFoliacionNomina.Quincena);
+                    foliarNomina.AnioInterfaz = FoliarNegocios.ObtenerAnioDeQuincena(NuevaFoliacionNomina.Quincena);
 
                     string Observa = "CHEQUE";
                     //List<AlertasAlFolearPagomaticosDTO> resultadoFoliacion = await FoliarNegocios.FoliarChequesPorNomina(foliarNomina, Observa, chequesVerificadosFoliar);
@@ -274,7 +275,7 @@ namespace DAP.Plantilla.Controllers
             //************************************************************************************************************************************************************************************************************************************************//
             public ActionResult ObtenerResumenDetalle_NominaCheques(int IdNomina , string Quincena )
             {
-                int anioInterface = ObtenerAnioDeQuincena(Quincena);
+                int anioInterface = FoliarNegocios.ObtenerAnioDeQuincena(Quincena);
                 var resumenDatosTablaModal = FoliarNegocios.ObtenerResumenDetalleNomina_Cheques( IdNomina, anioInterface).OrderBy(X => X.IdDelegacion);
 
                 return Json(resumenDatosTablaModal, JsonRequestBehavior.AllowGet);
@@ -285,9 +286,9 @@ namespace DAP.Plantilla.Controllers
             //***************************************************************************************************************************************************************************************************************************************************//
             public ActionResult RevisarReportePDFChequeIdNominaPorDelegacion(GenerarReportePorDelegacionChequeModels GenerarReporteDelegacion) 
             {
-                int anioInterface = ObtenerAnioDeQuincena(GenerarReporteDelegacion.Quincena);
-
-                var datosCompletosNomina = FoliarNegocios.ObtenerDatosCompletosBitacoraPorIdNom_paraControlador(GenerarReporteDelegacion.IdNomina, anioInterface);
+                int anioInterface = FoliarNegocios.ObtenerAnioDeQuincena(GenerarReporteDelegacion.Quincena);
+                  string visitaAnioInterface = FoliarNegocios.ObtenerCadenaAnioInterface(anioInterface);
+                var datosCompletosNomina = FoliarNegocios.ObtenerDatosCompletosBitacoraFILTRO(GenerarReporteDelegacion.IdNomina, visitaAnioInterface);
 
                 List<ResumenRevicionNominaPDFModel> ResumenRevicionNominaPDF = new List<ResumenRevicionNominaPDFModel>();
 
@@ -319,20 +320,21 @@ namespace DAP.Plantilla.Controllers
 
 
 
-                string archivoBase64;
+            string archivoBase64;
+            string NombreDelegacionSeleccionada = FoliarNegocios.ObtenerNombreDelegacion(GenerarReporteDelegacion.IdDelegacion);
                 //    using (new Foliacion.Negocios.NetworkConnection(domain, new System.Net.NetworkCredential(user, password)))
                 //   {
 
-                DAP.Plantilla.Reportes.Datasets.RevicionDeFoliacionPorNomina dtsRevicionFolios = new DAP.Plantilla.Reportes.Datasets.RevicionDeFoliacionPorNomina();
-
-                dtsRevicionFolios.Ruta.AddRutaRow(datosCompletosNomina.Ruta + datosCompletosNomina.RutaNomina, " ");
+            DAP.Plantilla.Reportes.Datasets.RevicionDeFoliacionPorNominaCheques dtsRevicionFolios = new DAP.Plantilla.Reportes.Datasets.RevicionDeFoliacionPorNominaCheques();
+                
+                dtsRevicionFolios.RutaDelegacionesCheque.AddRutaDelegacionesChequeRow(datosCompletosNomina.Coment, NombreDelegacionSeleccionada, datosCompletosNomina.Ruta + datosCompletosNomina.RutaNomina);
                 // dtsRevicionFolios.Ruta.AddRutaRow(FoliarNegocios.ObtenerRutaCOmpletaArchivoIdNomina(IdNomina), " " );
 
 
                 foreach (var resultado in ResumenRevicionNominaPDF)
                 {
                     //dtsRevicionFolios.DatosRevicion.AddDatosRevicionRow(Convert.ToString(resultado.Id), resultado.Partida, resultado.Nombre, resultado.Deleg, resultado.Num_Che, resultado.Liquido, resultado.CuentaBancaria, resultado.Num, resultado.Nom);
-                    dtsRevicionFolios.DatosRevicion.AddDatosRevicionRow(resultado.Contador, resultado.Partida, resultado.NombreEmpleado, resultado.Delegacion, resultado.NUM_CHE, resultado.Liquido, resultado.Cuenta, resultado.CadenaNumEmpleado, resultado.Nomina);
+                    dtsRevicionFolios.DatosRevicionCheque.AddDatosRevicionChequeRow(resultado.Contador, resultado.Partida, resultado.CadenaNumEmpleado, resultado.NombreEmpleado, resultado.Delegacion, resultado.Nomina ,resultado.NUM_CHE, resultado.Liquido, resultado.Cuenta );
                 }
 
                 string pathPdf = @"C:\Reporte\FoliacionRevicionPDF";
@@ -345,9 +347,9 @@ namespace DAP.Plantilla.Controllers
 
 
 
-                string pathCompleto = pathPdf + "\\" + "RevicionNomina"+datosCompletosNomina.Id_nom+".pdf";
+                string pathCompleto = pathPdf + "\\" + "RevicionDelegacion"+NombreDelegacionSeleccionada+ "Nomina" + datosCompletosNomina.Id_nom+".pdf";
                 ReportDocument rd = new ReportDocument();
-                rd.Load(Path.Combine(Server.MapPath("~/"), "Reportes/Crystal/RevicionFoliacionNomina.rpt"));
+                rd.Load(Path.Combine(Server.MapPath("~/"), "Reportes/Crystal/RevicionFoliacionNominaCheques.rpt"));
                 rd.SetDataSource(dtsRevicionFolios);
                 rd.ExportToDisk(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat, pathCompleto);
 
@@ -374,10 +376,10 @@ namespace DAP.Plantilla.Controllers
 
             public ActionResult RevisarReportePDFChequeIdNomina(int IdNomina , string Quincena)
             {
-                int anioInterface = ObtenerAnioDeQuincena(Quincena);
+                int anioInterface =FoliarNegocios.ObtenerAnioDeQuincena(Quincena);
 
-
-                var datosCompletosNomina = FoliarNegocios.ObtenerDatosCompletosBitacoraPorIdNom_paraControlador(IdNomina, anioInterface);
+                string visitaAnioInterface = FoliarNegocios.ObtenerCadenaAnioInterface(anioInterface);
+                var datosCompletosNomina = FoliarNegocios.ObtenerDatosCompletosBitacoraFILTRO(IdNomina, visitaAnioInterface);
 
                 List<ResumenRevicionNominaPDFModel> ResumenRevicionNominaPDF = new List<ResumenRevicionNominaPDFModel>();
 
@@ -400,16 +402,16 @@ namespace DAP.Plantilla.Controllers
                 //    using (new Foliacion.Negocios.NetworkConnection(domain, new System.Net.NetworkCredential(user, password)))
                 //   {
 
-                DAP.Plantilla.Reportes.Datasets.RevicionDeFoliacionPorNomina dtsRevicionFolios = new DAP.Plantilla.Reportes.Datasets.RevicionDeFoliacionPorNomina();
+                DAP.Plantilla.Reportes.Datasets.RevicionDeFoliacionPorNominaCheques dtsRevicionFolios = new DAP.Plantilla.Reportes.Datasets.RevicionDeFoliacionPorNominaCheques();
 
-                dtsRevicionFolios.Ruta.AddRutaRow(datosCompletosNomina.Ruta + datosCompletosNomina.RutaNomina, " ");
+                dtsRevicionFolios.RutaDelegacionesCheque.AddRutaDelegacionesChequeRow(datosCompletosNomina.Coment,"" /*Sin delegacion por ser la nomina completa*/ ,  datosCompletosNomina.Ruta + datosCompletosNomina.RutaNomina);
                 // dtsRevicionFolios.Ruta.AddRutaRow(FoliarNegocios.ObtenerRutaCOmpletaArchivoIdNomina(IdNomina), " " );
 
 
                 foreach (var resultado in ResumenRevicionNominaPDF)
                 {
                     //dtsRevicionFolios.DatosRevicion.AddDatosRevicionRow(Convert.ToString(resultado.Id), resultado.Partida, resultado.Nombre, resultado.Deleg, resultado.Num_Che, resultado.Liquido, resultado.CuentaBancaria, resultado.Num, resultado.Nom);
-                    dtsRevicionFolios.DatosRevicion.AddDatosRevicionRow(resultado.Contador, resultado.Partida, resultado.NombreEmpleado, resultado.Delegacion, resultado.NUM_CHE, resultado.Liquido, resultado.Cuenta, resultado.CadenaNumEmpleado, resultado.Nomina);
+                    dtsRevicionFolios.DatosRevicionCheque.AddDatosRevicionChequeRow(resultado.Contador, resultado.Partida, resultado.CadenaNumEmpleado , resultado.NombreEmpleado, resultado.Delegacion, resultado.Nomina ,  resultado.NUM_CHE, resultado.Liquido, resultado.Cuenta);
                 }
 
                 string pathPdf = @"C:\Reporte\FoliacionRevicionPDF";
@@ -422,9 +424,9 @@ namespace DAP.Plantilla.Controllers
 
 
 
-                string pathCompleto = pathPdf + "\\" + "RevicionNomina" + datosCompletosNomina.Id_nom + ".pdf";
+                string pathCompleto = pathPdf + "\\" + "RevicionNominaCheques" + datosCompletosNomina.Id_nom + ".pdf";
                 ReportDocument rd = new ReportDocument();
-                rd.Load(Path.Combine(Server.MapPath("~/"), "Reportes/Crystal/RevicionFoliacionNomina.rpt"));
+                rd.Load(Path.Combine(Server.MapPath("~/"), "Reportes/Crystal/RevicionFoliacionNominaCheques.rpt"));
                 rd.SetDataSource(dtsRevicionFolios);
                 rd.ExportToDisk(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat, pathCompleto);
 
@@ -472,11 +474,12 @@ namespace DAP.Plantilla.Controllers
         {
             try
             {
-                int anioInterfaz = ObtenerAnioDeQuincena(NumeroQuincena);
-                //List<AlertasAlFolearPagomaticosDTO> errores = await FoliarNegocios.FolearPagomaticoPorNomina(IdNomina, anioInterfaz, NumeroQuincena);
-                List<AlertasAlFolearPagomaticosDTO> errores = await FoliarNegocios.FolearPagomaticoPorNomina_TIEMPO_DE_RESPUESTA_MEJORADO(IdNomina, anioInterfaz, NumeroQuincena);
+                int anioInterfaz = FoliarNegocios.ObtenerAnioDeQuincena(NumeroQuincena);
+                //List<AlertasAlFolearPagomaticosDTO> errores = await FoliarNegocios.FolearPagomaticoPorNomina_TIEMPO_DE_RESPUESTA_MEJORADO(IdNomina, anioInterfaz, NumeroQuincena);
+                List<AlertasAlFolearPagomaticosDTO> alertasObtenidas = new List<AlertasAlFolearPagomaticosDTO>();
+                alertasObtenidas.Add( await FoliarNegocios.FolearPagomaticoPorNominaaAsincrono(IdNomina, anioInterfaz ) );
 
-                var DBFAbierta = errores.Where(x => x.IdAtencion == 4).Select(x => new { x.Id_Nom, x.Detalle, x.Solucion }).ToList();
+                var DBFAbierta = alertasObtenidas.Where(x => x.IdAtencion == 4).Select(x => new { x.Id_Nom, x.Detalle, x.Solucion }).ToList();
 
                 if (DBFAbierta.Count() > 0)
                 {
@@ -508,15 +511,108 @@ namespace DAP.Plantilla.Controllers
             
         }
 
-  
+        public async System.Threading.Tasks.Task<ActionResult> FoliarQuincenaPagomatico( string NumeroQuincena)
+        {
+            try
+            {
+                int anioInterfaz = FoliarNegocios.ObtenerAnioDeQuincena(NumeroQuincena);
+                //List<AlertasAlFolearPagomaticosDTO> errores = await FoliarNegocios.FolearPagomaticoPorNomina(IdNomina, anioInterfaz, NumeroQuincena);
+              //  List<AlertaDeNominasFoliadasPagomatico> detallesTodasNominas = FoliarNegocios.VerificarTodasNominaPagoMatico(NumeroQuincena).Where(x => x.IdEstaFoliada == 0).ToList();
+                List<AlertaDeNominasFoliadasPagomatico> nominasConPagomaticoParaFoliar = FoliarNegocios.VerificarTodasNominaPagoMatico(NumeroQuincena).Where(x => x.IdEstaFoliada == 0).ToList();
 
-        //******************************************************************************************************************************************************************//
-        //************************************          VERFIFICAR LAS NOMINAS SI YA ESTAN FOLIADAS O NO  (VERIFICA en SQL)    ****************************//
-        //******************************************************************************************************************************************************************//
+                List<AlertasAlFolearPagomaticosDTO> alertasObtenidasFoliarTodasNominasPagomaticos = new List<AlertasAlFolearPagomaticosDTO>();
+
+                
+                foreach (AlertaDeNominasFoliadasPagomatico nuevaNomina in nominasConPagomaticoParaFoliar) 
+                {
+                    alertasObtenidasFoliarTodasNominasPagomaticos.Add( await FoliarNegocios.FolearPagomaticoPorNominaaAsincrono(nuevaNomina.Id_Nom, anioInterfaz) );
+                }
+
+                List<AlertasAlFolearPagomaticosDTO> inicenciasEncontradas = alertasObtenidasFoliarTodasNominasPagomaticos.Where(x => x.IdAtencion != 0).ToList();
+                List<AlertasAlFolearPagomaticosDTO> casosFoliadosExitos = alertasObtenidasFoliarTodasNominasPagomaticos.Where(x => x.IdAtencion == 0).ToList();
+
+
+                List<AlertaDeNominasFoliadasPagomatico> nuevoResultadoDespuesFoliacioPagomatico = FoliarNegocios.VerificarTodasNominaPagoMatico(NumeroQuincena);
+                if (casosFoliadosExitos.Count() > 0)
+                {
+                    return Json(new
+                    {
+                        bandera = true,
+                        mensaje  = "ALGUNAS NOMINAS CON PAGOMATICOS SE FOLIARON CORRECTAMENTE REVISE LA INFORMACION COMPLETA DEBAJO DE ESTE MODAL",
+                        resultadoServer = nuevoResultadoDespuesFoliacioPagomatico.Where( x => x.IdEstaFoliada < 2)
+                    });
+                }
+                else
+                {
+                    return Json(new
+                    {
+                        bandera = false,
+                        mensaje = "HUBO INCIDENCIAS AL FOLIAR TODO EL PAQUETE DE NOMINAS DE LA QUINCENA O NO CONTENIAN PAGOMATICOS: '" +NumeroQuincena+"',  SE RECOMIENDA FOLEAR UNA A UNA O INTENTAR DE NUEVO",
+                        resultadoServer = nuevoResultadoDespuesFoliacioPagomatico
+                    });
+                }
+            }
+            catch (Exception E)
+            {
+                return Json(new
+                {
+                    bandera = false,
+                    mensaje = E.Message,
+                    resultadoServer = EstanFoliadasTodasNominaPagomatico(NumeroQuincena)
+                });
+            }
+
+        }
+
+        public async Task<ActionResult> ReFoliarPorIdNominaPagomatico(int IdNomina , string NumeroQuincena) 
+        {
+            try
+            {
+                //List<AlertasAlFolearPagomaticosDTO> errores = await FoliarNegocios.FolearPagomaticoPorNomina_TIEMPO_DE_RESPUESTA_MEJORADO(IdNomina, anioInterfaz, NumeroQuincena);
+                List<AlertasAlFolearPagomaticosDTO> errores = await FoliarNegocios.RefoliarFolearPagomaticoPorNominaaAsincrono(IdNomina,  NumeroQuincena);
+
+                var DBFAbierta = errores.Where(x => x.IdAtencion == 4).Select(x => new { x.Id_Nom, x.Detalle, x.Solucion }).ToList();
+
+                if (DBFAbierta.Count() > 0)
+                {
+                    return Json(new
+                    {
+                        bandera = false,
+                        DBFAbierta = DBFAbierta
+                    });
+                }
+                else
+                {
+                    return Json(new
+                    {
+                        bandera = true,
+                        resultadoServer = EstanFoliadasTodasNominaPagomatico(NumeroQuincena)
+                    });
+                }
+            }
+            catch (Exception E)
+            {
+                int a = 0;
+
+                return Json(new
+                {
+                    bandera = true,
+                    resultadoServer = EstanFoliadasTodasNominaPagomatico(NumeroQuincena)
+                });
+            }
+        }
+
+        //******************************************************************************************************************************************************************************************************//
+        //*******************************************************************************************************************************************************************************************************//
+        //*******************************************************          VERFIFICAR LAS NOMINAS SI YA ESTAN FOLIADAS O NO  (VERIFICA en SQL)    ***************************************************************//
+        //*******************************************************************************************************************************************************************************************************//
+        //*******************************************************************************************************************************************************************************************************//
         /*******  Pinta tabla con el detalle de una nomina para saber si esta foliada y su detalle para pagomaticos  ******/
         public ActionResult EstaFoliadaIdNominaPagomatico(int IdNom, string NumeroQuincena) 
         {
-            List<AlertaDeNominasFoliadasPagomatico> resultadoAlertas = FoliarNegocios.EstaFoliadaNominaSeleccionadaPagoMatico(IdNom, ObtenerAnioDeQuincena(NumeroQuincena) ).ToList();
+            int anioInterface = FoliarNegocios.ObtenerAnioDeQuincena(NumeroQuincena);
+            List<AlertaDeNominasFoliadasPagomatico> resultadoAlertas = new List<AlertaDeNominasFoliadasPagomatico>();
+            resultadoAlertas.Add(FoliarNegocios.EstaFoliadaNominaSeleccionadaPagoMatico(IdNom, anioInterface));
 
            // return Json(resultadoAlertas, JsonRequestBehavior.AllowGet);
             if (resultadoAlertas.Count() > 0)
@@ -544,7 +640,8 @@ namespace DAP.Plantilla.Controllers
         /****** pinta una tabla con el detalle de todas las nominas para saber si estan foliadas y sus detalles ******/
         public ActionResult EstanFoliadasTodasNominaPagomatico(string NumeroQuincena)
         {
-            List<AlertaDeNominasFoliadasPagomatico> detallesTodasNominas = FoliarNegocios.VerificarTodasNominaPagoMatico(NumeroQuincena).Where(x => x.IdEstaFoliada != 2 ).ToList();
+           // List<AlertaDeNominasFoliadasPagomatico> detallesTodasNominas = FoliarNegocios.VerificarTodasNominaPagoMatico(NumeroQuincena).Where(x => x.IdEstaFoliada != 2 ).ToList();
+            List<AlertaDeNominasFoliadasPagomatico> detallesTodasNominas = FoliarNegocios.VerificarTodasNominaPagoMatico(NumeroQuincena).ToList().OrderBy( x=> x.NumeroNomina).ThenBy( x => x.Id_Nom).ToList();
 
 
             if (detallesTodasNominas.Count() > 0)
@@ -570,18 +667,27 @@ namespace DAP.Plantilla.Controllers
 
         }
 
+        public ActionResult VerificarNominasQuincaDisponiblesFoliarPagomaticos(string NumeroQuincena) 
+        {
+            List<AlertaDeNominasFoliadasPagomatico> nominasConPagomaticoParaFoliar = FoliarNegocios.VerificarTodasNominaPagoMatico(NumeroQuincena).Where(x => x.IdEstaFoliada < 2).ToList();
+            return Json(nominasConPagomaticoParaFoliar, JsonRequestBehavior.AllowGet);
+        }
+
 
 
         //*****************************************************************************************************************************************************************************************************************//
+        //*****************************************************************************************************************************************************************************************************************//
         //************************************          GENERA REPORTE EN PDF DONDE SE VISUALIZA EL CADA EMPLEADO COMO SE ENCUENTRA EN SQL PARA VERIFICAR SI ESTA BIEN FOLIADO O NO    ************************************//
+        //*****************************************************************************************************************************************************************************************************************//
         //*****************************************************************************************************************************************************************************************************************//
         public ActionResult RevisarReportePDFPagomaticoPorIdNomina(int IdNomina, string Quincena)
         {
             string archivoBase64 = "no entre";
 
-            int anio = ObtenerAnioDeQuincena(Quincena);
+            int anio = FoliarNegocios.ObtenerAnioDeQuincena(Quincena);
 
-            var datosCompletosNomina = FoliarNegocios.ObtenerDatosCompletosBitacoraPorIdNom_paraControlador(IdNomina, anio);
+            string visitaAnioInterface = FoliarNegocios.ObtenerCadenaAnioInterface(anio);
+            var datosCompletosNomina = FoliarNegocios.ObtenerDatosCompletosBitacoraFILTRO(IdNomina, visitaAnioInterface);
 
             var resumenRevicionNominaReportePDF = FoliarNegocios.ObtenerDatosPersonalesNominaReportePagomatico(datosCompletosNomina.An, anio, datosCompletosNomina.Nomina);
 
@@ -589,14 +695,14 @@ namespace DAP.Plantilla.Controllers
 
             DAP.Plantilla.Reportes.Datasets.RevicionDeFoliacionPorNomina dtsRevicionFolios = new DAP.Plantilla.Reportes.Datasets.RevicionDeFoliacionPorNomina();
 
-            dtsRevicionFolios.Ruta.AddRutaRow(datosCompletosNomina.Ruta + datosCompletosNomina.RutaNomina, " ");
+            dtsRevicionFolios.Ruta.AddRutaRow(datosCompletosNomina.Ruta + datosCompletosNomina.RutaNomina, datosCompletosNomina.Coment);
             // dtsRevicionFolios.Ruta.AddRutaRow(FoliarNegocios.ObtenerRutaCOmpletaArchivoIdNomina(IdNomina), " " );
 
 
             foreach (var resultado in resumenRevicionNominaReportePDF)
             {
                 //dtsRevicionFolios.DatosRevicion.AddDatosRevicionRow(Convert.ToString(resultado.Id), resultado.Partida, resultado.Nombre, resultado.Deleg, resultado.Num_Che, resultado.Liquido, resultado.CuentaBancaria, resultado.Num, resultado.Nom);
-                dtsRevicionFolios.DatosRevicion.AddDatosRevicionRow(resultado.Contador, resultado.Partida, resultado.NombreEmpleado, resultado.Delegacion, resultado.NUM_CHE, resultado.Liquido, resultado.Cuenta, resultado.CadenaNumEmpleado, resultado.Nomina);
+                dtsRevicionFolios.DatosRevicion.AddDatosRevicionRow(resultado.Contador, resultado.Partida, resultado.NombreEmpleado, resultado.Delegacion, resultado.NUM_CHE, resultado.Liquido, resultado.Cuenta, resultado.CadenaNumEmpleado, resultado.Nomina , resultado.Suspencion);
             }
 
             string pathPdf = "C:\\Reporte\\FoliacionRevicionPDF";

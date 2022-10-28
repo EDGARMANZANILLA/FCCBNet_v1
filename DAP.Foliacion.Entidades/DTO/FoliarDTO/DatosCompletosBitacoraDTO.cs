@@ -20,8 +20,12 @@ namespace DAP.Foliacion.Entidades.DTO.FoliarDTO
         public string Coment { get; set; }
         public string Ruta { get; set; }
         public string RutaNomina { get; set; }
+        public string Subnomina { get; set; }
+        public bool Importado { get; set; }
+        public string  Ap{ get; set; }
+        public string  Ad{ get; set; }
 
 
-        
-   }
+
+    }
 }

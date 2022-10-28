@@ -133,14 +133,7 @@ async function suspender(IdRegistro)
 
         MensajeCargando();
 
-      //  TraervistaParcialSuspencion(buscardetalleIdRegistro);
-        //$.post("Reposicion_Suspencion/BuscarDetalleSuspencion", { IdRegistroAbuscar: `${idFormaPagoDetalleSuspeder.IdRegistro}` }, function (response) {
-        //    $('#RenderPartialViewDetalleRegistroSuspencion').html('');
-        //    $('#RenderPartialViewDetalleRegistroSuspencion').html(response);
-
-
-
-        //});
+     
 
     const response = await axios.post("Reposicion_Suspencion/BuscarDetalleSuspencion", { IdRegistroAbuscar: `${IdRegistro}` })
 
@@ -239,32 +232,58 @@ function SuspenderPagoTrabajador(idRegistro) {
 
 
             MensajeCargando();
-            $.ajax({
-                url: 'Reposicion_Suspencion/SuspenderIdFormaPago',
-                data: EnviarSupensionRegistro,
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                success: function (response) {
-
-                   // console.log(response)
-
-                    if (response.respuestaServidor == 200) {
-                        //entra si todo fue bien en el servidor 
-                        MensajeCorrectoConRecargaPagina(response.solucion)
 
 
-                    } else  {
+            axios.post('/Reposicion_Suspencion/SuspenderIdFormaPago', {
+                IdRegistroPago: idRegistro
 
-                        MensajeErrorSweet(response.solucion, '');
-                    }
+            }).then(function (response) {
 
-                    OcultarMensajeCargando();
+                if (response.data.respuestaServidor == 200) {
+                    //entra si todo fue bien en el servidor 
+                    MensajeCorrectoConRecargaPagina(response.data.solucion)
 
-                }, error: function (jqXHR, textStatus) {
-                    MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
-                    OcultarMensajeCargando();
+
+                } else {
+
+                    MensajeErrorSweet(response.data.solucion, '');
                 }
+
+                OcultarMensajeCargando();
+            }).catch(function (error) {
+                MensajeErrorSweet("Ocurrio un error intente de nuevo : " + error)
+                OcultarMensajeCargando();
+                //console.log(error);
             });
+
+
+
+            //$.ajax({
+            //    url: 'Reposicion_Suspencion/SuspenderIdFormaPago',
+            //    data: EnviarSupensionRegistro,
+            //    type: "POST",
+            //    contentType: "application/json; charset=utf-8",
+            //    success: function (response) {
+
+            //       // console.log(response)
+
+            //        if (response.respuestaServidor == 200) {
+            //            //entra si todo fue bien en el servidor 
+            //            MensajeCorrectoConRecargaPagina(response.solucion)
+
+
+            //        } else  {
+
+            //            MensajeErrorSweet(response.solucion, '');
+            //        }
+
+            //        OcultarMensajeCargando();
+
+            //    }, error: function (jqXHR, textStatus) {
+            //        MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
+            //        OcultarMensajeCargando();
+            //    }
+            //});
 
 
 
@@ -429,35 +448,64 @@ function ReponerNuevoFolio(idRegistro) {
 
 
                 MensajeCargando();
-                $.ajax({
-                    url: 'Reposicion_Suspencion/ReponerIdFormaPago',
-                    data: EnviarNuevoFolio,
-                    type: "POST",
-                    contentType: "application/json; charset=utf-8",
-                    success: function (response) {
-
-                        if (response.respuestaServidor == 200) {
-                            //entra si todo fue bien en el servidor 
-                            MensajeCorrectoConRecargaPagina(response.solucion)
-                        }
-                        else {
-
-                            MensajeErrorSweet( response.solucion, '');
-                        }
 
 
-                        OcultarMensajeCargando();
 
-                    }, error: function (jqXHR, textStatus) {
-                        MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
-                        OcultarMensajeCargando();
+                axios.post('/Reposicion_Suspencion/ReponerIdFormaPago', {
+                    IdRegistroPago: idRegistro,
+                    ReponerNuevoFolio: reponerNuevoFolio
+
+                }).then(function (response) {
+
+
+
+                    if (response.data.respuestaServidor == 200) {
+                        //entra si todo fue bien en el servidor 
+                        MensajeCorrectoConRecargaPagina(response.data.solucion)
+
+
+                    } else {
+
+                        MensajeErrorSweet(response.data.solucion, '');
                     }
+
+                    OcultarMensajeCargando();
+                }).catch(function (error) {
+                    MensajeErrorSweet("Ocurrio un error intente de nuevo : " + error)
+                    OcultarMensajeCargando();
+                    //console.log(error);
                 });
+
+
+                //$.ajax({
+                //    url: 'Reposicion_Suspencion/ReponerIdFormaPago',
+                //    data: EnviarNuevoFolio,
+                //    type: "POST",
+                //    contentType: "application/json; charset=utf-8",
+                //    success: function (response) {
+
+                //        if (response.respuestaServidor == 200) {
+                //            //entra si todo fue bien en el servidor 
+                //            MensajeCorrectoConRecargaPagina(response.solucion)
+                //        }
+                //        else {
+
+                //            MensajeErrorSweet( response.solucion, '');
+                //        }
+
+
+                //        OcultarMensajeCargando();
+
+                //    }, error: function (jqXHR, textStatus) {
+                //        MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
+                //        OcultarMensajeCargando();
+                //    }
+                //});
 
 
 
             }
-        })
+        });
 
 
 
@@ -478,43 +526,78 @@ function HistoricoSeguimiento(idRegistro) {
     let HistoricoAlocalizar = "{'IdRegistro':'"+idRegistro+"'}";
 
 
-    $.ajax({
-        url: 'Reposicion_Suspencion/BuscarHistorico',
-        data: HistoricoAlocalizar ,
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        success: function (response) {
+
+    axios.post('/Reposicion_Suspencion/BuscarHistorico', {
+        IdRegistro:idRegistro
+
+    }).then(function (response) {
+
+        if (response.data.RespuestaServidor == 200) {
+
+            //  console.log(response.Data);
 
 
+            $('#TablaHistoricoReposiciones').empty();
+            DibujarHistoricoFormaPago();
+            PintarHistoricoFormaPago(response.data.Data);
 
-            if (response.RespuestaServidor == 200) {
+            $('#btnHistoricoSeguimiento').modal('show');
 
-              //  console.log(response.Data);
-
-
-                $('#TablaHistoricoReposiciones').empty();
-                DibujarHistoricoFormaPago();
-                PintarHistoricoFormaPago(response.Data);
-
-                $('#btnHistoricoSeguimiento').modal('show');
-
-                //$('#TablaRegistroLocalizadoFormaPago').empty();
-                //DibujarLocalizadorFormaPago();
-                //PintarLocalizadorFormaPago(response.FormaPagoLocalizada)
+            //$('#TablaRegistroLocalizadoFormaPago').empty();
+            //DibujarLocalizadorFormaPago();
+            //PintarLocalizadorFormaPago(response.FormaPagoLocalizada)
 
 
-            } else
-            {
-                MensajeErrorSweet(response.Error, response.Solucion);
-            }
-
-            OcultarMensajeCargando();
-
-        }, error: function (jqXHR, textStatus) {
-            MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
-            OcultarMensajeCargando();
+        } else {
+            MensajeErrorSweet(response.data.Error, response.data.Solucion);
         }
+
+        OcultarMensajeCargando();
+    }).catch(function (error) {
+        MensajeErrorSweet("Ocurrio un error intente de nuevo : " + error)
+        OcultarMensajeCargando();
+        //console.log(error);
     });
+
+
+
+    //$.ajax({
+    //    url: 'Reposicion_Suspencion/BuscarHistorico',
+    //    data: HistoricoAlocalizar ,
+    //    type: "POST",
+    //    contentType: "application/json; charset=utf-8",
+    //    success: function (response) {
+
+
+
+    //        if (response.RespuestaServidor == 200) {
+
+    //          //  console.log(response.Data);
+
+
+    //            $('#TablaHistoricoReposiciones').empty();
+    //            DibujarHistoricoFormaPago();
+    //            PintarHistoricoFormaPago(response.Data);
+
+    //            $('#btnHistoricoSeguimiento').modal('show');
+
+    //            //$('#TablaRegistroLocalizadoFormaPago').empty();
+    //            //DibujarLocalizadorFormaPago();
+    //            //PintarLocalizadorFormaPago(response.FormaPagoLocalizada)
+
+
+    //        } else
+    //        {
+    //            MensajeErrorSweet(response.Error, response.Solucion);
+    //        }
+
+    //        OcultarMensajeCargando();
+
+    //    }, error: function (jqXHR, textStatus) {
+    //        MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
+    //        OcultarMensajeCargando();
+    //    }
+    //});
 
 
 
@@ -550,41 +633,81 @@ function LocalizarDatoPorFiltro()
             //console.log(ElementoABuscar);
 
             MensajeCargando();
-            $.ajax({
-                url: 'Reposicion_Suspencion/Localizar',
-                data: ElementoABuscar,
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                success: function (response) {
-
-                    if (response.RespuestaServidor == 200) {
-
-                        //   console.log(response.FormaPagoLocalizada);
-
-                        //$('#TablaEsFoliada').empty();
-                        //DibujarTablaEsFoliada();
-                        //PintarLocalizadorFormaPago(response.FormaPagoLocalizada);
-                        $('#TablaRegistroLocalizadoFormaPago').empty();
-                        DibujarLocalizadorFormaPago();
-                        PintarLocalizadorFormaPago(response.FormaPagoLocalizada)
 
 
-                    } else if (response.RespuestaServidor == 201) {
 
-                        MensajeErrorSweet(response.Error, response.Solucion);
-                    }
-                    else if (response.RespuestaServidor == 500) {
+            axios.post('/Reposicion_Suspencion/Localizar', {
+                IdFiltro: parseInt(tipoFiltro),
+                LocalizarEsteElemento: parseInt(buscarDato)
 
-                        MensajeErrorSweet(response.Error, response.Solucion);
-                    }
+            }).then(function (response) {
 
-                    OcultarMensajeCargando();
+                if (response.data.RespuestaServidor == 200) {
 
-                }, error: function (jqXHR, textStatus) {
-                    MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
-                    OcultarMensajeCargando();
+                    //   console.log(response.FormaPagoLocalizada);
+
+                    //$('#TablaEsFoliada').empty();
+                    //DibujarTablaEsFoliada();
+                    //PintarLocalizadorFormaPago(response.FormaPagoLocalizada);
+                    $('#TablaRegistroLocalizadoFormaPago').empty();
+                    DibujarLocalizadorFormaPago();
+                    PintarLocalizadorFormaPago(response.data.FormaPagoLocalizada)
+
+
+                } else if (response.data.RespuestaServidor == 201) {
+
+                    MensajeErrorSweet(response.data.Error, response.data.Solucion);
                 }
+                else if (response.data.RespuestaServidor == 500) {
+
+                    MensajeErrorSweet(response.data.Error, response.data.Solucion);
+                }
+
+
+
+                OcultarMensajeCargando();
+            }).catch(function (error) {
+                MensajeErrorSweet("Ocurrio un error intente de nuevo : " + error)
+                OcultarMensajeCargando();
+                //console.log(error);
             });
+
+
+            //$.ajax({
+            //    url: 'Reposicion_Suspencion/Localizar',
+            //    data: ElementoABuscar,
+            //    type: "POST",
+            //    contentType: "application/json; charset=utf-8",
+            //    success: function (response) {
+
+            //        if (response.RespuestaServidor == 200) {
+
+            //            //   console.log(response.FormaPagoLocalizada);
+
+            //            //$('#TablaEsFoliada').empty();
+            //            //DibujarTablaEsFoliada();
+            //            //PintarLocalizadorFormaPago(response.FormaPagoLocalizada);
+            //            $('#TablaRegistroLocalizadoFormaPago').empty();
+            //            DibujarLocalizadorFormaPago();
+            //            PintarLocalizadorFormaPago(response.FormaPagoLocalizada)
+
+
+            //        } else if (response.RespuestaServidor == 201) {
+
+            //            MensajeErrorSweet(response.Error, response.Solucion);
+            //        }
+            //        else if (response.RespuestaServidor == 500) {
+
+            //            MensajeErrorSweet(response.Error, response.Solucion);
+            //        }
+
+            //        OcultarMensajeCargando();
+
+            //    }, error: function (jqXHR, textStatus) {
+            //        MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
+            //        OcultarMensajeCargando();
+            //    }
+            //});
 
 
         } else {
@@ -632,34 +755,58 @@ $(document).ready(function () {
 
         MensajeCargando();
 
-      //  TraervistaParcialSuspencion(buscardetalleIdRegistro);
-        //$.post("Reposicion_Suspencion/BuscarDetalleSuspencion", { IdRegistroAbuscar: `${idFormaPagoDetalleSuspeder.IdRegistro}` }, function (response) {
-        //    $('#RenderPartialViewDetalleRegistroSuspencion').html('');
-        //    $('#RenderPartialViewDetalleRegistroSuspencion').html(response);
-        //});
+   
 
-        $.ajax({
-              url: 'Reposicion_Suspencion/BuscarDetalleSuspencion',
-            data: buscardetalleIdRegistro,
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            success: function (response) {
 
-                if (response.RespuestaServidor === 500) {
+        axios.post('/Reposicion_Suspencion/BuscarDetalleSuspencion', {
+            IdRegistroAbuscar:idFormaPagoDetalleSuspeder.IdRegistro
 
-                    MensajeErrorSweet(response.MensajeError);
-                    $('#RenderPartialViewDetalleRegistroSuspencion').html('');
+        }).then(function (response) {
 
-                } else {
-                    $('#RenderPartialViewDetalleRegistroSuspencion').html('');
-                    $('#RenderPartialViewDetalleRegistroSuspencion').html(response);
-                    $('#RenderVista_SuspensionCancelacion').modal('show');
 
-                }
-              
+            if (response.data.RespuestaServidor === 500) {
+
+                MensajeErrorSweet(response.data.MensajeError);
+                $('#RenderPartialViewDetalleRegistroSuspencion').html('');
+
+            } else {
+                $('#RenderPartialViewDetalleRegistroSuspencion').html('');
+                $('#RenderPartialViewDetalleRegistroSuspencion').html(response.data);
+                $('#RenderVista_SuspensionCancelacion').modal('show');
+
             }
+
+            OcultarMensajeCargando();
+        }).catch(function (error) {
+            MensajeErrorSweet("Ocurrio un error intente de nuevo : " + error)
+            OcultarMensajeCargando();
+            //console.log(error);
         });
-        OcultarMensajeCargando();
+
+
+
+        //$.ajax({
+        //      url: 'Reposicion_Suspencion/BuscarDetalleSuspencion',
+        //    data: buscardetalleIdRegistro,
+        //    type: "POST",
+        //    contentType: "application/json; charset=utf-8",
+        //    success: function (response) {
+
+        //        if (response.RespuestaServidor === 500) {
+
+        //            MensajeErrorSweet(response.MensajeError);
+        //            $('#RenderPartialViewDetalleRegistroSuspencion').html('');
+
+        //        } else {
+        //            $('#RenderPartialViewDetalleRegistroSuspencion').html('');
+        //            $('#RenderPartialViewDetalleRegistroSuspencion').html(response);
+        //            $('#RenderVista_SuspensionCancelacion').modal('show');
+
+        //        }
+              
+        //    }
+        //});
+        //OcultarMensajeCargando();
 
     });
 
@@ -675,39 +822,67 @@ $(document).ready(function () {
 
         //console.log("ver detalle de suspencion: "+idFormaPagoDetalleCancelar.IdRegistro);
 
-        let buscardetalleIdRegistro = "{'IdRegistroAbuscar':'"+idFormaPagoDetalleCancelar.IdRegistro+"'}";
+      //  let buscardetalleIdRegistro = "{'IdRegistroAbuscar':'"+idFormaPagoDetalleCancelar.IdRegistro+"'}";
 
         //console.log(buscardetalleIdRegistro);
 
-
         MensajeCargando();
-        $.ajax({
-            url: 'Reposicion_Suspencion/BuscarDetalleReponer',
-            data: buscardetalleIdRegistro,
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            success: function (response) {
 
-              
-                if (response.RespuestaServidor === 500) {
+        axios.post('/Reposicion_Suspencion/BuscarDetalleReponer', {
+            IdRegistroAbuscar: idFormaPagoDetalleCancelar.IdRegistro 
 
-                    MensajeErrorSweet(response.MensajeError);
-                    $('#RenderPartialViewDetalleRegistroSuspencion').html('');
+        }).then(function (response) {
 
 
-                    document.getElementById("InputNuevaFormaDePago").focus();
+            if (response.data.RespuestaServidor === 500) {
 
+                MensajeErrorSweet(response.data.MensajeError);
+                $('#RenderPartialViewDetalleRegistroSuspencion').html('');
 
-                } else {
-                    $('#RenderPartialViewDetalleRegistroSuspencion').html('');
-                    $('#RenderPartialViewDetalleRegistroSuspencion').html(response);
-                    $('#RenderVista_SuspensionCancelacion').modal('show');
-
-                }
+            } else {
+                $('#RenderPartialViewDetalleRegistroSuspencion').html('');
+                $('#RenderPartialViewDetalleRegistroSuspencion').html(response.data);
+                $('#RenderVista_SuspensionCancelacion').modal('show');
 
             }
+
+            OcultarMensajeCargando();
+        }).catch(function (error) {
+            MensajeErrorSweet("Ocurrio un error intente de nuevo : " + error)
+            OcultarMensajeCargando();
+            //console.log(error);
         });
-        OcultarMensajeCargando();
+
+
+
+        //MensajeCargando();
+        //$.ajax({
+        //    url: 'Reposicion_Suspencion/BuscarDetalleReponer',
+        //    data: buscardetalleIdRegistro,
+        //    type: "POST",
+        //    contentType: "application/json; charset=utf-8",
+        //    success: function (response) {
+
+              
+        //        if (response.RespuestaServidor === 500) {
+
+        //            MensajeErrorSweet(response.MensajeError);
+        //            $('#RenderPartialViewDetalleRegistroSuspencion').html('');
+
+
+        //            document.getElementById("InputNuevaFormaDePago").focus();
+
+
+        //        } else {
+        //            $('#RenderPartialViewDetalleRegistroSuspencion').html('');
+        //            $('#RenderPartialViewDetalleRegistroSuspencion').html(response);
+        //            $('#RenderVista_SuspensionCancelacion').modal('show');
+
+        //        }
+
+        //    }
+        //});
+        //OcultarMensajeCargando();
 
 
     });

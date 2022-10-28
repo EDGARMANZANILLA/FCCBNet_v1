@@ -407,6 +407,8 @@ function MensajeConFuncionAdjuntaDeConfirmar( PreguntaSeguridad , Texto )
     })
 
     //Se usa en Solicitar.js Metodo => CrearSolicitudFormasPago()
+    //Se usa en FoliarXPagomatico.js Metodo => FolearQuincenaPagomatico()
+    //Se usa en FoliarXPagomatico.js Metodo => RefoliarPagomatico()
 }
 
 

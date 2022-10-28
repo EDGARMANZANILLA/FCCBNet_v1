@@ -344,6 +344,7 @@ namespace DAP.Foliacion.Negocios.FoliarDBF
             /**   6 == LIMPIEZA DE CAMPOS DBF CONDICIONADOS CUANDO LA FOLIACION DEL PUNTO 1 NO CUMPLE CON EL ESTANDART PARA AMBAS FORMAS DE PAGO**/
             /**   7 == **/
             /**   8 == **/
+            /**   200 == TODO SALIO CORRECTO Y SIN NINGUN ERROE EN LA BASE **/
             /***********************************************************************/
             AlertasAlFolearPagomaticosDTO adver = new AlertasAlFolearPagomaticosDTO();
 

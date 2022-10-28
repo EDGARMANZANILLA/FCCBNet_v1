@@ -183,11 +183,11 @@ namespace DAP.Foliacion.Negocios.ObtenerConsultasChequesFoliarNegocios
             string universoDatos;
             if (Sindicato)
             {
-                universoDatos = "select Substring(PARTIDA,2,5), NUM, NOMBRE, DELEG, NUM_CHE, LIQUIDO, BANCO_X, CUENTA_X  from interfaces" + Anio + ".dbo." + An + "  where  "+condicionBancos+" and  sindicato = 1 and  deleg in " + DelegacionesIncluidas + " order by  IIF(isnull(NOM_ESP, 0) = 1, '1', '2'), DELEG, SUBSTRING(PARTIDA, 2, 8), NOMBRE collate SQL_Latin1_General_CP1_CI_AS ";
+                universoDatos = "select Substring(PARTIDA,2,5), NUM, NOMBRE, DELEG, NUM_CHE, LIQUIDO, BANCO_X, CUENTA_X , OBSERVA from interfaces" + Anio + ".dbo." + An + "  where  "+condicionBancos+" and  sindicato = 1 and  deleg in " + DelegacionesIncluidas + " order by  IIF(isnull(NOM_ESP, 0) = 1, '1', '2'), DELEG, SUBSTRING(PARTIDA, 2, 8), NOMBRE collate SQL_Latin1_General_CP1_CI_AS ";
             }
             else
             {
-                universoDatos = "select Substring(PARTIDA,2,5), NUM, NOMBRE, DELEG, NUM_CHE, LIQUIDO, BANCO_X, CUENTA_X  from interfaces" + Anio + ".dbo." + An + "  where  "+condicionBancos+" and  sindicato = 0 and  deleg in  " + DelegacionesIncluidas + " order by  IIF(isnull(NOM_ESP, 0) = 1, '1', '2'), DELEG, SUBSTRING(PARTIDA, 2, 8), NOMBRE collate SQL_Latin1_General_CP1_CI_AS ";
+                universoDatos = "select Substring(PARTIDA,2,5), NUM, NOMBRE, DELEG, NUM_CHE, LIQUIDO, BANCO_X, CUENTA_X , OBSERVA  from interfaces" + Anio + ".dbo." + An + "  where  "+condicionBancos+" and  sindicato = 0 and  deleg in  " + DelegacionesIncluidas + " order by  IIF(isnull(NOM_ESP, 0) = 1, '1', '2'), DELEG, SUBSTRING(PARTIDA, 2, 8), NOMBRE collate SQL_Latin1_General_CP1_CI_AS ";
             }
 
             return universoDatos;
@@ -207,11 +207,11 @@ namespace DAP.Foliacion.Negocios.ObtenerConsultasChequesFoliarNegocios
             string universoDatos;
             if (EsPena)
             {
-                universoDatos = "select Substring(PARTIDA,2,5) , NUM, NOMBRE, DELEG, NUM_CHE, LIQUIDO, BANCO_X, CUENTA_X    from interfaces"+Anio+".dbo."+An+"  where "+condicionBancos+"  and deleg in " + DelegacionesIncluidas + " order by JUZGADO, NOMBRE ";
+                universoDatos = "select Substring(PARTIDA,2,5) , NUM, NOMBRE, DELEG, NUM_CHE, LIQUIDO, BANCO_X, CUENTA_X , OBSERVA    from interfaces" + Anio+".dbo."+An+"  where "+condicionBancos+"  and deleg in " + DelegacionesIncluidas + " order by JUZGADO, NOMBRE ";
             }
             else
             {
-                universoDatos = "select Substring(PARTIDA,2,5) , NUM, NOMBRE, DELEG, NUM_CHE, LIQUIDO, BANCO_X, CUENTA_X    from interfaces"+Anio+".dbo."+An+"  where "+condicionBancos+"  and deleg in " + DelegacionesIncluidas + " order by  IIF(isnull(NOM_ESP, 0) = 1, '1', '2'), DELEG, SUBSTRING(PARTIDA, 2, 8), NOMBRE collate SQL_Latin1_General_CP1_CI_AS ";
+                universoDatos = "select Substring(PARTIDA,2,5) , NUM, NOMBRE, DELEG, NUM_CHE, LIQUIDO, BANCO_X, CUENTA_X , OBSERVA   from interfaces" + Anio+".dbo."+An+"  where "+condicionBancos+"  and deleg in " + DelegacionesIncluidas + " order by  IIF(isnull(NOM_ESP, 0) = 1, '1', '2'), DELEG, SUBSTRING(PARTIDA, 2, 8), NOMBRE collate SQL_Latin1_General_CP1_CI_AS ";
             }
 
 

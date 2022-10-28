@@ -20,5 +20,6 @@ namespace DAP.Foliacion.Entidades.DTO.FoliarDTO
 
         // Bancox - [cuenta_x]
         public string Cuenta { get; set; }
+        public string Suspencion { get; set; }
     }
 }

@@ -142,63 +142,94 @@
 
                 <li class="false ">
 
-
-                <li>
-                    <a href="#pageSubmenu2" title="Pages2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                        <em class="fa fa-money-check-alt"></em>
-                        FOLIACIÓN
-                    </a>
-                    <ul class="collapse list-unstyled" id="pageSubmenu2">
-                        <li>
-                            <a href="@Url.Action("Index", "Inventario")">Inventario</a>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("Index","Foliar")">Foliar Forma de Pago</a>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("RecuperarFolios","Foliar")">Recuperar Folios Foliados</a>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("Index","Reposicion_Suspencion")">Suspender y/o Reponer Forma de Pago </a>
-                        </li>
-                    </ul>
-                </li>
-
-
-                <li>
-                    <a href="#pageSubmenu" title="Pages" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                        <em class="fas fa-search-dollar"></em>
-                        CANCELAR
-                    </a>
-                    <ul class="collapse list-unstyled" id="pageSubmenu">
-                        <li>
-                            <a href="@Url.Action("Index","EncontrarCheque")">Encontrar Cheque</a>
-
-                        </li>
-                        <li>
-                            <a href="@Url.Action("Index","CrearReferencia_Cancelados")">Crea, Elimina o Finaliza Referencias</a>
-                        </li>
-
-                    </ul>
-                </li>
-
-
-                @*<li>
-                        <a href="#pageConfiguracion" title="Pages" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                            <em class="fas fa-tools"></em>
-                            CONFIGURACION
-
+                    @*@{
+                        string controllador = "Index";
+                        string action = "Foliar";
+                    <li>
+                        <a href="#pageSubmenuPRUEBA" title="Pages2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                            <em class="fa fa-money-check-alt"></em>
+                            FOLIACIÓN
                         </a>
-                        <ul class="collapse list-unstyled" id="pageConfiguracion">
+                        <ul class="collapse list-unstyled" id="pageSubmenuPRUEBA">
                             <li>
-                                <a href="@Url.Action("Index","Configuraciones_InventarioYCuentas")">INVENTARIO</a>
+                                <a href="@Url.Action(controllador, action )">Inventario</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action(controllador, action )">Foliar Forma de Pago</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action(controllador, action )">Recuperar Folios Foliados</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action(controllador, action )">Suspender y/o Reponer Forma de Pago </a>
+                            </li>
+                        </ul>
+                    </li>
+                    }*@
+
+
+
+                    <li>
+                        <a href="#pageSubmenu2" title="Pages2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                            <em class="fa fa-money-check-alt"></em>
+                            FOLIACIÓN
+                        </a>
+                        <ul class="collapse list-unstyled" id="pageSubmenu2">
+                            <li>
+                                <a href="@Url.Action("Index", "Inventario")">Inventario</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index","Foliar")">Foliar Forma de Pago</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("RecuperarFolios","Foliar")">Recuperar Folios Foliados</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index","Reposicion_Suspencion")">Suspender y/o Reponer Forma de Pago </a>
+                            </li>
+                        </ul>
+                    </li>
+
+
+                    <li>
+                        <a href="#pageSubmenu" title="Pages" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                            <em class="fas fa-search-dollar"></em>
+                            CANCELAR
+                        </a>
+                        <ul class="collapse list-unstyled" id="pageSubmenu">
+                            <li>
+                                <a href="@Url.Action("Index","EncontrarCheque")">Encontrar Cheque</a>
+
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index","CrearReferencia_Cancelados")">Crea, Elimina o Finaliza Referencias</a>
                             </li>
 
-
                         </ul>
-                    </li>*@
+                    </li>
 
-            </ul>
+                    <li>
+                        <a href="@Url.Action("CerrarSesion","Validador")">
+                            <button class="btn btn-danger" style="margin-top: 55px; margin-left: 45px; "> Cerrar Sesion</button>
+                        </a>
+                    </li>
+
+                    @*<li>
+                <a href="#pageConfiguracion" title="Pages" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                    <em class="fas fa-tools"></em>
+                    CONFIGURACION
+
+                </a>
+                <ul class="collapse list-unstyled" id="pageConfiguracion">
+                    <li>
+                        <a href="@Url.Action("Index","Configuraciones_InventarioYCuentas")">INVENTARIO</a>
+                    </li>
+
+
+                </ul>
+            </li>*@
+
+                </ul>
             <!-- Fin del area de menus y sub menus-->
 
         </nav>
