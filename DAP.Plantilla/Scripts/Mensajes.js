@@ -409,6 +409,14 @@ function MensajeConFuncionAdjuntaDeConfirmar( PreguntaSeguridad , Texto )
     //Se usa en Solicitar.js Metodo => CrearSolicitudFormasPago()
     //Se usa en FoliarXPagomatico.js Metodo => FolearQuincenaPagomatico()
     //Se usa en FoliarXPagomatico.js Metodo => RefoliarPagomatico()
+    //Se usa en asignar.js Metodo => ValidarRangoFoliosAsignaciones()
+    //Se usa en asignar.js Metodo => ValidarContenedorAsignacion()
+    //Se usa en Inhabilitar.js Metodo => ValidarFolios()
+    //Se usa en Inhabilitar.js Metodo => ValidarContenedor()
+    //Se usa en RecuperarFolios.js Metodo => RecuperarFoliosEncontrados()
+    //Se usa en => Reposicion_Suspencion =>  Index.js Metodo => MarcarRechazoBancario()
+
+
 }
 
 

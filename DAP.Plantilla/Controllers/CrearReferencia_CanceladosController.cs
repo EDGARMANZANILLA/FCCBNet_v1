@@ -12,21 +12,27 @@ using System.Threading.Tasks;
 using CrystalDecisions.CrystalReports.Engine;
 using System.IO.Compression;
 using DAP.Foliacion.Entidades.DTO.CrearReferencia_CanceladosDTO.ReporteCCancelados.IPD;
+using DAP.Plantilla.Models.PermisosModels;
+using DAP.Foliacion.Plantilla.Filters;
 
 namespace DAP.Plantilla.Controllers
 {
     public class CrearReferencia_CanceladosController : Controller
     {
-        // GET: CrearReferencia_Cancelados
+        [SessionSecurityFilter]
         public ActionResult Index()
         {
             //  List<CrearReferenciaDTO> listaEncontrada =  CrearReferencia_CanceladosNegocios.ObtenerReferenciasAnioActual(DateTime.Now.Year);
 
             List<ReferenciaCanceladoModel> listaEncontrada = Mapper.Map<List<CrearReferenciaDTO>, List<ReferenciaCanceladoModel>>(CrearReferencia_CanceladosNegocios.ObtenerReferenciasAnioActual(DateTime.Now.Year));
 
-          
+            ViewBag.ReferenciasCancelaciones = listaEncontrada;
 
-            return View(listaEncontrada);
+
+            // ************************************************************************************************************* //
+            // EL MODELO QUE SE ENVIA ES PARA QUE EL SIDEBAR CONTENGA LOS LINK’S REFERENTE A LOS PERMISOS QUE PUEDE VISITAR //
+            // ************************************************************************************************************ //
+            return View();
         }
 
 
@@ -65,7 +71,6 @@ namespace DAP.Plantilla.Controllers
             //Obtener cuantos cheques hay en la referencia a cancelar
             int totalChequesCargadosReferencia = CrearReferencia_CanceladosNegocios.ObtenerTotalChequesEnReferenciaCancelacion(IdReferenciaCancelacion);
 
-
             int idDevuelto = CrearReferencia_CanceladosNegocios.InactivarReferenciaCancelados(IdReferenciaCancelacion);
 
             if (totalChequesCargadosReferencia == idDevuelto) 
@@ -79,7 +84,6 @@ namespace DAP.Plantilla.Controllers
                 bandera = bandera,
                 respuestaServer = idDevuelto
             });
-
         }
 
 

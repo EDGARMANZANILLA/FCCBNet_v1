@@ -1,4 +1,5 @@
-﻿@model Dictionary<int, string>
+﻿@*@model Dictionary<int, string>*@
+@model DAP.Plantilla.Models.PermisosModels.PermisosUsuarioModel
 
 @{
     ViewBag.Icono = "fas fa-boxes";
@@ -9,9 +10,13 @@
 
 
 <seccion class="card col-12 offset-md-2 col-md-7" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+    <br />
+    <div class="col-5 text-left">
+        <a type="button" class="btn btn-success btn text-center" href="@Url.Action("Index", "Inventario", new  { IdCuentaBancaria = ViewBag.IdBancoSeleccionado })"> <i class="fas fa-arrow-left"></i>  Regresar</a>
+    </div>
+    <br />
 
-
-    <div class="margenSection row" style="margin-bottom: 60px; ">
+    <div class="margenAlPie row">
 
 
         <div class="btn-block">
@@ -54,12 +59,10 @@
                 <div class="form-group">
                     <select class="form-control" id="SeleccionBancoSolicitud" name="SeleccionBanco" required>
                         <option value="" disabled selected>Selecciona un banco...</option>
-                        @foreach (var banco in Model)
+                        @foreach (var banco in ViewBag.BancosConChequera)
                         {
 
-
-                            <option value="@banco.Key" >@banco.Value </option>
-
+                            <option value="@banco.Key">@banco.Value </option>
 
                         }
 
@@ -71,7 +74,7 @@
 
         </div>
 
-   
+
 
         <!--Input para la cantidad de formas que desea solicitar el usuario-->
         <div class="row">
@@ -88,7 +91,7 @@
         </div>
 
         <br />
-        <button type="button" class="col-12 text-center offset-md-3 col-md-6 btn btn-outline-success"  onclick="Anexar_Solicitud()"> Anexar a solicitud </button>
+        <button type="button" class="col-12 text-center offset-md-3 col-md-6 btn btn-outline-success" onclick="Anexar_Solicitud()"> Anexar a solicitud </button>
 
     </form>
 
@@ -135,7 +138,7 @@
 
 <br />
 <br />
-<button type="button" id="CrearSolicitud" class="btn btn-primary col-10 offset-1" style="display:none" onclick="CrearSolicitudFormasPago()" >Crear nueva solicitud</button>
+<button type="button" id="CrearSolicitud" class="btn btn-primary col-10 offset-1" style="display:none" onclick="CrearSolicitudFormasPago()">Crear nueva solicitud</button>
 
 
 
@@ -217,7 +220,7 @@
 <!-- INICIO DE MODALES -->
 <!-- Modal de Edicion -->
 <section class="modal fade" id="EditarSolicitud" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
 
@@ -372,12 +375,12 @@
                                         <th>Banco</th>
                                         <th>Cuenta</th>
                                         <th>Folio Inicial</th>
-                                       
+
 
                                     </tr>
                                 </thead>
 
-                               
+
                             </table>
 
                         </div>

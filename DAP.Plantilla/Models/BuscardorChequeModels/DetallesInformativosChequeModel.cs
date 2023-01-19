@@ -33,6 +33,7 @@ namespace DAP.Plantilla.Models.BuscardorChequeModels
         public string BancoPagador { get; set; }
         public string CuentaPagadora { get; set; }
         public string TipoPago { get; set; }
+        public string EsRechazoBancario { get; set; }
 
 
 

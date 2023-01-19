@@ -1,5 +1,4 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -35,7 +34,7 @@
     <script src="~/Scripts/Mensajes.js"></script>
     <script src="~/Scripts/jquery.noty.packaged.js"></script>
     <script src="~/Scripts/jquery.dynamicTable-1.0.0.js"></script>
-  
+
 
 
 
@@ -119,10 +118,13 @@
 
 
                     <div>
+                        @{
 
-                        <Label ID="lblNombreCorto" style="margin-bottom: 0px;"> Admin Sistema </Label>
+                            DAP.Plantilla.Models.SesionesDatosModels.InformacionEmpleadoSesionModel NuevoEmpleadoCorrectamenteLogueado = (DAP.Plantilla.Models.SesionesDatosModels.InformacionEmpleadoSesionModel)Session["UsuarioAPP"];
+                         }
+                        <Label ID="lblNombreCorto" style="margin-bottom: 0px;">@NuevoEmpleadoCorrectamenteLogueado.NombreEmpleado </Label>
                         <br />
-                        <Label ID="lblPuesto">ROOT.</Label>
+                        <Label ID="lblPuesto">@NuevoEmpleadoCorrectamenteLogueado.Puesto </Label>
                     </div>
 
                 </div>
@@ -142,36 +144,25 @@
 
                 <li class="false ">
 
-                    @*@{
-                        string controllador = "Index";
-                        string action = "Foliar";
-                    <li>
-                        <a href="#pageSubmenuPRUEBA" title="Pages2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                            <em class="fa fa-money-check-alt"></em>
-                            FOLIACIÓN
-                        </a>
-                        <ul class="collapse list-unstyled" id="pageSubmenuPRUEBA">
-                            <li>
-                                <a href="@Url.Action(controllador, action )">Inventario</a>
-                            </li>
-                            <li>
-                                <a href="@Url.Action(controllador, action )">Foliar Forma de Pago</a>
-                            </li>
-                            <li>
-                                <a href="@Url.Action(controllador, action )">Recuperar Folios Foliados</a>
-                            </li>
-                            <li>
-                                <a href="@Url.Action(controllador, action )">Suspender y/o Reponer Forma de Pago </a>
-                            </li>
-                        </ul>
-                    </li>
-                    }*@
+                <li>
+                    <a href="#pageSubmenuInicio" title="Pages2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                        <em class="fa fa-home"></em>  
+                        Inicio
+                    </a>
+                    <ul class="collapse list-unstyled" id="pageSubmenuInicio">
+                        <li>
+                            <a href="@Url.Action("InicioAplicacion", "Validador")">Inicio</a>
+                        </li>
+
+                    </ul>
+                </li>
 
 
-
+                @if (NuevoEmpleadoCorrectamenteLogueado.MoodDesarrollador)
+                {
                     <li>
                         <a href="#pageSubmenu2" title="Pages2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                            <em class="fa fa-money-check-alt"></em>
+                            <em class="fa fa-money-check-alt"></em> 
                             FOLIACIÓN
                         </a>
                         <ul class="collapse list-unstyled" id="pageSubmenu2">
@@ -179,181 +170,293 @@
                                 <a href="@Url.Action("Index", "Inventario")">Inventario</a>
                             </li>
                             <li>
-                                <a href="@Url.Action("Index","Foliar")">Foliar Forma de Pago</a>
+                                <a href="@Url.Action("Index", "Foliar")">Foliar Forma de Pago</a>
                             </li>
                             <li>
-                                <a href="@Url.Action("RecuperarFolios","Foliar")">Recuperar Folios Foliados</a>
+                                <a href="@Url.Action("RecuperarFolios", "Foliar")">Recuperar Folios Foliados</a>
                             </li>
                             <li>
-                                <a href="@Url.Action("Index","Reposicion_Suspencion")">Suspender y/o Reponer Forma de Pago </a>
+                                <a href="@Url.Action("Index", "Reposicion_Suspencion")">Suspender y/o Reponer </a>
                             </li>
                         </ul>
                     </li>
 
 
                     <li>
-                        <a href="#pageSubmenu" title="Pages" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                        <a href="#pageSubmenu3" title="Pages" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
                             <em class="fas fa-search-dollar"></em>
                             CANCELAR
                         </a>
-                        <ul class="collapse list-unstyled" id="pageSubmenu">
+                        <ul class="collapse list-unstyled" id="pageSubmenu3">
                             <li>
-                                <a href="@Url.Action("Index","EncontrarCheque")">Encontrar Cheque</a>
+                                <a href="@Url.Action("Index", "EncontrarCheque")">Encontrar Cheque</a>
 
                             </li>
                             <li>
-                                <a href="@Url.Action("Index","CrearReferencia_Cancelados")">Crea, Elimina o Finaliza Referencias</a>
+                                <a href="@Url.Action("Index", "CrearReferencia_Cancelados")">Crea, Elimina o Finaliza Referencias</a>
                             </li>
 
                         </ul>
                     </li>
 
+
+
+                    <!-- CONFIGURACION -->
                     <li>
-                        <a href="@Url.Action("CerrarSesion","Validador")">
-                            <button class="btn btn-danger" style="margin-top: 55px; margin-left: 45px; "> Cerrar Sesion</button>
+                        <a href="#pageConfiguracion" title="Pages" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                            <em class="fas fa-tools"></em>
+                            CONFIGURACION
+
                         </a>
+                        <ul class="collapse list-unstyled" id="pageConfiguracion">
+                            <li>
+                                <a href="@Url.Action("Index", "Configuraciones_InventarioYCuentas")">INVENTARIO</a>
+                            </li> <li>
+                                <a href="@Url.Action("RegistrarUsuario", "HerramientasConfiguracion")">Registrar Usuario</a>
+                            </li>
+
+
+                        </ul>
                     </li>
-
-                    @*<li>
-                <a href="#pageConfiguracion" title="Pages" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                    <em class="fas fa-tools"></em>
-                    CONFIGURACION
-
-                </a>
-                <ul class="collapse list-unstyled" id="pageConfiguracion">
-                    <li>
-                        <a href="@Url.Action("Index","Configuraciones_InventarioYCuentas")">INVENTARIO</a>
-                    </li>
+                }
+                else
+                {
 
 
-                </ul>
-            </li>*@
+                    if (NuevoEmpleadoCorrectamenteLogueado.Foliacion != null)
+                    {
+                        if (NuevoEmpleadoCorrectamenteLogueado.Foliacion.Count > 0)
+                        {
+                            <li>
+                                <a href="#pageSubmenuFoliacion" title="Control para la foliacion tanto de cheques como dispercion" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                                    <em class="fa fa-money-check-alt"></em>
+                                    Foliacion
+                                </a>
+                                <ul class="collapse list-unstyled" id="pageSubmenuFoliacion">
+                                    @foreach (var item in NuevoEmpleadoCorrectamenteLogueado.Foliacion)
+                                    {
+                                        <li>
+                                            <a title="@item.Descripcion" href="@Url.Action(item.Accion, item.Controlador)">@item.NombreModulo</a>
 
-                </ul>
-            <!-- Fin del area de menus y sub menus-->
+                                        </li>
 
-        </nav>
-        <!-- Fin de SideBart-->
+                                    }
+
+                                </ul>
+                            </li>
+
+                        }
+                    }
 
 
-        <div id="content">
-            <!-- Inicio del Navbar  -->
-            <nav class="navbar navbar-expand-lg ">
-                <div class="container-fluid">
+                    if (NuevoEmpleadoCorrectamenteLogueado.Cancelacion != null)
+                    {
+                        if (NuevoEmpleadoCorrectamenteLogueado.Cancelacion.Count > 0)
+                        {
+                            <li>
+                                <a href="#pageSubmenuCancelacion" title="Cancelacion de cheques" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                                    <em class="fas fa-search-dollar"></em>
+                                    Cancelacion
+                                </a>
+                                <ul class="collapse list-unstyled" id="pageSubmenuCancelacion">
+                                    @foreach (var item in NuevoEmpleadoCorrectamenteLogueado.Cancelacion)
+                                    {
+                                        <li>
+                                            <a title="@item.Descripcion" href="@Url.Action(item.Accion, item.Controlador)">@item.NombreModulo</a>
 
-                    <button type="button" id="sidebarCollapse" class="btn ">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                    <button class="btn d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" title="Ocultar barrra de Menu">
-                        <i class="fas fa-angle-double-down"></i>
-                    </button>
+                                        </li>
 
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="btn navbar-nav ml-auto">
+                                    }
 
-                            <button type="button" id="sidebarCollapse" class="btn d-inline-block  ml-auto" title="Pantalla completa">
+                                </ul>
+                            </li>
+
+                        }
+                    }
+
+
+                    if (NuevoEmpleadoCorrectamenteLogueado.Configuracion != null)
+                    {
+                        if (NuevoEmpleadoCorrectamenteLogueado.Configuracion.Count > 0)
+                        {
+                            <li>
+                                <a href="#pageSubmenuConfiguracion" title="Herramienta para modificar algunas opciones de la aplicacion" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                                    <em class="fas fa-tools"></em>
+                                    Configuracion
+                                </a>
+                                <ul class="collapse list-unstyled" id="pageSubmenuConfiguracion">
+                                    @foreach (var item in NuevoEmpleadoCorrectamenteLogueado.Configuracion)
+                                    {
+                                        <li>
+                                            <a title="@item.Descripcion" href="@Url.Action(item.Accion, item.Controlador)">@item.NombreModulo</a>
+
+                                        </li>
+
+                                    }
+
+                                </ul>
+                            </li>
+
+                        }
+                    }
+                }
+
+
+
+
+
+
+
+                <li>
+                    <a title="Cierra la sesion actual" href="@Url.Action("CerrarSesion","Validador")">
+                        <button class="btn btn-danger" style="margin-top: 55px; margin-left: 45px; "> Cerrar Sesion</button>
+                    </a>
+                </li>
+
+            </ul>
+                <!-- Fin del area de menus y sub menus-->
+
+            </nav>
+            <!-- Fin de SideBart-->
+
+
+            <div id="content">
+                <!-- Inicio del Navbar  -->
+                <nav class="navbar navbar-expand-lg ">
+                    <div class="container-fluid">
+
+                        <button type="button" id="sidebarCollapse" class="btn ">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        <button class="btn d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" title="Ocultar barrra de Menu">
+                            <i class="fas fa-angle-double-down"></i>
+                        </button>
+
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="btn navbar-nav ml-auto">
+
+                                @*<button type="button" id="sidebarCollapse" class="btn d-inline-block  ml-auto" title="Pantalla completa">
 
                                 <i class="fas fa-tools"></i>
-                            </button>
+                                </button>*@
 
 
-                            <button type="button" id="sidebarCollapse" class="btn d-inline-block  ml-auto" title="Cerrar Session">
-                                <i class="fas fa-sign-out-alt"></i>
-                            </button>
+                                </button>
+                                <a title="Cierra la sesion actual"  href="@Url.Action("CerrarSesion","Validador")">
+                                    <button type="button" id="sidebarCollapse" class="btn d-inline-block  ml-auto" title="Cerrar Session">
+                                        <i class="fas fa-sign-out-alt"></i>
+                                    </button>
+                                </a>
 
-
-                        </ul>
+                            </ul>
+                        </div>
                     </div>
+                </nav>
+                <!-- Fin del Navbar  -->
+                <!-- Inicio del Nombre del sistema-->
+                <section>
+                    <div class="row">
+                        <div class="col">
+                            <p class="@ViewBag.Icono" style="margin-left: 30px; font-size: 1.4em;">&nbsp @ViewBag.Title </p>
+                        </div>
+
+                        <div class="col" style="text-align: right;">
+
+                            <p class="fa fa-cube" style="margin-right:30px; font-size: 1.4em; color: #74BC7C;">&nbsp Foliación v01</p>
+
+                        </div>
+                    </div>
+                </section>
+                <!-- Fin del Nombre del sistema-->
+
+
+                <div class="line"></div>
+
+                <div class="container-fluid">
+                    @RenderBody()
                 </div>
-            </nav>
-            <!-- Fin del Navbar  -->
-            <!-- Inicio del Nombre del sistema-->
-            <section>
-                <div class="row">
-                    <div class="col">
-                        <p class="@ViewBag.Icono" style="margin-left: 30px; font-size: 1.4em;">&nbsp @ViewBag.Title </p>
-                    </div>
-
-                    <div class="col" style="text-align: right;">
-
-                        <p class="fa fa-cube" style="margin-right:30px; font-size: 1.4em; color: #74BC7C;">&nbsp Foliación v01</p>
-
-                    </div>
-                </div>
-            </section>
-            <!-- Fin del Nombre del sistema-->
 
 
-            <div class="line"></div>
-
-            <div class="container-fluid">
-                @RenderBody()
+                <br />
+                <br />
+                <br />
             </div>
 
-
-            <br />
-            <br />
-            <br />
         </div>
 
-    </div>
+
+
+        <footer id="pieDePagina" class=" fixed-bottom" style="background: #74BC7C;     height: 70px;  ">
+
+            <section class="row">
 
 
 
-    <footer id="pieDePagina" class=" fixed-bottom" style="background: #74BC7C;     height: 70px;  ">
+                <div class="col-12 text-center">
+                    <img src="~/Imagenes/LOGO SAFIN_ HORIZONTAL.png" style="height: 55px; margin-top:6px;" />
+                </div>
 
-        <section class="row">
-
-
-
-            <div class="col-12 text-center">
-                <img src="~/Imagenes/LOGO SAFIN_ HORIZONTAL.png" style="height: 55px; margin-top:6px;" />
-            </div>
-
-        </section>
+            </section>
 
 
-    </footer>
+        </footer>
 
 
 
-    <script type="text/javascript">
-        $(document).ready(function () {
-            // $('#sidebar').toggleClass('active');
-
-
-            $('#sidebarCollapse').on('click', function () {
+        <script type="text/javascript">
+            $(document).ready(function () {
                 $('#sidebar').toggleClass('active');
-                /* $('footer').css(background: #000000);*/
 
+                $('#sidebarCollapse').on('click', function () {
+                    $('#sidebar').toggleClass('active');
+
+                });
             });
-        });
-
-    </script>
-    <script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/FOLIACION/Inventario/Index.js"></script>
-    <script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/FOLIACION/Inventario/Solicitar.js"></script>
-    @*<script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/Inventario/Agregar.js" > </script>*@
-    <script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/FOLIACION/Inventario/Inhabilitar.js"></script>
-    <script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/FOLIACION/Inventario/Asignar.js"></script>
-    <script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/FOLIACION/Inventario/DetalleBanco.js"></script>
-    @*FOLIACION*@
-    @*<script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/Foliar/Index.js"> </script>*@
-
-    @*
 
 
-        <script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/FOLIACION/Foliar/FoliarXPagomatico.js"> </script>
-        <script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/FOLIACION/Foliar/FoliarXFormasPago.js"> </script>
+            //window.addEventListener('beforeunload', (event) => {
+            //    event.preventDefault();
+
+            //    //console.log("qwertyuio");
+            //    //axios.post('/Validador/CerrarSesion');
+            //    event.returnValue = axios.post('/Validador/CerrarSesion');
+            //});
+
+       
+
+            //window.addEventListener("beforeunload", function (e) {
+            //    return "Write something clever here...";
+            //    //console.log("Cierre de  ventana");
+            //    //axios.post('/Validador/CerrarSesion');
+            //});
 
 
-    *@
+        </script>
+        <script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/FOLIACION/Inventario/Index.js"></script>
+        <script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/FOLIACION/Inventario/Solicitar.js"></script>
+        @*<script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/Inventario/Agregar.js" > </script>*@
+        <script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/FOLIACION/Inventario/Inhabilitar.js"></script>
+        <script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/FOLIACION/Inventario/Asignar.js"></script>
+        <script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/FOLIACION/Inventario/DetalleBanco.js"></script>
+        @*FOLIACION*@
+        @*<script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/Foliar/Index.js"> </script>*@
 
-    <script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/FOLIACION/Foliar/RecuperarFolios.js"></script>
+        @*
 
-    @Scripts.Render("~/bundles/scriptProyecto")
-    @RenderSection("Scripts", required: false)
 
-</body>
+            <script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/FOLIACION/Foliar/FoliarXPagomatico.js"> </script>
+            <script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/FOLIACION/Foliar/FoliarXFormasPago.js"> </script>
+
+
+        *@
+
+        <script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/FOLIACION/Foliar/RecuperarFolios.js"></script>
+        <script src="~/Scripts/SCRIPTS_PROYECTO_VISTAS/HerramientasConfiguracion/RegistrarUsuario.js"></script>
+
+        @Scripts.Render("~/bundles/scriptProyecto")
+        @RenderSection("Scripts", required: false)
+
+    </body>
 
 
 </html>

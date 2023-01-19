@@ -214,7 +214,7 @@
 
 
         @if (@Model.EsPenA != true)
-         {
+        {
 
             <div class="row offset-0  offset-sm-1 offset-lg-1  offset-xl-1  marginbottom">
 
@@ -226,9 +226,17 @@
 
                 </div>
 
+
+                 <div class="col-12 col-sm-3 orientacion">
+                    <label for="">Rechazo Bancario:</label>
+                    <br>
+                    <span id="PagoSuspendido" class="text-center">@Model.EsRechazoBancario</span>
+
+                </div>
+
             </div>
 
-         }
+        }
 
 
     </div>
@@ -261,7 +269,13 @@
 
     <div class="col-12  text-center marginbottom">
 
-        <button type="button" class="btn bg-success text-white col-8" title="Realizar un ajuste al inventario" onclick="SuspenderPagoTrabajador(@Model.IdRegistro)">Suspender </button>
+        <button type="button" class="btn bg-success text-white col-8" title="Suspende el pago de la dispersion bancaria" onclick="SuspenderPagoTrabajador(@Model.IdRegistro)">Suspender </button>
+
+    </div>
+
+    <div class="col-12  text-center marginbottom">
+
+        <button type="button" class="btn bg-success text-white col-8" title="Marca el registro como un rechazo causado por el banco" onclick="MarcarRechazoBancario(@Model.IdRegistro)"> Rechazo de dispercion </button>
 
     </div>
 

@@ -187,38 +187,23 @@ function VerificaDetalleInhabilitado() {
 
     let IdCuentaBancaria = document.getElementById("IdCuentaBancariaInhabilitar").innerHTML;
 
-   // console.log(IdCuentaBancaria);
-
-    //  $("#divTablaSubir").empty();
-    //  DibujarTablaDetalleInhabilitados();
-
-
-    let verificarFolios = "{'IdCuentaBancaria':'" + IdCuentaBancaria + "'}";
 
     MensajeCargando();
-    $.ajax({
-        url: 'CrearTablaInhabilitadosOAsignacion',
-        data: verificarFolios,
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        success: function (msg) {
-          //  console.log(msg);
-            //console.log("msg", msg.length);
+    axios.post('/Inventario/CrearTablaInhabilitadosOAsignacion', {
+        IdCuentaBancaria: IdCuentaBancaria
+    })
+    .then(function (response) {
 
-            $("#divTablaDetalleInhabilitados").empty();
-            DibujarTablaDetalleInhabilitados();
-            PintarTablaDetalleInhabilitados(msg)
-            // PintarConsultas(msg);
-
-            OcultarMensajeCargando();
-
-        },
-        error: function (msg) {
-            OcultarMensajeCargando();
-
-            MensajeInformacionSweet("No se pudo verificar la disponibilidad de folios intentelo de nuevo mas tarde o pongase en contacto con el administrador del sistema");
-        }
+        $("#divTablaDetalleInhabilitados").empty();
+        DibujarTablaDetalleInhabilitados();
+        PintarTablaDetalleInhabilitados(response.data)
+        OcultarMensajeCargando();
+    })
+    .catch(function (error) {
+        MensajeInformacionSweet("No se pudo verificar la disponibilidad de folios intentelo de nuevo mas tarde o pongase en contacto con el administrador del sistema", error);
+        OcultarMensajeCargando();
     });
+
 
 
 
@@ -258,81 +243,61 @@ function ValidarFolios() {
                 // console.log(FFinal);
                 //console.log(FInicial);
                 MensajeCargando();
+                axios.post('/Inventario/VerificarDisponibilidadFolios', {
+                    IdCuentaBancaria: Idbanco,
+                    FolioInicial: FInicial,
+                    FolioFinal: FFinal
+                })
+                    .then(function (response) {
 
-                let verificarFolios = "{'IdCuentaBancaria':'" + Idbanco + "','FolioInicial':'" + FInicial + "','FolioFinal':'" + FFinal + "'}";
-
-                //console.log(verificarFolios);
-
-                $.ajax({
-                    url: 'VerificarDisponibilidadFolios',
-                    data: verificarFolios,
-                    type: "POST",
-                    contentType: "application/json; charset=utf-8",
-
-                    success: function (msg) {
-                        //console.log("msg", msg);
-
-                        if (msg.length > 0) {
+                        OcultarMensajeCargando();
+                        if (response.data.length > 0) {
                             $("#divTablaFoliosInvalidos").empty();
                             DibujarTablaFoliosInvalidos();
-                            PintarTablaFoliosInvalidos(msg);
+                            PintarTablaFoliosInvalidos(response.data);
                             $('#ErrorEnFormasPago').modal('show');
-                        } else {
+                        } else
+                        {
+
                             Swal.fire({
                                 title: '¿Se inhabilitara desde el rango ' + FInicial + ' al ' + FFinal + ' las formas de pago, esta seguro de esto?',
-                                showDenyButton: true,
+                                text: 'Esto disminuira los folios disponibles para la cuenta bancaria actual ',
+                                icon: 'warning',
                                 showCancelButton: true,
-                                confirmButtonText: 'Inhabilitar Rango',
-                                denyButtonText: `No hacer nada`,
-                                cancelButtonText: `Cancelar`,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Si, Inhabilitar Rango!',
+                                cancelButtonText: 'No, Inhabilitar!',
+                                footer: '<a href="#">Contactar al desarrollador?</a>'
                             }).then((result) => {
-                                /* Read more about isConfirmed, isDenied below */
                                 if (result.isConfirmed) {
                                     MensajeCargando();
-                                    $.ajax({
-                                        url: 'InhabilitarRango',
-                                        data: verificarFolios,
-                                        type: "POST",
-                                        contentType: "application/json; charset=utf-8",
-
-                                        success: function (renposehttp) {
+                                    axios.post('/Inventario/InhabilitarRango', {
+                                        IdCuentaBancaria: Idbanco,
+                                        FolioInicial: FInicial,
+                                        FolioFinal: FFinal
+                                    })
+                                        .then(function (response) {
+                                            MensajeCorrectoConRecargaPagina("Se inhabilitaron " + response.data + " formas de pago");
                                             OcultarMensajeCargando();
 
-                                            MensajeCorrectoConRecargaPagina("Se inhabilitaron " + renposehttp + " formas de pago");
-                                            // MensajeCorrectoSweet("Se inhabilitaron " + renposehttp + " formas de pago");
-
-                                        },
-                                        error: function (renposehttp) {
+                                        })
+                                        .catch(function (error) {
+                                            MensajeInformacionSweet("Intente de nuevo mas tarde, lamentamos la demora", error);
                                             OcultarMensajeCargando();
-                                            MensajeInformacionSweet(renposehttp, "Intente de nuevo mas tarde, lamentamos la demora");
-                                        }
-                                    });
+                                        });
 
-
-
-
-
-
-
-
-                                    /*Swal.fire('Saved!', '', 'success')*/
-                                } else if (result.isDenied) {
-
-                                    MensajeInformacionSweet("No se guardara ningun cambio")
-                                    /* Swal.fire('Changes are not saved', '', 'info')*/
                                 }
                             })
-
+                           
                         }
-
-
+                })
+                    .catch(function (error) {
+                        MensajeInformacionSweet('No se pudo verificar la disponibilidad de folios intentelo de nuevo mas tarde o pongase en contacto con el administrador del sistema', error);
                         OcultarMensajeCargando();
-                    },
-                    error: function (msg) {
-                        OcultarMensajeCargando();
-                        MensajeInformacionSweet('No se pudo verificar la disponibilidad de folios intentelo de nuevo mas tarde o pongase en contacto con el administrador del sistema');
-                    }
                 });
+
+
 
             } else {
 
@@ -359,126 +324,99 @@ function VerificarNumeroContenedores() {
     let IdBanco = document.getElementById("IdCuentaBancariaInhabilitar").innerHTML;
 
 
-    let DatosEnviar = "{'IdBanco': '" + IdBanco + "' ,'OrdenSeleccionada': '" + OrdenSeleccionada + "' }";
-    //console.log(DatosEnviar);
+    MensajeCargando();
+    axios.post('/Inventario/ObtenerNumerosContenedores', {
+        IdBanco: IdBanco ,
+        OrdenSeleccionada: OrdenSeleccionada
+    })
+    .then(function (response) {
 
-    // console.log(DatosEnviar);
-    $.ajax({
-        url: 'ObtenerNumerosContenedores',
-        data: DatosEnviar,
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
+        $("#SeleccionContenedor").empty();
 
-        success: function (response) {
-            //console.log("msg", response);
+        let tamanioLista = response.data.length;
+        if (tamanioLista > 0) {
+            let selector = document.getElementById("SeleccionContenedor");
 
-            //console.log("msg", response[1].Llave);
-            //console.log("msg", response[1].Valor);
-
-
-
-            $("#SeleccionContenedor").empty();
-
-            let tamanioLista = response.length;
-            if (tamanioLista > 0) {
-                let selector = document.getElementById("SeleccionContenedor");
-
-
-
-                for (let i = 0; i < tamanioLista; i++) {
-                    let opcion = document.createElement("option");
-                    opcion.value = response[i].Llave;
-                    opcion.text = response[i].Valor;
-                    selector.add(opcion);
-                }
+            for (let i = 0; i < tamanioLista; i++) {
+                let opcion = document.createElement("option");
+                opcion.value = response.data[i].Llave;
+                opcion.text = response.data[i].Valor;
+                selector.add(opcion);
             }
-
-            document.getElementById("PrimeraOpcion_Orden").style.display = "none";
-            document.getElementById("MasOpciones").style.display = "block";
-
-
-        },
-        error: function (msg) {
-            MensajeInformacionSweet("No se pudo cargar los numeros de orden intentelo de nuevo mas tarde o pongase en contacto con el administrador del sistema");
         }
-    });
+
+        document.getElementById("PrimeraOpcion_Orden").style.display = "none";
+        document.getElementById("MasOpciones").style.display = "block";
+        OcultarMensajeCargando();
+    })
+        .catch(function (error) {
+            MensajeInformacionSweet("No se pudo cargar los contenedores del numero de orden seleccionado intentelo de nuevo mas tarde o pongase en contacto con el administrador del sistema", error);
+            OcultarMensajeCargando();
+        });
+
+
 }
 
 function ValidarContenedor() {
-    MensajeCargando();
 
     let numeroContenedorSelecionado = document.getElementById("SeleccionContenedor").value;
 
-    let verificarContenedor = "{'IdContenedor':'" + numeroContenedorSelecionado + "'}";
-   // console.log(verificarContenedor);
 
-    $.ajax({
-        url: 'VerificarDisponibilidadContenedor',
-        data: verificarContenedor,
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        success: function (response) {
+    MensajeCargando();
+    axios.post('/Inventario/VerificarDisponibilidadContenedor', {
+        IdContenedor: numeroContenedorSelecionado
+    })
+        .then(function (response) {
+
             OcultarMensajeCargando();
-            if (response.bandera) {
+            if (response.data.bandera) {
                 $("#divTablaFoliosInvalidos").empty();
                 DibujarTablaFoliosInvalidos();
-                PintarTablaFoliosInvalidos(response.TotalFoliosNoDisponibles);
+                PintarTablaFoliosInvalidos(response.data.TotalFoliosNoDisponibles);
                 $('#ErrorEnFormasPago').modal('show');
             } else {
+
                 Swal.fire({
                     title: '¿Se inhabilitaran todas las formas de pago del contenedor seleccionado, esta seguro de esto?',
-                    showDenyButton: true,
+                    text: 'Esto disminuira los folios disponibles para la cuenta bancaria actual ',
+                    icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonText: 'Inhabilitar',
-                    denyButtonText: `No hacer nada`,
-                    cancelButtonText: `Cancelar`,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Si, Inhabilitar contenedor!',
+                    cancelButtonText: 'No, cancelar!',
+                    footer: '<a href="#">Contactar al desarrollador?</a>'
                 }).then((result) => {
-                    /* Read more about isConfirmed, isDenied below */
                     if (result.isConfirmed) {
                         MensajeCargando();
-                        $.ajax({
-                            url: 'InhabilitarContenedor',
-                            data: verificarContenedor,
-                            type: "POST",
-                            contentType: "application/json; charset=utf-8",
-
-                            success: function (renposehttp) {
+                        axios.post('/Inventario/InhabilitarContenedor', {
+                            IdContenedor: numeroContenedorSelecionado
+                        })
+                            .then(function (response) {
+                                MensajeCorrectoConRecargaPagina("Se inhabilitaron " + response.data + " formas de pago")
                                 OcultarMensajeCargando();
 
-                                MensajeCorrectoConRecargaPagina("Se inhabilitaron " + renposehttp + " formas de pago")
-                                //MensajeCorrectoSweet("Se inhabil22itaron " + renposehttp + " formas de pago");
-
-                            },
-                            error: function (renposehttp) {
+                        })
+                            .catch(function (error) {
+                                MensajeInformacionSweet("Intente de nuevo mas tarde, lamentamos el inconveniente", error);
                                 OcultarMensajeCargando();
-                                MensajeInformacionSweet(renposehttp, "Intente de nuevo mas tarde, lamentamos la demora");
-                            }
-                        });
+                            });
 
 
-
-
-
-
-
-
-                        /*Swal.fire('Saved!', '', 'success')*/
-                    } else if (result.isDenied) {
-
-                        MensajeInformacionSweet("No se guardara ningun cambio")
-                        /* Swal.fire('Changes are not saved', '', 'info')*/
                     }
                 })
-
+                
             }
 
 
-        },
-        error: function (msg) {
+        })
+        .catch(function (error) {
+            MensajeInformacionSweet("No se pudo verificar la disponibilidad de folios en el contenedor intentelo de nuevo mas tarde o pongase en contacto con el administrador del sistema", error);
             OcultarMensajeCargando();
-            MensajeInformacionSweet("No se pudo verificar la disponibilidad de folios intentelo de nuevo mas tarde o pongase en contacto con el administrador del sistema");
-        }
-    });
+        });
+
+
+
 
 }
 

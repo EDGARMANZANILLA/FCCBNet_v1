@@ -335,34 +335,26 @@ function GuardarContenedoresFolios() {
     
 
     MensajeCargando();
-    $.ajax({
-        url: 'GuardarInventarioAgregado',
-        data: JSON.stringify({ listaContenedores, NumOrden, IdBanco }),
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        success: function (resultado) {
+    axios.post('/Inventario/GuardarInventarioAgregado', {
+        listaContenedores: listaContenedores,
+        NumOrden: NumOrden,
+        IdBanco: IdBanco
+    })
+        .then(function (response) {
 
-
-            if (resultado == true) {
-                
+            if (response.data == true) {
                 MensajeCorrectoConRecargaPagina(`Se han agregado nuevos contenedores a ${nombreENBanca}`);
-
             } else {
 
                 MensajeErrorSweet('', `No se guardaron los nuevos contenedores para el banco ${nombreENBanca}`);
             }
-
             OcultarMensajeCargando();
-
-
-        },
-        error: function (msg) {
-
-            MensajeErrorSweet('', "Ocurrio un problema intente de nuevo")
-
+    })
+    .catch(function (error) {
             OcultarMensajeCargando();
-        }
+            MensajeErrorSweet("Ocurrio un problema intente de nuevo", error)
     });
+
 
 
 }

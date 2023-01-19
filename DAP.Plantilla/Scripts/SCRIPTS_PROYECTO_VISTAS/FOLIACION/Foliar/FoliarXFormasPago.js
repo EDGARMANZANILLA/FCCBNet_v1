@@ -303,7 +303,7 @@ function ImprimeNominaDelegacion(IdNomina, IdDelegacion, GrupoFoliacion, Sindica
         Quincena: document.getElementById("QuincenaFormasPago").innerText
     };
 
-
+    MensajeCargando();
     axios.post('/Foliar/RevisarReportePDFChequeIdNominaPorDelegacion', {
         GenerarReporteDelegacion: generarReporteDelegacion
     })
@@ -608,7 +608,7 @@ function FoliarNominaCheque() {
 
                     //  console.log("Ire a foliar");
                     //  console.log(datosNominaFoliarCheque);
-
+                    MensajeCargando();
                     axios.post('/Foliar/FoliarNominaFormaPago', {
                         NuevaFoliacionNomina: datosNominaFoliarCheque
                        
@@ -637,7 +637,7 @@ function FoliarNominaCheque() {
 
                                 MensajeErrorSweet(response.data.DBFAbierta[0].Detalle, response.data.DBFAbierta[0].Solucion);
 
-                            } else if (response.resultServer == 501) {
+                            } else if (response.data.resultServer == 501) {
                                 MensajeInformacionSweet(response.data.FoliosSaltados);
                             }
 
@@ -722,6 +722,186 @@ function FoliarNominaCheque() {
 
 
 
+function AjustarInhabilitados() {
+    /* para saber el id del banco y poder saber el idInventario que tiene */
+    let idBancoPagadorSeleccionado = document.getElementById("SeleccionarCuentaBancaria").value
+
+    /* para saber en que rango de inicio empezar a buscar */
+    let rangoInicialSeleccionado = document.getElementById("rangoInicial").value
+
+    /* saber si esta selecciona la opcion de inhabilitar */
+    let hayInhabilitado = document.getElementById('checkInhabilitar').checked
+
+    /* rango de inhabilitacion a la cual se debe ajustar */
+    let rangoInhabilitadoInicial = document.getElementById('FolioInicialInhabilitado').value
+    let rangoInhabilitadoFinal = document.getElementById('FolioFinalInhabilitado').value
+
+    let cBSeleccionada = document.getElementById("SeleccionarCuentaBancaria");
+    let textoCBancaria = cBSeleccionada.options[cBSeleccionada.selectedIndex].text;
+
+
+    let bandera = false;
+    if (idBancoPagadorSeleccionado != '') {
+
+        if (rangoInicialSeleccionado != '') {
+
+
+            if (hayInhabilitado) {
+
+                //  console.log(rangoInhabilitadoInicial)
+                // console.log(rangoInhabilitadoFinal)
+                if (rangoInhabilitadoFinal != '' && rangoInhabilitadoInicial != '') {
+
+                    if (parseInt(rangoInhabilitadoFinal) >= parseInt(rangoInhabilitadoInicial)) {
+
+
+                        //  console.log("INICIal", rangoInicialSeleccionado)
+                        //  console.log("Inhabilitado INICIAL", parseInt(rangoInhabilitadoInicial))
+                        //  console.log("Inhabilitado FINAL", parseInt(rangoInhabilitadoFinal))
+                        if (parseInt(rangoInhabilitadoInicial) > parseInt(rangoInicialSeleccionado)) {
+
+                            // console.log("TOdi bien");
+                            bandera = true;
+
+                        } else {
+                            MensajeErrorSweet(' El rango inicial de inhabilitado debe ser mayor al rango inicial de foliacion', 'Incongruencia en los rangos de foliacion ');
+                        }
+
+                    } else {
+                        MensajeErrorSweet(' El rango Final inhabilitado debe ser mayor al Inicial inhabilitado', 'Incongruencia en los rangos de foliacion inhabilitados ');
+                    }
+
+
+
+                } else {
+                    MensajeErrorSweet('El rango de inhabilitados no puede estar vacio', 'Incongruencia en los rangos de foliacion inhabilitados ');
+                }
+
+
+            } else {
+
+
+                MensajeErrorSweet('Seleccione la opcion de inhabilitar para proceder con el ajuste');
+               // bandera = true;
+                rangoInhabilitadoInicial = 0;
+                rangoInhabilitadoFinal = 0;
+            }
+
+
+
+        } else {
+            MensajeErrorSweet('intruduzca un numero para iniciar la busqueda y poder hacer el ajuste', 'Rango inicial de Foliacion vacio ');
+        }
+
+    } else {
+        MensajeErrorSweet('Seleccione el banco con el que se folio anteriormente este nomina', 'No se selecciono un banco');
+    }
+
+
+
+
+
+
+    // es para saber que las primeras validaciones estan correctas
+    if (bandera) {
+
+        let textoResumenAMostrar =  "Se realizara un ajuste apartir del rango " + rangoInicialSeleccionado + " , del banco " + textoCBancaria + " , con la Inhabilitacion en el folio inicial ajustado : " + rangoInhabilitadoInicial + " y el folio final ajustado : " + rangoInhabilitadoFinal + "  ";
+        
+
+        Swal.fire({
+            title: '¿Esta seguro de ajustar el rango de CHEQUES INHABILITADOS ?',
+            text: textoResumenAMostrar,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ajustar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+
+                if (bandera) {
+                    let datosAjustar = {
+                        IdNomina: + IdNominaSeleccionada,
+                        IdDelegacion: + IdDelegacionSeleccionada,
+                        IdGrupoFoliacion: + IdGrupoFoliacion,
+                        Sindicato: + sindicatoSeleccionado,
+                        Confianza: + confianzaSeleccionado,
+                        Otros: + OtrosSeleccionado,
+                        IdBancoPagador: + idBancoPagadorSeleccionado,
+                        RangoInicial: +  rangoInicialSeleccionado,
+                        Inhabilitado: hayInhabilitado,
+                        RangoInhabilitadoInicial: + rangoInhabilitadoInicial,
+                        RangoInhabilitadoFinal: + rangoInhabilitadoFinal,
+                        Quincena: document.getElementById("QuincenaFormasPago").innerText
+
+                    };
+
+
+
+                    console.log(datosAjustar);
+
+                    /**/
+                    /**/
+                    /**/
+                    MensajeCargando();
+                    axios.post('/Foliar/AjustarCheques', {
+                        NuevaAjusteDelegacionNomina: datosAjustar
+
+                    })
+                        .then(function (response) {
+
+                            console.log(response);
+                            //if (response.data.resultServer == 0) {
+
+
+                            //    $("#TablaProblemasCheques").empty();
+                            //    DibujarTablaDetalleProblemasCheques();
+                            //    LlenarTablaDetalleProblemasCheques(response.data.FoliosConIncidencias);
+                            //    $('#DetalleProblemasConCHEQUES').modal('show');
+
+                            //} else if (response.data.resultServer == 200) {
+
+                            //    MensajeCorrectoSweet("Se ha foliado la nomina correctamente");
+
+                            //    document.getElementById("rangoFinal").innerText = response.data.resultadoFoliacion[0].UltimoFolioUsado;
+                            //    document.getElementById("registrosFoliados").innerText = response.data.resultadoFoliacion[0].RegistrosFoliados;
+
+
+                            //    ActualizaTablaResumenFoliar();
+                            //    verResumenXDelegacionNominaCheque();
+
+                            //} else if (response.data.resultServer == 500) {
+
+                            //    MensajeErrorSweet(response.data.DBFAbierta[0].Detalle, response.data.DBFAbierta[0].Solucion);
+
+                            //} else if (response.data.resultServer == 501) {
+                            //    MensajeInformacionSweet(response.data.FoliosSaltados);
+                            //}
+
+
+                            OcultarMensajeCargando();
+                        })
+                        .catch(function (error) {
+                            MensajeErrorSweet("Ocurrio un error intente de nuevo ", error);
+                            OcultarMensajeCargando();
+                        });
+                    /***/
+                    /***/
+                    /***/
+
+                }
+
+            }
+        })
+    }
+
+
+
+
+
+}
 
 
 

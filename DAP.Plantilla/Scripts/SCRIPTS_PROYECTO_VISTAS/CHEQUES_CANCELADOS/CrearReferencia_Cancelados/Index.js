@@ -1,4 +1,33 @@
-﻿
+﻿/******************************************************************************************************************************************* */
+/******************************************************************************************************************************************* */
+/******************************************************************************************************************************************* */
+/******************************************************************************************************************************************* */
+/******************************************************************************************************************************************* */
+/******************************************************************************************************************************************* */
+/******************************************************************************************************************************************* */
+/******************************************************************************************************************************************* */
+/******************************************************************************************************************************************* */
+/******************************************************************************************************************************************* */
+/******************************************************************************************************************************************* */
+/******************************************************************************************************************************************* */
+/*************************************           VERIFICAR QUE TODO LOS CHEQUES CANCELADOS ESTEN JALANDO        ******************************* */
+/******************************************************************************************************************************************* */
+/******************************************************************************************************************************************* */
+/******************************************************************************************************************************************* */
+/******************************************************************************************************************************************* */
+/******************************************************************************************************************************************* */
+/******************************************************************************************************************************************* */
+/******************************************************************************************************************************************* */
+/******************************************************************************************************************************************* */
+/******************************************************************************************************************************************* */
+/******************************************************************************************************************************************* */
+/******************************************************************************************************************************************* */
+/******************************************************************************************************************************************* */
+/******************************************************************************************************************************************* */
+/******************************************************************************************************************************************* */
+/******************************************************************************************************************************************* */
+/******************************************************************************************************************************************* */
+/******************************************************************************************************************************************* */
 
 
 
@@ -36,28 +65,46 @@ function EliminarNumeroReferencia(IdRegistroAInactivar, NumeroReferencia, Anio) 
                 if (result.isConfirmed) {
 
                     MensajeCargando();
-
-                    let eliminarIdReferencia = "{'IdReferenciaCancelacion':'" + IdRegistroAInactivar + "'}";
-
-                    $.ajax({
-                        url: '/CrearReferencia_Cancelados/InactivarReferenciaCancelado',
-                        data: eliminarIdReferencia,
-                        type: "POST",
-                        contentType: "application/json; charset=utf-8",
-                        success: function (response) {
-
-                            if (response.bandera) {
-                                MensajeCorrectoConRecargaPagina("Se a eliminado exitosamente la referencia #" + NumeroReferencia + " seleccionada y se han revocado " + response.respuestaServer + " registros cargados dentro de la referencia");
+                    axios.post('/CrearReferencia_Cancelados/InactivarReferenciaCancelado', {
+                        IdReferenciaCancelacion: IdRegistroAInactivar
+                    })
+                        .then(function (response) {
+                            if (response.data.bandera) {
+                                MensajeCorrectoConRecargaPagina("Se a eliminado exitosamente la referencia #" + NumeroReferencia + " seleccionada y se han revocado " + response.data.respuestaServer + " registros cargados dentro de la referencia");
                             } else {
                                 MensajeErrorSweet("No se pudo eliminar la referencia intente mas tarde o contacte al desarrollador");
                             }
                             OcultarMensajeCargando();
-
-                        }, error: function (jqXHR, textStatus) {
-                            MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
+                    })
+                        .catch(function (error) {
+                            MensajeErrorSweet("Ocurrio un error intente de nuevo ", error)
                             OcultarMensajeCargando();
-                        }
                     });
+
+
+
+                    //let eliminarIdReferencia = "{'IdReferenciaCancelacion':'" + IdRegistroAInactivar + "'}";
+
+
+                    //$.ajax({
+                    //    url: '/CrearReferencia_Cancelados/InactivarReferenciaCancelado',
+                    //    data: eliminarIdReferencia,
+                    //    type: "POST",
+                    //    contentType: "application/json; charset=utf-8",
+                    //    success: function (response) {
+
+                    //        if (response.bandera) {
+                    //            MensajeCorrectoConRecargaPagina("Se a eliminado exitosamente la referencia #" + NumeroReferencia + " seleccionada y se han revocado " + response.respuestaServer + " registros cargados dentro de la referencia");
+                    //        } else {
+                    //            MensajeErrorSweet("No se pudo eliminar la referencia intente mas tarde o contacte al desarrollador");
+                    //        }
+                    //        OcultarMensajeCargando();
+
+                    //    }, error: function (jqXHR, textStatus) {
+                    //        MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
+                    //        OcultarMensajeCargando();
+                    //    }
+                    //});
 
 
 
@@ -231,39 +278,57 @@ $(document).ready(function () {
                     cancelButtonText: `Cancelar `
 
                 }).then((result) => {
-                    if (result.isConfirmed) {
+                    if (result.isConfirmed)
+                    {
 
 
 
                         MensajeCargando();
-
-                        //let BuscarElementoSeleccionado = "{'BuscarElemento_id': '"+datoSeleccionadoSelect2.id+"', 'BuscarElemento_text': '"+datoSeleccionadoSelect2.text+"'}";
-                        let crearReferenciaCancelacion = "{'NuevoNumeroReferencia':'" + datoObtenidoDel_InputNumeroReferencia + "'}";
-
-
-
-                        $.ajax({
-                            url: 'CrearReferencia_Cancelados/CrearReferenciaCancelado',
-                            data: crearReferenciaCancelacion,
-                            type: "POST",
-                            contentType: "application/json; charset=utf-8",
-                            success: function (response) {
-
-                                if (response) {
+                        axios.post('/CrearReferencia_Cancelados/CrearReferenciaCancelado', {
+                            NuevoNumeroReferencia: datoObtenidoDel_InputNumeroReferencia
+                        })
+                            .then(function (response) {
+                                if (response.data) {
                                     MensajeCorrectoConRecargaPagina("Se a creado exitosamente la nueva referencia");
                                 }
                                 else {
                                     MensajeErrorSweet("Cambie el numero de referencia, ya que se repite con otro activo", "No se puede crear un numero de referencia repetida en un mismo año")
                                 }
-
-
                                 OcultarMensajeCargando();
-
-                            }, error: function (jqXHR, textStatus) {
-                                MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
-                                OcultarMensajeCargando();
-                            }
+                        })
+                            .catch(function (error) {
+                                MensajeErrorSweet("Ocurrio un error intente de nuevo ", error)
+                            OcultarMensajeCargando();
                         });
+
+
+                        //let BuscarElementoSeleccionado = "{'BuscarElemento_id': '"+datoSeleccionadoSelect2.id+"', 'BuscarElemento_text': '"+datoSeleccionadoSelect2.text+"'}";
+                        //let crearReferenciaCancelacion = "{'NuevoNumeroReferencia':'" + datoObtenidoDel_InputNumeroReferencia + "'}";
+
+
+
+                        //$.ajax({
+                        //    url: 'CrearReferencia_Cancelados/CrearReferenciaCancelado',
+                        //    data: crearReferenciaCancelacion,
+                        //    type: "POST",
+                        //    contentType: "application/json; charset=utf-8",
+                        //    success: function (response) {
+
+                        //        if (response) {
+                        //            MensajeCorrectoConRecargaPagina("Se a creado exitosamente la nueva referencia");
+                        //        }
+                        //        else {
+                        //            MensajeErrorSweet("Cambie el numero de referencia, ya que se repite con otro activo", "No se puede crear un numero de referencia repetida en un mismo año")
+                        //        }
+
+
+                        //        OcultarMensajeCargando();
+
+                        //    }, error: function (jqXHR, textStatus) {
+                        //        MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
+                        //        OcultarMensajeCargando();
+                        //    }
+                        //});
 
 
 
@@ -455,20 +520,18 @@ function PintarResultadoDetalleReferencia(datos) {
 
 
 function AbrirDetalleReferencia(IdReferencia, NumeroReferencia) {
-    let EnviarDatos = "{'IdReferencia': '" + IdReferencia + "'}";
+   
 
     MensajeCargando();
-    $.ajax({
-        url: '/CrearReferencia_Cancelados/ObtenerDetalleReferenciasParaModal',
-        data: EnviarDatos,
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        success: function (response) {
+    axios.post('/CrearReferencia_Cancelados/ObtenerDetalleReferenciasParaModal', {
+        IdReferencia: IdReferencia
+    })
+        .then(function (response) {
 
-            if (response.bandera) {
+            if (response.data.bandera) {
                 $("#divTablaDetalleReferencia").empty();
                 DibujarTablaDetalleReferencia(NumeroReferencia);
-                PintarResultadoDetalleReferencia(response.respuestaServer);
+                PintarResultadoDetalleReferencia(response.data.respuestaServer);
 
                 document.getElementById("NumeroReferencia").innerHTML = "DETALLE DE LA REFERENCIA #" + NumeroReferencia + "";
                 document.getElementById("IdReferenciaCanceladoSelecionado").innerHTML = IdReferencia;
@@ -476,31 +539,62 @@ function AbrirDetalleReferencia(IdReferencia, NumeroReferencia) {
 
                 document.querySelector(".dt-buttons").style = "text-align: right;";
                 $('#DetalleReferencia').modal('show')
+                
             } else {
                 MensajeErrorSweet("Aun no existen registros dentro de la referencia seleccionada");
             }
-
-
-
-
             OcultarMensajeCargando();
-
-        }, error: function (jqXHR, textStatus) {
-            MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
+        })
+        .catch(function (error) {
+            MensajeErrorSweet("Ocurrio un error intente de nuevo ", error)
             OcultarMensajeCargando();
-        }
-    });
+        });
+
+    //let EnviarDatos = "{'IdReferencia': '" + IdReferencia + "'}";
+    //$.ajax({
+    //    url: '/CrearReferencia_Cancelados/ObtenerDetalleReferenciasParaModal',
+    //    data: EnviarDatos,
+    //    type: "POST",
+    //    contentType: "application/json; charset=utf-8",
+    //    success: function (response) {
+
+    //        if (response.bandera) {
+    //            $("#divTablaDetalleReferencia").empty();
+    //            DibujarTablaDetalleReferencia(NumeroReferencia);
+    //            PintarResultadoDetalleReferencia(response.respuestaServer);
+
+    //            document.getElementById("NumeroReferencia").innerHTML = "DETALLE DE LA REFERENCIA #" + NumeroReferencia + "";
+    //            document.getElementById("IdReferenciaCanceladoSelecionado").innerHTML = IdReferencia;
+    //            document.getElementById("NombreReferenciaCancelado").innerHTML = NumeroReferencia;
+
+    //            document.querySelector(".dt-buttons").style = "text-align: right;";
+    //            $('#DetalleReferencia').modal('show')
+    //        } else {
+    //            MensajeErrorSweet("Aun no existen registros dentro de la referencia seleccionada");
+    //        }
+
+
+
+
+    //        OcultarMensajeCargando();
+
+    //    }, error: function (jqXHR, textStatus) {
+    //        MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
+    //        OcultarMensajeCargando();
+    //    }
+    //});
 
 }
 
 function CerrarDetalleReferencia() {
-    // $('#DetalleReferencia').modal('hide');
-    window.location.reload();
+    $('#DetalleReferencia').modal('hide');
+   // window.location.reload();
 }
 
 $(document).on("click", ".AnularIdDeReferencia", function () {
-
+    //let eliminarDetoTemporalDeDataTable = tableDetallesReferecniaCancelacion.row($(this).parents("tr"));
     let pagoARemover = tableDetallesReferecniaCancelacion.row($(this).parents("tr")).data();
+    
 
     //console.log(pagoARemover);
 
@@ -517,33 +611,54 @@ $(document).on("click", ".AnularIdDeReferencia", function () {
 
             MensajeCargando();
             let eliminarDetoTemporalDeDataTable = tableDetallesReferecniaCancelacion.row($(this).parents("tr"));
-            //   tableDetallesReferecniaCancelacion.row($(this).parents("tr")).remove().draw();
-            ///Peticion por ejax al server para eliminar el cheque de la referencia
-            let EnviarDatos = "{'IdPago': '" + pagoARemover.Id + "'}";
+            axios.post('/CrearReferencia_Cancelados/AnularCancelacion', {
+                IdPago: pagoARemover.Id
+            })
+            .then(function (response) {
 
-            $.ajax({
-                url: '/CrearReferencia_Cancelados/AnularCancelacion',
-                data: EnviarDatos,
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                success: function (response) {
+                if (response.data.bandera) {
 
-                    if (response.bandera) {
+                    eliminarDetoTemporalDeDataTable.remove().draw();
 
-                        eliminarDetoTemporalDeDataTable.remove().draw();
-
-                        MensajeCorrectoSweet("Se removio con exito la forma de pago de la referencia");
-                    } else {
-                        MensajeErrorSweet("Hubo un problema y no se pudo remover la forma de pago de la referencia");
-                    }
-
-                    OcultarMensajeCargando();
-
-                }, error: function (jqXHR, textStatus) {
-                    MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
-                    OcultarMensajeCargando();
+                    MensajeCorrectoSweet("Se removio con exito la forma de pago de la referencia");
+                } else {
+                    MensajeErrorSweet("Hubo un problema y no se pudo remover la forma de pago de la referencia");
                 }
+                OcultarMensajeCargando();
+
+            })
+            .catch(function (error) {
+                MensajeErrorSweet("Ocurrio un error intente de nuevo ", error )
+                OcultarMensajeCargando();
             });
+
+            //   tableDetallesReferecniaCancelacion.row($(this).parents("tr")).remove().draw();
+            //Peticion por ejax al server para eliminar el cheque de la referencia
+            //let EnviarDatos = "{'IdPago': '" + pagoARemover.Id + "'}";
+
+            //$.ajax({
+            //    url: '/CrearReferencia_Cancelados/AnularCancelacion',
+            //    data: EnviarDatos,
+            //    type: "POST",
+            //    contentType: "application/json; charset=utf-8",
+            //    success: function (response) {
+
+            //        if (response.bandera) {
+
+            //            eliminarDetoTemporalDeDataTable.remove().draw();
+
+            //            MensajeCorrectoSweet("Se removio con exito la forma de pago de la referencia");
+            //        } else {
+            //            MensajeErrorSweet("Hubo un problema y no se pudo remover la forma de pago de la referencia");
+            //        }
+
+            //        OcultarMensajeCargando();
+
+            //    }, error: function (jqXHR, textStatus) {
+            //        MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
+            //        OcultarMensajeCargando();
+            //    }
+            //});
 
 
 
@@ -568,31 +683,28 @@ $(document).on("click", ".AnularIdDeReferencia", function () {
 /******************************************************  funcion para mostrar la previa del PDF del documento acreditado             ******************************************************/
 
 function AbrirVistaPreviaPDF(IdReferencia) {
-    let EnviarDatos = "{'IdReferenciaCancelado': '" + IdReferencia + "'}";
 
-    $.ajax({
-        url: 'CrearReferencia_Cancelados/ObtenerPdfReferenciaCancelada',
-        data: EnviarDatos,
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        success: function (response) {
+    axios.post('/CrearReferencia_Cancelados/ObtenerPdfReferenciaCancelada', {
+        IdReferenciaCancelado: IdReferencia
+    })
+    .then(function (response) {
 
-            if (response.bandera) {
+        if (response.data.bandera) {
 
-                $("VisorPdfCCOficial").empty();
-                PDFObject.embed("data:application/pdf;base64," + response.respuestaServer + "", "#VisorPdfCCOficial");
+            $("VisorPdfCCOficial").empty();
+            PDFObject.embed("data:application/pdf;base64," + response.data.respuestaServer + "", "#VisorPdfCCOficial");
                 $('#VisualizadorCancelacionOficial').modal('show');
-            } else {
+        } else {
                 MensajeErrorSweet("Hubo un problema y no se a podido cargar la previa, intentelo de nuevo mas tarde");
-            }
-
-            OcultarMensajeCargando();
-
-        }, error: function (jqXHR, textStatus) {
-            MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
-            OcultarMensajeCargando();
         }
+
+         OcultarMensajeCargando();
+    })
+        .catch(function (error) {
+            MensajeErrorSweet("Ocurrio un error intente de nuevo ", error )
+        OcultarMensajeCargando();
     });
+
 
 }
 
@@ -707,42 +819,42 @@ function EstamosEnDesarrollo()
 }
 
 
+
 function CheCancRPNominaAnual() {
     let IdReferencia = document.getElementById("IdReferenciaCanceladoSelecionado").innerHTML;
 
     //let EnviarDatos = "{'IdReferencia': '" + IdReferencia + "'}";
 
     MensajeCargando();
-    $.ajax({
-        url: '/CrearReferencia_Cancelados/ObtenerDetalleReferenciasParaModal',
-        data: EnviarDatos,
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        success: function (response) {
+    axios.post('/CrearReferencia_Cancelados/ObtenerDetalleReferenciasParaModal', {
+        IdReferencia: IdReferencia
+    })
+    .then(function (response) {
 
-            if (response.bandera) {
-                $("#divTablaDetalleReferencia").empty();
-                DibujarTablaDetalleReferencia(NumeroReferencia);
-                PintarResultadoDetalleReferencia(response.respuestaServer);
+        if (response.data.bandera) {
+            $("#divTablaDetalleReferencia").empty();
+            DibujarTablaDetalleReferencia(NumeroReferencia);
+            PintarResultadoDetalleReferencia(response.data.respuestaServer);
 
                 document.getElementById("NumeroReferencia").innerHTML = "DETALLE DE LA REFERENCIA #" + NumeroReferencia + "";
                 document.getElementById("IdReferenciaCanceladoSelecionado").innerHTML = IdReferencia;
                 document.getElementById("NombreReferenciaCancelado").innerHTML = NumeroReferencia;
                 $('#DetalleReferencia').modal('show')
-            } else {
+        } else {
                 MensajeErrorSweet("Aun no existen registros dentro de la referencia seleccionada");
-            }
-
-
-
-
-            OcultarMensajeCargando();
-
-        }, error: function (jqXHR, textStatus) {
-            MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
-            OcultarMensajeCargando();
         }
+
+            OcultarMensajeCargando();
+
+    })
+        .catch(function (error) {
+            MensajeErrorSweet("Ocurrio un error intente de nuevo ", error)
+        OcultarMensajeCargando();
     });
+
+
+
+  
 
 }
 

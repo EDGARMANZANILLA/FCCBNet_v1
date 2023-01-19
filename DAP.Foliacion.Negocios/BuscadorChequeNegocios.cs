@@ -451,6 +451,7 @@ namespace DAP.Foliacion.Negocios
             // 2 => /No Existe la referencia (APLICA PARA AGREGAR, ACTUALIZAR O REVOCAR UN CHEQUE DE LA REFERENCIA DE CANCELACION)
             // 3 => No se puede cambiar un cheque a la misma referencia
             // 4 => La referencia no puede ser removida porque aun no tiene una (APLiCA SOLO PARA QUITAR UN PAGO DE UNA REFERENCIA)
+            // 5 => Un cheque con folio "1111 1111" no puede ser agregado a una referencia de cancelacion ya que era una dispercion se suspendio pero aun no se le asigna un folio valido
 
             //Mensajes Exitosos
             // 6 => /Se agrego a una referencia exitosamente
@@ -481,6 +482,11 @@ namespace DAP.Foliacion.Negocios
             {
                 if (registroFereciaEncontrado != null)
                 {
+                    if(registroPagoEncontrado.FolioCheque == 11111111) 
+                    {
+                        // 5 => Un cheque con folio "1111 1111" no puede ser agregado a una referencia de cancelacion ya que era una dispercion se suspendio pero aun no se le asigna un folio valido
+                        return 5;
+                    }
                     //valida que el pago no tenga ninguna referencia
                     if (registroPagoEncontrado.IdTbl_Referencias_Cancelaciones == null)
                     {

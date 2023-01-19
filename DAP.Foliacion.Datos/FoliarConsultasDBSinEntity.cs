@@ -101,17 +101,20 @@ namespace DAP.Foliacion.Datos
 
 
 
-       
 
 
 
 
-        /**********************************************************************************************************************************************/
-        /*************** Devuelve un DTO de si esta foliada la nomina y cuantos registros hay que foliar  ********************/
+
+        /*************************************************************************************************************************************************************************************************************************/
+        /*************************************************************************************************************************************************************************************************************************/
+        /*******************************************************************                    Devuelve un boleano de si esta foliada la nomina en SQL                             **********************************************/
+        /*************************************************************************************************************************************************************************************************************************/
+        /*************************************************************************************************************************************************************************************************************************/
         public static bool EstaFoliadacorrectamenteDelegacion_Cheque(string ConsultaPreparada, int TotalFolios)
         {
             /* EL RESULTADO OBTENIDO SON CUENTOS REGISTROS NO ESTAN FOLIADOS POR ENDE SI OBTENEMOS LA DIFERENCIA ENTRE EL TOTALFOLIOS HACEN LOS QUE YA ESTAN FOLIADOS*/
-            bool EstaFoliadoDelegacion = false;
+        bool EstaFoliadoDelegacion = false;
 
             int registrosFoliados = 0;
             List<string> listaNumcheFoliados = new List<string>();
@@ -168,6 +171,45 @@ namespace DAP.Foliacion.Datos
         }
 
 
+        /*OBTIENE UNA LISTA DE NUMEROS DE EMPLEADOS CONTENIDOS DENTRO DE LA DELEGACION SELECCIONADA*/
+        public static List<int> NumEmpleadosContenidosEnDelegacion_cheque(string ExecutarConsulta)
+        {
+            /* EL RESULTADO OBTENIDO SON LA LISTA DE EMPLEADOS QUE SE ENCUENTRAN DENTRO DE LA DELEGACION SELECCIONADA */
+            List<int> listaNumerosEmpleados = new List<int>();
+            try
+            {
+                using (System.Data.SqlClient.SqlConnection connection = new System.Data.SqlClient.SqlConnection(ObtenerConexionesDB.obtenerCadenaConexionDeploy()))
+                {
+                    connection.Open();
+                    System.Data.SqlClient.SqlCommand command = new System.Data.SqlClient.SqlCommand(ExecutarConsulta, connection);
+                    System.Data.SqlClient.SqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        listaNumerosEmpleados.Add( Convert.ToInt32( reader[0].ToString().Trim() ) );
+                    }
+                }
+            }
+            catch (Exception E)
+            {
+                var transaccion = new Transaccion();
+                var repositorio = new Repositorio<LOG_EXCEPCIONES>(transaccion);
+                LOG_EXCEPCIONES NuevaExcepcion = new LOG_EXCEPCIONES();
+
+                NuevaExcepcion.Clase = "FoliarConsultasDBSinEntity";
+                NuevaExcepcion.Metodo = "NumEmpleadosContenidosEnDelegacion_cheque";
+                NuevaExcepcion.Usuario = null;
+                NuevaExcepcion.Excepcion = E.Message;
+                NuevaExcepcion.Comentario = "Problema al ejecutar una consulta para saber el numero de empleados que estan contenidos dentro de la delegacion seleccionada";
+                NuevaExcepcion.Fecha = DateTime.Now;
+
+                repositorio.Agregar(NuevaExcepcion);
+
+            }
+
+            return listaNumerosEmpleados;
+
+        }
 
 
 
@@ -251,13 +293,13 @@ namespace DAP.Foliacion.Datos
         /// <param name="AnioInterface"></param>
         /// <param name="Quincena"></param>
         /// <returns>Retorna una lista de objetos del tipo DatosCompletosBitacoraDTO</returns>
-        public static List<DatosCompletosBitacoraDTO> ObtenerDatosCompletosBitacoraFILTRO( string AnioInterface, string Quincena)
+        public static List<DatosCompletosBitacoraDTO> ObtenerDatosCompletosBitacoraFILTRO(string VisitaAnioInterface, string Quincena)
         {
             List<DatosCompletosBitacoraDTO> DatosCompletosBitacoraQuincena = new List< DatosCompletosBitacoraDTO>();
 
             try
             {
-                string query = "select id_nom, nomina, an, adicional, quincena,mes, referencia, CASE nomina  WHEN '08' THEN 'True' ELSE 'False' END 'EsPenA' ,coment, ruta , rutanomina , fechaPago , subnomina ,  importado , ap, ad from interfaces" + AnioInterface + ".dbo.bitacora where quincena = "+Quincena+ " order by  nomina, id_nom";
+                string query = "select id_nom, nomina, an, adicional, quincena,mes, referencia, CASE nomina  WHEN '08' THEN 'True' ELSE 'False' END 'EsPenA' ,coment, ruta , rutanomina , fechaPago , subnomina ,  importado , ap, ad from interfaces" + VisitaAnioInterface + ".dbo.bitacora where quincena = "+Quincena+ " order by  nomina, id_nom";
 
                
                 using (System.Data.SqlClient.SqlConnection connection = new System.Data.SqlClient.SqlConnection(ObtenerConexionesDB.obtenerCadenaConexionDeploy()))
@@ -283,6 +325,9 @@ namespace DAP.Foliacion.Datos
                         NuevoDetalle.Coment = reader[8].ToString().Trim();
                         NuevoDetalle.Ruta = reader[9].ToString().Trim();
                         NuevoDetalle.RutaNomina = reader[10].ToString().Trim();
+                        //string anioDeQuincena = Quincena.Substring(1, 2).
+
+
                         NuevoDetalle.Anio = Convert.ToInt32(reader[11].ToString().Trim().Substring(6, 4));
                         NuevoDetalle.Subnomina = reader[12].ToString().Trim();
                         NuevoDetalle.Importado = Convert.ToBoolean(reader[13].ToString().Trim());
@@ -329,8 +374,6 @@ namespace DAP.Foliacion.Datos
         /*******************************************************************          Verificar cuandos registros No estan Foliados en los pagomaticos de un A-N                    **********************************************/
         /*************************************************************************************************************************************************************************************************************************/
         /*************************************************************************************************************************************************************************************************************************/
-
-
         public static int ObtenerRegistro_FoliacionPagomatico(string EjecutarConsulta)
         {
             try
@@ -410,26 +453,13 @@ namespace DAP.Foliacion.Datos
             return tieneElcampo_AZTECA;
         }
 
-        public static List<string> VerificarCamposBancoContieneAN(string An, int Anio)
+        public static List<string> VerificarCamposBancoContieneAN(string An, string visititaAnioInterface)
         {
 
             List<string> camposContenidoEnAN = new List<string>();
 
-            string verificarCampos = "select top (1) * from Interfaces[ANIO].dbo.[AN]";
 
-            if (Anio == 2022)
-            {
-                verificarCampos = verificarCampos.Replace("[ANIO]", "");
-                verificarCampos = verificarCampos.Replace("[AN]", An);
-            }
-            else 
-            {
-                verificarCampos = verificarCampos.Replace("[ANIO]", ""+Anio+"");
-                verificarCampos = verificarCampos.Replace("[AN]", An);
-            }
-
-
-
+            string verificarCampos = "select top (1) * from Interfaces"+visititaAnioInterface+".dbo."+An+"";
 
             using (System.Data.SqlClient.SqlConnection connection = new System.Data.SqlClient.SqlConnection(ObtenerConexionesDB.obtnercadenaConexionAlpha()))
             {
@@ -468,13 +498,12 @@ namespace DAP.Foliacion.Datos
             string executar= "select distinct(NombreCampoAN) from nomina.dbo.tblnm_ctabanca where NombreCampoAN is not null";
 
             List<string> camposBancoOntenidos = new List<string>();
-           // bool tieneElcampo_AZTECA = false;
+            //bool tieneElcampo_AZTECA = false;
             using (System.Data.SqlClient.SqlConnection connection = new System.Data.SqlClient.SqlConnection(ObtenerConexionesDB.obtnercadenaConexionAlpha()))
             {
                 connection.Open();
                 System.Data.SqlClient.SqlCommand command = new System.Data.SqlClient.SqlCommand(executar, connection);
                 System.Data.SqlClient.SqlDataReader reader = command.ExecuteReader();
-
 
                 while (reader.Read())
                 {
@@ -651,7 +680,7 @@ namespace DAP.Foliacion.Datos
 
 
 
-        public static async Task<int> ActualizarBaseNominaEnSql_transaccionado_CANCELACIONHILO(List<ResumenPersonalAFoliarDTO> GuardarResumenPersonalFoliado, DatosCompletosBitacoraDTO datosCompletosNomina, int Anio , CancellationToken cancelaToken)
+        public static async Task<int> ActualizarBaseNominaEnSql_transaccionado_CANCELACIONHILO(List<ResumenPersonalAFoliarDTO> GuardarResumenPersonalFoliado, DatosCompletosBitacoraDTO datosCompletosNomina, string visitaAnioInterface , CancellationToken cancelaToken)
         {
 
             int registrosActualizados = 0;
@@ -668,15 +697,15 @@ namespace DAP.Foliacion.Datos
 
                 try
                 {
-                    string anioInterface = "";
-                    if (Anio == Convert.ToInt32(DateTime.Now.Year))
-                    {
-                        anioInterface = "";
-                    }
-                    else
-                    {
-                        anioInterface = "" + Anio + "";
-                    }
+                    //string anioInterface = "";
+                    //if (Anio == Convert.ToInt32(DateTime.Now.Year))
+                    //{
+                    //    anioInterface = "";
+                    //}
+                    //else
+                    //{
+                    //    anioInterface = "" + Anio + "";
+                    //}
 
                     foreach (ResumenPersonalAFoliarDTO guardaNuevaPersona in GuardarResumenPersonalFoliado)
                     {
@@ -686,11 +715,11 @@ namespace DAP.Foliacion.Datos
                         string queryActualizaInterfacesSQL;
                         if (datosCompletosNomina.EsPenA)
                         {
-                            queryActualizaInterfacesSQL = "UPDATE interfaces" + anioInterface + ".dbo." + datosCompletosNomina.An + " SET Num_che = '" + guardaNuevaPersona.NumChe + "', Banco_x = '" + guardaNuevaPersona.BancoX + "', Cuenta_x = '" + guardaNuevaPersona.CuentaX + "', Observa = '" + guardaNuevaPersona.Observa + "' WHERE NUM = '" + guardaNuevaPersona.CadenaNumEmpleado + "' and RFC = '" + guardaNuevaPersona.RFC + "' and LIQUIDO = '" + guardaNuevaPersona.Liquido + "' and NOMBRE = '" + guardaNuevaPersona.Nombre + "' and DELEG = '" + guardaNuevaPersona.Delegacion + "' and BENEF = '" + guardaNuevaPersona.NumBeneficiario + "'  ";
+                            queryActualizaInterfacesSQL = "UPDATE interfaces" + visitaAnioInterface + ".dbo." + datosCompletosNomina.An + " SET Num_che = '" + guardaNuevaPersona.NumChe + "', Banco_x = '" + guardaNuevaPersona.BancoX + "', Cuenta_x = '" + guardaNuevaPersona.CuentaX + "', Observa = '" + guardaNuevaPersona.Observa + "' WHERE NUM = '" + guardaNuevaPersona.CadenaNumEmpleado + "' and RFC = '" + guardaNuevaPersona.RFC + "' and LIQUIDO = '" + guardaNuevaPersona.Liquido + "' and NOMBRE = '" + guardaNuevaPersona.Nombre + "' and DELEG = '" + guardaNuevaPersona.Delegacion + "' and BENEF = '" + guardaNuevaPersona.NumBeneficiario + "'  ";
                         }
                         else
                         {
-                            queryActualizaInterfacesSQL = "UPDATE interfaces" + anioInterface + ".dbo." + datosCompletosNomina.An + " SET Num_che = '" + guardaNuevaPersona.NumChe + "', Banco_x = '" + guardaNuevaPersona.BancoX + "', Cuenta_x = '" + guardaNuevaPersona.CuentaX + "', Observa = '" + guardaNuevaPersona.Observa + "' WHERE NUM = '" + guardaNuevaPersona.CadenaNumEmpleado + "' and RFC = '" + guardaNuevaPersona.RFC + "' and LIQUIDO = '" + guardaNuevaPersona.Liquido + "' and NOMBRE = '" + guardaNuevaPersona.Nombre + "' and DELEG = '" + guardaNuevaPersona.Delegacion + "' ";
+                            queryActualizaInterfacesSQL = "UPDATE interfaces" + visitaAnioInterface + ".dbo." + datosCompletosNomina.An + " SET Num_che = '" + guardaNuevaPersona.NumChe + "', Banco_x = '" + guardaNuevaPersona.BancoX + "', Cuenta_x = '" + guardaNuevaPersona.CuentaX + "', Observa = '" + guardaNuevaPersona.Observa + "' WHERE NUM = '" + guardaNuevaPersona.CadenaNumEmpleado + "' and RFC = '" + guardaNuevaPersona.RFC + "' and LIQUIDO = '" + guardaNuevaPersona.Liquido + "' and NOMBRE = '" + guardaNuevaPersona.Nombre + "' and DELEG = '" + guardaNuevaPersona.Delegacion + "' ";
                         }
 
                         // Must assign both transaction object and connection
@@ -760,7 +789,7 @@ namespace DAP.Foliacion.Datos
         }
 
 
-        public static int ActualizarBaseNominaEnSql_transaccionado_Cheque(List<ResumenPersonalAFoliarDTO> GuardarResumenPersonalFoliado, DatosCompletosBitacoraDTO datosCompletosNomina, int Anio)
+        public static int ActualizarBaseNominaEnSql_transaccionado_Cheque(List<ResumenPersonalAFoliarDTO> GuardarResumenPersonalFoliado, DatosCompletosBitacoraDTO datosCompletosNomina, string visitaAnioInterface)
         {
 
             int registrosActualizados = 0;
@@ -779,15 +808,15 @@ namespace DAP.Foliacion.Datos
 
                 try
                 {
-                    string anioInterface = "";
-                    if (Anio == Convert.ToInt32(DateTime.Now.Year))
-                    {
-                        anioInterface = "";
-                    }
-                    else
-                    {
-                        anioInterface = "" + Anio + "";
-                    }
+                    //string anioInterface = "";
+                    //if (Anio == Convert.ToInt32(DateTime.Now.Year))
+                    //{
+                    //    anioInterface = "";
+                    //}
+                    //else
+                    //{
+                    //    anioInterface = "" + Anio + "";
+                    //}
 
                     foreach (ResumenPersonalAFoliarDTO guardaNuevaPersona in GuardarResumenPersonalFoliado)
                     {
@@ -795,11 +824,11 @@ namespace DAP.Foliacion.Datos
                         string queryActualizaInterfacesSQL;
                         if (datosCompletosNomina.EsPenA)
                         {
-                            queryActualizaInterfacesSQL = "UPDATE interfaces" + anioInterface + ".dbo." + datosCompletosNomina.An + " SET Num_che = '" + guardaNuevaPersona.NumChe + "', Banco_x = '" + guardaNuevaPersona.BancoX + "', Cuenta_x = '" + guardaNuevaPersona.CuentaX + "', Observa = '" + guardaNuevaPersona.Observa + "' WHERE NUM = '" + guardaNuevaPersona.CadenaNumEmpleado + "' and LIQUIDO = '" + guardaNuevaPersona.Liquido + "' and NOMBRE = '" + guardaNuevaPersona.Nombre + "' and DELEG = '" + guardaNuevaPersona.Delegacion + "' and BENEF = '" + guardaNuevaPersona.NumBeneficiario + "'  ";
+                            queryActualizaInterfacesSQL = "UPDATE interfaces" + visitaAnioInterface + ".dbo." + datosCompletosNomina.An + " SET Num_che = '" + guardaNuevaPersona.NumChe + "', Banco_x = '" + guardaNuevaPersona.BancoX + "', Cuenta_x = '" + guardaNuevaPersona.CuentaX + "', Observa = '" + guardaNuevaPersona.Observa + "' WHERE NUM = '" + guardaNuevaPersona.CadenaNumEmpleado + "' and LIQUIDO = '" + guardaNuevaPersona.Liquido + "' and NOMBRE = '" + guardaNuevaPersona.Nombre + "' and DELEG = '" + guardaNuevaPersona.Delegacion + "' and BENEF = '" + guardaNuevaPersona.NumBeneficiario + "'  ";
                         }
                         else
                         {
-                            queryActualizaInterfacesSQL = "UPDATE interfaces" + anioInterface + ".dbo." + datosCompletosNomina.An + " SET Num_che = '" + guardaNuevaPersona.NumChe + "', Banco_x = '" + guardaNuevaPersona.BancoX + "', Cuenta_x = '" + guardaNuevaPersona.CuentaX + "', Observa = '" + guardaNuevaPersona.Observa + "' WHERE NUM = '" + guardaNuevaPersona.CadenaNumEmpleado + "' and LIQUIDO = '" + guardaNuevaPersona.Liquido + "' and NOMBRE = '" + guardaNuevaPersona.Nombre + "' and DELEG = '" + guardaNuevaPersona.Delegacion + "' ";
+                            queryActualizaInterfacesSQL = "UPDATE interfaces" + visitaAnioInterface + ".dbo." + datosCompletosNomina.An + " SET Num_che = '" + guardaNuevaPersona.NumChe + "', Banco_x = '" + guardaNuevaPersona.BancoX + "', Cuenta_x = '" + guardaNuevaPersona.CuentaX + "', Observa = '" + guardaNuevaPersona.Observa + "' WHERE NUM = '" + guardaNuevaPersona.CadenaNumEmpleado + "' and LIQUIDO = '" + guardaNuevaPersona.Liquido + "' and NOMBRE = '" + guardaNuevaPersona.Nombre + "' and DELEG = '" + guardaNuevaPersona.Delegacion + "' ";
                         }
 
                         // Must assign both transaction object and connection
@@ -868,53 +897,9 @@ namespace DAP.Foliacion.Datos
 
         /****************************************************************************************************************************************************************************************************************************/
         /****************************************************************************************************************************************************************************************************************************/
-        /**************************************************     METODOS PARA LIMPIAR DBF , AN Y TBL_PAGO CUANDO NO SE CUMPLA LA CALIDAD DE LA FOLIACION     *************************************************************************/
+        /**************************************************     METODOS PARA LIMPIAR AN DE SQL CUANDO NO SE CUMPLA LA CALIDAD DE LA FOLIACION     *************************************************************************/
         /****************************************************************************************************************************************************************************************************************************/
         /****************************************************************************************************************************************************************************************************************************/
-
-
-        //public static async Task<int> LimpiarANSql_IncumplimientoCalidadFoliacionAsincrono(string anioInterface, string AN, string condicionACumplir, int Id_Nom)
-        //{
-        //    int registrosBorrados = 0;
-        //    try
-        //    {
-             
-        //        using (System.Data.SqlClient.SqlConnection connection = new System.Data.SqlClient.SqlConnection(ObtenerConexionesDB.obtenerCadenaConexionDeploy()))
-        //        {
-        //            connection.OpenAsync();
-
-        //            string queryActualizaInterfacesSQL = "UPDATE interfaces" + anioInterface + ".dbo." + AN + " SET Num_che = '', Banco_x = '', Cuenta_x = '', Observa = '' where " + condicionACumplir + " ";
-
-        //            System.Data.SqlClient.SqlCommand command = new System.Data.SqlClient.SqlCommand(queryActualizaInterfacesSQL, connection);
-        //            registrosBorrados += await command.ExecuteNonQueryAsync();
-
-        //            connection.Close();
-        //            connection.Dispose();
-
-        //        }
-        //    }
-        //    catch (Exception E)
-        //    {
-        //        var transaccion = new Transaccion();
-
-        //        var repositorio = new Repositorio<LOG_EXCEPCIONES>(transaccion);
-
-        //        LOG_EXCEPCIONES NuevaExcepcion = new LOG_EXCEPCIONES();
-
-        //        NuevaExcepcion.Clase = "FoliarConsultasDBSinEntity";
-        //        NuevaExcepcion.Metodo = "LimpiarANSql_IncumplimientoCalidadFoliacion";
-        //        NuevaExcepcion.Usuario = null;
-        //        NuevaExcepcion.Excepcion = E.Message;
-        //        NuevaExcepcion.Comentario = "No se Borraron los datos en la nomina  " + Id_Nom + " del anio : " + anioInterface;
-        //        NuevaExcepcion.Fecha = DateTime.Now;
-
-        //        repositorio.Agregar(NuevaExcepcion);
-
-        //    }
-
-        //    return registrosBorrados;
-        //}
-
         public static int LimpiarANSql_IncumplimientoCalidadFoliacion(int Anio, string AN, string condicionACumplir, int Id_Nom)
         {
             int registrosBorrados = 0;
@@ -971,27 +956,31 @@ namespace DAP.Foliacion.Datos
             return registrosBorrados;
         }
 
-        public static int LimpiarElementosSeleccionadosSql_IncumplimientoCalidadFoliacion(string visitaAnioInterfas , string AN, string condicionACumplir, int Id_Nom)
+
+        /****************************************************************************************************************************************************************************************************************************/
+        /****************************************************************************************************************************************************************************************************************************/
+        /**************************************************     METODOS PARA LIMPIAR AN DE SQL CUANDO NO SE CUMPLA LA CALIDAD DE LA FOLIACION     *************************************************************************/
+        /****************************************************************************************************************************************************************************************************************************/
+        /****************************************************************************************************************************************************************************************************************************/
+        public static int LimpiarCamposPorRecuperacionDeFolios(string visitaAnioInterfas, string AN, string condicionACumplir, int Id_Nom)
         {
-            int registrosBorrados = 0;
+            int registrosLimpiados = 0;
             try
             {
-               
+              
                 using (System.Data.SqlClient.SqlConnection connection = new System.Data.SqlClient.SqlConnection(ObtenerConexionesDB.obtenerCadenaConexionDeploy()))
                 {
                     connection.Open();
 
-                    string queryActualizaInterfacesSQL = "UPDATE interfaces"+visitaAnioInterfas+".dbo."+AN+" SET Num_che = '', Banco_x = '', Cuenta_x = '', Observa = '' where " + condicionACumplir + " ";
+                    string queryActualizaInterfacesSQL = "UPDATE interfaces" + visitaAnioInterfas + ".dbo." + AN + " SET Num_che = '', Banco_x = '', Cuenta_x = '', Observa = '' where " + condicionACumplir + " ";
 
 
                     System.Data.SqlClient.SqlCommand command = new System.Data.SqlClient.SqlCommand(queryActualizaInterfacesSQL, connection);
-                    registrosBorrados += command.ExecuteNonQuery();
+                    registrosLimpiados += command.ExecuteNonQuery();
 
                     connection.Close();
 
-
                 }
-
 
             }
             catch (Exception E)
@@ -1003,10 +992,10 @@ namespace DAP.Foliacion.Datos
                 LOG_EXCEPCIONES NuevaExcepcion = new LOG_EXCEPCIONES();
 
                 NuevaExcepcion.Clase = "FoliarConsultasDBSinEntity";
-                NuevaExcepcion.Metodo = "LimpiarANSql_IncumplimientoCalidadFoliacion";
+                NuevaExcepcion.Metodo = "LimpiarCamposPorRecuperacionDeFolios";
                 NuevaExcepcion.Usuario = null;
                 NuevaExcepcion.Excepcion = E.Message;
-                NuevaExcepcion.Comentario = "No se Borraron los datos en la nomina  " + Id_Nom + " del anio " + visitaAnioInterfas;
+                NuevaExcepcion.Comentario = "No se Limpiaron todos los campos en la nomina  " + Id_Nom + " del anio " + visitaAnioInterfas+ " || Datos que debieron Limpiarse "+ condicionACumplir;
                 NuevaExcepcion.Fecha = DateTime.Now;
 
                 repositorio.Agregar(NuevaExcepcion);
@@ -1014,142 +1003,8 @@ namespace DAP.Foliacion.Datos
             }
 
 
-            return registrosBorrados;
+            return registrosLimpiados;
         }
-
-        public static int LimpiarTblPagos_IncumplimientoCalidadFoliacion(int Anio, int Quincena, int Id_nom, int TipoPago)
-        {
-            int registrosBorrados = 0;
-            try
-            {
-                string anioInterface = "";
-                if (Anio == Convert.ToInt32(DateTime.Now.Year))
-                {
-                    anioInterface = "";
-                }
-                else
-                {
-                    anioInterface = "" + Anio + "";
-                }
-
-                string nombreDB = ObtenerConexionesDB.ObtenerNombreDBValidacionFoliosDeploy();
-                using (System.Data.SqlClient.SqlConnection connection = new System.Data.SqlClient.SqlConnection(ObtenerConexionesDB.obtenerCadenaConexionDeploy()))
-                {
-                    connection.Open();
-                          //string queryActualizaInterfacesSQL = "UPDATE interfaces" + anioInterface + ".dbo." + AN + " SET Num_che = '', Banco_x = '', Cuenta_x = '', Observa = '' where " + condicionACumplir + " ";
-                    string queryActualizaInterfacesSQL = "UPDATE " + nombreDB + ".dbo.Tbl_Pagos SET IdTbl_CuentaBancaria_BancoPagador = 0 , FolioCheque = 0 ,  Integridad_HashMD5 = 'Campos (IdTbl_CuentaBancaria_BancoPagador ,  FolioCheque , Integridad_HashMD5 )   limpiados por no cumplir el estandar de calidad en la foliacion'  where anio = " + Anio + " and Quincena = " + Quincena + " and Id_nom = " + Id_nom + " and IdCat_FormaPago_Pagos = "+TipoPago+ " and TieneSeguimientoHistorico is null ";
-                    System.Data.SqlClient.SqlCommand command = new System.Data.SqlClient.SqlCommand(queryActualizaInterfacesSQL, connection);
-                    registrosBorrados += command.ExecuteNonQuery();
-
-                    connection.Close();
-
-
-                }
-
-
-            }
-            catch (Exception E)
-            {
-                var transaccion = new Transaccion();
-
-                var repositorio = new Repositorio<LOG_EXCEPCIONES>(transaccion);
-
-                LOG_EXCEPCIONES NuevaExcepcion = new LOG_EXCEPCIONES();
-
-                NuevaExcepcion.Clase = "FoliarConsultasDBSinEntity";
-                NuevaExcepcion.Metodo = "LimpiarTblPagos_IncumplimientoCalidadFoliacion";
-                NuevaExcepcion.Usuario = null;
-                NuevaExcepcion.Excepcion = E.Message;
-                NuevaExcepcion.Comentario = "No se Borraron los datos en la nomina  " + Id_nom + " del anio " + Anio;
-                NuevaExcepcion.Fecha = DateTime.Now;
-
-                repositorio.Agregar(NuevaExcepcion);
-
-            }
-
-
-            return registrosBorrados;
-        }
-
-
-        //public static int LimpiarBaseDelegacionNominaEnSql_Cheque(DatosCompletosBitacoraDTO datosCompletosNomina, int Anio, string DelegacionesIncluidas, bool EsSindi)
-        //{
-
-        //    int registrosBorrados = 0;
-        //    try
-        //    {
-        //        string anioInterface = "";
-        //        if (Anio == Convert.ToInt32(DateTime.Now.Year))
-        //        {
-        //            anioInterface = "";
-        //        }
-        //        else
-        //        {
-        //            anioInterface = "" + Anio + "";
-        //        }
-
-
-        //        using (System.Data.SqlClient.SqlConnection connection = new System.Data.SqlClient.SqlConnection(ObtenerConexionesDB.obtenerCadenaConexionDeploy()))
-        //        {
-        //            connection.Open();
-
-        //            string queryActualizaInterfacesSQL;
-        //            if (datosCompletosNomina.EsPenA)
-        //            {
-        //                queryActualizaInterfacesSQL = "UPDATE interfaces" + anioInterface + ".dbo." + datosCompletosNomina.An + " SET Num_che = '', Banco_x = '', Cuenta_x = '', Observa = '' where TARJETA = '' and SERFIN = '' and BANCOMER = '' and BANORTE = '' and HSBC = ''  and deleg in " + DelegacionesIncluidas + " ";
-        //            }
-        //            else
-        //            {
-        //                if (datosCompletosNomina.Nomina == "01" || datosCompletosNomina.Nomina == "02")
-        //                {
-        //                    if (EsSindi)
-        //                    {
-        //                        queryActualizaInterfacesSQL = "UPDATE interfaces" + anioInterface + ".dbo." + datosCompletosNomina.An + " SET Num_che = '', Banco_x = '', Cuenta_x = '', Observa = '' where sindicato = 1 and TARJETA = '' and SERFIN = '' and BANCOMER = '' and BANORTE = '' and HSBC = ''  and deleg in " + DelegacionesIncluidas + "  ";
-        //                    }
-        //                    else
-        //                    {
-        //                        queryActualizaInterfacesSQL = "UPDATE interfaces" + anioInterface + ".dbo." + datosCompletosNomina.An + " SET Num_che = '', Banco_x = '', Cuenta_x = '', Observa = '' where sindicato = 0 TARJETA = '' and SERFIN = '' and BANCOMER = '' and BANORTE = '' and HSBC = ''  and deleg in " + DelegacionesIncluidas + "  ";
-        //                    }
-        //                }
-
-        //                queryActualizaInterfacesSQL = "UPDATE interfaces" + anioInterface + ".dbo." + datosCompletosNomina.An + " SET Num_che = '', Banco_x = '', Cuenta_x = '', Observa = '' where TARJETA = '' and SERFIN = '' and BANCOMER = '' and BANORTE = '' and HSBC = ''  and deleg in " + DelegacionesIncluidas + "  ";
-
-        //            }
-
-
-        //            System.Data.SqlClient.SqlCommand command = new System.Data.SqlClient.SqlCommand(queryActualizaInterfacesSQL, connection);
-        //            registrosBorrados += command.ExecuteNonQuery();
-
-        //            connection.Close();
-
-
-        //        }
-
-
-        //    }
-        //    catch (Exception E)
-        //    {
-        //        var transaccion = new Transaccion();
-
-        //        var repositorio = new Repositorio<LOG_EXCEPCIONES>(transaccion);
-
-        //        LOG_EXCEPCIONES NuevaExcepcion = new LOG_EXCEPCIONES();
-
-        //        NuevaExcepcion.Clase = "FoliarConsultasDBSinEntity";
-        //        NuevaExcepcion.Metodo = "LimpiarBaseDelegacionNominaEnSql_Cheque";
-        //        NuevaExcepcion.Usuario = null;
-        //        NuevaExcepcion.Excepcion = E.Message;
-        //        NuevaExcepcion.Comentario = "No se Borraron los datos en la nomina  " + datosCompletosNomina.Id_nom + " del anio " + Anio;
-        //        NuevaExcepcion.Fecha = DateTime.Now;
-
-        //        repositorio.Agregar(NuevaExcepcion);
-
-        //    }
-
-
-        //    return registrosBorrados;
-        //}
-
 
 
 
@@ -1339,6 +1194,62 @@ namespace DAP.Foliacion.Datos
 
             return registrosBorrados;
         }
+
+
+        /****************************************************************************************************************************************************************************************************************************/
+        /****************************************************************************************************************************************************************************************************************************/
+        /**************************************************  </SUSPENDER UNA DISPERCION (SUPENCION DE PAGOMATICOS) />    METODOS PARA ACTUALIZAR UN REGISTRO EN AN CUENDO SE REPONE UN FOLIO    *************************************************************************/
+        /****************************************************************************************************************************************************************************************************************************/
+        /****************************************************************************************************************************************************************************************************************************/
+        public static int RechazoBancarioDispercionDePagomatico(DatosCompletosBitacoraDTO datosNominaCompleto, string CadenaNumEmpleado, Tbl_Pagos SuspenderDispercion)
+        {
+            int registrosBorrados = 0;
+            string queryActualizaInterfacesSQL = "";
+            try
+            {
+                string anioInterface = "";
+                if (datosNominaCompleto.Anio == Convert.ToInt32(DateTime.Now.Year))
+                {
+                    anioInterface = "";
+                }
+                else
+                {
+                    anioInterface = "" + datosNominaCompleto.Anio + "";
+                }
+                //var transaccion = new Transaccion();
+                //var repositorioTblBanco = new Repositorio<Tbl_CuentasBancarias>(transaccion);
+                //Tbl_CuentasBancarias cuentaEncontrada = repositorioTblBanco.Obtener(x => x.Id == SuspenderDispercion.IdTbl_CuentaBancaria_BancoPagador);
+
+                using (System.Data.SqlClient.SqlConnection connection = new System.Data.SqlClient.SqlConnection(ObtenerConexionesDB.obtenerCadenaConexionDeploy()))
+                {
+                  
+                    queryActualizaInterfacesSQL = "UPDATE interfaces"+anioInterface+".dbo."+datosNominaCompleto.An+" SET NUM_CHE = '11111111', OBSERVA = 'RECHAZO'  WHERE NUM = '" + CadenaNumEmpleado + "' and Liquido = " + SuspenderDispercion.ImporteLiquido + " and deleg = " + SuspenderDispercion.Delegacion + "";
+                
+                    connection.Open();
+                    System.Data.SqlClient.SqlCommand command = new System.Data.SqlClient.SqlCommand(queryActualizaInterfacesSQL, connection);
+                    registrosBorrados += command.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+            catch (Exception E)
+            {
+                var transaccion = new Transaccion();
+                var repositorio = new Repositorio<LOG_EXCEPCIONES>(transaccion);
+                LOG_EXCEPCIONES NuevaExcepcion = new LOG_EXCEPCIONES();
+
+                NuevaExcepcion.Clase = "FoliarConsultasDBSinEntity";
+                NuevaExcepcion.Metodo = "RechazoBancarioDispercionDePagomatico";
+                NuevaExcepcion.Usuario = null;
+                NuevaExcepcion.Excepcion = E.Message;
+                NuevaExcepcion.Comentario = "No se pudo ejecutar el query '" + queryActualizaInterfacesSQL + "'";
+                NuevaExcepcion.Fecha = DateTime.Now;
+
+                repositorio.Agregar(NuevaExcepcion);
+            }
+
+            return registrosBorrados;
+        }
+
 
 
 
@@ -1596,6 +1507,7 @@ namespace DAP.Foliacion.Datos
                         nuevoRegistro.NumEmpleado = reader[7].ToString().Trim();
                         nuevoRegistro.Liquido = reader[8].ToString().Trim();
                         nuevoRegistro.FolioCheque = reader[9].ToString().Trim();
+                        nuevoRegistro.IdTbl_InventarioDetalle = Convert.ToInt32( reader[11].ToString().Trim());
                         nuevoRegistro.CuentaBancaria = CuentaBancaria;
                         
                         resumenNomina.Add(nuevoRegistro);
@@ -1689,7 +1601,46 @@ namespace DAP.Foliacion.Datos
 
 
 
-        
+
+        #region METODOS PARA VERIFICAR SI LAS NOMINAS DE LA QUINCENA ESTAN FOLIADAS  
+   
+        public static int ObtenerTotalRegistrosEnANDeNomina(string VisitaaAnioInterfas , string An)
+        {
+            string query = "SELECT COUNT(*) FROM Interfaces"+VisitaaAnioInterfas+".dbo."+An+"";
+            int totalRegistros = 0;
+            using (System.Data.SqlClient.SqlConnection connection = new System.Data.SqlClient.SqlConnection(ObtenerConexionesDB.obtenerCadenaConexionDeploy()))
+            {
+                connection.Open();
+                System.Data.SqlClient.SqlCommand command = new System.Data.SqlClient.SqlCommand(query, connection);
+                System.Data.SqlClient.SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    totalRegistros = Convert.ToInt32( reader[0].ToString().Trim() );
+                }
+            }
+            return totalRegistros;
+        }
+
+    
+
+        public static int ObtenerTotalRegistrosNoFoliadosSegunCondicion(string VisitaaAnioInterfas, string An, string condicionChequeOPagomatico)
+        {
+            string query = "SELECT COUNT(*) FROM Interfaces" + VisitaaAnioInterfas + ".dbo." + An + " where "+condicionChequeOPagomatico+" ";
+            int totalRegistrosNoFoliados = 0;
+            using (System.Data.SqlClient.SqlConnection connection = new System.Data.SqlClient.SqlConnection(ObtenerConexionesDB.obtenerCadenaConexionDeploy()))
+            {
+                connection.Open();
+                System.Data.SqlClient.SqlCommand command = new System.Data.SqlClient.SqlCommand(query, connection);
+                System.Data.SqlClient.SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    totalRegistrosNoFoliados = Convert.ToInt32(reader[0].ToString().Trim());
+                }
+            }
+            return totalRegistrosNoFoliados;
+        }
+
+        #endregion
 
 
 

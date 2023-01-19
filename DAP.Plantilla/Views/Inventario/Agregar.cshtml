@@ -1,4 +1,5 @@
-﻿@{
+﻿@model DAP.Plantilla.Models.PermisosModels.PermisosUsuarioModel
+@{
     ViewBag.Icono = "fas fa-boxes";
     ViewBag.Title = "Agregar";
 
@@ -27,6 +28,10 @@
 
 
 <section class="card col-12 offset-md-2 col-md-8 margenSection" id="PrimerosDatos">
+    <br />
+    <div class="col-5 text-left">
+        <a type="button" class="btn btn-success btn text-center" href="@Url.Action("Index", "Inventario", new  { IdCuentaBancaria = ViewBag.IdBancoSeleccionado })"> <i class="fas fa-arrow-left"></i>  Regresar</a>
+    </div>
     <br />
     <div class="col-12 text-center">
         <h5 class=" text-uppercase"> Ingrese los siguientes campos: </h5>
@@ -62,6 +67,13 @@
 
 <section class="card col-12 offset-lg-1 col-lg-10 margenSection" id="Contenedores" style="display:none;">
     <br />
+    <div class="col-5 text-left">
+        <button type="button" class="btn btn-success btn text-center" onclick="Regresar()"> <i class="fas fa-arrow-left"></i>  Regresar</button>
+    </div>
+
+
+    <br />
+    <br />
     <div class="col-12 text-center">
         <label class=" text-uppercase text-justify"> Ingrese los datos correspondientes a cada contenedor de la orden ingresada en la seccion anterior </label>
     </div>
@@ -75,9 +87,9 @@
         <h4 id="IteradorContenedor" class="col-12 text-center"></h4>
         <div class="row">
             <label class="offset-1 col-10  col-sm-2 text-md-right">Folio Inicial:</label>
-            <input id="FolioInicialAgregar" class="offset-1 col-10 offset-sm-0 col-sm-3" placeholder="Ingresa el F. inicial" type="text" pattern="[A-Za-z0-9]" onkeypress="return event.charCode >= 48 && event.charCode <= 122 && event.charCode != 91 " />
+            <input id="FolioInicialAgregar" class="offset-1 col-10 offset-sm-0 col-sm-3" placeholder="Ingresa el F. inicial" type="number" pattern="[A-Za-z0-9]" onkeypress="return event.charCode >= 48 && event.charCode <= 122 && event.charCode != 91 " />
             <label class="offset-1 col-10 offset-sm-0 col-sm-2   text-md-right">Folio Final:</label>
-            <input id="FolioFinalAgregar" class="offset-1 col-10 offset-sm-0 col-sm-3" placeholder="Ingresa el F. Final" type="text" pattern="[A-Za-z0-9]" onkeypress="return event.charCode >= 48 && event.charCode <= 122 && event.charCode != 91 " />
+            <input id="FolioFinalAgregar" class="offset-1 col-10 offset-sm-0 col-sm-3" placeholder="Ingresa el F. Final" type="number" pattern="[A-Za-z0-9]" onkeypress="return event.charCode >= 48 && event.charCode <= 122 && event.charCode != 91 " />
 
         </div>
         <br />
@@ -85,10 +97,10 @@
 
 
     </div>
-    <br />
-    <button type="button" class="col-12 text-center offset-md-4 col-md-4 btn btn-outline-warning" onclick="Regresar()">
-        Atras
-    </button>
+    @*<br />
+        <button type="button" class="col-12 text-center offset-md-4 col-md-4 btn btn-outline-warning" onclick="Regresar()">
+            Atras
+        </button>*@
     <br />
     <button type="button" class="col-12 text-center offset-md-4 col-md-4 btn btn-success" onclick="Agregar()">
         Agregar Contenedor

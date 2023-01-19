@@ -125,14 +125,29 @@
     <Compile Include="DTO\FoliarDTO\ResumenPersonalAFoliarDTO.cs" />
     <Compile Include="DTO\FoliarDTO\ResumenRevicionNominaPDFDTO.cs" />
     <Compile Include="DTO\FoliarDTO\TotalRegistrosDelegacionXSindicatoDTO.cs" />
+    <Compile Include="DTO\FoliarDTO\VerificarFoliacionNominasQuincenaDTO.cs" />
+    <Compile Include="DTO\HerramientasConfiguracionesDTO\UsuariosNoRegistradoDTO.cs" />
     <Compile Include="DTO\InventarioContenedoresDTO.cs" />
     <Compile Include="DTO\InventarioDetalleDTO.cs" />
     <Compile Include="DTO\InventarioIncidenciasAnuales .cs" />
     <Compile Include="DTO\InventarioValidaFoliosDTO.cs" />
+    <Compile Include="DTO\PermisosLoginDTO\ModulosPermitidosActivosDTO.cs" />
     <Compile Include="DTO\ReporteInventarioGeneralDTO.cs" />
     <Compile Include="DTO\Reposicion_SuspencionNegociosDTO\HistoricoReposicionesDTO.cs" />
     <Compile Include="DTO\SolicitudCreadaDTO.cs" />
     <Compile Include="ExepcionesCargaInterface.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Login_Modulos.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Login_Permisos.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Login_Roles.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Login_Usuarios.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="LOG_EXCEPCIONES.cs">

@@ -51,8 +51,12 @@ namespace DAP.Foliacion.Negocios
             {
                 chequeEncontrado = repositorioTBlPagos.ObtenerPorFiltro(x => x.FolioCheque == BuscarDato).ToList();
 
+            } else if (IdFiltro == 3) 
+            {
+                //Solo para buscar suspenciones o rechazos bancarios
+                chequeEncontrado = repositorioTBlPagos.ObtenerPorFiltro(x => x.FolioCheque == 11111111 ).ToList();
             }
-            else 
+            else
             {
                 chequeEncontrado = repositorioTBlPagos.ObtenerPorFiltro(x => x.NumEmpleado == BuscarDato).ToList();
 
@@ -118,7 +122,8 @@ namespace DAP.Foliacion.Negocios
             nuevoDetalle.EstadoCheque = registroEncontrado.IdCat_EstadoPago_Pagos != 0 ? repositorioEstadoPagos.Obtener(x => x.Id == registroEncontrado.IdCat_EstadoPago_Pagos).Descrip : "No Definido";
             nuevoDetalle.BancoPagador = bancoEncontrado.NombreBanco;
             nuevoDetalle.CuentaPagadora = bancoEncontrado.Cuenta;
-            nuevoDetalle.EsSuspencion = registroEncontrado.TieneSuspensionDispersion == null ? "False" : "Verdadero";
+            nuevoDetalle.EsSuspencion = registroEncontrado.TieneSuspensionDispersion == null ? "Falso" : "Verdadero";
+            nuevoDetalle.EsRechazoBancario = registroEncontrado.TieneRechazoDispersion == null ? "Falso" : "Verdadero";
 
             //nuevoDetalle.EsPenA = regitroEncontrado.EsPenA;
             nuevoDetalle.EsPenA = registroEncontrado.EsPenA == null ? false : registroEncontrado.EsPenA;
@@ -298,6 +303,124 @@ namespace DAP.Foliacion.Negocios
 
             return resultadoSuspencion;
         }
+
+
+        /**************************************************************************************************************************************************************************************/
+        /***************************************         Marca un rechazo bancario  dado que no se pudo hacer una dispercion por causar ajenas         ****************************************/
+        /**************************************************************************************************************************************************************************************/
+        public static string MarcarRechazoBancario(int IdFormaaPago)
+        {
+            string resultadoSuspencion = "Error";
+            var transaccion = new Transaccion();
+            var repositorioTBlPagos = new Repositorio<Tbl_Pagos>(transaccion);
+            var repositorioTBlRefoliados = new Repositorio<Tbl_SeguimientoHistoricoFormas_Pagos>(transaccion);
+
+            Tbl_Pagos suspenderFormaPago = repositorioTBlPagos.Obtener(x => x.Id == IdFormaaPago);
+
+
+            if (suspenderFormaPago.Nomina != "08")
+            {
+                string visitaAnioInterface = FoliarNegocios.ObtenerCadenaAnioInterface(suspenderFormaPago.Anio);
+                DatosCompletosBitacoraDTO datosNominaCompleto = FoliarNegocios.ObtenerDatosCompletosBitacoraFILTRO(suspenderFormaPago.Id_nom, visitaAnioInterface);
+                string cadenaNumEmpleado = ObtenerNumeroEmpleadoCincoDigitos(suspenderFormaPago.NumEmpleado);
+
+                int registroSuspendidoDBF = 0;
+                int resultadoSuspendidoInterfaces = 0;
+                /******************************************************************************************************************************************************/
+                /**********************************   MODIFICA LA BASE DBF EN EL SERVIDOR ( CAMBIA EL FOLIO)    *******************************************************/
+                /******************************************************************************************************************************************************/
+                AlertasAlFolearPagomaticosDTO verificacionAlerta = FolearDBFEnServerNegocios.ModificacionDBF_SuspenderReponer_YLimpiarUnRegistro(4 /*Opncion 4 por ser una Rechazo bancario*/ , datosNominaCompleto, cadenaNumEmpleado, suspenderFormaPago, ""/* Parametro vacio por ser una suspencion no se ocupa*/);
+                if (verificacionAlerta.IdAtencion == 200)
+                {
+                    registroSuspendidoDBF = verificacionAlerta.NumeroRegistrosActualizados;
+                }
+                else
+                {
+                    return verificacionAlerta.Detalle;
+                }
+
+
+                /**************************************************************************************************************************************************************/
+                /**********************************************       ACTUALIZA EN ALPHA INTERFACES AN       ******************************************************************/
+                /**************************************************************************************************************************************************************/
+                if (registroSuspendidoDBF == 1)
+                {
+                    resultadoSuspendidoInterfaces = FoliarConsultasDBSinEntity.RechazoBancarioDispercionDePagomatico(datosNominaCompleto, cadenaNumEmpleado, suspenderFormaPago);
+                }
+
+
+
+                //Actualizacion de la tabla de la DB de interfaces donde se encuentra el registro del empleado (Alcualmente apunta al local porque no esta en produccion)
+                //  int registroActualizado = Reposicion_SuspencionDBSinORM.SuspenderDispercion(formaPagoEncontrada.An, NumCompleto);
+                /****************************************************************************************************************************************************/
+                ///***************************  GUARDA UN REGISTRO PARA EL SEGUIMIENTO DE LO QUE SUCEDIO CON ESTE PAGO ********************************************////
+                int resultadoDbFoliacion = 0;
+                if (resultadoSuspendidoInterfaces == 1)
+                {
+                    try
+                    {
+                        //Crea el inicio de un nuevo trackin de formas de pago (cheques)
+                        Tbl_SeguimientoHistoricoFormas_Pagos nuevaRefoliacion = new Tbl_SeguimientoHistoricoFormas_Pagos();
+                        nuevaRefoliacion.IdTbl_Pagos = suspenderFormaPago.Id;
+                        nuevaRefoliacion.FechaCambio = DateTime.Now;
+                        nuevaRefoliacion.ChequeAnterior = Convert.ToInt32(suspenderFormaPago.FolioCheque);
+                        nuevaRefoliacion.ChequeNuevo = 11111111;
+                        nuevaRefoliacion.MotivoRefoliacion = "RECHAZO DE DISPERSION POR EL BANCO ";
+                        nuevaRefoliacion.RefoliadoPor = "*****";
+                        nuevaRefoliacion.EsCancelado = false;
+                        nuevaRefoliacion.Activo = true;
+                        Tbl_SeguimientoHistoricoFormas_Pagos trackinAgregado = repositorioTBlRefoliados.Agregar(nuevaRefoliacion);
+
+
+                        if (trackinAgregado.Id > 0)
+                        {
+                            //Edita la tabla Tbl_pagos para guardar el registro del la suspension
+                            suspenderFormaPago.FolioCheque = 11111111;
+                            suspenderFormaPago.TieneSeguimientoHistorico = true;
+                            suspenderFormaPago.IdCat_FormaPago_Pagos = 1;
+                            suspenderFormaPago.TieneRechazoDispersion = true;
+
+                            Tbl_Pagos pagoModificado = repositorioTBlPagos.Modificar(suspenderFormaPago);
+
+                            if (pagoModificado.Id > 0)
+                            {
+                                resultadoDbFoliacion = 1;
+                            }
+                        }
+
+                    }
+                    catch (Exception E)
+                    {
+                        //si entra es por que hubo algun error y se trata de forzar la suspencion 
+
+                        transaccion.Dispose();
+
+
+                        return resultadoSuspencion = "Error";
+                    }
+
+                }
+
+
+                if ((registroSuspendidoDBF + resultadoSuspendidoInterfaces) == (resultadoDbFoliacion * 2))
+                {
+                    //transaccion.GuardarCambios();
+                    return resultadoSuspencion = "Correcto";
+                }
+
+
+            }
+            else
+            {
+                return "No se pudo generar el Rechazo de la dispercion de pension alimenticia";
+            }
+
+
+
+            return resultadoSuspencion;
+        }
+
+
 
 
         public static string ReponerNuevaFormaPago(int IdRegistroPago, int ReponerNuevoFolio , string motivoReposicion )

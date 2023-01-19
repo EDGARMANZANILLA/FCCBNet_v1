@@ -1,6 +1,8 @@
 ﻿
-
-
+    //*********************************************************************************//
+    //*********************************************************************************//
+    //*********************************************************************************//
+    //AL CHILE NO SE PARA QUE SIRVE ESTA FUNCION PERO AL PARECER NO HACE NADA 
     function PintarTablaCuentasEncontradasModal(msg) {
         let ninios = $("#cuerpoTabla").children().length
 
@@ -32,81 +34,7 @@
 
 
 
-    ////$(document).ready(function () {
-
-
-
-    ////   // let mesSeleccionado = null;
-    ////   // const seleccionMes = document.getElementById("SeleccionarMes");
-    ////   // seleccionMes.addEventListener("change",
-    ////   //     function () {
-    ////   //             //mesSeleccionado = null;
-    ////   //             mesSeleccionado = this.options[seleccionMes.selectedIndex];
-
-    ////   //         console.log(mesSeleccionado.value);
-
-    ////   //        //let a = href = "/Inventario/GenerarReporteSolicitud?NumMemorandum=19";
-
-    ////   //         //window.open(url);
-
-
-    ////   //     }
-    ////   // );
-
-    ////   //// Descargar
-    ////   // const DescargarInventario = document.getElementById("DescargarPDF");
-    ////   // DescargarInventario.addEventListener("click",
-    ////   //     function () {
-
-    ////   //         //IdIncidencia = 1 es por que esta inhabilitado
-    ////   //         //let mes = "{'MesSelecionado':'"+mesSeleccionado.value+"'}";
-
-    ////   //         if (mesSeleccionado != null) {
-    ////   //             //seleccionar un mes de quincena
-
-    ////   //             // console.log(mes);
-    ////   //             console.log(mesSeleccionado.value);
-
-    ////   //             let url = "/Inventario/GenerarReporteFormasChequesExistentes";
-    ////   //             document.getElementById('Descargar').setAttribute('href', url + '?MesSelecionado=' + `${mesSeleccionado.value}`);
-
-    ////   //            //location.reload();
-    ////   //            //window.location.reload(true);
-
-    ////   //             $('#DescargarReporte').modal('hide');
-    ////   //             $("#SeleccionarMes").val('0')
-
-
-    ////   //         } else {
-    ////   //             //no se selecciono mes
-
-    ////   //             Swal.fire({
-    ////   //                 backdrop: true,
-    ////   //                 allowEnterKey: false,
-    ////   //                 allowOutsideClick: false,
-    ////   //                 icon: 'warning',
-    ////   //                 title: 'Seleccione un mes de la quincena',
-    ////   //                 text: ``
-    ////   //             })
-    ////   //         }
-
-
-    ////   //     }
-    ////   // );
-
-
-
-        
-
-
-
-
-
-
-
-
-
-    ////});
+ 
 
 
 let mesADescargar = null;

@@ -595,7 +595,7 @@ namespace DAP.Foliacion.Negocios
                     }
 
 
-                    //if (pago.FolioCheque == 123172)
+                    //if (pago.FolioCheque == 24285)
                     //{
                     //    int r = 100;
                     //}
@@ -609,12 +609,18 @@ namespace DAP.Foliacion.Negocios
                         string num5Digitos = Reposicion_SuspencionNegocios.ObtenerNumeroEmpleadoCincoDigitos(pago.NumEmpleado);
                         DatosAnIPD_DTO datosAn = CrearReferencia_CanceladosDbSinEntity.ObtenerDatosAN_IPD(anio, datosGeneralesEncontrados.AN, num5Digitos);
 
+                        if(string.IsNullOrEmpty(datosAn.Cla_Pto) && pago.Nomina.Equals("03")) 
+                        {
+                            datosAn.Cla_Pto = "AY001";
+                        }
 
                         if (datosAn != null)
                         {
                             //Obtener Percepciones y Deducciones
                             List<DatosApercepcionesIPD_DTO> percepciones = CrearReferencia_CanceladosDbSinEntity.ObtenerPercepciones_IPD(anio, datosGeneralesEncontrados.AP, num5Digitos);
                             List<DatosAdeducionesIPD_DTO> deducciones = CrearReferencia_CanceladosDbSinEntity.ObtenerDeducciones_IPD(anio, datosGeneralesEncontrados.AD, num5Digitos);
+
+
 
                             foreach (DatosApercepcionesIPD_DTO nuevaPercepcion in percepciones)
                             {
@@ -807,7 +813,7 @@ namespace DAP.Foliacion.Negocios
                 foreach (Tbl_Pagos pago in pagosEncontrados)
                 {
 
-                    //if (pago.FolioCheque == 678)
+                    //if (pago.FolioCheque == 6500)
                     //{
                     //    int a = 110;
                     //}
@@ -835,11 +841,32 @@ namespace DAP.Foliacion.Negocios
                             //Obtener Percepciones y Deducciones
                             List<DatosApercepcionesIPD_DTO> percepciones = CrearReferencia_CanceladosDbSinEntity.ObtenerPercepciones_IPD(anio, datosGeneralesEncontrados.AP, num5Digitos);
                             List<DatosAdeducionesIPD_DTO> deducciones = CrearReferencia_CanceladosDbSinEntity.ObtenerDeducciones_IPD(anio, datosGeneralesEncontrados.AD, num5Digitos);
-                           // registrosCompensados = new List<IPDCDTO>();
+                            //registrosCompensados = new List<IPDCDTO>();
+
+                            /*****************************************************************************************************************************************************************************************/
+                            /*******************************************        SE CONSIDERA PARA NO INCLUIR LAS FALTAS O RETARDOS DENTRO DEL COMPENSADO        ******************************************************/
+                            /*****************************************************************************************************************************************************************************************/
+                            bool contieneFaltasRetardos = false;
+                            decimal DeduccionFaltasYRetardos = 0.0M;
+                            if ( deducciones.Select(x => x.Cla_dedu).Contains("38") || deducciones.Select(x => x.Cla_dedu).Contains("37")) 
+                            {
+                                contieneFaltasRetardos = true;
+
+                                List<DatosAdeducionesIPD_DTO> deduccionesPorFaltasRetardos = deducciones.Where(x => x.Cla_dedu.Trim().Equals("38") || x.Cla_dedu.Trim().Equals("37")).ToList();
+
+                                foreach (DatosAdeducionesIPD_DTO nuevaFaltaRetardo in deduccionesPorFaltasRetardos) 
+                                {
+
+                                    DeduccionFaltasYRetardos += nuevaFaltaRetardo.Monto;
+                                    deducciones.Remove(nuevaFaltaRetardo);
+                                }
+                            }
+                            /*****************************************************************************************************************************************************************************************/
+                            /*****************************************************************************************************************************************************************************************/
+                            /*****************************************************************************************************************************************************************************************/
 
 
-                            //decimal saldo = percepciones.Where(x => x.Cla_perc == "01").FirstOrDefault().Monto;
-                            decimal saldo = percepciones.FirstOrDefault().Monto;
+                            decimal saldo = percepciones.FirstOrDefault().Monto - DeduccionFaltasYRetardos;
                             decimal montoDDACompensar = 0M;
 
                             decimal saldodedu = 0M;
@@ -859,7 +886,7 @@ namespace DAP.Foliacion.Negocios
                                     Tbl_Pagos pagoPena = null;
                                     if (dedu.Cla_dedu == "25") 
                                     {
-                                        pagoPena = repoTblPagos.Obtener(x => x.Quincena == pago.Quincena && x.NumEmpleado == pago.NumEmpleado && x.EsPenA == true && x.ImporteLiquido == dedu.Monto && x.Activo == true);
+                                        pagoPena = repoTblPagos.Obtener(x => x.Quincena == pago.Quincena && x.NumEmpleado == pago.NumEmpleado && x.EsPenA == true && x.Activo == true);
                                     }
 
                                     if (montoDDACompensar <= saldo)
@@ -1009,6 +1036,7 @@ namespace DAP.Foliacion.Negocios
 
                                 while(totalPercepciones > iteradorPP) 
                                 {
+
                                     //Agrega las demas percepciones al compensado 
                                     IPDCDTO nuevoRegistro = new IPDCDTO();
                                     nuevoRegistro.TipoNom = datosGeneralesEncontrados.TipoNomina;
@@ -1028,6 +1056,9 @@ namespace DAP.Foliacion.Negocios
                                     nuevoRegistro.Adicional = Convert.ToString(pago.Adicional);
                                     nuevoRegistro.Cla_pto = datosAn.Cla_Pto;
                                     nuevoRegistro.Ldf_6d = lDF_6M;
+
+                                    
+
                                     registrosCompensados.Add(nuevoRegistro);
 
                                     iteradorPP += 1;

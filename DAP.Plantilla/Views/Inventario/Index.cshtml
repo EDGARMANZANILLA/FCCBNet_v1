@@ -1,6 +1,6 @@
-﻿@model List<DAP.Plantilla.Models.InventarioModel>
+﻿@*@model List<DAP.Plantilla.Models.InventarioModel>*@
 
-@*@model List<PruebaNAV.Modelos.InventariosModel>*@
+@model DAP.Plantilla.Models.PermisosModels.PermisosUsuarioModel
 
 @{
     ViewBag.Icono = "fas fa-boxes";
@@ -76,7 +76,7 @@
 
 
                     </th>
-                    
+
 
 
                 </tr>
@@ -85,42 +85,42 @@
 
 
 
-                @foreach (var modelo in Model)
+                @foreach (var modelo in ViewBag.MostrarBancos)
                 {
-                <tr>
+                    <tr>
 
-                    <td class="text-left">@modelo.NombreBanco</td>
-                    <td>@modelo.Cuenta</td>
-                    <td>@modelo.FormasDisponibles</td>
-                    <td>@modelo.UltimoFolioInventario</td>
-                    <td>@modelo.UltimoFolioUtilizado</td>
-                    <td>@modelo.EstimadoMeses</td>
+                        <td class="text-left">@modelo.NombreBanco</td>
+                        <td>@modelo.Cuenta</td>
+                        <td>@modelo.FormasDisponibles</td>
+                        <td>@modelo.UltimoFolioInventario</td>
+                        <td>@modelo.UltimoFolioUtilizado</td>
+                        <td>@modelo.EstimadoMeses</td>
 
-                    <th>
+                        <th>
 
-                        @if (@modelo.IdCuentaBancaria != 0)
-                        {
-                            <a type="button" class="agregar btn btn-success" href="@Url.Action("Agregar", "Inventario", new { IdCuentaBancaria = modelo.IdCuentaBancaria })">Agregar</a>
+                            @if (@modelo.IdCuentaBancaria != 0)
+                            {
+                                <a type="button" class="agregar btn btn-success" href="@Url.Action("Agregar", "Inventario", new { IdCuentaBancaria = modelo.IdCuentaBancaria })">Agregar</a>
 
-                            @*<th>
-                             <a type="button" class="agregar btn btn-primary" href="@Url.Action("Inhabilitar", "Inventario", new  { NombreBanco = modelo.NombreBanco })">Inhabilitar</a>
-                             </th>*@
+                                @*<th>
+                                    <a type="button" class="agregar btn btn-primary" href="@Url.Action("Inhabilitar", "Inventario", new  { NombreBanco = modelo.NombreBanco })">Inhabilitar</a>
+                                    </th>*@
 
-                            @*<th>
-                                <a type="button" class="agregar btn btn-primary " href="@Url.Action("Ajustar", "Inventario",  new  { NombreBanco = modelo.NombreBanco })" title="Realizar un ajuste al inventario">  Asignar </a>
-                             </th>*@
+                                @*<th>
+                                       <a type="button" class="agregar btn btn-primary " href="@Url.Action("Ajustar", "Inventario",  new  { NombreBanco = modelo.NombreBanco })" title="Realizar un ajuste al inventario">  Asignar </a>
+                                    </th>*@
 
-                            <a type="button" class="agregar btn btn-primary" href="@Url.Action("Incidencias", "Inventario", new  { IdCuentaBancaria = modelo.IdCuentaBancaria  })">Incidencias</a>
-
-
-
-                        }
-                        <a type="button" class="agregar btn btn-success" href="@Url.Action("DetalleBanco", "Inventario", new { IdCuentaBancaria = modelo.IdCuentaBancaria })">Detalle </a>
-                    </th>
-               
+                                <a type="button" class="agregar btn btn-primary" href="@Url.Action("Incidencias", "Inventario", new  { IdCuentaBancaria = modelo.IdCuentaBancaria  })">Incidencias</a>
 
 
-                </tr>
+
+                            }
+                            <a type="button" class="agregar btn btn-success" href="@Url.Action("DetalleBanco", "Inventario", new { IdCuentaBancaria = modelo.IdCuentaBancaria })">Detalle </a>
+                        </th>
+
+
+
+                    </tr>
 
 
                 }

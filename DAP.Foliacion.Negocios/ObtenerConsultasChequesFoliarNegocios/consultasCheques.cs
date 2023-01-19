@@ -20,6 +20,16 @@ namespace DAP.Foliacion.Negocios.ObtenerConsultasChequesFoliarNegocios
         /*  Hopelchen               => 07 */
 
 
+        /// <summary>
+        /// Regresa "1" si es sindicato y "0" si es de confianza, solo aplica para las nomina GENERAL Y DESCENTRALIZADA
+        /// </summary>
+        /// <param name="Sindicato"></param>
+        /// <returns></returns>
+        public static int SindicatoOConfianza(bool Sindicato) 
+        {
+            return Sindicato ? 1 : 0;
+        }
+
         public static string ConvertirListaBancosEnCondicionParaCheques(List<string> bancosContenidosEnAn)
         {
             string condicion = "";
@@ -42,6 +52,9 @@ namespace DAP.Foliacion.Negocios.ObtenerConsultasChequesFoliarNegocios
 
 
 
+        /*****************************************************************************************************************************************************************************************************************************/
+        /**************************************************************             NOMINAS GENERAL Y DESCENTRALIZADA    *************************************************************************************************************/
+        /*****************************************************************************************************************************************************************************************************************************/
 
         public static List<string> ObtenerConsultasTotalPersonal_ConfianzaSindicaliza(string An, int AnioInterface, List<string> bancosContenidosEnAn)
         {
@@ -79,26 +92,21 @@ namespace DAP.Foliacion.Negocios.ObtenerConsultasChequesFoliarNegocios
             }
             return consultasListas;
         }
+        public static string ObtenerConsultaNumerosEmpleadosEnDelegacionGENERALYDESCE(string An, string visitaAnioInterface, string CondicionBancos, string DelegacionesIncluidas, bool Sindicato)
+        {
+            int sindi = SindicatoOConfianza(Sindicato);
+            return "select Num from  interfaces" + visitaAnioInterface + ".dbo." + An + " where  " + CondicionBancos + " and  deleg in  " + DelegacionesIncluidas + " and Sindicato =" + sindi + " ";
+        }
 
 
 
 
-        /****************************************************************************************************************************************************************************************************************************/
-        /**************************************************************               PENSION ALIMENTICIA                 *************************************************************************************************************/
-        /****************************************************************************************************************************************************************************************************************************/
-        public static List<string> ObtenerConsultasTotalPersonal_OtrasNominasYPenA(string An, int AnioInterface, List<string> bancosContenidosEnAn)
+        /************************************************************************************************************************************************************************************************************************************/
+        /**************************************************************             OTRAS NOMiNAS Y PENSION ALIMENTICIA                 *****************************************************************************************************/
+        /************************************************************************************************************************************************************************************************************************************/
+        public static List<string> ObtenerConsultasTotalPersonal_OtrasNominasYPenA(string An, string visitaAnioInterface, string CondicionBancos)
         {
             List<string> consultasTotalPersonal = new List<string>();
-
-
-            string Anio = "";
-            if (AnioInterface != Convert.ToInt32(DateTime.Now.Year))
-            {
-                Anio = Convert.ToString(AnioInterface);
-            }
-
-
-            string condicionBancos = ConvertirListaBancosEnCondicionParaCheques(bancosContenidosEnAn);
 
             var transaccion = new Transaccion();
             var repositorio = new Repositorio<cat_FiltroGrupoImpresionDelegaciones>(transaccion);
@@ -106,112 +114,64 @@ namespace DAP.Foliacion.Negocios.ObtenerConsultasChequesFoliarNegocios
 
            foreach (var itemsDelegacion in filtrodelegaciones)
            {
-             consultasTotalPersonal.Add("select '', '"+itemsDelegacion.GrupoImpresionDelegacion+"' 'Nom_Deleg' ,count(*) 'Total' from interfaces"+Anio+".dbo."+An+" where  "+condicionBancos+" and  deleg in  "+itemsDelegacion.DelegacionesIncluidas+" ");
+             consultasTotalPersonal.Add("select '', '"+itemsDelegacion.GrupoImpresionDelegacion+"' 'Nom_Deleg' ,count(*) 'Total' from interfaces"+visitaAnioInterface+".dbo."+An+" where  "+CondicionBancos+" and  deleg in  "+itemsDelegacion.DelegacionesIncluidas+" ");
            }
 
             return consultasTotalPersonal;
         }
 
+        public static string ObtenerConsultaNumerosEmpleadosEnDelegacion(string An, string visitaAnioInterface, string CondicionBancos, string DelegacionesIncluidas)
+        {
+            return "select Num from  interfaces" + visitaAnioInterface + ".dbo." + An + " where  " + CondicionBancos + " and  deleg in  " + DelegacionesIncluidas + "";
+        }
+        
 
 
 
-        /****************************************************************************************************************************************************************************************************************************/
+
+        /*****************************************************************************************************************************************************************************************************************************/
         /**************************************************************              OBTIENE CONSULTA PARA SABER CUANTOS REGISTROS NO ESTAN FOLIADOS DEACUERDO A LA NOMINA      ******************************************************/
         /*****************************************************************************************************************************************************************************************************************************/
-        public static string ObtenerConsultaTotalRegistrosNoFoliadosxDelegacion_GeneralDescentralizada(string An, int AnioInterface, string DelegacionesIncluidas, bool Sindicato, List<string> bancosContenidosEnAn)
+        public static string ObtenerConsultaTotalRegistrosNoFoliadosxDelegacion_GeneralDescentralizada(string An, string VisitaAnioInterface, string CondicionBancos,  string DelegacionesIncluidas,  bool Sindicato)
         {
-            string Anio = "";
-            if (AnioInterface != Convert.ToInt32(DateTime.Now.Year))
-            {
-                Anio = Convert.ToString(AnioInterface);
-            }
-
-
-            string condicionBancos = ConvertirListaBancosEnCondicionParaCheques(bancosContenidosEnAn);
-            /*Universo de los que deben de estar Foliados*/
-            //string universoDatos = "select NUM   from interfaces2021.dbo.ANSE2120000489  where TARJETA = '' and SERFIN = '' and BANCOMER = '' and BANORTE = '' and HSBC = ''  and deleg in ('05')";
-            string universoDatos;
-            if (Sindicato)
-            {
-                universoDatos = "select NUM from interfaces" + Anio + ".dbo." + An + " where  " + condicionBancos + "  and  sindicato = 1 and deleg in " + DelegacionesIncluidas + " ";
-            }
-            else
-            {
-                universoDatos = "select NUM from interfaces" + Anio + ".dbo." + An + "  where  " + condicionBancos + "  and  sindicato = 0 and deleg in " + DelegacionesIncluidas + " ";
-            }
-
-            return "SELECT COUNT(*) FROM interfaces" + Anio + ".dbo." + An + " WHERE (NUM_CHE = '' or  banco_x = '' or cuenta_x = '' or Observa = '') AND NUM IN (" + universoDatos + ")";
+            //Devuelve "1" si es sindicalizado o "0" si es Confianza
+            int sindi = SindicatoOConfianza(Sindicato);
+            string  universoDatos = "select NUM from interfaces"+VisitaAnioInterface+".dbo."+An+" where  "+CondicionBancos+"  and  sindicato = "+sindi+" and deleg in "+DelegacionesIncluidas+" ";  
+            return "SELECT COUNT(*) FROM interfaces"+VisitaAnioInterface+".dbo."+An+" WHERE (NUM_CHE = '' or  banco_x = '' or cuenta_x = '' or Observa = '') AND NUM IN ("+universoDatos+")";
         }
 
 
-        public static string ObtenerConsultaTotalRegistrosNoFoliadosxDelegacion_OtrasNominasYPenA(string An, int AnioInterface, string DelegacionesIncluidas, List<string> bancosContenidosEnAn)
+        public static string ObtenerConsultaTotalRegistrosNoFoliadosxDelegacion_OtrasNominasYPenA(string An, string visitaAnioInterface, string CondicionBancos , string DelegacionesIncluidas)
         {
-            string Anio = "";
-            if (AnioInterface != Convert.ToInt32(DateTime.Now.Year))
-            {
-                Anio = Convert.ToString(AnioInterface);
-            }
-
-            string condicionBancos = ConvertirListaBancosEnCondicionParaCheques(bancosContenidosEnAn);
-            /*Universo de los que deben de estar Foliados*/
-            //string universoDatos = "select NUM   from interfaces2021.dbo.ANSE2120000489  where TARJETA = '' and SERFIN = '' and BANCOMER = '' and BANORTE = '' and HSBC = ''  and deleg in ('05')";
-
-            string universoDatos = "select NUM   from interfaces"+Anio+".dbo."+An+"  where "+condicionBancos+"  and deleg in "+DelegacionesIncluidas+" ";
-
-
-            return "SELECT COUNT(*) FROM interfaces" + Anio + ".dbo." + An + " WHERE (NUM_CHE = '' or  banco_x = '' or cuenta_x = '' or Observa = '') AND NUM IN (" + universoDatos + ")";
+            string universoDatos = "select NUM   from interfaces"+visitaAnioInterface+".dbo."+An+"  where "+CondicionBancos+"  and deleg in "+DelegacionesIncluidas+" ";
+            return "SELECT COUNT(*) FROM interfaces"+visitaAnioInterface+".dbo." + An + " WHERE (NUM_CHE = '' or  banco_x = '' or cuenta_x = '' or Observa = '') AND NUM IN (" + universoDatos + ")";
         }
 
 
 
 
-        /****************************************************************************************************************************************************************************************************************************/
+        /***********************************************************************************************************************************************************************************************************************************************/
         /**************************************************************              OBTIENE CONSULTA PARA SABER El DETALLE DE COMO SE ENCUENTRA LAS PERSONAS O REGISTROS EN AN DE LA NOMINA      ******************************************************/
-        /*****************************************************************************************************************************************************************************************************************************/
-        public static string ObtenerConsultaDetallePersonalEnAN_GeneralDescentralizada(string An, int AnioInterface, string DelegacionesIncluidas, bool Sindicato, List<string> bancosContenidosEnAn)
+        /***********************************************************************************************************************************************************************************************************************************************/
+        public static string ObtenerConsultaDetallePersonalEnAN_GeneralDescentralizada(string An, string visitaAnioInterface , string CondicionBancos,  string DelegacionesIncluidas, bool Sindicato)
         {
-            string Anio = "";
-            if (AnioInterface != Convert.ToInt32(DateTime.Now.Year))
-            {
-                Anio = Convert.ToString(AnioInterface);
-            }
+            int sindi = SindicatoOConfianza(Sindicato);
 
-            string condicionBancos = ConvertirListaBancosEnCondicionParaCheques(bancosContenidosEnAn);
-
-            /*Universo de los que deben de estar Foliados*/
-            //string universoDatos = "select NUM   from interfaces2021.dbo.ANSE2120000489  where TARJETA = '' and SERFIN = '' and BANCOMER = '' and BANORTE = '' and HSBC = ''  and deleg in ('05')";
-            string universoDatos;
-            if (Sindicato)
-            {
-                universoDatos = "select Substring(PARTIDA,2,5), NUM, NOMBRE, DELEG, NUM_CHE, LIQUIDO, BANCO_X, CUENTA_X , OBSERVA from interfaces" + Anio + ".dbo." + An + "  where  "+condicionBancos+" and  sindicato = 1 and  deleg in " + DelegacionesIncluidas + " order by  IIF(isnull(NOM_ESP, 0) = 1, '1', '2'), DELEG, SUBSTRING(PARTIDA, 2, 8), NOMBRE collate SQL_Latin1_General_CP1_CI_AS ";
-            }
-            else
-            {
-                universoDatos = "select Substring(PARTIDA,2,5), NUM, NOMBRE, DELEG, NUM_CHE, LIQUIDO, BANCO_X, CUENTA_X , OBSERVA  from interfaces" + Anio + ".dbo." + An + "  where  "+condicionBancos+" and  sindicato = 0 and  deleg in  " + DelegacionesIncluidas + " order by  IIF(isnull(NOM_ESP, 0) = 1, '1', '2'), DELEG, SUBSTRING(PARTIDA, 2, 8), NOMBRE collate SQL_Latin1_General_CP1_CI_AS ";
-            }
-
-            return universoDatos;
+            return "select Substring(PARTIDA,2,5), NUM, NOMBRE, DELEG, NUM_CHE, LIQUIDO, BANCO_X, CUENTA_X , OBSERVA from interfaces" + visitaAnioInterface + ".dbo." + An + "  where  " + CondicionBancos + " and  sindicato = " + sindi + " and  deleg in " + DelegacionesIncluidas + " order by  IIF(isnull(NOM_ESP, 0) = 1, '1', '2'), DELEG, SUBSTRING(PARTIDA, 2, 8), NOMBRE collate SQL_Latin1_General_CP1_CI_AS ";
         }
 
 
 
-        public static string ObtenerConsultaDetallePersonalEnAN_OtrasNominasYPenA(string An, int AnioInterface, string DelegacionesIncluidas, bool EsPena, List<string> bancosContenidosEnAn)
+        public static string ObtenerConsultaDetallePersonalEnAN_OtrasNominasYPenA(string An, string VisitaAnioInterface, string CondicionBancos ,  string DelegacionesIncluidas, bool EsPena)
         {
-            string Anio = "";
-            if (AnioInterface != Convert.ToInt32(DateTime.Now.Year))
-            {
-                Anio = Convert.ToString(AnioInterface);
-            }
-
-            string condicionBancos = ConvertirListaBancosEnCondicionParaCheques(bancosContenidosEnAn);
             string universoDatos;
             if (EsPena)
             {
-                universoDatos = "select Substring(PARTIDA,2,5) , NUM, NOMBRE, DELEG, NUM_CHE, LIQUIDO, BANCO_X, CUENTA_X , OBSERVA    from interfaces" + Anio+".dbo."+An+"  where "+condicionBancos+"  and deleg in " + DelegacionesIncluidas + " order by JUZGADO, NOMBRE ";
+                universoDatos = "select Substring(PARTIDA,2,5) , NUM, NOMBRE, DELEG, NUM_CHE, LIQUIDO, BANCO_X, CUENTA_X , OBSERVA    from interfaces" + VisitaAnioInterface + ".dbo."+An+"  where "+CondicionBancos+"  and deleg in " + DelegacionesIncluidas + " order by JUZGADO, NOMBRE ";
             }
             else
             {
-                universoDatos = "select Substring(PARTIDA,2,5) , NUM, NOMBRE, DELEG, NUM_CHE, LIQUIDO, BANCO_X, CUENTA_X , OBSERVA   from interfaces" + Anio+".dbo."+An+"  where "+condicionBancos+"  and deleg in " + DelegacionesIncluidas + " order by  IIF(isnull(NOM_ESP, 0) = 1, '1', '2'), DELEG, SUBSTRING(PARTIDA, 2, 8), NOMBRE collate SQL_Latin1_General_CP1_CI_AS ";
+                universoDatos = "select Substring(PARTIDA,2,5) , NUM, NOMBRE, DELEG, NUM_CHE, LIQUIDO, BANCO_X, CUENTA_X , OBSERVA   from interfaces"+VisitaAnioInterface + ".dbo."+An+"  where "+CondicionBancos+"  and deleg in " + DelegacionesIncluidas + " order by  IIF(isnull(NOM_ESP, 0) = 1, '1', '2'), DELEG, SUBSTRING(PARTIDA, 2, 8), NOMBRE collate SQL_Latin1_General_CP1_CI_AS ";
             }
 
 
@@ -219,111 +179,89 @@ namespace DAP.Foliacion.Negocios.ObtenerConsultasChequesFoliarNegocios
         }
 
 
-        /********************************************************************************************************************************************************************************************************************************/
-        /**************************************************************              OBTIENE CONSULTA PARA SABER EL ORDEN EN EL QUE SE VA A FOLIAR LA DELEGACION SELECCIONADA               *********************************************/
-        /********************************************************************************************************************************************************************************************************************************/
-        public static string ObtenerConsultaOrdenDeFoliacionPorDelegacion_GeneralDescentralizada(string An, int AnioInterface, string DelegacionesIncluidas, bool Sindicato , List<string> bancosContenidosEnAn)
+        /*********************************************************************************************************************************************************************************************************************************************/
+        /**************************************************************              OBTIENE CONSULTA PARA SABER EL ORDEN EN EL QUE SE VA A FOLIAR LA DELEGACION SELECCIONADA               **********************************************************/
+        /*********************************************************************************************************************************************************************************************************************************************/
+        public static string ObtenerConsultaOrdenDeFoliacionPorDelegacion_GeneralDescentralizada(string An, string VisitaAnioInterface, string CondicionBancos , string DelegacionesIncluidas, bool Sindicato )
         {
-            string Anio = "";
-            if (AnioInterface != Convert.ToInt32(DateTime.Now.Year))
-            {
-                Anio = Convert.ToString(AnioInterface);
-            }
-
-            string condicionBancos = ConvertirListaBancosEnCondicionParaCheques(bancosContenidosEnAn);
-            /* Universo de los que SE VAN A FOLIAR */
-            string universoDatos;
-            if (Sindicato)
-            {
-                universoDatos = "select PARTIDA, NUM, NOMBRE, DELEG, NUM_CHE, LIQUIDO , FolioCFDI, BANCO_X, CUENTA_X, RFC   from interfaces" + Anio + ".dbo." + An + "  where  "+condicionBancos+"  and sindicato = 1 and deleg in "+DelegacionesIncluidas+" order by  IIF(isnull(NOM_ESP, 0) = 1, '1', '2'), DELEG, SUBSTRING(PARTIDA, 2, 8), NOMBRE collate SQL_Latin1_General_CP1_CI_AS ";
-            }
-            else
-            {
-                universoDatos = "select PARTIDA, NUM, NOMBRE, DELEG, NUM_CHE, LIQUIDO , FolioCFDI, BANCO_X, CUENTA_X, RFC   from interfaces" + Anio + ".dbo." + An + "  where  "+condicionBancos+" and sindicato = 0 and deleg in "+DelegacionesIncluidas+" order by  IIF(isnull(NOM_ESP, 0) = 1, '1', '2'), DELEG, SUBSTRING(PARTIDA, 2, 8), NOMBRE collate SQL_Latin1_General_CP1_CI_AS ";
-            }
-
-            return universoDatos;
+           /* Universo de los que SE VAN A FOLIAR */
+           int sindi = SindicatoOConfianza(Sindicato);
+           return  "select PARTIDA, NUM, NOMBRE, DELEG, NUM_CHE, LIQUIDO , FolioCFDI, BANCO_X, CUENTA_X, RFC   from interfaces"+VisitaAnioInterface+".dbo." + An + "  where  "+CondicionBancos+"  and sindicato = "+sindi+" and deleg in "+DelegacionesIncluidas+" order by  IIF(isnull(NOM_ESP, 0) = 1, '1', '2'), DELEG, SUBSTRING(PARTIDA, 2, 8), NOMBRE collate SQL_Latin1_General_CP1_CI_AS ";
         }
 
 
-        public static string ObtenerConsultaOrdenDeFoliacionPorDelegacion_OtrasNominasYPenA(string An, int AnioInterface, string DelegacionesIncluidas, bool EsPena, List<string> bancosContenidosEnAn)
+        public static string ObtenerConsultaOrdenDeFoliacionPorDelegacion_OtrasNominasYPenA(string An, string VisitaAnioInterface, string CondicionBancos, string DelegacionesIncluidas, bool EsPena)
         {
-            string Anio = "";
-            if (AnioInterface != Convert.ToInt32(DateTime.Now.Year))
-            {
-                Anio = Convert.ToString(AnioInterface);
-            }
-
-
-            string condicionBancos = ConvertirListaBancosEnCondicionParaCheques(bancosContenidosEnAn);
-            /*Universo de los que deben de estar Foliados*/
-            //string universoDatos = "select NUM   from interfaces2021.dbo.ANSE2120000489  where TARJETA = '' and SERFIN = '' and BANCOMER = '' and BANORTE = '' and HSBC = ''  and deleg in ('05')";
             string universoDatos;
             if (EsPena)
             {
-                universoDatos = "select PARTIDA, NUM, Inter.NOMBRE, DELEG, NUM_CHE, LIQUIDO , FolioCFDI, BANCO_X, CUENTA_X , RFC,  BENEF      from interfaces" + Anio + ".dbo." + An + " as Inter where  "+condicionBancos+"   and deleg in " + DelegacionesIncluidas + " order by JUZGADO, Inter.NOMBRE ";
+                universoDatos = "select PARTIDA, NUM, Inter.NOMBRE, DELEG, NUM_CHE, LIQUIDO , FolioCFDI, BANCO_X, CUENTA_X , RFC,  BENEF      from interfaces"+VisitaAnioInterface+".dbo."+An+ " as Inter where  "+CondicionBancos+"  and deleg in "+DelegacionesIncluidas+" order by JUZGADO, Inter.NOMBRE ";
             }
             else
             {
-                universoDatos = "select PARTIDA, NUM, Inter.NOMBRE, DELEG, NUM_CHE, LIQUIDO , FolioCFDI, BANCO_X, CUENTA_X , RFC              from interfaces" + Anio + ".dbo." + An + " as Inter  where  "+condicionBancos+"  and deleg in " + DelegacionesIncluidas + " order by  IIF(isnull(NOM_ESP, 0) = 1, '1', '2'), DELEG, SUBSTRING(PARTIDA, 2, 8), Inter.NOMBRE collate SQL_Latin1_General_CP1_CI_AS ";
+                universoDatos = "select PARTIDA, NUM, Inter.NOMBRE, DELEG, NUM_CHE, LIQUIDO , FolioCFDI, BANCO_X, CUENTA_X , RFC              from interfaces"+VisitaAnioInterface+".dbo."+An+" as Inter  where  "+CondicionBancos+"  and deleg in "+DelegacionesIncluidas+" order by  IIF(isnull(NOM_ESP, 0) = 1, '1', '2'), DELEG, SUBSTRING(PARTIDA, 2, 8), Inter.NOMBRE collate SQL_Latin1_General_CP1_CI_AS ";
             }
 
+            return universoDatos;
+        }
+
+        /*********************************************************************************************************************************************************************************************************************************************/
+        /*********************************************************             AJUSTE ====>  OBTIENE CONSULTA PARA SABER EL ORDEN QUE SE TIENE QUE VOLVER A FOLIAR LA DELEGACION SELECCIONADA EN EL AJUSTE                     ***********************/
+        /*********************************************************************************************************************************************************************************************************************************************/
+        public static string ObtenerConsultaParaAJuste_GeneralDescentralizada(string An, string visitaAnioInterface, string CondicionBancos, string DelegacionesIncluidas , bool Sindicato)
+        {
+            int sindi = SindicatoOConfianza(Sindicato);
+            string indexadoNomina = obtenerIndexadoDeNomina();
+            return "select PARTIDA, NUM, NOMBRE, DELEG, NUM_CHE, LIQUIDO , FolioCFDI, BANCO_X, CUENTA_X, RFC  from  interfaces" + visitaAnioInterface + ".dbo." + An + " where  (NUM_CHE ='' and CUENTA_X = '') and  " + CondicionBancos + " and sindicato = " + sindi + " and  deleg in  " + DelegacionesIncluidas+"  "+indexadoNomina+"  ";
+        }
+
+        public static string ObtenerConsultaParaAJuste_OtrasNominasYPenA(string An, string VisitaAnioInterface, string CondicionBancos, string DelegacionesIncluidas, bool EsPena)
+        {
+            string indexadoNomina = obtenerIndexadoDeNomina();
+            string universoDatos;
+            if (EsPena)
+            {
+                universoDatos = "select PARTIDA, NUM, Inter.NOMBRE, DELEG, NUM_CHE, LIQUIDO , FolioCFDI, BANCO_X, CUENTA_X , RFC,  BENEF      from interfaces" + VisitaAnioInterface + ".dbo." + An + " as Inter where   (NUM_CHE ='' and CUENTA_X = '') and " + CondicionBancos + "  and deleg in " + DelegacionesIncluidas + " order by JUZGADO, Inter.NOMBRE ";
+            }
+            else
+            {
+                universoDatos = "select PARTIDA, NUM, Inter.NOMBRE, DELEG, NUM_CHE, LIQUIDO , FolioCFDI, BANCO_X, CUENTA_X , RFC              from interfaces" + VisitaAnioInterface + ".dbo." + An + " as Inter  where  (NUM_CHE ='' and CUENTA_X = '') and " + CondicionBancos+"  and deleg in "+DelegacionesIncluidas+" "+indexadoNomina+" ";
+            }
 
             return universoDatos;
         }
 
 
+
+        public static string obtenerIndexadoDeNomina() 
+        {
+            return "order by  IIF(isnull(NOM_ESP, 0) = 1, '1', '2'), DELEG, SUBSTRING(PARTIDA, 2, 8), Inter.NOMBRE collate SQL_Latin1_General_CP1_CI_AS";
+        } 
 
         /*****************************************************************************************************************************************************************************************************************************************************************/
         /**************************************************************              OBTIENE CONSULTA PARA SABER QUE REGISTROS SE DEBEN DE BLANQUEAR CUANDO LA FOLIACION NO CUMPLA CON EL ESTANDART DE CALIDAD               *********************************************/
         /*****************************************************************************************************************************************************************************************************************************************************************/
-        public static string ObtenerConsultaLimpiarRegistrosPorDelegacion_GeneralDescentralizada(string An, int AnioInterface, string DelegacionesIncluidas, bool Sindicato, List<string> bancosContenidosEnAn)
+        public static string ObtenerCondicionParaLimpiarRegistrosChequePorDelegacion_GeneralDescentralizada(string An, string CondicionBancos, string DelegacionesIncluidas, bool Sindicato)
         {
-            string Anio = "";
-            if (AnioInterface != Convert.ToInt32(DateTime.Now.Year))
-            {
-                Anio = Convert.ToString(AnioInterface);
-            }
-
-            string condicionBancos = ConvertirListaBancosEnCondicionParaCheques(bancosContenidosEnAn);
-            /* Universo de los que SE VAN A FOLIAR */
-            string universoDatos;
             // No contiene el where ya que este se define en el metodo donde se hara la limpieza de los registros bajo esta condicion
-            if (Sindicato)
-            {
-                universoDatos = "   "+condicionBancos+"  and sindicato = 1 and deleg in "+DelegacionesIncluidas+" ";
-            }
-            else
-            {
-                universoDatos = "   "+condicionBancos+" and sindicato = 0 and deleg in "+DelegacionesIncluidas+"  ";
-            }
+            int sindi = SindicatoOConfianza(Sindicato);
+            string universoDatos = "   " + CondicionBancos + "  and sindicato = " + sindi + " and deleg in " + DelegacionesIncluidas + " ";
 
             return universoDatos;
         }
 
-
-        public static string ObtenerConsultaLimpiarRegistrosPorDelegacion_OtrasNominasYPenA(string An, int AnioInterface, string DelegacionesIncluidas, bool EsPena, List<string> bancosContenidosEnAn)
+        public static string ObtenerCondicionParaLimpiarRegistrosChequePorDelegacion_OtrasNominasYPenA(string An, string CondicionBancos, string DelegacionesIncluidas, bool EsPena )
         {
-            string Anio = "";
-            if (AnioInterface != Convert.ToInt32(DateTime.Now.Year))
-            {
-                Anio = Convert.ToString(AnioInterface);
-            }
-
-
-            string condicionBancos = ConvertirListaBancosEnCondicionParaCheques(bancosContenidosEnAn);
-
             // No contiene el where ya que este se define en el metodo donde se hara la limpieza de los registros bajo esta condicion
             string universoDatos;
             if (EsPena)
             {
-                universoDatos = "   "+condicionBancos+"   and deleg in "+DelegacionesIncluidas+"  ";
+                universoDatos = "   "+CondicionBancos+"   and deleg in "+DelegacionesIncluidas+"  ";
             }
             else
             {
-                universoDatos = "   "+condicionBancos+"  and deleg in "+DelegacionesIncluidas+"  ";
+                universoDatos = "   "+CondicionBancos+"  and deleg in "+DelegacionesIncluidas+"  ";
             }
-
 
             return universoDatos;
         }

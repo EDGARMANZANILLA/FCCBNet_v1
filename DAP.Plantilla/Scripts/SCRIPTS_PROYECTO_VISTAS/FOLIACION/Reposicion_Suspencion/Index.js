@@ -95,7 +95,7 @@ function PintarLocalizadorFormaPago(datos) {
                     //console.log( data);
                     if (data) {
                       
-                        return '<h4 class="verDetalleSuspender bg-info btn  text-uppercase text-light"   >Ver detalle para Suspender </h4>';
+                        return '<h4 class="verDetalleSuspender bg-info btn  text-uppercase text-light"   >Detalle Suspension o Rechazo Banca </h4>';
                     }
 
                 }
@@ -209,7 +209,7 @@ function SuspenderPagoTrabajador(idRegistro) {
 
 
 
-    let EnviarSupensionRegistro = "{'IdRegistroPago':'"+idRegistro+"'}";
+   // let EnviarSupensionRegistro = "{'IdRegistroPago':'"+idRegistro+"'}";
 
     //console.log(EnviarSupensionRegistro + " SuspenderPagoTrabajadorrrrrrrrrrrrrrrrrrrr")
 
@@ -258,33 +258,6 @@ function SuspenderPagoTrabajador(idRegistro) {
 
 
 
-            //$.ajax({
-            //    url: 'Reposicion_Suspencion/SuspenderIdFormaPago',
-            //    data: EnviarSupensionRegistro,
-            //    type: "POST",
-            //    contentType: "application/json; charset=utf-8",
-            //    success: function (response) {
-
-            //       // console.log(response)
-
-            //        if (response.respuestaServidor == 200) {
-            //            //entra si todo fue bien en el servidor 
-            //            MensajeCorrectoConRecargaPagina(response.solucion)
-
-
-            //        } else  {
-
-            //            MensajeErrorSweet(response.solucion, '');
-            //        }
-
-            //        OcultarMensajeCargando();
-
-            //    }, error: function (jqXHR, textStatus) {
-            //        MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
-            //        OcultarMensajeCargando();
-            //    }
-            //});
-
 
 
         }
@@ -298,6 +271,57 @@ function SuspenderPagoTrabajador(idRegistro) {
 
 
 
+/**********************************************************************************************************************************************************************************/
+/**********************************************************************************************************************************************************************************/
+/***************************************************  FUNCON PARA MARCAR COMO UN RECHAZO BANCARIO LA DISPERCION QUE SE DEBIO REALIZAR *********************************************/
+/**********************************************************************************************************************************************************************************/
+/**********************************************************************************************************************************************************************************/
+function MarcarRechazoBancario(idRegistro)
+{
+
+
+    Swal.fire({
+        title: '¿Seguro que desea marcar como RECHAZO ESTA DISPERSION para el empleado actual?',
+        text: "¡Se guardara un registro de este movimiento y podria no revertirse!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, Continuar!',
+        cancelButtonText: 'No, cancelar!',
+        footer: '<a href="#">Contactar al desarrollador?</a>'
+    }).then((result) => {
+        if (result.isConfirmed) {
+
+            MensajeCargando();
+
+            axios.post('/Reposicion_Suspencion/MarcarRechazoIdFormaPago', {
+                IdRegistroPago: idRegistro
+
+            }).then(function (response) {
+
+                if (response.data.respuestaServidor == 200) {
+                    //entra si todo fue bien en el servidor 
+                    MensajeCorrectoConRecargaPagina(response.data.solucion)
+
+
+                } else {
+
+                    MensajeErrorSweet(response.data.solucion, '');
+                }
+
+                OcultarMensajeCargando();
+            }).catch(function (error) {
+                MensajeErrorSweet("Ocurrio un error intente de nuevo : " + error)
+                OcultarMensajeCargando();
+                //console.log(error);
+            });
+
+
+        }
+    })
+
+}
 
 
 
@@ -620,35 +644,45 @@ function LocalizarDatoPorFiltro()
     let buscarDato = document.getElementById("InputLocalizador").value;
 
     $('#TablaRegistroLocalizadoFormaPago').empty();
-    if (parseInt( tipoFiltro) != 0) {
+    let IdFiltroSeleccionado = parseInt(tipoFiltro);
+    if (IdFiltroSeleccionado != 0) {
+
+        let SePuedeHacerPeticion = false;
+        let DatoBuscado = parseInt(buscarDato);
+
+        if (buscarDato != '')
+        {
+            SePuedeHacerPeticion = true;
+
+        } else {
+
+            if (IdFiltroSeleccionado == 3) {
+                SePuedeHacerPeticion = true;
+                DatoBuscado = 11111111;
+            } else
+            {
+                MensajeErrorSweet('Ingrese un dato a buscar', 'NO INGRESO NINGUN DATO PARA BUSCAR')
+            }
+        }
 
 
-        if (buscarDato != '') {
 
+        if (SePuedeHacerPeticion)
+        {
             //Antes de inciar una nueva peticion al server limpiamos la vista parcial para que el detalle del registro seleccionado no este a la vista
             $('#RenderPartialViewDetalleRegistroSuspencion').html('');
 
-            let ElementoABuscar = "{'IdFiltro':'" + parseInt(tipoFiltro) + "','LocalizarEsteElemento':'" + parseInt( buscarDato) + "'}";
-
-            //console.log(ElementoABuscar);
 
             MensajeCargando();
-
-
-
             axios.post('/Reposicion_Suspencion/Localizar', {
-                IdFiltro: parseInt(tipoFiltro),
-                LocalizarEsteElemento: parseInt(buscarDato)
+                IdFiltro: IdFiltroSeleccionado,
+                LocalizarEsteElemento: DatoBuscado
 
             }).then(function (response) {
 
-                if (response.data.RespuestaServidor == 200) {
+                if (response.data.RespuestaServidor == 200)
+                {
 
-                    //   console.log(response.FormaPagoLocalizada);
-
-                    //$('#TablaEsFoliada').empty();
-                    //DibujarTablaEsFoliada();
-                    //PintarLocalizadorFormaPago(response.FormaPagoLocalizada);
                     $('#TablaRegistroLocalizadoFormaPago').empty();
                     DibujarLocalizadorFormaPago();
                     PintarLocalizadorFormaPago(response.data.FormaPagoLocalizada)
@@ -669,49 +703,9 @@ function LocalizarDatoPorFiltro()
             }).catch(function (error) {
                 MensajeErrorSweet("Ocurrio un error intente de nuevo : " + error)
                 OcultarMensajeCargando();
-                //console.log(error);
+               
             });
 
-
-            //$.ajax({
-            //    url: 'Reposicion_Suspencion/Localizar',
-            //    data: ElementoABuscar,
-            //    type: "POST",
-            //    contentType: "application/json; charset=utf-8",
-            //    success: function (response) {
-
-            //        if (response.RespuestaServidor == 200) {
-
-            //            //   console.log(response.FormaPagoLocalizada);
-
-            //            //$('#TablaEsFoliada').empty();
-            //            //DibujarTablaEsFoliada();
-            //            //PintarLocalizadorFormaPago(response.FormaPagoLocalizada);
-            //            $('#TablaRegistroLocalizadoFormaPago').empty();
-            //            DibujarLocalizadorFormaPago();
-            //            PintarLocalizadorFormaPago(response.FormaPagoLocalizada)
-
-
-            //        } else if (response.RespuestaServidor == 201) {
-
-            //            MensajeErrorSweet(response.Error, response.Solucion);
-            //        }
-            //        else if (response.RespuestaServidor == 500) {
-
-            //            MensajeErrorSweet(response.Error, response.Solucion);
-            //        }
-
-            //        OcultarMensajeCargando();
-
-            //    }, error: function (jqXHR, textStatus) {
-            //        MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
-            //        OcultarMensajeCargando();
-            //    }
-            //});
-
-
-        } else {
-            MensajeErrorSweet('Ingrese un dato a buscar', 'NO INGRESO NINGUN DATO PARA BUSCAR')
         }
 
 

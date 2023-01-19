@@ -1,0 +1,48 @@
+﻿
+@model DAP.Plantilla.Models.PermisosModels.PermisosUsuarioModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="col-12 marginBotton">
+
+    <div class="text-center margenAlPie">
+        <H2> Registrar usuario para uso interno de la app </H2>
+    </div>
+
+    <div class="text-center margenAlPie ">
+
+        <input list="browsers" name="browser" id="buscadorEmpleado" class="text-center" placeholder="Ingrese el numero de empleado">
+
+        <datalist id="browsers">
+            @foreach (var nuevoUsuairoNoregistrado in ViewBag.UsuariosNoRegistrados)
+            {
+                <option value="@nuevoUsuairoNoregistrado.Num"> @nuevoUsuairoNoregistrado.MostrarTexto</option>
+            }
+        </datalist>
+    </div>
+
+
+    <div class="text-center">
+        <div class="col-12 ">
+            <button class=" text-center col-md-4 col-12   btn  btn-success" title="vincular un usuario para que pueda usar esta appa" onclick="AgregarUsuario()">Agregar cuenta </button>
+        </div>
+    </div>
+
+</div>
+
+
+
+<style>
+
+    #buscadorEmpleado {
+        background-color: white;
+        width: 300px;
+        height: 50px;
+        border-radius: 16px;
+        border: solid 1px;
+    }
+
+</style>
+

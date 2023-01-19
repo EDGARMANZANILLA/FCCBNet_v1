@@ -223,45 +223,30 @@ function PintarDatosHistoricoFormaPago(datos) {
 function HistoricoSeguimiento(idRegistro) {
 
     MensajeCargando();
-
-    let HistoricoAlocalizar = "{'IdRegistro':'" + idRegistro + "'}";
-
-
-    $.ajax({
-        url: 'EncontrarCheque/BuscarHistorico',
-        data: HistoricoAlocalizar,
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        success: function (response) {
-
-
-
-            if (response.RespuestaServidor == 200) {
-
-                // console.log(response.Data);
-
+    axios.post('/EncontrarCheque/BuscarHistorico', {
+        IdRegistro: idRegistro
+    })
+    .then(function (response) {
+            if (response.data.RespuestaServidor == 200) {
 
                 $('#TablaHistoricoReposiciones').empty();
                 DibujarTBLHistoricoFormaPago();
-                PintarDatosHistoricoFormaPago(response.Data);
+                PintarDatosHistoricoFormaPago(response.data.Data);
 
-                //OCULTAR EL MODAL DONDE SE ENCUENTRA LA VISTA PARCIAL
+                //ABRIRL EL MODAL DONDE SE ENCUENTRA LA VISTA PARCIAL
                 $('#HistoricoSeguimientoFormaPago').modal('show');
 
-
-
-
             } else {
-                MensajeErrorSweet(response.Error, response.Solucion);
+                MensajeErrorSweet(response.data.Error, response.data.Solucion);
             }
 
             OcultarMensajeCargando();
-
-        }, error: function (jqXHR, textStatus) {
-            MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
-            OcultarMensajeCargando();
-        }
+    })
+        .catch(function (error) {
+            MensajeErrorSweet("Ocurrio un error intente de nuevo ", error)
+        OcultarMensajeCargando();
     });
+
 
 }
 
@@ -275,42 +260,38 @@ function AgregarFormaPagoReferenciaCancelacion(IdRegitroAReferenciaCancelado) {
     if (SeleccionaReferencia.value != "") {
 
         MensajeCargando();
-
-        let enviarIdReferencia = "{'IdReferenciaCancelado':'" + SeleccionaReferencia.value + "', 'IdRegistroCancelar':'" + IdRegitroAReferenciaCancelado + "'}";
-
-
-        $.ajax({
-            url: 'EncontrarCheque/AgregarRemover_IdFormaPagoAReferenciaCancelado',
-            data: enviarIdReferencia,
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            success: function (response) {
-
-                if (response.NumeroMensaje == 6 || response.NumeroMensaje == 7 || response.NumeroMensaje == 8) {
+        axios.post('/EncontrarCheque/AgregarRemover_IdFormaPagoAReferenciaCancelado', {
+            IdReferenciaCancelado: SeleccionaReferencia.value,
+            IdRegistroCancelar: IdRegitroAReferenciaCancelado
+        })
+        .then(function (response) {
 
 
-                    MensajeCorrectoSweet(response.Mensaje);
+                if (response.data.NumeroMensaje == 6 || response.data.NumeroMensaje == 7 || response.data.NumeroMensaje == 8) {
+
+
+                    MensajeCorrectoSweet(response.data.Mensaje);
 
                 } else {
-                    MensajeErrorSweet(response.Solucion, response.Mensaje)
+                    MensajeErrorSweet(response.data.Solucion, response.data.Mensaje)
                 }
 
 
                 $('#AgregarFormaPagoCancelacion').modal('hide');
                 OcultarMensajeCargando();
 
-
-
-
-            }, error: function (jqXHR, textStatus) {
-                MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
-                OcultarMensajeCargando();
-            }
+        })
+            .catch(function (error) {
+                MensajeErrorSweet("Ocurrio un error intente de nuevo ", error)
+            OcultarMensajeCargando();
         });
 
-        OcultarMensajeCargando();
 
-        // console.log(SeleccionaReferencia.value + " || " + IdRegitroAReferenciaCancelado);
+
+        let enviarIdReferencia = "{'IdReferenciaCancelado':'" + SeleccionaReferencia.value + "', 'IdRegistroCancelar':'" + IdRegitroAReferenciaCancelado + "'}";
+
+
+  
     } else {
         MensajeErrorSweet(" Seleccione una referencia ", " No se a elegido ninguna referencia aún ");
     }
@@ -326,47 +307,36 @@ function VerificaSiTieneReferencia(idRegistro) {
     console.log(existeReferencia);
     let tieneReferencia = "{'IdRegistro':'" + idRegistro + "'}";
 
+    axios.post('/EncontrarCheque/TieneReferenciaIdFormaPago', {
+        IdRegistro: idRegistro
+    })
+    .then(function (response) {
 
-    $.ajax({
-        url: 'EncontrarCheque/TieneReferenciaIdFormaPago',
-        data: tieneReferencia,
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        success: function (response) {
-
+        if (response.data.Referencia != "") {
 
 
-            if (response.Referencia != "") {
-
-
-                existeReferencia.innerHTML = 'Esta forma de pago ya se encuentra cargada dentro de la referencia ' + response.Referencia + ', cambiela si asi lo desea';
+            existeReferencia.innerHTML = 'Esta forma de pago ya se encuentra cargada dentro de la referencia ' + response.data.Referencia + ', cambiela si asi lo desea';
                 existeReferencia.style.display = "block";
                 $('#AgregarFormaPagoCancelacion').modal('show');
 
 
-            } else {
+        } else {
 
                 existeReferencia.style.display = "none";
                 $('#AgregarFormaPagoCancelacion').modal('show');
-            }
-
-            OcultarMensajeCargando();
-
-        }, error: function (jqXHR, textStatus) {
-            MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
-            OcultarMensajeCargando();
         }
-    });
 
+            OcultarMensajeCargando();
+    })
+    .catch(function (error) {
+            MensajeErrorSweet("Ocurrio un error intente de nuevo ", error)
+            OcultarMensajeCargando();
+    });
 
 
 }
 
-//$(document).on('hidden.bs.modal', function (event) {
-//    if ($('.modal:visible').length) {
-//        $('body').addClass('modal-open');
-//    }
-//});
+
 
 
 
@@ -412,7 +382,7 @@ $(document).ready(function () {
             language: "es",
             width: '100%',
             ajax: {
-                url: 'EncontrarCheque/ObtenerFiltradoDatos',
+                url: 'ObtenerFiltradoDatos',
                 type: 'GET',
                 dataType: 'json',
                 delay: 1000,
@@ -520,34 +490,30 @@ $(document).ready(function () {
 
                     };
 
-                    $.ajax({
-                        url: 'EncontrarCheque/Buscar',
-                        data: JSON.stringify(BuscarElemento),
-                        type: "POST",
-                        contentType: "application/json; charset=utf-8",
-                        success: function (response) {
-
-                            if (response.RespuestaServidor == 201) {
-                                MensajeCorrectoSweet("Registro encontrado satisfactoriamente");
-                              //  console.log(response.RegistrosEncontrados);
-                                //$('#TablaEsFoliada').empty();
-                                //DibujarTablaEsFoliada();
-                                //PintarResultadoEsFoliada(response.DetalleTabla);
-                                $('#TablaRegistros').empty();
+                    axios.post('/EncontrarCheque/Buscar', {
+                        BuscarElemento: BuscarElemento
+                    })
+                    .then(function (response) {
+                        if (response.data.RespuestaServidor == 201)
+                        {
+                           MensajeCorrectoSweet("Registro encontrado satisfactoriamente");
+                           
+                            $('#TablaRegistros').empty();
                                 DibujarTablaRegistros();
-                                PintarRegistrosEncontrados(response.RegistrosEncontrados);
-                            } else if (response.RespuestaServidor == "500") {
-                                MensajeErrorSweet(response.Error);
-                            }
-
-                            OcultarMensajeCargando();
-
-                        }, error: function (jqXHR, textStatus) {
-                            MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
-                            OcultarMensajeCargando();
+                                PintarRegistrosEncontrados(response.data.RegistrosEncontrados);
+                        } else if (response.data.RespuestaServidor == "500") {
+                                MensajeErrorSweet(response.data.Error);
                         }
+
+                        OcultarMensajeCargando();
+
+                    })
+                    .catch(function (error) {
+                            MensajeErrorSweet("Ocurrio un error intente de nuevo ", error);
+                        OcultarMensajeCargando();
                     });
 
+                
 
                 }
                 else {
@@ -578,37 +544,30 @@ $(document).ready(function () {
     $(document).on("click", ".verDetalle", function () {
 
 
-
-        //Decomentar para volver al funcionamiendo original 
-
         let datoIdbuscar = RegistrosTabla.row($(this).parents("tr")).data();
 
-        let buscarIdRegistro = "{'IdRegistroBuscar': '" + datoIdbuscar.IdRegistro + "'}";
-
         MensajeCargando();
-        $.ajax({
-            url: 'EncontrarCheque/DetallesInformativosCheques',
-            data: buscarIdRegistro,
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            success: function (response) {
+        axios.post('/EncontrarCheque/DetallesInformativosCheques', {
+            IdRegistroBuscar: datoIdbuscar.IdRegistro
+        })
+        .then(function (response) {
+            if (response.data.RespuestaServidor === "500")
+            {
+                MensajeErrorSweet(response.data.MensajeError);
+                $('#RenderPartialViewDetallesCheques').html('');
+            } else {
 
-                if (response.RespuestaServidor === "500") {
-                    MensajeErrorSweet(response.MensajeError);
-                    $('#RenderPartialViewDetallesCheques').html('');
-                } else {
+                $('#RenderPartialViewDetallesCheques').html('');
+                $('#RenderPartialViewDetallesCheques').html(response.data);
+                $('#Prueba_RenderVista').modal('show');
 
-                    $('#RenderPartialViewDetallesCheques').html('');
-                    $('#RenderPartialViewDetallesCheques').html(response);
-                    $('#Prueba_RenderVista').modal('show');
-
-                }
-
-                OcultarMensajeCargando();
-            }, error: function (jqXHR, textStatus) {
-                MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
-                OcultarMensajeCargando();
             }
+
+            OcultarMensajeCargando();
+        })
+            .catch(function (error) {
+                MensajeErrorSweet("Ocurrio un error intente de nuevo ", error);
+            OcultarMensajeCargando();
         });
 
 

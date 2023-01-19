@@ -14,19 +14,41 @@ using DAP.Plantilla.Models.FoliacionModels;
 using System.Security.Principal;
 using AutoMapper;
 using System.Threading.Tasks;
+using DAP.Foliacion.Entidades.DTO.PermisosLoginDTO;
+using DAP.Plantilla.Models.PermisosModels;
+using DAP.Foliacion.Plantilla.Filters;
+using DAP.Foliacion.Entidades.DTO.FoliarDTO.RecuperarFolios;
 
 namespace DAP.Plantilla.Controllers
 {
     public class FoliarController : Controller
     {
         //VISTAS
+        [SessionSecurityFilter]
         public ActionResult Index()
         {
             ViewBag.UltimaQuincenaEncontrada = FoliarNegocios.ObtenerUltimaQuincenaFoliada();
 
+
+            // ************************************************************************************************************* //
+            // EL MODELO QUE SE ENVIA ES PARA QUE EL SIDEBAR CONTENGA LOS LINK’S REFERENTE A LOS PERMISOS QUE PUEDE VISITAR //
+            // ************************************************************************************************************ //
             return View();
         }
 
+
+        [SessionSecurityFilter]
+        public ActionResult RecuperarFolios()
+        {
+            ViewBag.BancosConTarjeta = FoliarNegocios.ObtenerBancoParaFormasPago();
+
+            // ************************************************************************************************************* //
+            // EL MODELO QUE SE ENVIA ES PARA QUE EL SIDEBAR CONTENGA LOS LINK’S REFERENTE A LOS PERMISOS QUE PUEDE VISITAR //
+            // ************************************************************************************************************ //
+            return View();
+        }
+
+        //Vistas Parciales
         public ActionResult FoliarXPagomatico(string NumeroQuincena)
         {
             try
@@ -102,11 +124,6 @@ namespace DAP.Plantilla.Controllers
             });
         }
 
-        public ActionResult RecuperarFolios()
-        {
-            ViewBag.BancosConTarjeta = FoliarNegocios.ObtenerBancoParaFormasPago();
-            return View();
-        }
 
 
 
@@ -267,13 +284,166 @@ namespace DAP.Plantilla.Controllers
 
         }
 
+        //*******************************************************************************************************************************************************************************************************************//
+        //****************************************************         Metodos para FOLIAR nominas con cheques(FORMAS DE PAGO => CHEQUES)    ********************************************************************************//
+        //*******************************************************************************************************************************************************************************************************************//
+        public async System.Threading.Tasks.Task<ActionResult> AjustarCheques(DatosAFoliarNominaConChequeraModel NuevaAjusteDelegacionNomina)
+        {
+            //EL GRUPO DE FOLICION SE DIVIDE EN :
+            // 1 = le pertenece a las nominas general y descentralizada
+            // 2 = le pertenece a cualquier otra nomina que no se folea por sindicato y confianza
+
+
+            /***    VERIFICAR QUE LA NOMINA SE ENCUENTRE FOLIADA CORRECTAMENTE ANTES DE INICIAR CON EL AJUSTE    ***/
+            int anioInterface = FoliarNegocios.ObtenerAnioDeQuincena(NuevaAjusteDelegacionNomina.Quincena);
+            var resumenDelegacionEnNomina = FoliarNegocios.ObtenerResumenDetalleNomina_Cheques(NuevaAjusteDelegacionNomina.IdNomina, anioInterface).FirstOrDefault();
+
+            if (resumenDelegacionEnNomina.EstaFoliadoCorrectamente) 
+            {
+                FoliarFormasPagoDTO AjustarDelegacionNomina = new FoliarFormasPagoDTO();
+
+                AjustarDelegacionNomina.IdNomina = NuevaAjusteDelegacionNomina.IdNomina;
+                AjustarDelegacionNomina.IdDelegacion = NuevaAjusteDelegacionNomina.IdDelegacion;
+                AjustarDelegacionNomina.Sindicato = NuevaAjusteDelegacionNomina.Sindicato;
+                AjustarDelegacionNomina.Confianza = NuevaAjusteDelegacionNomina.Confianza;
+                AjustarDelegacionNomina.Otros = NuevaAjusteDelegacionNomina.Otros;
+                AjustarDelegacionNomina.IdBancoPagador = NuevaAjusteDelegacionNomina.IdBancoPagador;
+                AjustarDelegacionNomina.RangoInicial = NuevaAjusteDelegacionNomina.RangoInicial;
+                AjustarDelegacionNomina.Inhabilitado = NuevaAjusteDelegacionNomina.Inhabilitado;
+                AjustarDelegacionNomina.RangoInhabilitadoInicial = NuevaAjusteDelegacionNomina.RangoInhabilitadoInicial;
+                AjustarDelegacionNomina.RangoInhabilitadoFinal = NuevaAjusteDelegacionNomina.RangoInhabilitadoFinal;
+
+
+                //propiedad usada para saber a que grupo de nomina corresponde
+                // 1 = le pertenece a las nominas general y descentralizada
+                // 2 = le pertenece a cualquier otra nomina que no se folea por sindicato y confianza
+                AjustarDelegacionNomina.IdGrupoFoliacion = NuevaAjusteDelegacionNomina.IdGrupoFoliacion;
+                AjustarDelegacionNomina.AnioInterfaz = anioInterface;
+
+                FoliarNegocios.RealizarAjusteFoliacion(AjustarDelegacionNomina);
+            }
 
 
 
-            //*************************************************************************************************************************************************************************************************************************************************//
-            //****************************   OBTIENE UN RESUMEN POR DELEGACION DE UNA NOMINA ELEGIDA PARA VISUALIZAR ES UN MODAL CUANTOS REGISTROS HAY POR DELEGACION PARA FORLIAR POR CHEQUERA (CHEQUE)      **************************************************//
-            //************************************************************************************************************************************************************************************************************************************************//
-            public ActionResult ObtenerResumenDetalle_NominaCheques(int IdNomina , string Quincena )
+
+            /***    SE LOCALIZAN EL NUMERO TOTAL DE CHEQUES QUE SE VAN A UTILIZAR    ***/
+            int totalDeRegistrosAFoliar = 0;
+            if (NuevaAjusteDelegacionNomina.IdGrupoFoliacion == 0)
+            {
+                if (NuevaAjusteDelegacionNomina.Confianza > 0 && NuevaAjusteDelegacionNomina.Sindicato == 0)
+                {
+                    //son de confianza
+                    totalDeRegistrosAFoliar = NuevaAjusteDelegacionNomina.Confianza;
+                }
+                else if (NuevaAjusteDelegacionNomina.Confianza == 0 && NuevaAjusteDelegacionNomina.Sindicato > 0)
+                {
+                    //Son sindicalizados
+                    totalDeRegistrosAFoliar = NuevaAjusteDelegacionNomina.Sindicato;
+                }
+            }
+            else if (NuevaAjusteDelegacionNomina.IdGrupoFoliacion == 1)
+            {
+                totalDeRegistrosAFoliar = NuevaAjusteDelegacionNomina.Otros;
+            }
+
+
+            /***    SE RECUPERAN LOS FOLIOS APARTIR DEL FOLIO INICIAL DE INHABILITACION MENOS 1 (-1)    ***/
+
+
+
+            bool hayFoliosConsecutivosSinUsar = FoliarNegocios.VerificarFoliosConsecutivos(NuevaAjusteDelegacionNomina.IdBancoPagador, NuevaAjusteDelegacionNomina.RangoInicial);
+
+            if (hayFoliosConsecutivosSinUsar)
+            {
+                //Informa al usuario que exiten cheques consecutivos que se saltaran durante la foliacion  
+                int rangoSaltadoInicial = NuevaAjusteDelegacionNomina.RangoInicial - 6;
+                int rangoSaltadoFinal = NuevaAjusteDelegacionNomina.RangoInicial;
+                return Json(new
+                {
+                    resultServer = 501,
+                    FoliosSaltados = "Esta intentanto foliar con un salto de folios consecutivos sin usar aun,  va del rango inicial " + rangoSaltadoInicial + " al rango final " + rangoSaltadoFinal + ". Se aconseja no saltar folios sin usar."
+                });
+            }
+            else
+            {
+
+                List<FoliosAFoliarInventario> chequesVerificadosFoliar = FoliarNegocios.verificarDisponibilidadFoliosEnInventarioDetalle(NuevaAjusteDelegacionNomina.IdBancoPagador, NuevaAjusteDelegacionNomina.RangoInicial, totalDeRegistrosAFoliar, NuevaAjusteDelegacionNomina.Inhabilitado, NuevaAjusteDelegacionNomina.RangoInhabilitadoInicial, NuevaAjusteDelegacionNomina.RangoInhabilitadoFinal).ToList();
+
+                List<FoliosAFoliarInventario> foliosNoDisponibles = chequesVerificadosFoliar.Where(y => y.Incidencia != "").ToList();
+
+                if (foliosNoDisponibles.Count() > 0)
+                {
+                    return Json(new
+                    {
+                        resultServer = 0,
+                        FoliosConIncidencias = foliosNoDisponibles
+                    });
+
+                }
+                else
+                {
+
+                    FoliarFormasPagoDTO AjustarDelegacionNomina = new FoliarFormasPagoDTO();
+
+                    AjustarDelegacionNomina.IdNomina = NuevaAjusteDelegacionNomina.IdNomina;
+                    AjustarDelegacionNomina.IdDelegacion = NuevaAjusteDelegacionNomina.IdDelegacion;
+                    AjustarDelegacionNomina.Sindicato = NuevaAjusteDelegacionNomina.Sindicato;
+                    AjustarDelegacionNomina.Confianza = NuevaAjusteDelegacionNomina.Confianza;
+                    AjustarDelegacionNomina.Otros = NuevaAjusteDelegacionNomina.Otros;
+                    AjustarDelegacionNomina.IdBancoPagador = NuevaAjusteDelegacionNomina.IdBancoPagador;
+                    AjustarDelegacionNomina.RangoInicial = NuevaAjusteDelegacionNomina.RangoInicial;
+
+                    //
+                    AjustarDelegacionNomina.Inhabilitado = NuevaAjusteDelegacionNomina.Inhabilitado;
+                    AjustarDelegacionNomina.RangoInhabilitadoInicial = NuevaAjusteDelegacionNomina.RangoInhabilitadoInicial;
+                    AjustarDelegacionNomina.RangoInhabilitadoFinal = NuevaAjusteDelegacionNomina.RangoInhabilitadoFinal;
+
+
+                    //propiedad usada para saber a que grupo de nomina corresponde
+                    // 1 = le pertenece a las nominas general y descentralizada
+                    // 2 = le pertenece a cualquier otra nomina que no se folea por sindicato y confianza
+                    AjustarDelegacionNomina.IdGrupoFoliacion = NuevaAjusteDelegacionNomina.IdGrupoFoliacion;
+                    AjustarDelegacionNomina.AnioInterfaz = FoliarNegocios.ObtenerAnioDeQuincena(NuevaAjusteDelegacionNomina.Quincena);
+
+                    string Observa = "CHEQUE";
+                    //List<AlertasAlFolearPagomaticosDTO> resultadoFoliacion = await FoliarNegocios.FoliarChequesPorNomina(foliarNomina, Observa, chequesVerificadosFoliar);
+                    List<AlertasAlFolearPagomaticosDTO> resultadoFoliacion = await FoliarNegocios.FoliarChequesPorNomina_TIEMPO_DE_RESPUESTA_MEJORADO(AjustarDelegacionNomina, Observa, chequesVerificadosFoliar);
+
+                    var DbfAbierta = resultadoFoliacion.Where(x => x.IdAtencion == 4).Select(x => new { x.Id_Nom, x.Detalle, x.Solucion }).ToList();
+
+
+                    if (DbfAbierta.Count() > 0)
+                    {
+                        return Json(new
+                        {
+                            resultServer = 500,
+                            DBFAbierta = DbfAbierta
+                        });
+                    }
+
+
+                    return Json(new
+                    {
+                        resultServer = 200,
+                        resultadoFoliacion = resultadoFoliacion
+                    });
+
+                }
+
+
+
+            }
+
+
+        }
+
+
+
+
+        //*************************************************************************************************************************************************************************************************************************************************//
+        //****************************   OBTIENE UN RESUMEN POR DELEGACION DE UNA NOMINA ELEGIDA PARA VISUALIZAR ES UN MODAL CUANTOS REGISTROS HAY POR DELEGACION PARA FORLIAR POR CHEQUERA (CHEQUE)      **************************************************//
+        //************************************************************************************************************************************************************************************************************************************************//
+        public ActionResult ObtenerResumenDetalle_NominaCheques(int IdNomina , string Quincena )
             {
                 int anioInterface = FoliarNegocios.ObtenerAnioDeQuincena(Quincena);
                 var resumenDatosTablaModal = FoliarNegocios.ObtenerResumenDetalleNomina_Cheques( IdNomina, anioInterface).OrderBy(X => X.IdDelegacion);
@@ -474,10 +644,10 @@ namespace DAP.Plantilla.Controllers
         {
             try
             {
-                int anioInterfaz = FoliarNegocios.ObtenerAnioDeQuincena(NumeroQuincena);
+                
                 //List<AlertasAlFolearPagomaticosDTO> errores = await FoliarNegocios.FolearPagomaticoPorNomina_TIEMPO_DE_RESPUESTA_MEJORADO(IdNomina, anioInterfaz, NumeroQuincena);
                 List<AlertasAlFolearPagomaticosDTO> alertasObtenidas = new List<AlertasAlFolearPagomaticosDTO>();
-                alertasObtenidas.Add( await FoliarNegocios.FolearPagomaticoPorNominaaAsincrono(IdNomina, anioInterfaz ) );
+                alertasObtenidas.Add( await FoliarNegocios.FolearPagomaticoPorNominaaAsincrono(IdNomina, NumeroQuincena) );
 
                 var DBFAbierta = alertasObtenidas.Where(x => x.IdAtencion == 4).Select(x => new { x.Id_Nom, x.Detalle, x.Solucion }).ToList();
 
@@ -515,8 +685,8 @@ namespace DAP.Plantilla.Controllers
         {
             try
             {
-                int anioInterfaz = FoliarNegocios.ObtenerAnioDeQuincena(NumeroQuincena);
-                //List<AlertasAlFolearPagomaticosDTO> errores = await FoliarNegocios.FolearPagomaticoPorNomina(IdNomina, anioInterfaz, NumeroQuincena);
+              //  int anioInterfaz = FoliarNegocios.ObtenerAnioDeQuincena(NumeroQuincena);
+              //List<AlertasAlFolearPagomaticosDTO> errores = await FoliarNegocios.FolearPagomaticoPorNomina(IdNomina, anioInterfaz, NumeroQuincena);
               //  List<AlertaDeNominasFoliadasPagomatico> detallesTodasNominas = FoliarNegocios.VerificarTodasNominaPagoMatico(NumeroQuincena).Where(x => x.IdEstaFoliada == 0).ToList();
                 List<AlertaDeNominasFoliadasPagomatico> nominasConPagomaticoParaFoliar = FoliarNegocios.VerificarTodasNominaPagoMatico(NumeroQuincena).Where(x => x.IdEstaFoliada == 0).ToList();
 
@@ -525,7 +695,7 @@ namespace DAP.Plantilla.Controllers
                 
                 foreach (AlertaDeNominasFoliadasPagomatico nuevaNomina in nominasConPagomaticoParaFoliar) 
                 {
-                    alertasObtenidasFoliarTodasNominasPagomaticos.Add( await FoliarNegocios.FolearPagomaticoPorNominaaAsincrono(nuevaNomina.Id_Nom, anioInterfaz) );
+                    alertasObtenidasFoliarTodasNominasPagomaticos.Add( await FoliarNegocios.FolearPagomaticoPorNominaaAsincrono(nuevaNomina.Id_Nom, NumeroQuincena) );
                 }
 
                 List<AlertasAlFolearPagomaticosDTO> inicenciasEncontradas = alertasObtenidasFoliarTodasNominasPagomaticos.Where(x => x.IdAtencion != 0).ToList();
@@ -689,7 +859,7 @@ namespace DAP.Plantilla.Controllers
             string visitaAnioInterface = FoliarNegocios.ObtenerCadenaAnioInterface(anio);
             var datosCompletosNomina = FoliarNegocios.ObtenerDatosCompletosBitacoraFILTRO(IdNomina, visitaAnioInterface);
 
-            var resumenRevicionNominaReportePDF = FoliarNegocios.ObtenerDatosPersonalesNominaReportePagomatico(datosCompletosNomina.An, anio, datosCompletosNomina.Nomina);
+            var resumenRevicionNominaReportePDF = FoliarNegocios.ObtenerDatosPersonalesNominaReportePagomatico(datosCompletosNomina.An, visitaAnioInterface, datosCompletosNomina.Nomina);
 
 
 
@@ -774,6 +944,26 @@ namespace DAP.Plantilla.Controllers
             return Json(FoliarNegocios.BuscarFormasPagoCoincidentes(IdCuentaBancaria, RangoInicial, RangoFinal).ToList(), JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult RecuperarChequesBuscados(int IdCuentaBancaria, int RangoInicial, int RangoFinal)
+        { 
+           var ( resultadoObtenido ,  totalChequesRecuperados ) =  FoliarNegocios.RestaurarRangoDeFolios( IdCuentaBancaria, RangoInicial,  RangoFinal);
+
+            bool chequeRecuperadosCorrectamente = false;
+            int totalChequesRestaurados = 0;
+            if (resultadoObtenido.ToUpper().Trim().Equals("CORRECTO")) 
+            {
+                chequeRecuperadosCorrectamente = true;
+                totalChequesRestaurados = totalChequesRecuperados;
+            }
+
+            
+            return Json(new
+            {
+                resultServer = chequeRecuperadosCorrectamente,
+                totalChequesRestaurados = totalChequesRecuperados,
+                Error = resultadoObtenido
+            });
+        }
 
 
 
@@ -819,6 +1009,21 @@ namespace DAP.Plantilla.Controllers
             });
 
         }
+
+
+
+        //**********************************************************************************************************************************************************************************************************************//
+        //**********************************************************************************************************************************************************************************************************************//
+        //****************************************************               VERIFICA SI SE ENCUENTRAN FOLIADAS LAS NOMINAS DE LA QUINCENA,  TANTO PAGOMATICO COMO CHEQUES                      ********************************//
+        //**********************************************************************************************************************************************************************************************************************//
+        //**********************************************************************************************************************************************************************************************************************//
+        public ActionResult VerificarNominasEstanFoliadasEnQuincena(string Quincena)
+        {
+            return Json(FoliarNegocios.VerificacionFoliacionNominasQuincena(Quincena), JsonRequestBehavior.AllowGet);
+        }
+
+
+
     }
 
 

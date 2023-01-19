@@ -94,8 +94,9 @@
     <Reference Include="Microsoft.IdentityModel.Tokens, Version=6.24.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.IdentityModel.Tokens.6.24.0\lib\net472\Microsoft.IdentityModel.Tokens.dll</HintPath>
     </Reference>
-    <Reference Include="NegocioLoginCentralizado">
-      <HintPath>..\..\..\..\..\Desktop\Documentacion Login\LoginDoc\NegocioLoginCentralizado.dll</HintPath>
+    <Reference Include="NegocioLoginCentralizado, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\NegocioLoginCentralizado.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -212,7 +213,9 @@
     <Compile Include="Controllers\CrearReferencia_CanceladosController.cs" />
     <Compile Include="Controllers\EncontrarChequeController.cs" />
     <Compile Include="Controllers\Configuraciones_InventarioYCuentasController.cs" />
+    <Compile Include="Controllers\ErroresController.cs" />
     <Compile Include="Controllers\FoliarController.cs" />
+    <Compile Include="Controllers\HerramientasConfiguracionController.cs" />
     <Compile Include="Controllers\InventarioController.cs" />
     <Compile Include="Controllers\Reposicion_SuspencionController.cs" />
     <Compile Include="Controllers\ValidadorController.cs" />
@@ -240,6 +243,8 @@
     <Compile Include="Models\InventarioDetalleModel.cs" />
     <Compile Include="Models\InventarioInhabilitadoModel.cs" />
     <Compile Include="Models\InventarioModel.cs" />
+    <Compile Include="Models\PermisosModels\PermisosUsuarioModel.cs" />
+    <Compile Include="Models\SesionesDatosModels\InformacionEmpleadoSesionModel.cs" />
     <Compile Include="Models\SolicitudDetalleModel.cs" />
     <Compile Include="Models\SolicitudFormasPagoModel.cs" />
     <Compile Include="ObjetosExtras\ObtenerHoraReal.cs" />
@@ -2199,6 +2204,7 @@
     <Content Include="Scripts\SCRIPTS_PROYECTO_VISTAS\FOLIACION\Inventario\Index.js" />
     <Content Include="Scripts\SCRIPTS_PROYECTO_VISTAS\FOLIACION\Inventario\Inhabilitar.js" />
     <Content Include="Scripts\SCRIPTS_PROYECTO_VISTAS\FOLIACION\Inventario\Solicitar.js" />
+    <Content Include="Scripts\SCRIPTS_PROYECTO_VISTAS\HerramientasConfiguracion\RegistrarUsuario.js" />
     <Content Include="Scripts\select2-4.1.0-rc.0\css\select2.css" />
     <Content Include="Scripts\select2-4.1.0-rc.0\css\select2.min.css" />
     <Content Include="Scripts\select2-4.1.0-rc.0\js\i18n\af.js" />
@@ -2392,6 +2398,8 @@
     <Content Include="Views\CrearReferencia_Cancelados\Index.cshtml" />
     <Content Include="Views\Foliar\RecuperarFolios.cshtml" />
     <Content Include="Views\Validador\InicioAplicacion.cshtml" />
+    <Content Include="Views\HerramientasConfiguracion\RegistrarUsuario.cshtml" />
+    <Content Include="Views\Errores\RecursoNoPermitido.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -2448,10 +2456,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Reportes\Crystal\RevicionFoliacionNominaCheques.rpt">
+    <Content Include="Reportes\Crystal\RevicionFoliacionNominaCheques.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>RevicionFoliacionNominaCheques.cs</LastGenOutput>
-    </EmbeddedResource>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

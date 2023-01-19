@@ -1,4 +1,5 @@
-﻿
+﻿//const { data } = require("jquery");
+
 
 
 
@@ -74,20 +75,13 @@ function DibujarTablaSolicitudesCreadasAjax() {
 
         "<table id='tbHistoricoSolicitudesCreadas'  class='table table-striped display table-bordered table-hover' cellspacing='0'  style='width:100%'>" +
         " <caption class='text-uppercase'>Historico de solicitudes creadas </caption>"
-        + "<thead class='tabla'>" +
+        + "<thead class='tabla text-center'>" +
         "<tr>" +
         "<th>Numero Memorandum</th>" +
         "<th>Fecha Solicitud</th>" +
         "<th>  </th>" +
         "</tr>" +
         "</thead>" +
-        "<tfoot>" +
-        "<tr>" +
-        "<th class='Filtro'>No. Memo</th>" +
-        "<th class='Filtro'>Fecha</th>" +
-        "<th></th>" +
-        "</tr>" +
-        "</tfoot>" +
         "</table>"
     );
 };
@@ -163,10 +157,10 @@ function DibujarTablaDetalleSolicitudAjax() {
 function PintarConsultaDetalleSolicitud(datos) {
 
     $('#tbDetalleSolicitud').DataTable({
-        "ordering": false,
+        "ordering": true,
         "info": false,
         "searching": false,
-        "paging": true,
+        "paging": false,
         "lengthMenu": [5, 10],
         "language":
         {
@@ -408,10 +402,6 @@ $(document).on("click", ".editar", function () {
 function CrearSolicitudFormasPago() {
 
 
-
-
-
-
     if (listaBancosSolicitados.length > 0) {
 
 
@@ -431,15 +421,13 @@ function CrearSolicitudFormasPago() {
 
 
                 MensajeCargando();
-                $.ajax({
-                    url: 'CrearNuevaSolicitud',
-                    data: JSON.stringify(listaBancosSolicitados),
-                    type: "POST",
-                    contentType: "application/json; charset=utf-8",
-                    success: function (msg) {
-                       
+                axios.post('/Inventario/CrearNuevaSolicitud', {
+                    listaBancosSolicitados: listaBancosSolicitados
+                })
+                    .then(function (response) {
+
                         //console.log("msg", msg);
-                        if (msg == true) {
+                        if (response.data == true) {
                             $('#Descargar').modal('show');
 
                         } else {
@@ -448,20 +436,15 @@ function CrearSolicitudFormasPago() {
 
                         }
                         OcultarMensajeCargando();
-
-                    },
-                    error: function (msg) {
-                       
-                        MensajeErrorSweet('Intente de nuevo o contacte con el desarrollador', 'Error de peticion al servidor');
+                    })
+                    .catch(function (error) {
+                        MensajeErrorSweet('Intente de nuevo o contacte con el desarrollador', 'Error de peticion al servidor' + error);
                         OcultarMensajeCargando();
-                    }
-                });
-
+                        
+                    });
 
             }
         })
-
-
 
 
     } else {
@@ -505,29 +488,21 @@ function VerHistoricoSolicitudes() {
 
 
     MensajeCargando();
-    $.ajax({
-        url: 'ObtenerHistoricoSolicitudes',
-        data: JSON.stringify(listaBancosSolicitados),
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        success: function (resultado) {
-            OcultarMensajeCargando();
+    axios.post('/Inventario/ObtenerHistoricoSolicitudes', {
+        listaBancosSolicitados: listaBancosSolicitados
+    })
+        .then(function (response) {
 
             $("#TablaHistorica").empty();
-
             DibujarTablaSolicitudesCreadasAjax();
-            PintarConsultaTablaSolicitud(resultado);
-
-
-        },
-        error: function (msg) {
-
+            PintarConsultaTablaSolicitud(response.data);
             OcultarMensajeCargando();
-         
-
-            MensajeErrorSweet('', 'Ocurrio un problema intente de nuevo')
-        }
-    });
+        })
+        .catch(function (error) {
+            MensajeErrorSweet('Ocurrio un problema intente de nuevo', error)
+            OcultarMensajeCargando();
+           
+        });
 
 }
 
@@ -541,47 +516,22 @@ $(document).on("click", ".detalles", function () {
 
     let datosFilaSeleccionada = historioSolicitudes.row($(this).parents("tr")).data();
 
-    console.log(datosFilaSeleccionada);
-
     MensajeCargando();
-
-
-    let EnviarNumeroMemo = "{'NumeroMemo':'" + datosFilaSeleccionada.NumeroMemo + "'}";
-    $.ajax({
-        url: 'ObtenerSolicitudPorMemo',
-        data: EnviarNumeroMemo,
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        success: function (resultado) {
-            OcultarMensajeCargando();
-            console.log(resultado);
-
+    axios.post('/Inventario/ObtenerSolicitudPorMemo', {
+        NumeroMemo: datosFilaSeleccionada.NumeroMemo
+    })
+    .then(function (response) {
 
             $("#TablaDetalleSolicitud").empty();
-
-            DibujarTablaDetalleSolicitudAjax();
-
-            ////cambia
-            PintarConsultaDetalleSolicitud(resultado);
-
-
-
-        },
-        error: function (msg) {
-
+        DibujarTablaDetalleSolicitudAjax();
+        PintarConsultaDetalleSolicitud(response.data);
             OcultarMensajeCargando();
-            Swal.fire({
-                backdrop: true,
-                allowEnterKey: false,
-                allowOutsideClick: false,
-                icon: 'error',
-                title: 'Ocurrio un problema intente de nuevo',
 
-            })
-        }
+    })
+    .catch(function (error) {
+            MensajeErrorSweet('Ocurrio un problema intente de nuevo', error)
+            OcultarMensajeCargando();
     });
-
-
 
 
 
@@ -598,43 +548,24 @@ $(document).on("click", ".detalles", function () {
 
 $(document).on("click", ".eliminarMemorandum", function () {
 
-    MensajeCargando();
-
-    //console.log("vieja" + listaBancosSolicitados);
-
     let filaHistoricoEliminar = historioSolicitudes.row($(this).parents("tr")).data();
-
     historioSolicitudes.row($(this).parents("tr")).remove().draw();
 
-    console.log(filaHistoricoEliminar.NumeroMemo);
-
-
-    let NumeroMemoEliminar = "{'NumeroMemorandum':'" + filaHistoricoEliminar.NumeroMemo + "'}";
-
-
-    $.ajax({
-        url: 'RemoverSolicitudCreada',
-        data: NumeroMemoEliminar,
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        success: function (resultado) {
-            OcultarMensajeCargando();
-
+//    console.log(filaHistoricoEliminar.NumeroMemo);
+    MensajeCargando();
+    axios.post('/Inventario/RemoverSolicitudCreada', {
+        NumeroMemorandum: filaHistoricoEliminar.NumeroMemo
+    })
+    .then(function (response) {
 
             MensajeCorrectoSweet("Memorandum numero  " + filaHistoricoEliminar.NumeroMemo + " eliminado");
-
-        },
-        error: function (msg) {
-
             OcultarMensajeCargando();
 
-            MensajeErrorSweet('', 'Ocurrio un problema intente de nuevo')
-        }
+    })
+    .catch(function (error) {
+            MensajeErrorSweet('Ocurrio un problema intente de nuevo', error)
+            OcultarMensajeCargando();
     });
-
-
-
-
 
 });
 

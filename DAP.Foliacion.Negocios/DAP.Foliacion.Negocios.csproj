@@ -97,10 +97,12 @@
     <Compile Include="Configuraciones_InventarioYCuentasNegocios.cs" />
     <Compile Include="FoliarDBF\FolearDBFEnServerNegocios.cs" />
     <Compile Include="FoliarNegocios.cs" />
+    <Compile Include="HerramientasConfiguracionNegocios.cs" />
     <Compile Include="InventarioNegocios.cs" />
     <Compile Include="NetworkConnection.cs" />
     <Compile Include="ObtenerConsultasChequesFoliarNegocios\consultasCheques.cs" />
     <Compile Include="ObtenerConsultasPagomaticosFoliarNegocios\consultasPagomaticos.cs" />
+    <Compile Include="PermisosLoginNegocios.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reposicion_SuspencionNegocios.cs" />
   </ItemGroup>

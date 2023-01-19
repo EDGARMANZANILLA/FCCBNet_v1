@@ -12,18 +12,36 @@ using System.IO;
 using System.Runtime.Remoting.Contexts;
 using System.Net.Http;
 using DAP.Plantilla.ObjetosExtras;
-
+using DAP.Foliacion.Entidades.DTO.PermisosLoginDTO;
+using DAP.Plantilla.Models.PermisosModels;
+using DAP.Foliacion.Plantilla.Filters;
 
 namespace DAP.Foliacion.Plantilla.Controllers
 {
-  
+
     public class InventarioController : Controller
     {
         // GET: Inventario
+        [SessionSecurityFilter]
         public ActionResult Index()
         {
-            var respon = HttpContext.Response;
+            //if(Session["moodDeveloper"] != null) 
+            //{
+            //    bool estaEnMoodDesarrollador = (bool)Session["moodDeveloper"];
 
+            //    if (false) 
+            //    {
+            //        bool puedeVerVista = PermisosLoginNegocios.EstaPermitidoVerVista("45356",1);
+
+            //        if (!puedeVerVista) 
+            //        {
+            //            return RedirectToAction("InicioAplicacion", "Validador");
+            //        }
+            //    }
+            //}
+
+           
+           
             List<InventarioModel> BancosMostrar = new List<InventarioModel>();
 
             var inventariosActivos = Negocios.InventarioNegocios.ObtenerInventarioActivo().ToList();
@@ -44,7 +62,6 @@ namespace DAP.Foliacion.Plantilla.Controllers
                 NuevoBanco.EstimadoMeses = inventarioBanco.Tbl_Inventario.EstimadoMeses;
 
                 BancosMostrar.Add(NuevoBanco);
-
             }
 
 
@@ -78,58 +95,27 @@ namespace DAP.Foliacion.Plantilla.Controllers
 
             }
 
-
-
-
-
-
-            return View(BancosMostrar);
+            ViewBag.MostrarBancos = BancosMostrar;
+            // ************************************************************************************************************* //
+            //EL MODELO QUE SE ENVIA AHORA ESTA DENTRO DE UNA SESSION  QUE SE CREA EN LA PAGINA INICIAL //
+            // ************************************************************************************************************ //
+            return View();
         }
 
-
-        public ActionResult Solicitar()
-        {
-
-
-            return View(Negocios.InventarioNegocios.ObtenerBancosConChequera());
-        }
-
-
+        [SessionSecurityFilter]
         public ActionResult Agregar(int IdCuentaBancaria)
         {
             ViewBag.NombreBancoSeleccionado = Negocios.InventarioNegocios.ObtenerNombreBanco(IdCuentaBancaria);
 
             ViewBag.IdBancoSeleccionado = IdCuentaBancaria;
 
+            // ************************************************************************************************************* //
+            //EL MODELO QUE SE ENVIA AHORA ESTA DENTRO DE UNA SESSION  QUE SE CREA EN LA PAGINA INICIAL //
+            // ************************************************************************************************************ //
             return View();
         }
 
-
-        public ActionResult Incidencias(int IdCuentaBancaria) 
-        {
-            ViewBag.NombreBancoSeleccionado = Negocios.InventarioNegocios.ObtenerNombreBanco(IdCuentaBancaria);
-
-            ViewBag.IdBancoSeleccionado = IdCuentaBancaria;
-
-            ViewBag.ResumenIncidencias = Negocios.InventarioNegocios.ObtenerResumenIncidenciasDeBancoSeleccionado(IdCuentaBancaria);
-
-            return View();
-        }
-        public ActionResult Inhabilitar(int IdCuentaBancaria)
-        {
-            //  ViewBag.NombreBanco = NombreBanco;
-            ViewBag.NombreBancoSeleccionado = Negocios.InventarioNegocios.ObtenerNombreBanco(IdCuentaBancaria);
-            ViewBag.IdBancoSeleccionado = IdCuentaBancaria;
-
-
-
-            int IdInventario = Negocios.InventarioNegocios.ObtenerIdInventarioPorIdCuentaBancaria(IdCuentaBancaria);
-           
-            ViewBag.OrdenesEncontradas = Negocios.InventarioNegocios.ObtenerNumeroOrdenesBancoActivo(IdInventario);
-
-
-            return View();
-        }
+        [SessionSecurityFilter]
         public ActionResult Asignar(int IdCuentaBancaria)
         {
             ViewBag.NombreBancoSeleccionado = Negocios.InventarioNegocios.ObtenerNombreBanco(IdCuentaBancaria);
@@ -140,42 +126,79 @@ namespace DAP.Foliacion.Plantilla.Controllers
             int idInventario = InventarioNegocios.ObtenerIdInventarioPorIdCuentaBancaria(IdCuentaBancaria);
 
             ViewBag.OrdenesEncontradas = Negocios.InventarioNegocios.ObtenerNumeroOrdenesBancoActivo(idInventario);
-
-
             ViewBag.ListaNombrePersonal = Negocios.InventarioNegocios.ObtenerPersonalActivo();
 
+            // ************************************************************************************************************* //
+            // EL MODELO QUE SE ENVIA AHORA ESTA DENTRO DE UNA SESSION  QUE SE CREA EN LA PAGINA INICIAL //
+            // ************************************************************************************************************ //
+            return View();
+        }
+
+        [SessionSecurityFilter]
+        public ActionResult DetalleBanco(int IdCuentaBancaria)
+        {
+            ViewBag.NombreBancoSeleccionado = Negocios.InventarioNegocios.ObtenerNombreBanco(IdCuentaBancaria);
+            ViewBag.IdBancoSeleccionado = IdCuentaBancaria;
+            int idInventario = InventarioNegocios.ObtenerIdInventarioPorIdCuentaBancaria(IdCuentaBancaria);
+            ViewBag.IdInventario = idInventario;
+
+            Session["IdCuentaBancaria"] = null;
+            Session["IdCuentaBancaria"] = IdCuentaBancaria;
+            Session["skip"] = null;
+
+            // ************************************************************************************************************* //
+            // EL MODELO QUE SE ENVIA AHORA ESTA DENTRO DE UNA SESSION  QUE SE CREA EN LA PAGINA INICIAL //
+            // ************************************************************************************************************ //
+            return View();
+        }
+
+        [SessionSecurityFilter]
+        public ActionResult Incidencias(int IdCuentaBancaria) 
+        {
+            ViewBag.NombreBancoSeleccionado = Negocios.InventarioNegocios.ObtenerNombreBanco(IdCuentaBancaria);
+
+            ViewBag.IdBancoSeleccionado = IdCuentaBancaria;
+
+            ViewBag.ResumenIncidencias = Negocios.InventarioNegocios.ObtenerResumenIncidenciasDeBancoSeleccionado(IdCuentaBancaria);
+
+            // ************************************************************************************************************* //
+            // EL MODELO QUE SE ENVIA AHORA ESTA DENTRO DE UNA SESSION  QUE SE CREA EN LA PAGINA INICIAL //
+            // ************************************************************************************************************ //
+            return View();
+        }
+        [SessionSecurityFilter]
+        public ActionResult Inhabilitar(int IdCuentaBancaria)
+        {
+            //  ViewBag.NombreBanco = NombreBanco;
+            ViewBag.NombreBancoSeleccionado = Negocios.InventarioNegocios.ObtenerNombreBanco(IdCuentaBancaria);
+            ViewBag.IdBancoSeleccionado = IdCuentaBancaria;
+
+            int IdInventario = Negocios.InventarioNegocios.ObtenerIdInventarioPorIdCuentaBancaria(IdCuentaBancaria);
+           
+            ViewBag.OrdenesEncontradas = Negocios.InventarioNegocios.ObtenerNumeroOrdenesBancoActivo(IdInventario);
+
+            // ************************************************************************************************************* //
+            // EL MODELO QUE SE ENVIA AHORA ESTA DENTRO DE UNA SESSION  QUE SE CREA EN LA PAGINA INICIAL //
+            // ************************************************************************************************************ //
+            return View();
+        }
+        [SessionSecurityFilter]
+        public ActionResult Solicitar()
+        {
+            ViewBag.BancosConChequera = Negocios.InventarioNegocios.ObtenerBancosConChequera();
+            // ************************************************************************************************************* //
+            // EL MODELO QUE SE ENVIA AHORA ESTA DENTRO DE UNA SESSION  QUE SE CREA EN LA PAGINA INICIAL //
+            // ************************************************************************************************************ //
             return View();
         }
 
 
 
 
-        public ActionResult DetalleBanco(int IdCuentaBancaria)
-        {
-
-            ViewBag.NombreBancoSeleccionado = Negocios.InventarioNegocios.ObtenerNombreBanco(IdCuentaBancaria);
-
-            ViewBag.IdBancoSeleccionado = IdCuentaBancaria;
 
 
-            int idInventario = InventarioNegocios.ObtenerIdInventarioPorIdCuentaBancaria(IdCuentaBancaria);
-            ViewBag.IdInventario = idInventario;
-
-            Session["IdCuentaBancaria"] = null;
-
-            Session["IdCuentaBancaria"] = IdCuentaBancaria;
-
-       
-            return View(/*listaDetalle*/);
-        }
 
 
-        
-      
-      
-
-
-      
 
 
         //metodos por post
@@ -294,7 +317,7 @@ namespace DAP.Foliacion.Plantilla.Controllers
                 {
                     InventarioClaveValorGenericaModel nuevoContenedorEncontrado = new InventarioClaveValorGenericaModel();
                     nuevoContenedorEncontrado.Llave = contenedor.Id;
-                    nuevoContenedorEncontrado.Valor = Convert.ToString(contenedor.NumContenedor);
+                    nuevoContenedorEncontrado.Valor = "No : "+ Convert.ToString(contenedor.NumContenedor) + " || Rango Inicial : "+contenedor.FolioInicial+ " || Rango Final : "+ contenedor.FolioFinal+ " || Total :"+contenedor.FormasTotalesContenedor ;
                     numeroDeContenedores.Add(nuevoContenedorEncontrado);
                 }
 
@@ -386,13 +409,14 @@ namespace DAP.Foliacion.Plantilla.Controllers
             int IdCuentaBancaria = (int)Session["IdCuentaBancaria"];
             int idInventario = InventarioNegocios.ObtenerIdInventarioPorIdCuentaBancaria(IdCuentaBancaria);
 
+          
 
             //logistica datatable
             var draw = Request.Form.GetValues("draw").FirstOrDefault();
             var start = Request.Form.GetValues("start").FirstOrDefault();
             var length = Request.Form.GetValues("length").FirstOrDefault();
             //var sortColumn = Request.Form.GetValues("columns[" + Request.Form.GetValues("order[0][column]").FirstOrDefault() + "][name]").FirstOrDefault();
-        //    string sortColumnDir = Request.Form.GetValues("order[0][dir]").FirstOrDefault();
+            //string sortColumnDir = Request.Form.GetValues("order[0][dir]").FirstOrDefault();
             string searchValue = Request.Form.GetValues("search[value]").FirstOrDefault();
            
              int pageSize, skip, recordsTotal;
@@ -400,18 +424,38 @@ namespace DAP.Foliacion.Plantilla.Controllers
             pageSize = length != null ? Convert.ToInt32(length) : 0;
 
             skip = start != null ? Convert.ToInt32(start) : 0;
-       
 
+
+            // la primera vez que entra tiene que skipear 0 registros
+            if (Session["skip"] == null) 
+            {
+                Session["skip"] = skip;
+            }
+
+            //si es la segunda vez que entra la session no es null e intentamos recuperar el skip anterior para saber si venia de una pagina del datablable sino solo le pintamos lo que nos solicita
+            int skipAnterior = (int)Session["skip"];
+            if (skipAnterior > 0)
+            {
+                if (skip == 0 && Convert.ToInt32(draw) == 1)
+                {
+                    Session["skip"] = skipAnterior;
+                }
+                else 
+                {
+                    Session["skip"] = skip;
+                }
+            }
+            else 
+            {
+                Session["skip"] = skip;
+            }
+
+            skip = (int)Session["skip"];
 
             recordsTotal = 0;
 
-
             var queryable_Tbl_InventarioDetalle = Negocios.InventarioNegocios.Obtener_TodosLosDetallesCargarDetalleBanco(idInventario);
             recordsTotal = queryable_Tbl_InventarioDetalle.Count();
-
-
-
-
 
             List<DetalleBancoModel> listaDetalle = new List<DetalleBancoModel>();
 
@@ -422,12 +466,10 @@ namespace DAP.Foliacion.Plantilla.Controllers
                 try
                 {
                     int buscarFolio = Convert.ToInt32(searchValue);
-
                     queryable_Tbl_InventarioDetalle = queryable_Tbl_InventarioDetalle.Where(d => d.NumFolio == buscarFolio);
                 }
                 catch (Exception E) 
                 {
-
                     return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = listaDetalle });
                 }
 
@@ -437,10 +479,6 @@ namespace DAP.Foliacion.Plantilla.Controllers
 
 
             var listaDetalleFiltrada = queryable_Tbl_InventarioDetalle.OrderBy(x => x.NumFolio).Skip(skip).Take(pageSize).ToList();
-
-
-
-
                 foreach (var detalle in listaDetalleFiltrada)
                 {
                     DetalleBancoModel nuevoDetalle = new DetalleBancoModel();

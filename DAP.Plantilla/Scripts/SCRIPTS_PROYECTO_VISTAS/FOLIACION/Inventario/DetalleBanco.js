@@ -1,6 +1,7 @@
 ﻿
 function CargarDetallesFolios() {
     let nombreDetalleBanco = document.getElementById("DetalleBancoCuenta").innerHTML
+    MensajeCargando();
   $("#table_id").DataTable({
         "dom": 'Blfrtip',
         "buttons": [
@@ -90,15 +91,16 @@ function CargarDetallesFolios() {
         "info": true,
         "searching": true,
         "paging": true,
-        "lengthMenu": [20, 30, 50, 100],
+        "lengthMenu": [25, 30, 50, 100],
         "ordering": false,
         "bDestroy": true
 
     });
 
-
+    
 
     document.getElementById("CargarDetallesFolios").style.display = "none";
+    OcultarMensajeCargando();
 }
 
 
@@ -119,7 +121,7 @@ function RecuperarFolioDeIncidencia(recuperarIdTblDetalle, numeroFolio,  inciden
     if (incidencia == "null")
     {
         incidencia = 'Asignado a chequera externa';
-        console.log('ENtre');
+        //console.log('ENtre');
     }
 
 
@@ -137,38 +139,27 @@ function RecuperarFolioDeIncidencia(recuperarIdTblDetalle, numeroFolio,  inciden
         if (result.isConfirmed) {
 
             MensajeCargando();
-            $.ajax({
-                url: 'RecuperarFolioDeIncidencia',
-                data: idDetalleARecuperar,
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                success: function (msg) {
-                    OcultarMensajeCargando();
+            axios.post('/Inventario/RecuperarFolioDeIncidencia', {
+                recuperarIdTblDetalle: recuperarIdTblDetalle
+            })
+            .then(function (response) {
 
+                if (response.data == true) {
+                    MensajeCorrectoConRecargaPagina_UnicaParaRecuperFoliosEnVistaDetalle('El Folio ' + numeroFolio + ' que se encontraba ' + incidencia + ',  fue recuperado exitosamente');
 
-                   // console.log("msg", msg);
-                    if (msg == true) {
-                        MensajeCorrectoConRecargaPagina_UnicaParaRecuperFoliosEnVistaDetalle('El Folio ' + numeroFolio + ' que se encontraba ' + incidencia + ',  fue recuperado exitosamente');
-
-                    } else {
-                        MensajeErrorSweet('Intente de nuevo mas tarde' , 'No se pudo recuperar el folio seleccionado' );
-                    }
-
-
-
-                },
-                error: function (msg) {
-
-                    OcultarMensajeCargando();
-
-                    MensajeErrorSweet('', 'Ocurrio un problema intente de nuevo');
-                    
+                } else {
+                    MensajeErrorSweet('Intente de nuevo mas tarde', 'No se pudo recuperar el folio seleccionado');
                 }
+                OcultarMensajeCargando();
+            })
+            .catch(function (error) {
+                MensajeErrorSweet('Ocurrio un problema intente de nuevo', error);
+                OcultarMensajeCargando();
             });
 
 
-            
 
+    
 
         }
     })

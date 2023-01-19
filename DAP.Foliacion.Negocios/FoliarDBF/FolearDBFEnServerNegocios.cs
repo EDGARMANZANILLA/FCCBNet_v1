@@ -287,6 +287,8 @@ namespace DAP.Foliacion.Negocios.FoliarDBF
         }
 
 
+
+
         public static AlertasAlFolearPagomaticosDTO ValidaExistenciaONoEsteAbierta(string contextoDBF , DatosCompletosBitacoraDTO datosCompletosNomina)
         {
 
@@ -315,6 +317,20 @@ namespace DAP.Foliacion.Negocios.FoliarDBF
                 nuevaAlerta.Detalle = "LA BASE : || " + datosCompletosNomina.Ruta + datosCompletosNomina.RutaNomina + " || RUTA INVALIDA DE LA DBF DENTRO DEL SERVIDOR ";
                 nuevaAlerta.Solucion = "COMUNIQUESE CON EL DESARROLLADOR INMEDIATAMENTE";
                 return nuevaAlerta;
+            }else if (contextoDBF.Contains("SQL: Statement too long.") || contextoDBF.Contains("Too many arguments.")) 
+            {
+                nuevaAlerta.IdAtencion = 4;
+                nuevaAlerta.Id_Nom = Convert.ToString(datosCompletosNomina.Id_nom);
+                nuevaAlerta.Detalle = "LA BASE : || " + datosCompletosNomina.Ruta + datosCompletosNomina.RutaNomina + " || INTENTA RECUPERAR MUCHOS FOLIOS A LA VEZ Y NO ES POSIBLE ";
+                nuevaAlerta.Solucion = "COMUNIQUESE CON EL DESARROLLADOR INMEDIATAMENTE";
+                return nuevaAlerta;
+            }else if (contextoDBF.Contains("SQL:")) 
+            {
+                nuevaAlerta.IdAtencion = 4;
+                nuevaAlerta.Id_Nom = Convert.ToString(datosCompletosNomina.Id_nom);
+                nuevaAlerta.Detalle = "LA BASE : || " + datosCompletosNomina.Ruta + datosCompletosNomina.RutaNomina + " || "+contextoDBF+"";
+                nuevaAlerta.Solucion = "COMUNIQUESE CON EL DESARROLLADOR INMEDIATAMENTE";
+                return nuevaAlerta;
             }
 
             if (nuevaAlerta.IdAtencion > 0)
@@ -327,9 +343,6 @@ namespace DAP.Foliacion.Negocios.FoliarDBF
             }
 
         }
-
-
-
 
 
 
@@ -378,21 +391,37 @@ namespace DAP.Foliacion.Negocios.FoliarDBF
             string resultado_OperacionDBF;
             using (new Negocios.NetworkConnection(domain, new System.Net.NetworkCredential(user, password)))
             {
-                string pathBasesServidor47 = @"\\172.19.3.173\";
+                string rutaPrueba = RutaRealDentroDeServidorDFB(datosNominaCompleto.Ruta);
 
-                string letraRuta = datosNominaCompleto.Ruta.Substring(0, 2);
-                if (letraRuta.ToUpper() == "F:")
-                {
-                    pathBasesServidor47 = pathBasesServidor47 + "F2";
+                datosNominaCompleto.Ruta = rutaPrueba;
+                /****************************************************************************************************************/
+                /****************************************************************************************************************/
+                /****************************************************************************************************************/
+                ////string pathBasesServidor47 = @"\\172.19.3.173\";
 
-                }
-                else if (letraRuta.ToUpper() == "J:")
-                {
-                    pathBasesServidor47 = pathBasesServidor47 + "J2";
-                }
+                ////bool estaModoDebuger = System.Diagnostics.Debugger.IsAttached ;
 
-                datosNominaCompleto.Ruta = datosNominaCompleto.Ruta.Replace("" + letraRuta + "", ""); // \SAGITARI\AYUDAS\ARCHIVOS\            
-                datosNominaCompleto.Ruta = pathBasesServidor47 + datosNominaCompleto.Ruta; //\\172.19.3.173\F\SAGITARI\AYUDAS\ARCHIVOS\
+                ////string letraRutaReal;
+                ////string letraRuta = datosNominaCompleto.Ruta.Substring(0, 2);
+                ////if (letraRuta.ToUpper() == "F:")
+                ////{
+                ////    letraRutaReal = estaModoDebuger? "F2": "F" ;
+                ////    pathBasesServidor47 = pathBasesServidor47 + letraRutaReal;
+
+                ////}
+                ////else if (letraRuta.ToUpper() == "J:")
+                ////{
+                ////    letraRutaReal = estaModoDebuger? "J2": "J";
+                ////    pathBasesServidor47 = pathBasesServidor47 + letraRutaReal;
+                ////}
+
+
+                ////datosNominaCompleto.Ruta = datosNominaCompleto.Ruta.Replace("" + letraRuta + "", ""); // \SAGITARI\AYUDAS\ARCHIVOS\            
+                ////datosNominaCompleto.Ruta = pathBasesServidor47 + datosNominaCompleto.Ruta; //\\172.19.3.173\F\SAGITARI\AYUDAS\ARCHIVOS\
+
+                /****************************************************************************************************************/
+                /****************************************************************************************************************/
+                /****************************************************************************************************************/
 
 
 
@@ -448,7 +477,23 @@ namespace DAP.Foliacion.Negocios.FoliarDBF
                         return adver;
 
                     case 7:
-                        //number = "Seven";
+                        /**     LIMPIAR VariosCampos REGISTROS DE LA DBF BAJO CIERTAS CONDICIONES       **/
+                        resultado_OperacionDBF = ActualizacionDFBS.LimpiarVariosCamposRegitrosBaseDBFRecuperacionFoliosCheques(datosNominaCompleto.Ruta, datosNominaCompleto.RutaNomina /*NombreArchivo*/, Condicion );
+                        AlertasAlFolearPagomaticosDTO alertaEncontradaRecuperarCheques = FolearDBFEnServerNegocios.ValidaExistenciaONoEsteAbierta(resultado_OperacionDBF, datosNominaCompleto);
+                        if (alertaEncontradaRecuperarCheques != null)
+                        {
+                            //Si existe un error esque no se termino de limpiar la base con condicion correctamente por ende solo se cambia el texto que se le informara al usuario 
+                            alertaEncontradaRecuperarCheques.Detalle += alertaEncontradaRecuperarCheques.Detalle + " || HUBO UN ERROR LIMPIANDO LA BASE PARA RECUPERAR LOS FOLIOS USADOS";
+                            alertaEncontradaRecuperarCheques.Solucion += alertaEncontradaRecuperarCheques.Solucion + " || INTENTE BLANQUEAR LA BASE MANUALMENTE Y REPITA EL PROCESO DE FOLIACION";
+
+                            return alertaEncontradaRecuperarCheques;
+                        }
+
+
+                        adver.IdAtencion = 200;
+                        adver.NumeroRegistrosActualizados = Convert.ToInt32(resultado_OperacionDBF);
+                        return adver;
+
                         break; 
                     case 8:
                         //number = "eight";
@@ -465,14 +510,6 @@ namespace DAP.Foliacion.Negocios.FoliarDBF
 
             return adver;
         }
-
-
-
-
-
-
-
-
 
 
 
@@ -521,24 +558,35 @@ namespace DAP.Foliacion.Negocios.FoliarDBF
             {
 
                 //string pathBasesServidor47 = @"\\172.19.3.173\f2\";
-                string pathBasesServidor47 = @"\\172.19.3.173\";
+                string rutaPrueba = RutaRealDentroDeServidorDFB(datosNominaCompleto.Ruta);
+
+                datosNominaCompleto.Ruta = rutaPrueba;
+
+                /****************************************************************************************************************/
+                /****************************************************************************************************************/
+                /****************************************************************************************************************/
+                //////string pathBasesServidor47 = @"\\172.19.3.173\";
 
 
 
-                string letraRuta = datosNominaCompleto.Ruta.Substring(0, 2);
+                //////string letraRuta = datosNominaCompleto.Ruta.Substring(0, 2);
 
-                if (letraRuta.ToUpper() == "F:")
-                {
-                    pathBasesServidor47 = pathBasesServidor47 + "F2";
+                //////if (letraRuta.ToUpper() == "F:")
+                //////{
+                //////    pathBasesServidor47 = pathBasesServidor47 + "F2";
 
-                }
-                else if (letraRuta.ToUpper() == "J:")
-                {
-                    pathBasesServidor47 = pathBasesServidor47 + "J2";
-                }
-           
-                datosNominaCompleto.Ruta = datosNominaCompleto.Ruta.Replace("" + letraRuta + "", ""); // \SAGITARI\AYUDAS\ARCHIVOS\            
-                datosNominaCompleto.Ruta = pathBasesServidor47 + datosNominaCompleto.Ruta; //\\172.19.3.173\F\SAGITARI\AYUDAS\ARCHIVOS\
+                //////}
+                //////else if (letraRuta.ToUpper() == "J:")
+                //////{
+                //////    pathBasesServidor47 = pathBasesServidor47 + "J2";
+                //////}
+
+                //////datosNominaCompleto.Ruta = datosNominaCompleto.Ruta.Replace("" + letraRuta + "", ""); // \SAGITARI\AYUDAS\ARCHIVOS\            
+                //////datosNominaCompleto.Ruta = pathBasesServidor47 + datosNominaCompleto.Ruta; //\\172.19.3.173\F\SAGITARI\AYUDAS\ARCHIVOS\
+                
+                /****************************************************************************************************************/
+                /****************************************************************************************************************/
+                /****************************************************************************************************************/
 
 
 
@@ -563,6 +611,13 @@ namespace DAP.Foliacion.Negocios.FoliarDBF
                         resultado_ActualizacionDBF = ActualizacionDFBS.LimpiarUnRegitroCamposFoliacionBaseDBF(datosNominaCompleto.Ruta, datosNominaCompleto.RutaNomina /*NombreArchivo*/, datosNominaCompleto.EsPenA, CadenaNumEmpleado, PagoAModificar.ImporteLiquido, PagoAModificar.Delegacion, PagoAModificar.NumBeneficiario);
                         advertencia = FolearDBFEnServerNegocios.ValidaExistenciaONoEsteAbierta(resultado_ActualizacionDBF, datosNominaCompleto);
                         break;
+                    case 4:
+                        /**     LIMPIAR UN REGISTROS DE LA DBF BAJO CIERTAS CONDICIONES       **/
+                        resultado_ActualizacionDBF = ActualizacionDFBS.MarcarComoRechazoBancario(datosNominaCompleto.Ruta, datosNominaCompleto.RutaNomina, PagoAModificar, CadenaNumEmpleado);
+                        advertencia = FolearDBFEnServerNegocios.ValidaExistenciaONoEsteAbierta(resultado_ActualizacionDBF, datosNominaCompleto);
+                        break;
+
+
                 }
 
             }
@@ -577,6 +632,34 @@ namespace DAP.Foliacion.Negocios.FoliarDBF
             advertencia.IdAtencion = 200;
             advertencia.NumeroRegistrosActualizados = Convert.ToInt32(resultado_ActualizacionDBF);
             return advertencia;
+        }
+
+
+        public static string RutaRealDentroDeServidorDFB(string Ruta) 
+        {
+            string pathBasesServidor47 = @"\\172.19.3.173\";
+
+            bool estaModoDebuger = System.Diagnostics.Debugger.IsAttached;
+
+            string letraRutaReal;
+            string letraRuta = Ruta.Substring(0, 2);
+            if (letraRuta.ToUpper() == "F:")
+            {
+                letraRutaReal = estaModoDebuger ? "F2" : "F";
+                pathBasesServidor47 = pathBasesServidor47 + letraRutaReal;
+
+            }
+            else if (letraRuta.ToUpper() == "J:")
+            {
+                letraRutaReal = estaModoDebuger ? "J2" : "J";
+                pathBasesServidor47 = pathBasesServidor47 + letraRutaReal;
+            }
+
+
+            Ruta = Ruta.Replace(""+letraRuta+"",""); // \SAGITARI\AYUDAS\ARCHIVOS\            
+            Ruta = pathBasesServidor47 + Ruta; //\\172.19.3.173\F\SAGITARI\AYUDAS\ARCHIVOS\
+
+            return Ruta;
         }
 
     }

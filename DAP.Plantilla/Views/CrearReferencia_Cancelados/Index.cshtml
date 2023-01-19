@@ -1,5 +1,6 @@
-﻿@model List<DAP.Plantilla.Models.CrearReferencia_CanceladosModels.ReferenciaCanceladoModel>
+﻿@*@model List<DAP.Plantilla.Models.CrearReferencia_CanceladosModels.ReferenciaCanceladoModel>*@
 
+@model DAP.Plantilla.Models.PermisosModels.PermisosUsuarioModel
 
 @{
     ViewBag.Icono = "fas fa-folder-plus";
@@ -38,10 +39,10 @@
 <br />
 <br />
 
-@if (Model.Count > 0)
+@if (ViewBag.ReferenciasCancelaciones != null)
 {
-
-    <div class="offset-1 col-10 text-center">
+    if (ViewBag.ReferenciasCancelaciones.Count > 0)
+    {
 
 
         <div class="table-responsive text-center">
@@ -53,20 +54,20 @@
                     <thead class="tabla">
                         <tr class="text-center text-uppercase">
 
-                            <th>Id</th>
-                            <th class="col-1">Anio</th>
-                            <th class="col-1"># Referencia Interna</th>
-                            <th class="col-1">Referencia Externa</th>
+                            @*<th>Id</th>*@
+                            <th>Anio</th>
+                            <th>#Ref. Interna</th>
+                            <th>#Ref. Externa</th>
                             <th class="col-1">Fecha de Creacion</th>
 
-                            <th class="col-2">Creado por:</th>
-                            <th class="col-1">Formas dentro de Referencia</th>
-                            <th class="col-1">Activo</th>
+                            <th class="col-1">Creado por:</th>
+                            <th>Formas dentro de Referencia</th>
+                            <th>Activo</th>
 
-                            <th class="col-2">Detalle   Referencia</th>
-                            <th class="col-1">Eliminar  Referencia</th>
-                            <th class="col-1">Finalizar Referencia</th>
-                            <th class="col-1">Detalle   Finalizacion</th>
+                            <th>Detalle   Referencia</th>
+                            <th>Eliminar  Referencia</th>
+                            <th>Finalizar Referencia</th>
+                            <th>Detalle   Finalizacion</th>
 
                         </tr>
 
@@ -77,18 +78,18 @@
 
 
 
-                        @foreach (var modelo in Model)
+                        @foreach (var modelo in ViewBag.ReferenciasCancelaciones)
                         {
                             <tr>
 
-                                <td>@modelo.Id_Iterador</td>
+                                @*<td>@modelo.Id_Iterador</td>*@
                                 <td>@modelo.Anio</td>
                                 <td>@modelo.NReferencia</td>
                                 <td>@modelo.Numero_Referencia</td>
                                 <td>@modelo.Fecha_Creacion</td>
                                 <td>@modelo.Creado_Por</td>
                                 <td>@modelo.FormasPagoCargadas</td>
-                                <td>@modelo.Activo</td>
+                                <td>@modelo.Activo </td>
 
                                 @if (@modelo.Activo)
                                 {
@@ -142,13 +143,17 @@
                 </table>
 
             </div>
+
         </div>
 
 
-    </div>
 
+
+
+    }
 
 }
+
 
 
 
@@ -330,29 +335,29 @@
 
 
                 <div class="row row-cols-1 row-cols-md-2">
-             
+
 
                     @*<div class="col mb-4 text-center">
-                        <div class="card" style="box-shadow: 0 4px 8px 0 rgba(118, 223, 20, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
-                            <div class="card-body text-success">
-                                <h5 class="card-title"> Descargar Reportes de Nomina por Año </h5>
-                                <a id="descargaNominaAnual" type="button" class="agregar btn btn-success">
-                                    Rp Nomina Anual  <br />
-                                    <i class="fas fa-cloud-download-alt"></i>
-                                </a>
+                            <div class="card" style="box-shadow: 0 4px 8px 0 rgba(118, 223, 20, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+                                <div class="card-body text-success">
+                                    <h5 class="card-title"> Descargar Reportes de Nomina por Año </h5>
+                                    <a id="descargaNominaAnual" type="button" class="agregar btn btn-success">
+                                        Rp Nomina Anual  <br />
+                                        <i class="fas fa-cloud-download-alt"></i>
+                                    </a>
 
 
-                           
+
+                                </div>
                             </div>
-                        </div>
-                    </div>*@ 
-                    
-                    
+                        </div>*@
+
+
                     <div class="col mb-4 text-center">
                         <div class="card" style="box-shadow: 0 4px 8px 0 rgba(118, 223, 20, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
                             <div class="card-body text-success">
                                 <h5 class="card-title"> Descargar Reportes de Nomina por Año </h5>
-                                <a id="descargaNominaAnual" type="button" class="agregar btn btn-success"  onclick="exportarZIP('@Url.Content("~/CrearReferencia_Cancelados/DescargarReporteNominaAnual_AXIOS")' , 1)" >
+                                <a id="descargaNominaAnual" type="button" class="agregar btn btn-success" onclick="exportarZIP('@Url.Content("~/CrearReferencia_Cancelados/DescargarReporteNominaAnual_AXIOS")' , 1)">
                                     Rp Nomina Anual  <br />
                                     <i class="fas fa-cloud-download-alt"></i>
                                 </a>
@@ -451,9 +456,8 @@
 
                 <br />
                 <!--<div class="row">-->
-
-                    <!-- card Principal-->
-                    <!--<div class="col-12 offset-md-2 col-md-8  text-center">
+                <!-- card Principal-->
+                <!--<div class="col-12 offset-md-2 col-md-8  text-center">
                         <div class="card" style="box-shadow: 0 4px 8px 0 rgba(20, 108, 223, 0.700), 0 6px 10px 6px rgba(67, 85, 201, 0.21);">
                             <div class="card-body text-success">
                                 <h5 class="card-title">Descargar IPD para afectacion presupuestal</h5>
@@ -509,31 +513,31 @@
                 </button>
             </div>
             <div class="modal-body">
-              
+
 
 
 
 
 
                 <div class="row row-cols-1 row-cols-md-2">
-                   <div class="col mb-4 text-center">
-                    <div class="card" style="box-shadow: 0 4px 8px 0 rgba(118, 223, 20, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
-                        <div class="card-body text-success">
-                            <h5 class="card-title"> Descargar Resumen General de Montos por Nomina a Cancelar </h5>
-                            <button class="btn btn-success"  onclick="EstamosEnDesarrollo()">
-                                Resumen Montos   <br />
-                                <i class="fas fa-cloud-download-alt"></i>
-                            </button>
+                    <div class="col mb-4 text-center">
+                        <div class="card" style="box-shadow: 0 4px 8px 0 rgba(118, 223, 20, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+                            <div class="card-body text-success">
+                                <h5 class="card-title"> Descargar Resumen General de Montos por Nomina a Cancelar </h5>
+                                <button class="btn btn-success" onclick="EstamosEnDesarrollo()">
+                                    Resumen Montos   <br />
+                                    <i class="fas fa-cloud-download-alt"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
-                   </div>
 
                     <div class="col mb-4 text-center">
                         <div class="card" style="box-shadow: 0 4px 8px 0 rgba(118, 223, 20, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
                             <div class="card-body text-success">
                                 <h5 class="card-title"> Interface de Coutas Patronales por Nomina </h5>
-                                <button class="btn btn-success"  onclick="EstamosEnDesarrollo()">
-                                     ICPXN   <br />
+                                <button class="btn btn-success" onclick="EstamosEnDesarrollo()">
+                                    ICPXN   <br />
                                     <i class="fas fa-cloud-download-alt"></i>
                                 </button>
                             </div>
@@ -541,18 +545,18 @@
                     </div>
 
                     @*<div class="col mb-4 text-center">
-                        <div class="card" style="box-shadow: 0 4px 8px 0 rgba(20, 108, 223, 0.700), 0 6px 10px 6px rgba(67, 85, 201, 0.21);">
-                            <div class="card-body text-success">
-                                <h5 class="card-title"> Descargar IPD_Compensados para afectacion Presupuestal </h5>
-                                <a id="DescargarIPDCxAnio" class="btn btn-success" >
-                                    ... IPD_C ...  <br />
-                                    <i class="fas fa-cloud-download-alt"></i>
-                                </a>
+                            <div class="card" style="box-shadow: 0 4px 8px 0 rgba(20, 108, 223, 0.700), 0 6px 10px 6px rgba(67, 85, 201, 0.21);">
+                                <div class="card-body text-success">
+                                    <h5 class="card-title"> Descargar IPD_Compensados para afectacion Presupuestal </h5>
+                                    <a id="DescargarIPDCxAnio" class="btn btn-success" >
+                                        ... IPD_C ...  <br />
+                                        <i class="fas fa-cloud-download-alt"></i>
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-                    </div>*@
+                        </div>*@
 
-                       <div class="col mb-4 text-center">
+                    <div class="col mb-4 text-center">
                         <div class="card" style="box-shadow: 0 4px 8px 0 rgba(20, 108, 223, 0.700), 0 6px 10px 6px rgba(67, 85, 201, 0.21);">
                             <div class="card-body text-success">
                                 <h5 class="card-title"> Descargar IPD_Compensados para afectacion Presupuestal </h5>
@@ -569,16 +573,16 @@
 
 
                     @*<div class="col mb-4 text-center">
-                        <div class="card" style="box-shadow: 0 4px 8px 0 rgba(118, 223, 20, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
-                            <div class="card-body text-success">
-                                <h5 class="card-title"> Descargar Reporte de Pension Alimenticia General </h5>
-                                <button class="btn btn-success">
-                                    ... IPD_C ... <br />
-                                    <i class="fas fa-cloud-download-alt"></i>
-                                </button>
+                            <div class="card" style="box-shadow: 0 4px 8px 0 rgba(118, 223, 20, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+                                <div class="card-body text-success">
+                                    <h5 class="card-title"> Descargar Reporte de Pension Alimenticia General </h5>
+                                    <button class="btn btn-success">
+                                        ... IPD_C ... <br />
+                                        <i class="fas fa-cloud-download-alt"></i>
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                    </div>*@
+                        </div>*@
                 </div>
 
 
@@ -599,7 +603,7 @@
 
 
 <style>
-    
+
     .modal.fade {
         background: rgba(0,0,0,0.6);
     }

@@ -26,9 +26,9 @@ namespace DAP.Foliacion.Datos
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<cat_FiltroConsultaDatosPersonalesNomina> cat_FiltroConsultaDatosPersonalesNomina { get; set; }
         public virtual DbSet<Cat_EstadoCancelados_Pagos> Cat_EstadoCancelados_Pagos { get; set; }
         public virtual DbSet<Cat_EstadosPago_Pagos> Cat_EstadosPago_Pagos { get; set; }
-        public virtual DbSet<cat_FiltroConsultaDatosPersonalesNomina> cat_FiltroConsultaDatosPersonalesNomina { get; set; }
         public virtual DbSet<cat_FiltroGrupoImpresionDelegaciones> cat_FiltroGrupoImpresionDelegaciones { get; set; }
         public virtual DbSet<Cat_FormasPago_Pagos> Cat_FormasPago_Pagos { get; set; }
         public virtual DbSet<cat_ReportesCCancelados> cat_ReportesCCancelados { get; set; }
@@ -47,5 +47,9 @@ namespace DAP.Foliacion.Datos
         public virtual DbSet<Tbl_Referencias_Cancelaciones> Tbl_Referencias_Cancelaciones { get; set; }
         public virtual DbSet<Tbl_SeguimientoHistoricoFormas_Pagos> Tbl_SeguimientoHistoricoFormas_Pagos { get; set; }
         public virtual DbSet<Tbl_Solicitudes> Tbl_Solicitudes { get; set; }
+        public virtual DbSet<Login_Modulos> Login_Modulos { get; set; }
+        public virtual DbSet<Login_Permisos> Login_Permisos { get; set; }
+        public virtual DbSet<Login_Roles> Login_Roles { get; set; }
+        public virtual DbSet<Login_Usuarios> Login_Usuarios { get; set; }
     }
 }

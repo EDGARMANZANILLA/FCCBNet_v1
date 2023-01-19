@@ -44,6 +44,7 @@ namespace DAP.Foliacion.Entidades
         public Nullable<bool> TieneSeguimientoHistorico { get; set; }
         public Nullable<bool> TieneSuspensionDispersion { get; set; }
         public bool Activo { get; set; }
+        public Nullable<bool> TieneRechazoDispersion { get; set; }
     
         public virtual Cat_EstadosPago_Pagos Cat_EstadosPago_Pagos { get; set; }
         public virtual Cat_FormasPago_Pagos Cat_FormasPago_Pagos { get; set; }

@@ -1,13 +1,13 @@
-﻿
+﻿@*@model DAP.Plantilla.Models.PermisosModels.PermisosUsuarioModel*@
 
 
 
 
-<section >
+<section>
 
     <div class="col-12 TxtNegrita margenAlPie">
         <div class="text-center TxtNegrita">
-          <h1>BIENVENIDO</h1>
+            <h1>BIENVENIDO</h1>
         </div>
     </div>
 
@@ -17,9 +17,13 @@
             <div class=" hijo">
                 <img src="~/Imagenes/ESCUDO_GRIS.png" class="margen" alt="Sample image" style="height: 200px; width:110px; margin-top:6px;">
 
+                @{
 
-                <li class="list-group-item">@ViewBag.NombreEmpleado</li>
-                <li class="list-group-item">@ViewBag.Puesto</li>
+                    DAP.Plantilla.Models.SesionesDatosModels.InformacionEmpleadoSesionModel NuevoEmpleadoCorrectamenteLogueado = (DAP.Plantilla.Models.SesionesDatosModels.InformacionEmpleadoSesionModel)Session["UsuarioAPP"];
+                }
+
+                <li class="list-group-item">@NuevoEmpleadoCorrectamenteLogueado.NombreEmpleado</li>
+                <li class="list-group-item">@NuevoEmpleadoCorrectamenteLogueado.Puesto</li>
             </div>
         </div>
     </div>

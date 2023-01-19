@@ -1,4 +1,7 @@
-﻿@model List<DAP.Plantilla.Models.InventarioAsignarAjustarModel>
+﻿@*@model List<DAP.Plantilla.Models.InventarioAsignarAjustarModel>*@
+
+@model DAP.Plantilla.Models.PermisosModels.PermisosUsuarioModel
+
 @{
     ViewBag.Icono = "fas fa-hands-helping";
     ViewBag.Title = "Asignar";
@@ -25,16 +28,19 @@
         </div>
 
     </div>
-
 </section>
 
 
 
 <seccion class="card col-12  offset-md-2 col-md-8 text-center" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+    <br />
+    <div class="col-5 text-left">
+        <a type="button" class="btn btn-success btn text-center" href="@Url.Action("Incidencias", "Inventario", new  { IdCuentaBancaria = ViewBag.IdBancoSeleccionado })"> <i class="fas fa-arrow-left"></i>  Regresar</a>
+    </div>
+    <br />
 
 
-
-    <div class="margenSection row" style="margin-bottom: 60px; ">
+    <div class="margenAlPie row" ">
 
         <div class="btn-block">
             <h5 class="text-center">Seleccione la opcion deseada:</h5>
@@ -77,7 +83,7 @@
                     <option value="">Selecciona personal a asignar...</option>
                     @foreach (var nuevoNombre in ViewBag.ListaNombrePersonal)
                     {
-                        <option value="@nuevoNombre.Key" >@nuevoNombre.Value </option>
+                        <option value="@nuevoNombre.Key">@nuevoNombre.Value </option>
                     }
                 </select>
             </div>
@@ -105,7 +111,6 @@
 </section>
 
 <!-- Termina secciones par Inhabilitar un Folio o Folios -->
-
 <!-- Inicia Inhabilitacion por contenedores -->
 <section id="AsignacionContenedor" class="margenSection offset-1 col-10" style="background:#E6E6E6; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); display:none;">
     <br />
@@ -171,9 +176,9 @@
 
     <!--Seleccionar Numero de contendor-->
     <section id="contenedorAsignacion" style="display: none">
-        
+
         <div class="row text-left">
-            <button type="button" class="btn btn-success text-center"  onclick="regresarSeleccion()"> <i class="fas fa-angle-double-left"></i> Regresar </button>
+            <button type="button" class="btn btn-success text-center" onclick="regresarSeleccion()"> <i class="fas fa-angle-double-left"></i> Regresar </button>
         </div>
 
         <div class="row">
@@ -184,7 +189,7 @@
             <div class=" col-12 col-md-6">
                 <div class="form-group">
                     <select class="form-control" id="SeleccionContenedorAsignacion">
-                        <option  value="">Selecciona un numero de Contenedor...</option>
+                        <option value="">Selecciona un numero de Contenedor...</option>
 
                     </select>
                 </div>
@@ -195,23 +200,23 @@
 
 
         @*<div class="row ">
-            <label class="col-12 text-center offset-md-1 col-md-3 text-md-right">Folio Inicial:</label>
-            <input id="FInicialContenedor" class="offset-1 col-10 offset-md-0 col-md-6" placeholder="Ingrese Folio inicial a inhabilitar" type="text" pattern="[A-Za-z0-9]" onkeypress="return event.charCode >= 48 && event.charCode <= 122 && event.charCode != 91 " />
-        </div>
+                <label class="col-12 text-center offset-md-1 col-md-3 text-md-right">Folio Inicial:</label>
+                <input id="FInicialContenedor" class="offset-1 col-10 offset-md-0 col-md-6" placeholder="Ingrese Folio inicial a inhabilitar" type="text" pattern="[A-Za-z0-9]" onkeypress="return event.charCode >= 48 && event.charCode <= 122 && event.charCode != 91 " />
+            </div>
 
-        <br />
+            <br />
 
-        <div class="row ">
-            <label class="col-12 text-center offset-md-1 col-md-3 text-md-right">Folio Final:</label>
-            <input id="FFinalContenedor" class="offset-1 col-10 offset-md-0 col-md-6" placeholder="Ingrese Folio Final a ihnabilitar" type="text" pattern="[A-Za-z0-9]" onkeypress="return event.charCode >= 48 && event.charCode <= 122 && event.charCode != 91 " />
-        </div>*@
+            <div class="row ">
+                <label class="col-12 text-center offset-md-1 col-md-3 text-md-right">Folio Final:</label>
+                <input id="FFinalContenedor" class="offset-1 col-10 offset-md-0 col-md-6" placeholder="Ingrese Folio Final a ihnabilitar" type="text" pattern="[A-Za-z0-9]" onkeypress="return event.charCode >= 48 && event.charCode <= 122 && event.charCode != 91 " />
+            </div>*@
 
 
         <br />
 
 
         <div class="col-12 text-center">
-            <button  type="button" class="btn btn-success btn-lg  btn-lg col-xs-12 col-md-5" title="valida la disponibilidad del contenedor" onclick="ValidarContenedorAsignacion()">
+            <button type="button" class="btn btn-success btn-lg  btn-lg col-xs-12 col-md-5" title="valida la disponibilidad del contenedor" onclick="ValidarContenedorAsignacion()">
                 Validar contenedor
             </button>
 
@@ -226,7 +231,6 @@
     <br />
 </section>
 <!-- Termina Inhabilitacion por contenedores -->
-
 <!-- Inicia Seccion de ver detalle -> Generacion de tablas -->
 <!-- Cascaron de tabla para luego llenarla con datos desde la DB -->
 <section id="SeccionFoliosAsignados" class="margenSection" style="display:none">
@@ -295,7 +299,7 @@
 
 <!-- Modal de Cancelacion cuando hay folios ya ocupados -->
 <section class="modal fade" id="ErrorEnFormasPagoAsignacion" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
 

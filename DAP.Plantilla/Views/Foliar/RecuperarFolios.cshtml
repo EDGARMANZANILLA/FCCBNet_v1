@@ -3,6 +3,8 @@
     <section id="IFolios" class="margenSection offset-2 col-8" style="background:#f8f2f2; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); ">
         <br />
         <h4 class="col-12 text-center">Recuperar Folios </h4>
+        <h6 class="col-12 text-center">Este apartado solo recupera folios que han sido foliados por error, tenga en cuenta que al recuperar el folio afectara a las bases donde se encuentre dicho folio asignado al empleado y debera volver asignar un folio de la cheque valido </h6>
+
         <br />
         <br />
         <div class="offset-2 col-8 text-left ">
@@ -19,7 +21,6 @@
                     </select>
 
                 </div>
-
 
             </div>
 
@@ -40,13 +41,21 @@
         <br />
         <br />
 
+        <hr class="col-9" />
 
+        <div id="regresarRecuperador" class="offset-1 col-6 text-left" style="display:none;">
+            <button type="button" class="btn btn-success btn text-center" onclick="RegresarRecuperadorFolios()" > <i class="fas fa-arrow-left"></i>  Regresar</button>
+        </div>
+        <br />
 
-
-        <div class="col-12 text-center ">
-            <button class="btn btn-lg btn-primary margenAlPie" onclick="RecuperarFolios()"> Buscar Folios</button>
+        <div id="btnBucarFoliarARecuperar" class="col-12 text-center" style="display:block;">
+            <button class="btn btn-lg btn-primary margenAlPie" onclick="BuscarFolios()"> Buscar Folios</button>
         </div>
 
+
+        <div id="btnRecuperasFoliosEncontrados" class="col-12 text-center " style="display: none;">
+            <button class="btn btn-lg btn-warning margenAlPie" onclick="RecuperarFoliosEncontrados()"> Recuperar Folios Encontrados</button>
+        </div>
 
 
     </section>

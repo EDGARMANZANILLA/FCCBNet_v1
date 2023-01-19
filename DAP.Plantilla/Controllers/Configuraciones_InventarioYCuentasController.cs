@@ -10,12 +10,15 @@ using DAP.Plantilla.Models.ConfiguracionesModels.FormaPagosDesinhabilitarModels;
 using DAP.Foliacion.Negocios;
 using AutoMapper;
 using DAP.Foliacion.Entidades.DTO.ConfiguracionesDTO;
+using DAP.Plantilla.Models.PermisosModels;
+using DAP.Foliacion.Plantilla.Filters;
 
 namespace DAP.Plantilla.Controllers
 {
     public class Configuraciones_InventarioYCuentasController : Controller
     {
         // GET: Configuraciones_InventarioYCuentas
+        [SessionSecurityFilter]
         public ActionResult Index()
         {
             return View();

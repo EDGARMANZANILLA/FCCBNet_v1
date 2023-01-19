@@ -91,6 +91,46 @@
           <Property Name="Comentario" Type="nvarchar" MaxLength="500" />
           <Property Name="Fecha" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="Login_Modulos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NombreModulo" Type="nvarchar" MaxLength="80" Nullable="false" />
+          <Property Name="Descripcion" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="Controlador" Type="nvarchar" MaxLength="60" Nullable="false" />
+          <Property Name="Accion" Type="nvarchar" MaxLength="60" Nullable="false" />
+          <Property Name="Activo" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Login_Permisos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdUsuario" Type="int" Nullable="false" />
+          <Property Name="IdRol" Type="int" Nullable="false" />
+          <Property Name="IdModulo" Type="int" Nullable="false" />
+          <Property Name="Activo" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Login_Roles">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NombreRol" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Activo" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Login_Usuarios">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdTblUsers" Type="int" Nullable="false" />
+          <Property Name="NumEmpleado" Type="int" Nullable="false" />
+          <Property Name="UltimaSesion" Type="date" />
+          <Property Name="EsRoot" Type="bit" Nullable="false" />
+          <Property Name="Activo" Type="bit" Nullable="false" />
+        </EntityType>
         <EntityType Name="sysdiagrams">
           <Key>
             <PropertyRef Name="diagram_id" />
@@ -230,6 +270,7 @@
           <Property Name="IdTbl_Referencias_Cancelaciones" Type="int" />
           <Property Name="TieneSeguimientoHistorico" Type="bit" />
           <Property Name="TieneSuspensionDispersion" Type="bit" />
+          <Property Name="TieneRechazoDispersion" Type="bit" />
           <Property Name="Activo" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Tbl_Referencias_Cancelaciones">
@@ -276,6 +317,42 @@
           <Property Name="FechaSolicitud" Type="date" Nullable="false" />
           <Property Name="Activo" Type="bit" Nullable="false" />
         </EntityType>
+        <Association Name="FK_Login_Permisos_Login_Modulos">
+          <End Role="Login_Modulos" Type="Self.Login_Modulos" Multiplicity="1" />
+          <End Role="Login_Permisos" Type="Self.Login_Permisos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Login_Modulos">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Login_Permisos">
+              <PropertyRef Name="IdModulo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Login_Permisos_Login_Roles">
+          <End Role="Login_Roles" Type="Self.Login_Roles" Multiplicity="1" />
+          <End Role="Login_Permisos" Type="Self.Login_Permisos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Login_Roles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Login_Permisos">
+              <PropertyRef Name="IdRol" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Login_Permisos_Login_Usuarios">
+          <End Role="Login_Usuarios" Type="Self.Login_Usuarios" Multiplicity="1" />
+          <End Role="Login_Permisos" Type="Self.Login_Permisos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Login_Usuarios">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Login_Permisos">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Tbl_CuentasBancarias_Tbl_Inventario">
           <End Role="Tbl_Inventario" Type="Self.Tbl_Inventario" Multiplicity="0..1" />
           <End Role="Tbl_CuentasBancarias" Type="Self.Tbl_CuentasBancarias" Multiplicity="*" />
@@ -308,18 +385,6 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Tbl_InventarioContenedores">
-              <PropertyRef Name="IdInventario" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Tbl_InventarioDetalle_Tbl_Inventario">
-          <End Role="Tbl_Inventario" Type="Self.Tbl_Inventario" Multiplicity="1" />
-          <End Role="Tbl_InventarioDetalle" Type="Self.Tbl_InventarioDetalle" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Tbl_Inventario">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Tbl_InventarioDetalle">
               <PropertyRef Name="IdInventario" />
             </Dependent>
           </ReferentialConstraint>
@@ -453,6 +518,10 @@
           <EntitySet Name="cat_ReportesCCancelados" EntityType="Self.cat_ReportesCCancelados" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ExepcionesCargaInterfaces" EntityType="Self.ExepcionesCargaInterfaces" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LOG_EXCEPCIONES" EntityType="Self.LOG_EXCEPCIONES" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Login_Modulos" EntityType="Self.Login_Modulos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Login_Permisos" EntityType="Self.Login_Permisos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Login_Roles" EntityType="Self.Login_Roles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Login_Usuarios" EntityType="Self.Login_Usuarios" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tbl_CuentaBancarias_TipoPagoCuenta" EntityType="Self.Tbl_CuentaBancarias_TipoPagoCuenta" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tbl_CuentasBancarias" EntityType="Self.Tbl_CuentasBancarias" Schema="dbo" store:Type="Tables" />
@@ -466,6 +535,18 @@
           <EntitySet Name="Tbl_Referencias_Cancelaciones" EntityType="Self.Tbl_Referencias_Cancelaciones" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tbl_SeguimientoHistoricoFormas_Pagos" EntityType="Self.Tbl_SeguimientoHistoricoFormas_Pagos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tbl_Solicitudes" EntityType="Self.Tbl_Solicitudes" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Login_Permisos_Login_Modulos" Association="Self.FK_Login_Permisos_Login_Modulos">
+            <End Role="Login_Modulos" EntitySet="Login_Modulos" />
+            <End Role="Login_Permisos" EntitySet="Login_Permisos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Login_Permisos_Login_Roles" Association="Self.FK_Login_Permisos_Login_Roles">
+            <End Role="Login_Roles" EntitySet="Login_Roles" />
+            <End Role="Login_Permisos" EntitySet="Login_Permisos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Login_Permisos_Login_Usuarios" Association="Self.FK_Login_Permisos_Login_Usuarios">
+            <End Role="Login_Usuarios" EntitySet="Login_Usuarios" />
+            <End Role="Login_Permisos" EntitySet="Login_Permisos" />
+          </AssociationSet>
           <AssociationSet Name="FK_Tbl_CuentasBancarias_Tbl_Inventario" Association="Self.FK_Tbl_CuentasBancarias_Tbl_Inventario">
             <End Role="Tbl_Inventario" EntitySet="Tbl_Inventario" />
             <End Role="Tbl_CuentasBancarias" EntitySet="Tbl_CuentasBancarias" />
@@ -477,10 +558,6 @@
           <AssociationSet Name="FK_Tbl_InventarioContenedores_Tbl_Inventario" Association="Self.FK_Tbl_InventarioContenedores_Tbl_Inventario">
             <End Role="Tbl_Inventario" EntitySet="Tbl_Inventario" />
             <End Role="Tbl_InventarioContenedores" EntitySet="Tbl_InventarioContenedores" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Tbl_InventarioDetalle_Tbl_Inventario" Association="Self.FK_Tbl_InventarioDetalle_Tbl_Inventario">
-            <End Role="Tbl_Inventario" EntitySet="Tbl_Inventario" />
-            <End Role="Tbl_InventarioDetalle" EntitySet="Tbl_InventarioDetalle" />
           </AssociationSet>
           <AssociationSet Name="FK_Tbl_InventarioDetalle_Tbl_InventarioAsignacionPersonal" Association="Self.FK_Tbl_InventarioDetalle_Tbl_InventarioAsignacionPersonal">
             <End Role="Tbl_InventarioAsignacionPersonal" EntitySet="Tbl_InventarioAsignacionPersonal" />
@@ -528,9 +605,9 @@
     <edmx:ConceptualModels>
       <Schema Namespace="FoliacionInterfacesCargadasPruebaDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="FoliacionInterfacesCargadasPruebaDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="cat_FiltroConsultaDatosPersonalesNomina" EntityType="FoliacionInterfacesCargadasPruebaDBModel.cat_FiltroConsultaDatosPersonalesNomina" />
           <EntitySet Name="Cat_EstadoCancelados_Pagos" EntityType="FoliacionInterfacesCargadasPruebaDBModel.Cat_EstadoCancelados_Pagos" />
           <EntitySet Name="Cat_EstadosPago_Pagos" EntityType="FoliacionInterfacesCargadasPruebaDBModel.Cat_EstadosPago_Pagos" />
-          <EntitySet Name="cat_FiltroConsultaDatosPersonalesNomina" EntityType="FoliacionInterfacesCargadasPruebaDBModel.cat_FiltroConsultaDatosPersonalesNomina" />
           <EntitySet Name="cat_FiltroGrupoImpresionDelegaciones" EntityType="FoliacionInterfacesCargadasPruebaDBModel.cat_FiltroGrupoImpresionDelegaciones" />
           <EntitySet Name="Cat_FormasPago_Pagos" EntityType="FoliacionInterfacesCargadasPruebaDBModel.Cat_FormasPago_Pagos" />
           <EntitySet Name="cat_ReportesCCancelados" EntityType="FoliacionInterfacesCargadasPruebaDBModel.cat_ReportesCCancelados" />
@@ -581,10 +658,6 @@
             <End Role="Tbl_Inventario" EntitySet="Tbl_Inventario" />
             <End Role="Tbl_InventarioContenedores" EntitySet="Tbl_InventarioContenedores" />
           </AssociationSet>
-          <AssociationSet Name="FK_Tbl_InventarioDetalle_Tbl_Inventario" Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_InventarioDetalle_Tbl_Inventario">
-            <End Role="Tbl_Inventario" EntitySet="Tbl_Inventario" />
-            <End Role="Tbl_InventarioDetalle" EntitySet="Tbl_InventarioDetalle" />
-          </AssociationSet>
           <AssociationSet Name="FK_Tbl_InventarioDetalle_Tbl_InventarioAsignacionPersonal" Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_InventarioDetalle_Tbl_InventarioAsignacionPersonal">
             <End Role="Tbl_InventarioAsignacionPersonal" EntitySet="Tbl_InventarioAsignacionPersonal" />
             <End Role="Tbl_InventarioDetalle" EntitySet="Tbl_InventarioDetalle" />
@@ -605,7 +678,34 @@
             <End Role="Tbl_Referencias_Cancelaciones" EntitySet="Tbl_Referencias_Cancelaciones" />
             <End Role="Tbl_Pagos" EntitySet="Tbl_Pagos" />
           </AssociationSet>
-        </EntityContainer>
+          <EntitySet Name="Login_Modulos" EntityType="FoliacionInterfacesCargadasPruebaDBModel.Login_Modulos" />
+          <EntitySet Name="Login_Permisos" EntityType="FoliacionInterfacesCargadasPruebaDBModel.Login_Permisos" />
+          <EntitySet Name="Login_Roles" EntityType="FoliacionInterfacesCargadasPruebaDBModel.Login_Roles" />
+          <AssociationSet Name="FK_Login_Permisos_Login_Modulos" Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Login_Permisos_Login_Modulos">
+            <End Role="Login_Modulos" EntitySet="Login_Modulos" />
+            <End Role="Login_Permisos" EntitySet="Login_Permisos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Login_Permisos_Login_Roles" Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Login_Permisos_Login_Roles">
+            <End Role="Login_Roles" EntitySet="Login_Roles" />
+            <End Role="Login_Permisos" EntitySet="Login_Permisos" />
+          </AssociationSet>
+          <EntitySet Name="Login_Usuarios" EntityType="FoliacionInterfacesCargadasPruebaDBModel.Login_Usuarios" />
+          <AssociationSet Name="FK_Login_Permisos_Login_Usuarios" Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Login_Permisos_Login_Usuarios">
+            <End Role="Login_Usuarios" EntitySet="Login_Usuarios" />
+            <End Role="Login_Permisos" EntitySet="Login_Permisos" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="cat_FiltroConsultaDatosPersonalesNomina">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EsPena" Type="Boolean" Nullable="false" />
+          <Property Name="EsPagomatico" Type="Boolean" />
+          <Property Name="ContieneAzteca" Type="Boolean" />
+          <Property Name="OtroBanco" Type="Boolean" />
+          <Property Name="Consulta" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
         <EntityType Name="Cat_EstadoCancelados_Pagos">
           <Key>
             <PropertyRef Name="Id" />
@@ -624,17 +724,6 @@
           <Property Name="Descrip" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
           <Property Name="Activo" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="true" />
           <NavigationProperty Name="Tbl_Pagos" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Pagos_Cat_EstadosPago_Pagos" FromRole="Cat_EstadosPago_Pagos" ToRole="Tbl_Pagos" />
-        </EntityType>
-        <EntityType Name="cat_FiltroConsultaDatosPersonalesNomina">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="EsPena" Type="Boolean" Nullable="false" />
-          <Property Name="EsPagomatico" Type="Boolean" />
-          <Property Name="ContieneAzteca" Type="Boolean" />
-          <Property Name="OtroBanco" Type="Boolean" />
-          <Property Name="Consulta" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="cat_FiltroGrupoImpresionDelegaciones">
           <Key>
@@ -757,7 +846,6 @@
           <Property Name="Activo" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Tbl_CuentasBancarias" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_CuentasBancarias_Tbl_Inventario" FromRole="Tbl_Inventario" ToRole="Tbl_CuentasBancarias" />
           <NavigationProperty Name="Tbl_InventarioContenedores" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_InventarioContenedores_Tbl_Inventario" FromRole="Tbl_Inventario" ToRole="Tbl_InventarioContenedores" />
-          <NavigationProperty Name="Tbl_InventarioDetalle" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_InventarioDetalle_Tbl_Inventario" FromRole="Tbl_Inventario" ToRole="Tbl_InventarioDetalle" />
         </EntityType>
         <EntityType Name="Tbl_InventarioAsignacionPersonal">
           <Key>
@@ -803,7 +891,6 @@
           <Property Name="IdEmpleado" Type="Int32" />
           <Property Name="FechaAsignacionExterna" Type="DateTime" Precision="0" />
           <Property Name="Activo" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Tbl_Inventario" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_InventarioDetalle_Tbl_Inventario" FromRole="Tbl_InventarioDetalle" ToRole="Tbl_Inventario" />
           <NavigationProperty Name="Tbl_InventarioAsignacionPersonal" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_InventarioDetalle_Tbl_InventarioAsignacionPersonal" FromRole="Tbl_InventarioDetalle" ToRole="Tbl_InventarioAsignacionPersonal" />
           <NavigationProperty Name="Tbl_InventarioContenedores" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_InventarioDetalle_Tbl_InventarioContenedores" FromRole="Tbl_InventarioDetalle" ToRole="Tbl_InventarioContenedores" />
           <NavigationProperty Name="Tbl_InventarioTipoIncidencia" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_InventarioDetalle_Tbl_InventarioTipoIncidencia" FromRole="Tbl_InventarioDetalle" ToRole="Tbl_InventarioTipoIncidencia" />
@@ -857,6 +944,7 @@
           <NavigationProperty Name="Tbl_CuentasBancarias" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Pagos_Tbl_CuentasBancarias" FromRole="Tbl_Pagos" ToRole="Tbl_CuentasBancarias" />
           <NavigationProperty Name="Tbl_InventarioDetalle" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Pagos_Tbl_InventarioDetalle" FromRole="Tbl_Pagos" ToRole="Tbl_InventarioDetalle" />
           <NavigationProperty Name="Tbl_Referencias_Cancelaciones" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Pagos_Tbl_Referencias_Cancelaciones" FromRole="Tbl_Pagos" ToRole="Tbl_Referencias_Cancelaciones" />
+          <Property Name="TieneRechazoDispersion" Type="Boolean" />
         </EntityType>
         <EntityType Name="Tbl_Referencias_Cancelaciones">
           <Key>
@@ -1001,18 +1089,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Tbl_InventarioDetalle_Tbl_Inventario">
-          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Tbl_Inventario" Role="Tbl_Inventario" Multiplicity="1" />
-          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Tbl_InventarioDetalle" Role="Tbl_InventarioDetalle" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Tbl_Inventario">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Tbl_InventarioDetalle">
-              <PropertyRef Name="IdInventario" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Tbl_InventarioDetalle_Tbl_InventarioAsignacionPersonal">
           <End Type="FoliacionInterfacesCargadasPruebaDBModel.Tbl_InventarioAsignacionPersonal" Role="Tbl_InventarioAsignacionPersonal" Multiplicity="0..1" />
           <End Type="FoliacionInterfacesCargadasPruebaDBModel.Tbl_InventarioDetalle" Role="Tbl_InventarioDetalle" Multiplicity="*" />
@@ -1073,12 +1149,106 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Login_Modulos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NombreModulo" Type="String" Nullable="false" MaxLength="80" FixedLength="false" Unicode="true" />
+          <Property Name="Descripcion" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Controlador" Type="String" Nullable="false" MaxLength="60" FixedLength="false" Unicode="true" />
+          <Property Name="Accion" Type="String" Nullable="false" MaxLength="60" FixedLength="false" Unicode="true" />
+          <Property Name="Activo" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Login_Permisos" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Login_Permisos_Login_Modulos" FromRole="Login_Modulos" ToRole="Login_Permisos" />
+        </EntityType>
+        <EntityType Name="Login_Permisos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdUsuario" Type="Int32" Nullable="false" />
+          <Property Name="IdRol" Type="Int32" Nullable="false" />
+          <Property Name="IdModulo" Type="Int32" Nullable="false" />
+          <Property Name="Activo" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Login_Modulos" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Login_Permisos_Login_Modulos" FromRole="Login_Permisos" ToRole="Login_Modulos" />
+          <NavigationProperty Name="Login_Roles" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Login_Permisos_Login_Roles" FromRole="Login_Permisos" ToRole="Login_Roles" />
+          <NavigationProperty Name="Login_Usuarios" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Login_Permisos_Login_Usuarios" FromRole="Login_Permisos" ToRole="Login_Usuarios" />
+        </EntityType>
+        <EntityType Name="Login_Roles">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NombreRol" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Activo" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Login_Permisos" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Login_Permisos_Login_Roles" FromRole="Login_Roles" ToRole="Login_Permisos" />
+        </EntityType>
+        <Association Name="FK_Login_Permisos_Login_Modulos">
+          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Login_Modulos" Role="Login_Modulos" Multiplicity="1" />
+          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Login_Permisos" Role="Login_Permisos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Login_Modulos">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Login_Permisos">
+              <PropertyRef Name="IdModulo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Login_Permisos_Login_Roles">
+          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Login_Roles" Role="Login_Roles" Multiplicity="1" />
+          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Login_Permisos" Role="Login_Permisos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Login_Roles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Login_Permisos">
+              <PropertyRef Name="IdRol" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Login_Usuarios">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdTblUsers" Type="Int32" Nullable="false" />
+          <Property Name="NumEmpleado" Type="Int32" Nullable="false" />
+          <Property Name="UltimaSesion" Type="DateTime" Precision="0" />
+          <Property Name="EsRoot" Type="Boolean" Nullable="false" />
+          <Property Name="Activo" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Login_Permisos" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Login_Permisos_Login_Usuarios" FromRole="Login_Usuarios" ToRole="Login_Permisos" />
+        </EntityType>
+        <Association Name="FK_Login_Permisos_Login_Usuarios">
+          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Login_Usuarios" Role="Login_Usuarios" Multiplicity="1" />
+          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Login_Permisos" Role="Login_Permisos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Login_Usuarios">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Login_Permisos">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="FoliacionInterfacesCargadasPruebaDBModelStoreContainer" CdmEntityContainer="FoliacionInterfacesCargadasPruebaDBEntities">
+          <EntitySetMapping Name="cat_FiltroConsultaDatosPersonalesNomina">
+            <EntityTypeMapping TypeName="FoliacionInterfacesCargadasPruebaDBModel.cat_FiltroConsultaDatosPersonalesNomina">
+              <MappingFragment StoreEntitySet="cat_FiltroConsultaDatosPersonalesNomina">
+                <ScalarProperty Name="Consulta" ColumnName="Consulta" />
+                <ScalarProperty Name="OtroBanco" ColumnName="OtroBanco" />
+                <ScalarProperty Name="ContieneAzteca" ColumnName="ContieneAzteca" />
+                <ScalarProperty Name="EsPagomatico" ColumnName="EsPagomatico" />
+                <ScalarProperty Name="EsPena" ColumnName="EsPena" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Cat_EstadoCancelados_Pagos">
             <EntityTypeMapping TypeName="FoliacionInterfacesCargadasPruebaDBModel.Cat_EstadoCancelados_Pagos">
               <MappingFragment StoreEntitySet="Cat_EstadoCancelados_Pagos">
@@ -1094,18 +1264,6 @@
               <MappingFragment StoreEntitySet="Cat_EstadosPago_Pagos">
                 <ScalarProperty Name="Activo" ColumnName="Activo" />
                 <ScalarProperty Name="Descrip" ColumnName="Descrip" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="cat_FiltroConsultaDatosPersonalesNomina">
-            <EntityTypeMapping TypeName="FoliacionInterfacesCargadasPruebaDBModel.cat_FiltroConsultaDatosPersonalesNomina">
-              <MappingFragment StoreEntitySet="cat_FiltroConsultaDatosPersonalesNomina">
-                <ScalarProperty Name="Consulta" ColumnName="Consulta" />
-                <ScalarProperty Name="OtroBanco" ColumnName="OtroBanco" />
-                <ScalarProperty Name="ContieneAzteca" ColumnName="ContieneAzteca" />
-                <ScalarProperty Name="EsPagomatico" ColumnName="EsPagomatico" />
-                <ScalarProperty Name="EsPena" ColumnName="EsPena" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -1291,6 +1449,7 @@
           <EntitySetMapping Name="Tbl_Pagos">
             <EntityTypeMapping TypeName="FoliacionInterfacesCargadasPruebaDBModel.Tbl_Pagos">
               <MappingFragment StoreEntitySet="Tbl_Pagos">
+                <ScalarProperty Name="TieneRechazoDispersion" ColumnName="TieneRechazoDispersion" />
                 <ScalarProperty Name="Activo" ColumnName="Activo" />
                 <ScalarProperty Name="TieneSuspensionDispersion" ColumnName="TieneSuspensionDispersion" />
                 <ScalarProperty Name="TieneSeguimientoHistorico" ColumnName="TieneSeguimientoHistorico" />
@@ -1371,7 +1530,51 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-        </EntityContainerMapping>
+          <EntitySetMapping Name="Login_Modulos">
+            <EntityTypeMapping TypeName="FoliacionInterfacesCargadasPruebaDBModel.Login_Modulos">
+              <MappingFragment StoreEntitySet="Login_Modulos">
+                <ScalarProperty Name="Activo" ColumnName="Activo" />
+                <ScalarProperty Name="Accion" ColumnName="Accion" />
+                <ScalarProperty Name="Controlador" ColumnName="Controlador" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="NombreModulo" ColumnName="NombreModulo" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Login_Permisos">
+            <EntityTypeMapping TypeName="FoliacionInterfacesCargadasPruebaDBModel.Login_Permisos">
+              <MappingFragment StoreEntitySet="Login_Permisos">
+                <ScalarProperty Name="Activo" ColumnName="Activo" />
+                <ScalarProperty Name="IdModulo" ColumnName="IdModulo" />
+                <ScalarProperty Name="IdRol" ColumnName="IdRol" />
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Login_Roles">
+            <EntityTypeMapping TypeName="FoliacionInterfacesCargadasPruebaDBModel.Login_Roles">
+              <MappingFragment StoreEntitySet="Login_Roles">
+                <ScalarProperty Name="Activo" ColumnName="Activo" />
+                <ScalarProperty Name="NombreRol" ColumnName="NombreRol" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Login_Usuarios">
+            <EntityTypeMapping TypeName="FoliacionInterfacesCargadasPruebaDBModel.Login_Usuarios">
+              <MappingFragment StoreEntitySet="Login_Usuarios">
+                <ScalarProperty Name="Activo" ColumnName="Activo" />
+                <ScalarProperty Name="EsRoot" ColumnName="EsRoot" />
+                <ScalarProperty Name="UltimaSesion" ColumnName="UltimaSesion" />
+                <ScalarProperty Name="NumEmpleado" ColumnName="NumEmpleado" />
+                <ScalarProperty Name="IdTblUsers" ColumnName="IdTblUsers" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>

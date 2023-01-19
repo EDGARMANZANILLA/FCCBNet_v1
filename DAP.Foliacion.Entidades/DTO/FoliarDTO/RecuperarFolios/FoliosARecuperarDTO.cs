@@ -20,6 +20,7 @@ namespace DAP.Foliacion.Entidades.DTO.FoliarDTO.RecuperarFolios
         public string NumEmpleado { get; set; }
         public string Liquido { get; set; }
         public string FolioCheque { get; set; }
+        public int IdTbl_InventarioDetalle { get; set; }
         public string CuentaBancaria { get; set; }
     }
 }

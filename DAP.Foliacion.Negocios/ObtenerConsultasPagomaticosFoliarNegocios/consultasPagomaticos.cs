@@ -114,9 +114,9 @@ namespace DAP.Foliacion.Negocios.ObtenerConsultasPagomaticosFoliarNegocios
         /*****************************************************************************************************************************************************************************************/
         /********************************                   CONSULTA PARA LA FOLIACION DE UN NOMINA CON PAGOMATICOS                ***************************************************************/
         /*****************************************************************************************************************************************************************************************/
-        public static string ObtenerConsultaDetalle_FoliacionPagomatico(string AN, int AnioInterface ,  bool EsPenA , List<Tbl_CuentasBancarias> BancosSelecionados)
+        public static string ObtenerConsultaDetalle_FoliacionPagomatico(string AN, string visitaAnioInterface ,  bool EsPenA , List<Tbl_CuentasBancarias> BancosSelecionados)
         {
-            List<string> bancosContenidosEnAn = FoliarConsultasDBSinEntity.VerificarCamposBancoContieneAN(AN, AnioInterface);
+            List<string> bancosContenidosEnAn = FoliarConsultasDBSinEntity.VerificarCamposBancoContieneAN(AN, visitaAnioInterface);
             string condicionDeBancos = ConvertirListaBancosEnCondicionParaPagomaticos(bancosContenidosEnAn);
 
             string condicionDeIdCuentaBancaria = ValidaBancosExistentenEnNominaSeleccionada_FoliacionPagomaticos(BancosSelecionados, bancosContenidosEnAn);
@@ -127,28 +127,16 @@ namespace DAP.Foliacion.Negocios.ObtenerConsultasPagomaticosFoliarNegocios
             string query = "";
 
 
-            if (AnioInterface == Convert.ToInt32(DateTime.Now.Year))
-            {
+        
                 if (EsPenA)
                 {
-                    query = "select   NUM, RFC, NOMBRE, LIQUIDO, " + condicionDeIdCuentaBancaria + " , DELEG , Partida , FolioCFDI , BENEF 'BENEFICIARIO'  from interfaces.dbo." + AN + " where  " + condicionDeBancos + " ORDER BY NUM ";
-                }
-                else 
-                {
-                    query = "select   NUM, RFC, NOMBRE, LIQUIDO, " + condicionDeIdCuentaBancaria + " , DELEG , Partida , FolioCFDI  from interfaces.dbo." + AN + " where  " + condicionDeBancos + " ORDER BY NUM ";
-                }
-            }
-            else
-            {
-                if (EsPenA)
-                {
-                    query = "select   NUM, RFC, NOMBRE, LIQUIDO, " + condicionDeIdCuentaBancaria + " , DELEG , Partida , FolioCFDI , BENEF 'BENEFICIARIO' from interfaces" + AnioInterface + ".dbo." + AN + " where  " + condicionDeBancos + "  ORDER BY NUM ";
+                    query = "select   NUM, RFC, NOMBRE, LIQUIDO, " + condicionDeIdCuentaBancaria + " , DELEG , Partida , FolioCFDI , BENEF 'BENEFICIARIO' from interfaces" + visitaAnioInterface + ".dbo." + AN + " where  " + condicionDeBancos + "  ORDER BY NUM ";
                 }
                 else
                 {
-                    query = "select   NUM, RFC, NOMBRE, LIQUIDO, " + condicionDeIdCuentaBancaria + " , DELEG , Partida , FolioCFDI  from interfaces" + AnioInterface + ".dbo." + AN + " where  " + condicionDeBancos + "  ORDER BY NUM ";
+                    query = "select   NUM, RFC, NOMBRE, LIQUIDO, " + condicionDeIdCuentaBancaria + " , DELEG , Partida , FolioCFDI  from interfaces" + visitaAnioInterface + ".dbo." + AN + " where  " + condicionDeBancos + "  ORDER BY NUM ";
                 }
-            }
+            
 
             return query;
 

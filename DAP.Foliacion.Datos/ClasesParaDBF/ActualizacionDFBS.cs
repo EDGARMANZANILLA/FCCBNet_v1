@@ -404,6 +404,46 @@ namespace DAP.Foliacion.Datos.ClasesParaDBF
             return Convert.ToString(totalActualizado);
         }
 
+        public static string MarcarComoRechazoBancario(string RutaPath, string NombreArchivo, Tbl_Pagos nuevoRegistro, string CadenaNumEmpleado)
+        {
+            //EjemploDePath:  string pathPruebaSERVER208 = @"F:\SAGITARI\GENERAL\ARCHIVOS\";
+
+
+            // string constr = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source="+RutaPath+";Extended Properties=dBASE 5.0;";
+            string constr = "Provider=VFPOLEDB.1 ;Data Source=" + RutaPath + "";
+            List<Task> tareas = new List<Task>();
+
+
+            int totalActualizado = 0;
+            try
+            {
+                using (OleDbConnection con = new OleDbConnection(constr))
+                {
+                    con.Open();
+
+                 
+                    string  ExecutarQuery = "UPDATE [" + NombreArchivo + "] SET Num_che = '11111111',  Observa = 'RECHAZO'   WHERE NUM = '" + CadenaNumEmpleado + "' and LIQUIDO = " + nuevoRegistro.ImporteLiquido + " and DELEG = '" + nuevoRegistro.Delegacion + "' ";
+                
+                    OleDbCommand cmd = new OleDbCommand(ExecutarQuery, con);
+                    int modificado = cmd.ExecuteNonQuery();
+
+                    if (modificado == 1)
+                    {
+                        totalActualizado += modificado;
+                    }
+
+                    con.Close();
+                }
+            }
+            catch (System.Data.OleDb.OleDbException E)
+            {
+                return E.Message.ToString();
+
+            }
+            return Convert.ToString(totalActualizado);
+        }
+
+
 
         public static string ReponerCheque_MEJORADO(string RutaPath, string NombreArchivo, Tbl_Pagos nuevoRegistro, bool EsPena, string CadenaNumEmpleado , string ReposicionNuevoFolio)
         {
@@ -618,6 +658,37 @@ namespace DAP.Foliacion.Datos.ClasesParaDBF
             return Convert.ToString(totalActualizado);
         }
 
+
+        /**********************************************************************************************************************************************************************************************************************************************/
+        /**********************************************************************************************************************************************************************************************************************************************/
+        /*************************************************************************************          Limpiar varios registros de la base EN DBF para limpiar campos           ***************************************************************************************/
+        /**********************************************************************************************************************************************************************************************************************************************/
+        /**********************************************************************************************************************************************************************************************************************************************/
+        public static string LimpiarVariosCamposRegitrosBaseDBFRecuperacionFoliosCheques(string RutaPath, string NombreArchivo, string LimpiarNumerosEmpleados)
+        {
+            string constr = "Provider=VFPOLEDB.1 ;Data Source=" + RutaPath + "";
+
+            int totalActualizado = 0;
+            try
+            {
+                using (OleDbConnection con = new OleDbConnection(constr))
+                {
+                    string ExecutarQuery = "UPDATE [" + NombreArchivo + "] SET NUM_CHE = '' , BANCO_X = '' , CUENTA_X = '' , OBSERVA = ''  where  "+LimpiarNumerosEmpleados+"  ";
+                    
+                    con.Open();
+                    OleDbCommand cmd = new OleDbCommand(ExecutarQuery, con);
+                    int modificado = cmd.ExecuteNonQuery();
+
+                    totalActualizado = modificado;
+                    con.Close();
+                }
+            }
+            catch (System.Data.OleDb.OleDbException E)
+            {
+                return E.Message.ToString();
+            }
+            return Convert.ToString(totalActualizado);
+        }
 
 
 

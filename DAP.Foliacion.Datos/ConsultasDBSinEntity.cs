@@ -34,8 +34,6 @@ namespace DAP.Foliacion.Datos
 
         public static List<string> ObtenerNumerosCuentasDiferentesAlpha()
         {
-
-
             List<string> cuentasEncontradas = new List<string>();
 
             using (System.Data.SqlClient.SqlConnection connection = new System.Data.SqlClient.SqlConnection(ObtenerConexionesDB.obtnercadenaConexionAlpha()))

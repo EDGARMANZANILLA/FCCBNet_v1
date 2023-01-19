@@ -30,7 +30,6 @@ namespace DAP.Foliacion.Entidades
         public Nullable<System.DateTime> FechaAsignacionExterna { get; set; }
         public bool Activo { get; set; }
     
-        public virtual Tbl_Inventario Tbl_Inventario { get; set; }
         public virtual Tbl_InventarioAsignacionPersonal Tbl_InventarioAsignacionPersonal { get; set; }
         public virtual Tbl_InventarioContenedores Tbl_InventarioContenedores { get; set; }
         public virtual Tbl_InventarioTipoIncidencia Tbl_InventarioTipoIncidencia { get; set; }

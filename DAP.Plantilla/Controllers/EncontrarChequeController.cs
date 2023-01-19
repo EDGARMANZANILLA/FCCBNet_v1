@@ -6,14 +6,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using DAP.Plantilla.Models.PermisosModels;
+using DAP.Foliacion.Plantilla.Filters;
 
 namespace DAP.Plantilla.Controllers
 {
     public class EncontrarChequeController : Controller
     {
         // GET: BuscadorCheque
+        [SessionSecurityFilter]
         public ActionResult Index()
         {
+            // ************************************************************************************************************* //
+            // EL MODELO QUE SE ENVIA ES PARA QUE EL SIDEBAR CONTENGA LOS LINK’S REFERENTE A LOS PERMISOS QUE PUEDE VISITAR //
+            // ************************************************************************************************************ //
             return View();
         }
 
@@ -190,8 +196,8 @@ namespace DAP.Plantilla.Controllers
             {
                 //Mensajes de error
                 case 1:
-                    mensaje = " No se puede agregar una dispercion a una referencia ";
-                    solucion = "Solicite una suspencion de la forma de pago";
+                    mensaje = " No se puede agregar una dispercion a una referencia de cancelacion ";
+                    solucion = "Solicite la suspencion de la dispercion";
                     break;
                 case 2:
                     mensaje = "No Existe la referencia a la que desea cargar la forma de pago";
@@ -205,8 +211,11 @@ namespace DAP.Plantilla.Controllers
                     mensaje = "No se puede revocar una forma de pago de una referencia, si nunca se a estado en una ";
                     solucion = "Asegurese que la forma de pago se encuentre cargada en una referencia";
                     break;
-
-                //Mensajes Exitosos
+                case 5:
+                    mensaje = "Un cheque con folio '1111 1111' no es valido para ingresar a una referencia de cancelación";
+                    solucion = "Cambie el folio por uno real";
+                    break;
+                
                 case 6:
                     mensaje = "se a ingresado la forma de pago a la referencia seleccionada correctamente";
                     break;

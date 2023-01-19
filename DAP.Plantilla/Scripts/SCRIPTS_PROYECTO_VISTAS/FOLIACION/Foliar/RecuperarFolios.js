@@ -94,23 +94,26 @@ function PintarResumenRecuperarFolios(datos) {
 
 
 
+function eliminarTablaTablaResumenRecuperarFolios()
+{
+    $("#TablaResumenRecuperarFolios").empty();
+}
 
 
 
+let cuentaBancariaARecuperar = "";
+let rpFoliosRangoInicial = "";
+let rpFoliosRangoFinal = "";
 
-
-function RecuperarFolios()
+let SePuedeRecuperarlosFolios = false;
+function BuscarFolios()
 {
     //limpia el data table que se creo si esta creado para  hacerle saber al cliente que los datos se actualizaron
     $("#TablaResumenRecuperarFolios").empty();
-    let cuentaBancariaARecuperar = document.getElementById("RecuperFoliosCuentaBancaria").value;
-   let rpFoliosRangoInicial = document.getElementById("recuperarFoliosRangoInicial").value;
-    let rpFoliosRangoFinal = document.getElementById("recuperarFoliosRangoFinal").value;
+     cuentaBancariaARecuperar = document.getElementById("RecuperFoliosCuentaBancaria").value;
+     rpFoliosRangoInicial = document.getElementById("recuperarFoliosRangoInicial").value;
+     rpFoliosRangoFinal = document.getElementById("recuperarFoliosRangoFinal").value;
 
-    //console.log( cuentaBancariaARecuperar);
-    //console.log("Cuentabancaria", cuentaBancariaARecuperar);
-    //console.log( "RangoInicial" , rpFoliosRangoInicial);
-    //console.log("Rango Final",  rpFoliosRangoFinal);
 
 
     if (cuentaBancariaARecuperar != "")
@@ -138,9 +141,20 @@ function RecuperarFolios()
                     .then(function (response) {
 
 
-                            $("#TablaResumenRecuperarFolios").empty();
+                       // $("#TablaResumenRecuperarFolios").empty();
+                        eliminarTablaTablaResumenRecuperarFolios();
                         DibujarResumenRecuperarFolios();
                         PintarResumenRecuperarFolios(response.data);
+
+                        //console.log(response.data.length)
+
+                        if (response.data.length > 0)
+                        {
+                            SePuedeRecuperarlosFolios = true;
+                            document.getElementById("btnBucarFoliarARecuperar").style.display = "none";
+                            document.getElementById("regresarRecuperador").style.display = "block";
+                            document.getElementById("btnRecuperasFoliosEncontrados").style.display = "block";
+                        }
 
                             OcultarMensajeCargando();
 
@@ -151,28 +165,7 @@ function RecuperarFolios()
                     });
 
 
-                    //$.ajax({
-                    //    url: '/Foliar/BuscarChequesARecuperar',
-                    //    data: JSON.stringify(enviarDatos),
-                    //    type: "POST",
-                    //    contentType: "application/json; charset=utf-8",
-                    //    success: function (response) {
-
-
-                    //        console.log(response);
-
-
-                    //        $("#TablaResumenRecuperarFolios").empty();
-                    //        DibujarResumenRecuperarFolios();
-                    //        PintarResumenRecuperarFolios(response);
-
-                    //        OcultarMensajeCargando();
-
-                    //    }, error: function (jqXHR, textStatus) {
-                    //        MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
-                    //        OcultarMensajeCargando();
-                    //    }
-                    //});
+               
 
                 } else {
                     MensajeErrorSweet("Corrija", "El Rango final no debe ser menor al rango inicial");
@@ -193,7 +186,83 @@ function RecuperarFolios()
 }
 
 
+function RecuperarFoliosEncontrados()
+{
+    if (SePuedeRecuperarlosFolios) {
 
+
+        Swal.fire({
+            title: '¿Esta seguro que desea recuperar el rango de cheques ingresado ?',
+            text: 'Esto afectara los registros de las bases en donde se encuentren los folios de cheques, solo continue si esta seguro de querer hacerlo',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, Recuperar delete it!',
+            cancelButtonText: 'No, Recuperar!',
+            footer: '<a href="#">Contactar al desarrollador?</a>'
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                MensajeCargando();
+                axios.post('/Foliar/RecuperarChequesBuscados', {
+                    IdCuentaBancaria: parseInt(cuentaBancariaARecuperar),
+                    RangoInicial: parseInt(rpFoliosRangoInicial),
+                    RangoFinal: parseInt(rpFoliosRangoFinal)
+                })
+                    .then(function (response) {
+
+                        if (response.data.resultServer) {
+                            MensajeCorrectoSweet("SE HAN RECUPERADO " + response.data.totalChequesRestaurados + " CHEQUES CORRECTAMENTE, VUELVA A FOLIAR LA BASE");
+                        } else {
+                            MensajeErrorSweet("ERROR  || " + response.data.Error)
+                        }
+
+                        RegresarRecuperadorFolios();
+                        OcultarMensajeCargando();
+
+                        //setTimeout(function () {
+                        //    console.log("Timer Activado");
+                        //    window.location.reload()
+                        //}, 5000);
+
+                    })
+                    .catch(function (error) {
+                        MensajeErrorSweet("Ocurrio un error intente de nuevo " + error)
+                        OcultarMensajeCargando();
+                    });
+
+               
+            }
+        })
+
+
+
+
+
+    } else
+    {
+        MensajeInformacionSweet("AL PARECER NO SE ENCONTRO NINGUN CHEQUE DENTRO DEL BANCO SELECCIONADO, POR ENDE NO PODEMOS RECUPERAR NADA");
+    }
+
+    
+}
+
+
+function RegresarRecuperadorFolios()
+{
+    MensajeCargando();
+    //$("#TablaResumenRecuperarFolios").empty();
+    eliminarTablaTablaResumenRecuperarFolios();
+    cuentaBancariaARecuperar = "";
+    rpFoliosRangoInicial = "";
+
+    document.getElementById("recuperarFoliosRangoFinal").value = "";
+    document.getElementById("regresarRecuperador").style.display = "none";
+    document.getElementById("btnRecuperasFoliosEncontrados").style.display = "none";
+    document.getElementById("btnBucarFoliarARecuperar").style.display = "block";
+    OcultarMensajeCargando();
+}
 
 
 

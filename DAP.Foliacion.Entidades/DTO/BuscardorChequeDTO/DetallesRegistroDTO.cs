@@ -36,6 +36,7 @@ namespace DAP.Foliacion.Entidades.DTO.BuscardorChequeDTO
         public string BancoPagador { get; set; }
         public string CuentaPagadora { get; set; }
         public string EsSuspencion { get; set; }
+        public string EsRechazoBancario { get; set; }
         
 
 

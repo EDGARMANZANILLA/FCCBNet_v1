@@ -817,7 +817,6 @@ namespace DAP.Foliacion.Negocios
             var repoPersonal = new Repositorio<Tbl_InventarioAsignacionPersonal>(transaccion);
             int IdEmpleado = repoPersonal.Obtener(x => x.IdEmpleado == IdPersonal).Id;
 
-
             int foliosAsignadosChequeraExterna = 0;
             foreach (Tbl_InventarioDetalle nuevoDetalle in inhabilitarFoliosEncontrados)
             {
@@ -827,6 +826,8 @@ namespace DAP.Foliacion.Negocios
                 nuevoDetalle.Tbl_InventarioContenedores.FormasDisponiblesActuales -= 1;
                 nuevoDetalle.Tbl_InventarioContenedores.FormasAsignadas += 1;
                 nuevoDetalle.Tbl_InventarioContenedores.Tbl_Inventario.FormasDisponibles -= 1;
+                //nuevoDetalle.Tbl_Inventario.FormasDisponibles -= 1;
+                
                 int id = repositorio.Modificar(nuevoDetalle).Id;
 
                 if (id > 0)
@@ -884,12 +885,12 @@ namespace DAP.Foliacion.Negocios
         {
             var transaccion = new Transaccion();
             var repositorioTblConte = new Repositorio<Tbl_InventarioContenedores>(transaccion);
-
-            var contenedoresEncontrados = repositorioTblConte.ObtenerPorFiltro( x => x.IdInventario == IdInventario && x.Activo == true).Select(x => x.Id);
+            //var contenedoresEncontrados = repositorioTblConte.ObtenerPorFiltro( x => x.IdInventario == IdInventario && x.Activo == true).Select(x => x.Id);
 
             var repositorioTblDetalle = new Repositorio<Tbl_InventarioDetalle>(transaccion) ;
 
-          return   repositorioTblDetalle.ObtenerPorFiltro(x => x.IdContenedor >= contenedoresEncontrados.Min() && x.IdContenedor <= contenedoresEncontrados.Max());
+          //return   repositorioTblDetalle.ObtenerPorFiltro(x => x.IdContenedor >= contenedoresEncontrados.Min() && x.IdContenedor <= contenedoresEncontrados.Max());
+          return   repositorioTblDetalle.ObtenerPorFiltro(x => x.IdInventario == IdInventario);
         }
 
         /*  Re*/
@@ -1082,7 +1083,7 @@ namespace DAP.Foliacion.Negocios
             foreach (Tbl_CuentasBancarias nuevaCuentaConCheque in bancosEncontrados)
             {
                 //No incluye las formas de pago que se han asignado a "Via Chequera"
-                int chequesConsumidosAldMes = repositorioDetalle.ObtenerPorFiltro(x => x.FechaIncidencia.Value.Year == anioActual && x.FechaIncidencia.Value.Month == MesSelecionado && x.FechaIncidencia != null).Count();
+                int chequesConsumidosAldMes = repositorioDetalle.ObtenerPorFiltro(x => x.IdInventario == nuevaCuentaConCheque.IdInventario && x.FechaIncidencia.Value.Year == anioActual && x.FechaIncidencia.Value.Month == MesSelecionado && x.FechaIncidencia != null ).Count();
 
                 List<Tbl_InventarioDetalle> foliosSinFechaIncidencia = repositorioDetalle.ObtenerPorFiltro(x => x.IdInventario == nuevaCuentaConCheque.IdInventario && x.FechaIncidencia == null && x.IdIncidencia == null).ToList();
 
@@ -1101,7 +1102,7 @@ namespace DAP.Foliacion.Negocios
 
                     Tbl_Inventario inventario = repositorioInventario.Obtener(x => x.Id == nuevaCuentaConCheque.IdInventario);
                     //Saber si se necesitan pedir formas de pago a cada 4 meses 
-                    if (nuevoDato.ConsumoMensualAproximado != null && Convert.ToInt32(nuevoDato.ConsumoMensualAproximado) != 0)
+                    if ( Convert.ToInt32(nuevoDato.ConsumoMensualAproximado) != 0)
                     {
                         if ((inventario.FormasDisponibles / Convert.ToDecimal(nuevoDato.ConsumoMensualAproximado)) <= 4)
                         {

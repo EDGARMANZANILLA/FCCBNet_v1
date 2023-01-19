@@ -157,9 +157,19 @@ namespace DAP.Foliacion.Datos
                         percepcionesEncontradas.Monto = Convert.ToDecimal( reader[1].ToString().Trim() );
                         percepcionesEncontradas.cvegasto = reader[2].ToString().Trim();
 
-                        if(percepcionesEncontradas.Monto > 0) 
+                        if (percepcionesEncontradas.Monto > 0)
                         {
                             percepciones.Add(percepcionesEncontradas);
+                        }
+                        else 
+                        {
+                            if(percepciones.Select(x => x.Cla_perc).Contains(percepcionesEncontradas.Cla_perc))
+                            {
+                                DatosApercepcionesIPD_DTO claveYaGuardada = percepciones.Where(x => x.Cla_perc == percepcionesEncontradas.Cla_perc).FirstOrDefault();
+                                claveYaGuardada.Monto += percepcionesEncontradas.Monto;
+
+                            }
+                           
                         }
                     
                     }

@@ -7,16 +7,25 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using DAP.Foliacion.Negocios;
+using DAP.Plantilla.Models.PermisosModels;
+using DAP.Foliacion.Plantilla.Filters;
 
 namespace DAP.Plantilla.Controllers
 {
     public class Reposicion_SuspencionController : Controller
     {
         // GET: Reposicion_Suspencion
+
+        [SessionSecurityFilter]
         public ActionResult Index()
         {
             return View();
         }
+
+
+
+
+
 
 
         [HttpPost]
@@ -204,6 +213,66 @@ namespace DAP.Plantilla.Controllers
                 solucion = solucion
             });
         }
+
+
+        /*************************************************************************************************************************************************************************************************************/
+        /************************************************************   Marcar Como Rechazo una dispercion que no se pudo llevar a cabo     **************************************************************************/
+        /*************************************************************************************************************************************************************************************************************/
+
+        
+
+        public ActionResult MarcarRechazoIdFormaPago(int IdRegistroPago)
+        {
+
+            string quePuedoHacer = Reposicion_SuspencionNegocios.VerificaFormaPagoEsActivoYQueSePuedeHacer(IdRegistroPago);
+
+
+            int respuestaServidor = 500;
+            string solucion = "";
+            if (quePuedoHacer.ToUpper().Trim().Equals(("SUSPENDER").ToUpper().Trim()))
+            {
+                //Continua con la suspencion
+
+                string respuesta = Reposicion_SuspencionNegocios.MarcarRechazoBancario(IdRegistroPago);
+
+                if (respuesta.Contains("LA BASE"))
+                {
+                    solucion = respuesta;
+                }
+                else if (respuesta.Contains("Error"))
+                {
+                    solucion = "No se pudo general el rechazo de la dispersion seleccionada";
+                }
+                else if (respuesta.Contains("Correcto"))
+                {
+                    respuestaServidor = 200;
+                    solucion = "Se a generado el rechazo de manera exitosa ";
+                }
+                else
+                {
+                    solucion = respuesta;
+                }
+
+
+            }
+            else if (quePuedoHacer.ToUpper().Trim().Equals(("REPONER").ToUpper().Trim()))
+            {
+                solucion = "Este pago ya no forma parte de una dispersion por ende, no puede haber un rechazo bancario por sistema, informe al administrativo correspondiente para la retencion del cheque";
+            }
+            else if (quePuedoHacer.ToUpper().Trim().Equals(("REFERENCIACANCELADO").ToUpper().Trim()))
+            {
+                solucion = "Este pago se encuentra es un proceso de cancelacion verifique por favor ";
+            }
+
+            return Json(new
+            {
+                respuestaServidor = respuestaServidor,
+                solucion = solucion
+            });
+        }
+
+
+
 
 
 
