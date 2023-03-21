@@ -140,7 +140,7 @@ namespace DAP.Foliacion.Negocios
 
             var repositorio = new Repositorio<Tbl_CuentasBancarias>(transaccion);
 
-            var BancosConChequeraActivos = repositorio.ObtenerPorFiltro(x => x.IdCuentaBancaria_TipoPagoCuenta != 1 && x.InicioBaja == null && x.Activo == true);
+            var BancosConChequeraActivos = repositorio.ObtenerPorFiltro(x => x.IdCuentaBancaria_TipoPagoCuenta != 1 && x.InicioBaja == null && x.Activo == true).ToList();
 
             foreach (Tbl_CuentasBancarias cuentaEncontrada in BancosConChequeraActivos) 
             {
@@ -293,12 +293,13 @@ namespace DAP.Foliacion.Negocios
                 Tbl_CuentasBancarias cuentaEncontrada = repositorioCuentaBancaria.Obtener(x => x.Id == solicitud.IdBanco);
 
                 Tbl_Solicitudes nuevoBancoSolicitud = new Tbl_Solicitudes();
-
                 nuevoBancoSolicitud.NumeroMemo = numMemo;
                 nuevoBancoSolicitud.IdCuentaBancaria = cuentaEncontrada.Id;
                 nuevoBancoSolicitud.Cantidad = Convert.ToInt32(solicitud.cantidadFormas);
                 nuevoBancoSolicitud.FolioInicial = solicitud.fInicial;
+                nuevoBancoSolicitud.FolioMuestra = solicitud.FolioMuestra;
                 nuevoBancoSolicitud.FechaSolicitud = DateTime.Now.Date;
+                nuevoBancoSolicitud.UsoAproximadoMeses = Convert.ToDecimal(nuevoBancoSolicitud.Cantidad) / obtenerUsoAproximadoChequesEnElMesXIdBanco(cuentaEncontrada.Id); 
                 nuevoBancoSolicitud.Activo = true;
 
                 var entidadGuardada = repositorioSolicitud.Agregar(nuevoBancoSolicitud);
@@ -309,6 +310,27 @@ namespace DAP.Foliacion.Negocios
 
             return valorADevolver;
         }
+
+
+        public static decimal obtenerUsoAproximadoChequesEnElMesXIdBanco(int idBanco)
+        {
+            decimal chequesUsadosMensual = 0.00m;
+            Transaccion transaccion = new Transaccion();
+            var repoTblPagos = new Repositorio<Tbl_Pagos>(transaccion);
+            int anio = DateTime.Now.Year; 
+            IQueryable<Tbl_Pagos> pagosChequesEncontrados =  repoTblPagos.ObtenerPorFiltro(x => x.Anio == anio && x.IdCat_FormaPago_Nacimiento == 1 /*1 por ser cheque*/ );
+
+            /***    AVERIGUA CUANTAS QUINCENAS SE HAN PAGADO EN EL MES ACTUAL   ***/
+            List<int> quincenasPagadasMes =  pagosChequesEncontrados.OrderByDescending(x => x.Quincena).Select(x => x.Quincena).Distinct().OrderByDescending( x => x).Take(2).ToList();
+            
+            foreach (int quincenaSeleccionada in quincenasPagadasMes) 
+            {
+                chequesUsadosMensual += pagosChequesEncontrados.Where(x => x.Quincena == quincenaSeleccionada && x.IdTbl_CuentaBancaria_BancoPagador == idBanco).Count();
+            }
+
+            return chequesUsadosMensual;
+        }
+
 
         public static IEnumerable<Tbl_Solicitudes> ObtenerSolicitudes()
         {

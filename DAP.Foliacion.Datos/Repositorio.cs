@@ -252,7 +252,29 @@ namespace DAP.Foliacion.Datos
             }
         }
 
-
+        public int Remover_EntidadesMasivamente(List<TEntity> EntidadesAAgregar)
+        {
+            try
+            {
+                var entidadesAgregadasAlContexto = ConjuntoEntidades.RemoveRange(EntidadesAAgregar);
+                _contexto.SaveChanges();
+                return entidadesAgregadasAlContexto.Count();
+            }
+            catch (System.Data.Entity.Validation.DbEntityValidationException e)
+            {
+                foreach (var eve in e.EntityValidationErrors)
+                {
+                    System.Diagnostics.Debug.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+                        eve.Entry.Entity.GetType().Name, eve.Entry.State);
+                    foreach (var ve in eve.ValidationErrors)
+                    {
+                        System.Diagnostics.Debug.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
+                            ve.PropertyName, ve.ErrorMessage);
+                    }
+                }
+                throw;
+            }
+        }
 
 
     }

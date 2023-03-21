@@ -509,7 +509,7 @@ namespace DAP.Foliacion.Negocios
             /**   2 == **/
             /**   3 == (USADO x SQL) NO TIENE REGISTROS PARA FOLIAR CON PAGOMATICOS O ALGUN OTRO ERROR QUE CAUSE NULL EN LA RESPUESTA**/
             /**   4 == **/
-            /**   5 == **/
+            /**   5 == (USADO x DBF) LIMPIEZA DE CAMPOS DBF CONDICIONADOS A LOS NUMEROS DE EMPLEADOS EN CONDICION POR INCUMPLIMIENDO DEL AJUSTE DE INHABILITADOS EN LA FOLIACION **/
             /**   6 == (USADO x DBF) LIMPIEZA DE CAMPOS DBF CONDICIONADOS CUANDO LA FOLIACION DEL PUNTO 1 NO CUMPLE CON EL ESTANDART PARA AMBAS FORMAS DE PAGO**/
             /**   7 == **/
             /**   8 == **/
@@ -971,6 +971,16 @@ namespace DAP.Foliacion.Negocios
             }
 
             List<ResumenPersonalAFoliarDTO> resumenPersonalFoliar = new List<ResumenPersonalAFoliarDTO>();
+
+            //Resolvio Problema "DE ANGELINA POR ANDAR EN EL CHISMECITO"
+            //consultaLista = @"select    Substring(Inte.PARTIDA,2,5) , Inte.NUM, Inte.NOMBRE , per.deleg 'DELEGANTIGUA', Inte.NUM_CHE, Inte.LIQUIDO, Inte.FolioCFDI, Inte.BANCO_X, Inte.CUENTA_X , Inte.RFC   from Interfaces.dbo.ANIN2302000036 as Inte
+            //                    inner join Nomina.dbo.nom_tbl_personal as per
+            //                    on Inte.NUM = per.num
+            //                    where per.baja = 0 and Inte.AZTECA = ''  and Inte.BANCOMER = ''  and Inte.BANORTE = ''  and Inte.HSBC = ''  and Inte.INVERLAT = ''  and Inte.SERFIN = ''  and Inte.TARJETA = ''
+            //                    and Inte.deleg in ('00', '01', '02', '08', '09', '10', '12', '13', '14', '15', '16')
+            //                    order by   IIF(isnull(Inte.NOM_ESP, 0) = 1, '1', '2'), per.DELEG, RTRIM(LTRIM(SUBSTRING(Inte.PARTIDA, 2, 8))), REPLACE(REPLACE(REPLACE(Inte.NOMBRE, '¥', 'Y'), 'Ð', 'Y'), '¾', 'Y')   collate Modern_Spanish_CI_AS
+            //                    ";
+
             resumenPersonalFoliar = FoliarConsultasDBSinEntity.ObtenerResumenDatosFormasDePagoFoliar(datosNominaCompleto.EsPenA, Observa, consultaLista, bancoEncontrado, NuevaNominaFoliar.RangoInicial, NuevaNominaFoliar.Inhabilitado, Convert.ToInt32(NuevaNominaFoliar.RangoInhabilitadoInicial), Convert.ToInt32(NuevaNominaFoliar.RangoInhabilitadoFinal));
 
             /******************************************************************************/
@@ -1038,7 +1048,9 @@ namespace DAP.Foliacion.Negocios
                     ActualizarFoliacionPagomaticoTblPagoDTO nuevaActualizacion = new ActualizarFoliacionPagomaticoTblPagoDTO();
                     nuevaActualizacion.IdPago = pagoAmodificar.Id;
                     nuevaActualizacion.IdTbl_CuentaBancaria_BancoPagador = nuevaPersona.IdBancoPagador;
+                    
                     nuevaActualizacion.FolioCheque = Convert.ToInt32( nuevaPersona.NumChe );
+                    
                     string cadenaDeIntegridad = datosNominaCompleto.Id_nom + " || " + datosNominaCompleto.Nomina + " || " + datosNominaCompleto.Quincena + " || " + nuevaPersona.CadenaNumEmpleado + " || " + nuevaPersona.Liquido + " || " + nuevaPersona.NumChe + " || " + nuevaPersona.BancoX + " || " + nuevaPersona.CuentaX + " || " + nuevaPersona.NumBeneficiario;
                     nuevaActualizacion.Integridad_HashMD5 = encriptar.EncriptarCadenaInicial(cadenaDeIntegridad);
                     ActualizarPagosEnTblPagos.Add(nuevaActualizacion);
@@ -1087,7 +1099,7 @@ namespace DAP.Foliacion.Negocios
                     nuevoPago.Delegacion = nuevaPersona.Delegacion;
                     nuevoPago.RfcEmpleado = nuevaPersona.RFC;
                     nuevoPago.NumEmpleado = nuevaPersona.NumEmpleado;
-                    nuevoPago.NombreEmpleado = nuevaPersona.Nombre;
+                    nuevoPago.NombreEmpleado = nuevaPersona.Nombre.Replace("¾", "¥");
                     nuevoPago.IdCat_FormaPago_Nacimiento = 1; /*Por Nacer como cheque cheque*/
                     if (datosNominaCompleto.EsPenA)
                     {
@@ -1216,9 +1228,10 @@ namespace DAP.Foliacion.Negocios
                List<int> foliosUsados = resumenPersonalFoliar.Select(x => Convert.ToInt32(x.NumChe)).ToList();
                nuevaAlerta.UltimoFolioUsado = foliosUsados.Max();
 
-               Advertencias.Add(nuevaAlerta);
-               return Advertencias;
-                // transaccion.GuardarCambios();
+                Advertencias.Add(nuevaAlerta);
+                transaccion.GuardarCambios();
+                return Advertencias;
+               
             }
             else
             {
@@ -1987,11 +2000,17 @@ namespace DAP.Foliacion.Negocios
 
             var id_nonCotenidos = restaurarCheques.Select(x => new { x.Id_nom, x.Anio } ).Distinct().ToList();
 
+
+
             foreach (var nuevoidNom in id_nonCotenidos) 
             {
                 string visitaAnioInterfas =  ObtenerCadenaAnioInterface(Convert.ToInt32(nuevoidNom.Anio));
                 DatosCompletosBitacoraDTO nominaEncontrada = FoliarConsultasDBSinEntity.ObtenerDatosCompletosBitacoraFILTRO(Convert.ToInt32(nuevoidNom.Id_nom), visitaAnioInterfas);
 
+                List<string> bancosContenidosEnAn = FoliarConsultasDBSinEntity.VerificarCamposBancoContieneAN(nominaEncontrada.An, visitaAnioInterfas);
+                string condicionBancos = consultasCheques.ConvertirListaBancosEnCondicionParaCheques(bancosContenidosEnAn);
+
+                
 
 
                 int foliosRecuperadosExitosamente = 0;
@@ -2005,7 +2024,7 @@ namespace DAP.Foliacion.Negocios
 
                 /******************************************************************************************************************************************/
                 //***************************    Crear metodo para limpiar una dbf con numero de empleado por lotes     ***********************************/
-                int numeroInsertar = 150;
+                int numeroInsertar = 100;
                 int numeroAcumuladorskips = 0;
                 int numeroLotes = Convert.ToInt32(restaurarCheques.Count() / numeroInsertar) + 1;
 
@@ -2050,7 +2069,7 @@ namespace DAP.Foliacion.Negocios
                     }
 
                   //  condicionParaLimpiarCamposDbF = " INLIST (num,  " + numEmpleadosLimpiarCamposDbf + " )";
-                    condicionParaLimpiarCamposDbF = " num IN ( " + numEmpleadosLimpiarCamposDbf + " )";
+                    condicionParaLimpiarCamposDbF = " num IN ( " + numEmpleadosLimpiarCamposDbf + " ) and "+ condicionBancos + " ";
 
                     alertaDbf = FolearDBFEnServerNegocios.BaseDBF_CruceroParaConexionServer47DBF(7, usarRutasNomina, null, condicionParaLimpiarCamposDbF);
                     if (alertaDbf.IdAtencion == 200)
@@ -2083,7 +2102,7 @@ namespace DAP.Foliacion.Negocios
                 }
 
                // condicionParaLimpiarCamposDbF = " INLIST (num,  " + numEmpleadosLimpiarCampos + " )";
-                condicionParaLimpiarCampos = " num in ( " + numEmpleadosLimpiarCampos + " )";
+                condicionParaLimpiarCampos = " num in ( " + numEmpleadosLimpiarCampos + " ) and "+condicionBancos+" ";
 
 
                 if (numeroRegistroLimpiadoDBF > 1 )
@@ -2092,7 +2111,7 @@ namespace DAP.Foliacion.Negocios
                     /* Limpiar datos de foliacion del AN de en SQL */
                     int registroAnLimpiados = FoliarConsultasDBSinEntity.LimpiarCamposPorRecuperacionDeFolios(visitaAnioInterfas, nominaEncontrada.An, condicionParaLimpiarCampos, nominaEncontrada.Id_nom);
 
-                    if (registroAnLimpiados > 1)
+                    if (registroAnLimpiados >= 1)
                     {
                         int idnomSeleccionado = Convert.ToInt32(nuevoidNom.Id_nom);
                         int anioSeleccionado = Convert.ToInt32(nuevoidNom.Anio);
@@ -2170,7 +2189,6 @@ namespace DAP.Foliacion.Negocios
                 }
                 
             }
-
             return (resultado  , totalChequesRestaurados);
         }
 
@@ -2212,7 +2230,7 @@ namespace DAP.Foliacion.Negocios
             if (numeroRegistroLimpiadoDBF == 1)
             {
                 /* Limpiar datos de foliacion del AN de en SQL */
-                int registroAnLimpiado = FoliarConsultasDBSinEntity.LimpiarUnRegitroCamposFoliacionAN(datosCompletosNomina.Anio, datosCompletosNomina.An, numeroEmpleado5Digitos, pagoEncontrado.ImporteLiquido, datosCompletosNomina.EsPenA, pagoEncontrado.BeneficiarioPenA);
+                int registroAnLimpiado = FoliarConsultasDBSinEntity.LimpiarUnRegitroCamposFoliacionAN(datosCompletosNomina.Anio, datosCompletosNomina.An, numeroEmpleado5Digitos, pagoEncontrado.ImporteLiquido, datosCompletosNomina.EsPenA, pagoEncontrado.NumBeneficiario);
 
                 if (registroAnLimpiado == 1)
                 {
@@ -2283,6 +2301,10 @@ namespace DAP.Foliacion.Negocios
         // VERIFICA SI EL GRUPO QUE SE SELECCION DE LA NOMINA SE ENCUENTRA FOLIADO CORRECTAMENTE, SINO NO PODRA ACCEDER A UN AJUSTE
         public static async Task<List<AlertasAlFolearPagomaticosDTO>> RealizarAjusteFoliacion(FoliarFormasPagoDTO  AjustarDelegacionNomina)
         {
+
+            List<AlertasAlFolearPagomaticosDTO> Advertencias = new List<AlertasAlFolearPagomaticosDTO>();
+            AlertasAlFolearPagomaticosDTO nuevaAlerta = new AlertasAlFolearPagomaticosDTO();
+
             /***    SE LOCALIZAN EL NUMERO TOTAL DE CHEQUES QUE SE VAN A UTILIZAR    ***/
             int totalFolios = 0;
 
@@ -2303,32 +2325,46 @@ namespace DAP.Foliacion.Negocios
                 //obtiene los numero de folios como deben de encontrarse en la tabla inventarios
                 List<int> foliosUtilizados = new List<int>();
                 int iterador = 0;
-                while (iterador <  totalFolios)
+                while (iterador <=  totalFolios)
                 {
                     int nuevoFolio = AjustarDelegacionNomina.RangoInicial + iterador++;
                     foliosUtilizados.Add(nuevoFolio);
                 }
 
-                /***    SE OBTIENEN LOS FOLIOA A RECUPERAR  ***/
+                /***    SE OBTIENEN LOS FOLIOS A RECUPERAR  ***/
                 List<int> foliosARecuperar = foliosUtilizados.Where(x => x >= AjustarDelegacionNomina.RangoInhabilitadoInicial).OrderBy(x => x).ToList();
 
-                int a = AjustarDelegacionNomina.IdBancoPagador;
+                //int a = AjustarDelegacionNomina.IdBancoPagador;
+                int cantidadTotalAjustar = foliosARecuperar.Count();
                 int nuevoInicioRangoFoliacion = foliosARecuperar.Min();
-                int c = foliosARecuperar.Max();
+               // int c = foliosARecuperar.Max();
+
+
+
+                /***    SE RECUPERAN LOS FOLIOS APARTIR DEL FOLIO INICIAL DE INHABILITACION  ***/
+                //List<int> listaFoliosInicialmenteUsados = FoliarConsultasDBSinEntity.ObtenerListaDefolios(AjustarDelegacionNomina.RangoInicial, totalFolios, AjustarDelegacionNomina.Inhabilitado, AjustarDelegacionNomina.RangoInhabilitadoInicial , AjustarDelegacionNomina.RangoInhabilitadoFinal );
+
+                ///***    LISTA DE FOLIOS QUE SE USARAN PARA EL NUEVO AJUSTE DESCONTANDO LOS INHABILITADOS ***/
+                //List<int> listaFoliosFinalUsar = listaFoliosInicialmenteUsados.Where(x => x > nuevoInicioRangoFoliacion).ToList();
+
+
+
 
                 /***    SE RECUPERAN LOS FOLIOS APARTIR DEL FOLIO INICIAL DE INHABILITACION  ***/
                 var (resultadoObtenido, totalChequesRecuperados) = RestaurarRangoDeFolios(AjustarDelegacionNomina.IdBancoPagador, foliosARecuperar.Min(), foliosARecuperar.Max());
 
                 /***    SE VERIFICAN QUE EFECTIVAMENTE TODOS LOS FOLIOS DE CHEQUES SE HAYAN RECUPERADO DE FORMA EXITOSA     ***/
-                List<FoliosAFoliarInventario> chequesVerificadosFoliar = FoliarNegocios.verificarDisponibilidadFoliosEnInventarioDetalle(AjustarDelegacionNomina.IdBancoPagador, nuevoInicioRangoFoliacion, totalFolios, AjustarDelegacionNomina.Inhabilitado, AjustarDelegacionNomina.RangoInhabilitadoInicial, AjustarDelegacionNomina.RangoInhabilitadoFinal).ToList();
+                List<FoliosAFoliarInventario> chequesVerificadosFoliar = FoliarNegocios.verificarDisponibilidadFoliosEnInventarioDetalle(AjustarDelegacionNomina.IdBancoPagador, nuevoInicioRangoFoliacion, cantidadTotalAjustar, AjustarDelegacionNomina.Inhabilitado, AjustarDelegacionNomina.RangoInhabilitadoInicial, AjustarDelegacionNomina.RangoInhabilitadoFinal).ToList();
                 int cantidadFoliosNoDisponibles = chequesVerificadosFoliar.Where(y => y.Incidencia != "").Count();
-                
-                if (foliosARecuperar.Count() == totalChequesRecuperados && cantidadFoliosNoDisponibles == 0) 
+                //var foliosNoDisponibles = chequesVerificadosFoliar.Where(y => y.Incidencia != "").Select( x => x.Folio );
+                /***********        poner un error que no se recuperaron adecuaqdamente algunos folios        ***********/
+
+                if (cantidadFoliosNoDisponibles == 0)
                 {
                     /** Si los folios fueron restaurados correctamente **/
                     string visitaAnioInterface = ObtenerCadenaAnioInterface(AjustarDelegacionNomina.AnioInterfaz);
                     DatosCompletosBitacoraDTO datosCompletosNomina = ObtenerDatosCompletosBitacoraFILTRO(AjustarDelegacionNomina.IdNomina, visitaAnioInterface);
-                   
+
                     List<string> bancosContenidosEnAn = FoliarConsultasDBSinEntity.VerificarCamposBancoContieneAN(datosCompletosNomina.An, visitaAnioInterface);
                     string condicionBancos = consultasCheques.ConvertirListaBancosEnCondicionParaCheques(bancosContenidosEnAn);
 
@@ -2362,10 +2398,10 @@ namespace DAP.Foliacion.Negocios
                     }
 
                     List<ResumenPersonalAFoliarDTO> resumenPersonalFoliar = new List<ResumenPersonalAFoliarDTO>();
-                    resumenPersonalFoliar = FoliarConsultasDBSinEntity.ObtenerResumenDatosFormasDePagoFoliar(datosCompletosNomina.EsPenA, "CHEQUE", consultaLista, repoCuentaBancaria.Obtener( x =>x.Id == AjustarDelegacionNomina.IdBancoPagador), nuevoInicioRangoFoliacion, AjustarDelegacionNomina.Inhabilitado, AjustarDelegacionNomina.RangoInhabilitadoInicial, AjustarDelegacionNomina.RangoInhabilitadoFinal);
+                    resumenPersonalFoliar = FoliarConsultasDBSinEntity.ObtenerResumenDatosFormasDePagoFoliar(datosCompletosNomina.EsPenA, "CHEQUE", consultaLista, repoCuentaBancaria.Obtener(x => x.Id == AjustarDelegacionNomina.IdBancoPagador), nuevoInicioRangoFoliacion, AjustarDelegacionNomina.Inhabilitado, AjustarDelegacionNomina.RangoInhabilitadoInicial, AjustarDelegacionNomina.RangoInhabilitadoFinal);
 
                     /***    VALIDA QUE  EL RESUMEN DE PERSONAS AJUSTAR SEA LA MISMA CANTIDAD DE LAS QUE SE RECUPERARON SUS CHEQUES   ***/
-                    if (resumenPersonalFoliar.Count() == totalFolios) 
+                    if (resumenPersonalFoliar.Count() == cantidadTotalAjustar)
                     {
                         /**********************************************************************************/
                         /***    INICIA EL PROCESESO PARA FOLIAR LAS PERSONAS A LAS QUE SE DEBEN AJUSTAR ***/
@@ -2411,7 +2447,7 @@ namespace DAP.Foliacion.Negocios
                         var repositorioTblPago = new Repositorio<Tbl_Pagos>(transaccion);
                         var repositorioInventarioDetalle = new Repositorio<Tbl_InventarioDetalle>(transaccion);
                         var repositorioContenedores = new Repositorio<Tbl_InventarioContenedores>(transaccion);
-                        
+
                         foreach (ResumenPersonalAFoliarDTO nuevaPersona in resumenPersonalFoliar)
                         {
                             Tbl_Pagos pagoAmodificar = null;
@@ -2451,22 +2487,22 @@ namespace DAP.Foliacion.Negocios
                                 folioEnInventarioEncontrado.IdIncidencia = 3; //3 porque ya fue foliado por primera vez
                                 folioEnInventarioEncontrado.FechaIncidencia = DateTime.Now;
                                 pagoAmodificar.IdTbl_InventarioDetalle = folioEnInventarioEncontrado.Id;
-                                repositorioInventarioDetalle.Modificar_Transaccionadamente(folioEnInventarioEncontrado);
+                                repositorioInventarioDetalle.Modificar(folioEnInventarioEncontrado);
 
 
                                 Tbl_InventarioContenedores descontarFolioDelContenedor = repositorioContenedores.Obtener(x => x.Id == folioEnInventarioEncontrado.IdContenedor);
                                 descontarFolioDelContenedor.FormasFoliadas += 1;
                                 descontarFolioDelContenedor.FormasDisponiblesActuales -= 1;
-                                repositorioContenedores.Modificar_Transaccionadamente(descontarFolioDelContenedor);
+                                repositorioContenedores.Modificar(descontarFolioDelContenedor);
 
                                 Tbl_Inventario descontarFolioDeInventario = repositorioInventario.Obtener(x => x.Id == descontarFolioDelContenedor.IdInventario);
                                 descontarFolioDeInventario.FormasDisponibles -= 1;
                                 descontarFolioDeInventario.UltimoFolioUtilizado = Convert.ToString(folioEnInventarioEncontrado.NumFolio);
-                                repositorioInventario.Modificar_Transaccionadamente(descontarFolioDeInventario);
+                                repositorioInventario.Modificar(descontarFolioDeInventario);
 
                                 registrosInsertadosOActualizados_Foliacion++;
                             }
-                           
+
                         }
 
 
@@ -2479,7 +2515,9 @@ namespace DAP.Foliacion.Negocios
 
                         numeroRegistrosActualizados_AlPHA = await task_resultadoRegitrosActualizados_InterfacesAlPHA;
 
-                        //Registros Actualizados en DBF
+                        /*****************************************************************************************************************************************************************************************/
+                        /**********************************************         VALIDA QUE LA FOLIACION EN DBF HAYA SIDO LA CORRECTA      ************************************************************************/
+                        /*****************************************************************************************************************************************************************************************/
                         if (alertaEncontrada.IdAtencion == 200)
                             numeroRegistrosActualizados_BaseDBF = alertaEncontrada.NumeroRegistrosActualizados;
 
@@ -2487,25 +2525,20 @@ namespace DAP.Foliacion.Negocios
 
 
                         /*****************************************************************************************************************************************************************************************/
-                        /**********************************************            Total de registros Actualizados e Insertados          *************************************************************************/
+                        /**********************************************            TOTAL REGISTROS ACTUALIZADOS EN LA DB CENTRALIZADA DE FCCBNetDB          ******************************************************/
                         /*****************************************************************************************************************************************************************************************/
-                        int resultadoActualizacionOInsercionSegunElCaso = 0;
-
+                        int resultadoActualizacionFCCBNetBD = 0;
                         if (numeroRegistrosActualizados_AlPHA == numeroRegistrosActualizados_BaseDBF)
                         {
                             if (actualizar)
                             {
-                                resultadoActualizacionOInsercionSegunElCaso = FoliarConsultasDBSinEntity.ActualizarTblPagos_DespuesDeFoliacion(ActualizarPagosEnTblPagos);
-                            }
-                            else
-                            {
-                                resultadoActualizacionOInsercionSegunElCaso = repositorioTblPago.Agregar_EntidadesMasivamente(pagosNuevosAinsertar);
+                                resultadoActualizacionFCCBNetBD = FoliarConsultasDBSinEntity.ActualizarTblPagos_DespuesDeFoliacion(ActualizarPagosEnTblPagos);
                             }
                         }
                         else
                         {
                             nuevaAlerta.IdAtencion = 4;
-                            nuevaAlerta.Id_Nom = Convert.ToString(datosNominaCompleto.Id_nom);
+                            nuevaAlerta.Id_Nom = Convert.ToString(datosCompletosNomina.Id_nom);
                             nuevaAlerta.Detalle = "Los registros Foliados en DBF y SQL No coinciden : DBF = " + numeroRegistrosActualizados_BaseDBF + " y SQL = " + numeroRegistrosActualizados_AlPHA;
                             nuevaAlerta.Solucion = "Intente Foliar de nuevo o contacte al desarrollador";
                             Advertencias.Add(nuevaAlerta);
@@ -2516,59 +2549,44 @@ namespace DAP.Foliacion.Negocios
                         /*****************************************************************************************************************************************************************************************/
                         /**********************************************                 Validacion del estandart de Foliacion                *********************************************************************/
                         /*****************************************************************************************************************************************************************************************/
-                        ///Guarda Un lote de transacciones tanto para modificar o hacer inserts  
-                        ///
-                        //resultadoActualizacionOInsercionSegunElCaso -= 1; /// Probar que entre en el else del metodo de abajo y funcione correctamente
-                        int registrosFoliados = resultadoActualizacionOInsercionSegunElCaso + numeroRegistrosActualizados_AlPHA + numeroRegistrosActualizados_BaseDBF;
-                        if ((resultadoActualizacionOInsercionSegunElCaso + numeroRegistrosActualizados_AlPHA) == (numeroRegistrosActualizados_BaseDBF * 2))
+                        if (resultadoActualizacionFCCBNetBD == numeroRegistrosActualizados_AlPHA)
                         {
                             nuevaAlerta.IdAtencion = 0;
-                            nuevaAlerta.NumeroNomina = datosNominaCompleto.Nomina;
-                            nuevaAlerta.NombreNomina = datosNominaCompleto.Coment;
+                            nuevaAlerta.NumeroNomina = datosCompletosNomina.Nomina;
+                            nuevaAlerta.NombreNomina = datosCompletosNomina.Coment;
                             nuevaAlerta.Detalle = "";
                             nuevaAlerta.Solucion = "";
-                            nuevaAlerta.Id_Nom = Convert.ToString(datosNominaCompleto.Id_nom);
-                            nuevaAlerta.RegistrosFoliados = registrosFoliados / 3;
+                            nuevaAlerta.Id_Nom = Convert.ToString(datosCompletosNomina.Id_nom);
+                            nuevaAlerta.RegistrosFoliados = resultadoActualizacionFCCBNetBD;
 
                             List<int> foliosUsados = resumenPersonalFoliar.Select(x => Convert.ToInt32(x.NumChe)).ToList();
                             nuevaAlerta.UltimoFolioUsado = foliosUsados.Max();
 
                             Advertencias.Add(nuevaAlerta);
+                            //transaccion.GuardarCambios();
                             return Advertencias;
-                            // transaccion.GuardarCambios();
                         }
                         else
                         {
+                            /*******************************************************************************************************************************************************************************************/
+                            /**********************************************                 LIMPIAR LOS CAMPOS DE LAS PERSONAS AFECTADAS                ****************************************************************/
+                            /*******************************************************************************************************************************************************************************************/
+
                             //Si entra en esta condicion es por que uno o mas registros no se foliaron y se necesita refoliar toda la nomina 
                             transaccion.Dispose();
 
-                            DatosCompletosBitacoraDTO datosCompletosNominaNuevo = ObtenerDatosCompletosBitacoraFILTRO(datosNominaCompleto.Id_nom, visitaAnioInterface);
-
-                            string condicionParaSerChequePorDelegacion = "";
-                            if (NuevaNominaFoliar.IdGrupoFoliacion == 0)
-                            {
-                                //APlica para GeneralYDESCE y en el campo EsSindise sabe si son de confianza = false o sindicalizados = true 
-                                condicionParaSerChequePorDelegacion = consultasCheques.ObtenerCondicionParaLimpiarRegistrosChequePorDelegacion_GeneralDescentralizada(datosCompletosNominaNuevo.An, condicionBancos, delegacionSeleccionada, EsSindi);
-                            }
-                            else if (NuevaNominaFoliar.IdGrupoFoliacion == 1)
-                            {
-                                condicionParaSerChequePorDelegacion = consultasCheques.ObtenerCondicionParaLimpiarRegistrosChequePorDelegacion_OtrasNominasYPenA(datosCompletosNominaNuevo.An, condicionBancos, delegacionSeleccionada, datosCompletosNominaNuevo.EsPenA);
-                            }
-
                             //Encontrar empleados para solo los registros donde se encuentren esas bases 
-                            int registrosLimpiadosAN = FoliarConsultasDBSinEntity.LimpiarANSql_IncumplimientoCalidadFoliacion(datosCompletosNominaNuevo.Anio, datosCompletosNominaNuevo.An, condicionParaSerChequePorDelegacion, datosCompletosNominaNuevo.Id_nom);
-
-                            int registrosLimpiadosTblPagos = 0;
-                            //Punto 7 de la hoja de los issues
-                            if (resultadoActualizacionOInsercionSegunElCaso > 0)
-                            {
-                                LimpiarCamposChequesUsadosPorErrorDeFoliacion(chequesVerificadosFoliar);
-                                registrosLimpiadosTblPagos = LimpiarCamposNumEmpleadosFCCBNetCheques(datosCompletosNominaNuevo.Anio, Convert.ToInt32(datosCompletosNominaNuevo.Quincena), datosCompletosNominaNuevo.Id_nom, regitrosNumEmpleadoLimpiarCamposFoliacionDBF_SQL_FCCBNet);
-                            }
+                            int registrosLimpiadosAN = FoliarConsultasDBSinEntity.LimpiarANSql_IncumplimientoAjuste(resumenPersonalFoliar, visitaAnioInterface, datosCompletosNomina.An);
 
 
+                            LimpiarCamposChequesUsadosPorErrorDeFoliacion(chequesVerificadosFoliar);
+                            List<int> NumEmpleadosLimpiarAjusteFCCBNetDB = resumenPersonalFoliar.Select(x => x.NumEmpleado).ToList();
+                            int registrosLimpiadosTblPagos = LimpiarCamposNumEmpleadosFCCBNetCheques(datosCompletosNomina.Anio, Convert.ToInt32(datosCompletosNomina.Quincena), datosCompletosNomina.Id_nom, NumEmpleadosLimpiarAjusteFCCBNetDB);
+
+                            List<string> NumEmpleadosLimpiarAjuste = resumenPersonalFoliar.Select(x => x.CadenaNumEmpleado).ToList();
+                            string condicionNumEmpleadosLimpiar = consultasCheques.ConvertirListaNumEmpledosEnCondicionParaLimpiarAjuste(NumEmpleadosLimpiarAjuste);
                             List<ResumenPersonalAFoliarDTO> resumenPersonalVacio = new List<ResumenPersonalAFoliarDTO>();
-                            AlertasAlFolearPagomaticosDTO alertaEncontradaLimpiezaDBF = FolearDBFEnServerNegocios.BaseDBF_CruceroParaConexionServer47DBF(6 /* Numero para redireccionar a una limpiaza de la base con una condicion */ , datosCompletosNominaNuevo, resumenPersonalVacio /*No se necesita esta dato*/, condicionParaSerChequePorDelegacion);
+                            AlertasAlFolearPagomaticosDTO alertaEncontradaLimpiezaDBF = FolearDBFEnServerNegocios.BaseDBF_CruceroParaConexionServer47DBF(5 /* Redireccionar a una limpieza de los num en la condicion */ , datosCompletosNomina, resumenPersonalVacio /*No se necesita esta dato*/, condicionNumEmpleadosLimpiar);
                             if (alertaEncontradaLimpiezaDBF.IdAtencion != 200)
                             {
                                 Advertencias.Add(alertaEncontradaLimpiezaDBF);
@@ -2580,12 +2598,12 @@ namespace DAP.Foliacion.Negocios
 
 
                             nuevaAlerta.IdAtencion = 4;
-                            nuevaAlerta.NumeroNomina = datosNominaCompleto.Nomina;
-                            nuevaAlerta.NombreNomina = datosNominaCompleto.Coment;
+                            nuevaAlerta.NumeroNomina = datosCompletosNomina.Nomina;
+                            nuevaAlerta.NombreNomina = datosCompletosNomina.Coment;
                             nuevaAlerta.Detalle = registrosLimpiadosAN == alertaEncontradaLimpiezaDBF.RegistrosFoliados ? "ERROR EN LA FOLIACION, NO SE PUDIERON LIMPIAR LOS CAMPOS AFECTADOS CORRECTAMENTE EN TBL_PAGOS, SQL O DBF" : "OCURRIO UN ERROR EN LA FOLIACION, NO SE CUMPLIO CON EL ESTANDAR DE FOLIACION SE HAN LIMPIADO LOS CAMPOS DESTINADOS EN DBF , SQL. TBLPagos NO FUE MODIFICADO ";
-                            nuevaAlerta.Solucion = "VUELVA A FOLIAR DE NUEVO";
-                            nuevaAlerta.Id_Nom = Convert.ToString(datosNominaCompleto.Id_nom);
-                            nuevaAlerta.RegistrosFoliados = registrosFoliados / 3;
+                            nuevaAlerta.Solucion = "VUELVA A REALIZAR EL AJUSTE DE NUEVO";
+                            nuevaAlerta.Id_Nom = Convert.ToString(datosCompletosNomina.Id_nom);
+                            nuevaAlerta.RegistrosFoliados = NumEmpleadosLimpiarAjusteFCCBNetDB.Count;
                             List<int> foliosUsados = resumenPersonalFoliar.Select(x => Convert.ToInt32(x.NumChe)).ToList();
                             nuevaAlerta.UltimoFolioUsado = foliosUsados.Max();  /*resumenPersonalFoliar.Max(x => x.NumChe);*/
 
@@ -2596,10 +2614,31 @@ namespace DAP.Foliacion.Negocios
                         }
                     }
                 }
+                else 
+                {
+                    /***    EL TOTAL DE FOLIOS RECUPERADOS  NO ES EL MISMO QUE LOS QUE DEBERIAN RECUPERAR  POR ENDE HAY ALGUNOS FOLIOS QUE AUN TIENEN ALGUNA INCIDENCIA Y NO VA A DEJAR USARALOS EL SISTEMA      ***/
+
+                    List<int> foliosNoDisponibles = chequesVerificadosFoliar.Where(y => y.Incidencia != "").Select(x => x.Folio).ToList();
+                    string comentarioFoliosNoDisponibles ="" ;
+                    foreach (int nuevoFolioNDis in foliosNoDisponibles) 
+                    {
+                        comentarioFoliosNoDisponibles += comentarioFoliosNoDisponibles + " " +nuevoFolioNDis +" , " ;
+                    }
+
+                    nuevaAlerta.Id_Nom = AjustarDelegacionNomina.IdNomina.ToString();
+                    nuevaAlerta.Detalle = "HAY FOLIOS QUE NO SE HAN RECUPERADO CORRECTAMENTE, INTENTE LO SIG :";
+                    nuevaAlerta.Solucion = comentarioFoliosNoDisponibles;
+                    Advertencias.Add(nuevaAlerta);
+                    return Advertencias;
+
+                }
 
             }
 
+            return Advertencias;
         }
+
+
 
         #endregion
 

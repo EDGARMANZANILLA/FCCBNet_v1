@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="DsTGCxCuentaBancaria" targetNamespace="http://tempuri.org/DsTGCxCuentaBancaria.xsd" xmlns:mstns="http://tempuri.org/DsTGCxCuentaBancaria.xsd" xmlns="http://tempuri.org/DsTGCxCuentaBancaria.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="DsTGCxCuentaBancaria" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="DsTGCxCuentaBancaria" msprop:Generator_UserDSName="DsTGCxCuentaBancaria">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="DatosReferencia" msprop:Generator_TableClassName="DatosReferenciaDataTable" msprop:Generator_TableVarName="tableDatosReferencia" msprop:Generator_TablePropName="DatosReferencia" msprop:Generator_RowDeletingName="DatosReferenciaRowDeleting" msprop:Generator_RowChangingName="DatosReferenciaRowChanging" msprop:Generator_RowEvHandlerName="DatosReferenciaRowChangeEventHandler" msprop:Generator_RowDeletedName="DatosReferenciaRowDeleted" msprop:Generator_UserTableName="DatosReferencia" msprop:Generator_RowChangedName="DatosReferenciaRowChanged" msprop:Generator_RowEvArgName="DatosReferenciaRowChangeEvent" msprop:Generator_RowClassName="DatosReferenciaRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Referencia" msprop:Generator_ColumnVarNameInTable="columnReferencia" msprop:Generator_ColumnPropNameInRow="Referencia" msprop:Generator_ColumnPropNameInTable="ReferenciaColumn" msprop:Generator_UserColumnName="Referencia" type="xs:string" minOccurs="0" />
+              <xs:element name="FechaReferencia" msprop:Generator_ColumnVarNameInTable="columnFechaReferencia" msprop:Generator_ColumnPropNameInRow="FechaReferencia" msprop:Generator_ColumnPropNameInTable="FechaReferenciaColumn" msprop:Generator_UserColumnName="FechaReferencia" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="DatosTGCxCuentaBancaria_Resumen" msprop:Generator_TableClassName="DatosTGCxCuentaBancaria_ResumenDataTable" msprop:Generator_TableVarName="tableDatosTGCxCuentaBancaria_Resumen" msprop:Generator_TablePropName="DatosTGCxCuentaBancaria_Resumen" msprop:Generator_RowDeletingName="DatosTGCxCuentaBancaria_ResumenRowDeleting" msprop:Generator_RowChangingName="DatosTGCxCuentaBancaria_ResumenRowChanging" msprop:Generator_RowEvHandlerName="DatosTGCxCuentaBancaria_ResumenRowChangeEventHandler" msprop:Generator_RowDeletedName="DatosTGCxCuentaBancaria_ResumenRowDeleted" msprop:Generator_UserTableName="DatosTGCxCuentaBancaria_Resumen" msprop:Generator_RowChangedName="DatosTGCxCuentaBancaria_ResumenRowChanged" msprop:Generator_RowEvArgName="DatosTGCxCuentaBancaria_ResumenRowChangeEvent" msprop:Generator_RowClassName="DatosTGCxCuentaBancaria_ResumenRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="NombreCuentaBancaria" msdata:Caption="NombreNomina" msprop:Generator_ColumnVarNameInTable="columnNombreCuentaBancaria" msprop:Generator_ColumnPropNameInRow="NombreCuentaBancaria" msprop:Generator_ColumnPropNameInTable="NombreCuentaBancariaColumn" msprop:Generator_UserColumnName="NombreCuentaBancaria" type="xs:string" minOccurs="0" />
+              <xs:element name="PP_TipoClave" msprop:nullValue="_throw" msprop:Generator_ColumnPropNameInRow="PP_TipoClave" msprop:Generator_ColumnVarNameInTable="columnPP_TipoClave" msprop:Generator_ColumnPropNameInTable="PP_TipoClaveColumn" msprop:Generator_UserColumnName="PP_TipoClave" type="xs:string" minOccurs="0" />
+              <xs:element name="PP_Cantidad" msprop:nullValue="_null" msprop:Generator_ColumnPropNameInRow="PP_Cantidad" msprop:Generator_ColumnVarNameInTable="columnPP_Cantidad" msprop:Generator_ColumnPropNameInTable="PP_CantidadColumn" msprop:Generator_UserColumnName="PP_Cantidad" type="xs:string" minOccurs="0" />
+              <xs:element name="PP_CvePD" msprop:nullValue="_null" msprop:Generator_ColumnPropNameInRow="PP_CvePD" msprop:Generator_ColumnVarNameInTable="columnPP_CvePD" msprop:Generator_ColumnPropNameInTable="PP_CvePDColumn" msprop:Generator_UserColumnName="PP_CvePD" type="xs:string" minOccurs="0" />
+              <xs:element name="pp_DescripcionCvePD" msprop:nullValue="_null" msprop:Generator_ColumnPropNameInRow="pp_DescripcionCvePD" msprop:Generator_ColumnVarNameInTable="columnpp_DescripcionCvePD" msprop:Generator_ColumnPropNameInTable="pp_DescripcionCvePDColumn" msprop:Generator_UserColumnName="pp_DescripcionCvePD" type="xs:string" minOccurs="0" />
+              <xs:element name="PP_SumatoriaPositiva" msprop:nullValue="_throw" msprop:Generator_ColumnPropNameInRow="PP_SumatoriaPositiva" msprop:Generator_ColumnVarNameInTable="columnPP_SumatoriaPositiva" msprop:Generator_ColumnPropNameInTable="PP_SumatoriaPositivaColumn" msprop:Generator_UserColumnName="PP_SumatoriaPositiva" type="xs:decimal" minOccurs="0" />
+              <xs:element name="PP_SumatoriaNegativa" msprop:nullValue="_throw" msprop:Generator_ColumnPropNameInRow="PP_SumatoriaNegativa" msprop:Generator_ColumnVarNameInTable="columnPP_SumatoriaNegativa" msprop:Generator_ColumnPropNameInTable="PP_SumatoriaNegativaColumn" msprop:Generator_UserColumnName="PP_SumatoriaNegativa" type="xs:decimal" minOccurs="0" />
+              <xs:element name="DD_TipoClave" msprop:nullValue="_null" msprop:Generator_ColumnPropNameInRow="DD_TipoClave" msprop:Generator_ColumnVarNameInTable="columnDD_TipoClave" msprop:Generator_ColumnPropNameInTable="DD_TipoClaveColumn" msprop:Generator_UserColumnName="DD_TipoClave" type="xs:string" minOccurs="0" />
+              <xs:element name="DD_Cantidad" msprop:nullValue="_null" msprop:Generator_ColumnPropNameInRow="DD_Cantidad" msprop:Generator_ColumnVarNameInTable="columnDD_Cantidad" msprop:Generator_ColumnPropNameInTable="DD_CantidadColumn" msprop:Generator_UserColumnName="DD_Cantidad" type="xs:string" minOccurs="0" />
+              <xs:element name="DD_CvePD" msprop:nullValue="_null" msprop:Generator_ColumnPropNameInRow="DD_CvePD" msprop:Generator_ColumnVarNameInTable="columnDD_CvePD" msprop:Generator_ColumnPropNameInTable="DD_CvePDColumn" msprop:Generator_UserColumnName="DD_CvePD" type="xs:string" minOccurs="0" />
+              <xs:element name="DD_DescripcionCvePD" msprop:nullValue="_null" msprop:Generator_ColumnPropNameInRow="DD_DescripcionCvePD" msprop:Generator_ColumnVarNameInTable="columnDD_DescripcionCvePD" msprop:Generator_ColumnPropNameInTable="DD_DescripcionCvePDColumn" msprop:Generator_UserColumnName="DD_DescripcionCvePD" type="xs:string" minOccurs="0" />
+              <xs:element name="DD_SumatoriaPositiva" msprop:nullValue="_throw" msprop:Generator_ColumnPropNameInRow="DD_SumatoriaPositiva" msprop:Generator_ColumnVarNameInTable="columnDD_SumatoriaPositiva" msprop:Generator_ColumnPropNameInTable="DD_SumatoriaPositivaColumn" msprop:Generator_UserColumnName="DD_SumatoriaPositiva" type="xs:decimal" minOccurs="0" />
+              <xs:element name="DD_SumatoriaNegativa" msprop:nullValue="_throw" msprop:Generator_ColumnPropNameInRow="DD_SumatoriaNegativa" msprop:Generator_ColumnVarNameInTable="columnDD_SumatoriaNegativa" msprop:Generator_ColumnPropNameInTable="DD_SumatoriaNegativaColumn" msprop:Generator_UserColumnName="DD_SumatoriaNegativa" type="xs:decimal" minOccurs="0" />
+              <xs:element name="PP_TotalPositivo" msprop:nullValue="_throw" msprop:Generator_ColumnPropNameInRow="PP_TotalPositivo" msprop:Generator_ColumnVarNameInTable="columnPP_TotalPositivo" msprop:Generator_ColumnPropNameInTable="PP_TotalPositivoColumn" msprop:Generator_UserColumnName="PP_TotalPositivo" type="xs:decimal" minOccurs="0" />
+              <xs:element name="PP_TotalNegativo" msprop:nullValue="_throw" msprop:Generator_ColumnPropNameInRow="PP_TotalNegativo" msprop:Generator_ColumnVarNameInTable="columnPP_TotalNegativo" msprop:Generator_ColumnPropNameInTable="PP_TotalNegativoColumn" msprop:Generator_UserColumnName="PP_TotalNegativo" type="xs:decimal" minOccurs="0" />
+              <xs:element name="DD_TotalPositivo" msprop:nullValue="_throw" msprop:Generator_ColumnPropNameInRow="DD_TotalPositivo" msprop:Generator_ColumnVarNameInTable="columnDD_TotalPositivo" msprop:Generator_ColumnPropNameInTable="DD_TotalPositivoColumn" msprop:Generator_UserColumnName="DD_TotalPositivo" type="xs:decimal" minOccurs="0" />
+              <xs:element name="DD_TotalNegativo" msprop:nullValue="_throw" msprop:Generator_ColumnPropNameInRow="DD_TotalNegativo" msprop:Generator_ColumnVarNameInTable="columnDD_TotalNegativo" msprop:Generator_ColumnPropNameInTable="DD_TotalNegativoColumn" msprop:Generator_UserColumnName="DD_TotalNegativo" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Liquido" msprop:Generator_ColumnVarNameInTable="columnLiquido" msprop:Generator_ColumnPropNameInRow="Liquido" msprop:Generator_ColumnPropNameInTable="LiquidoColumn" msprop:Generator_UserColumnName="Liquido" type="xs:decimal" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

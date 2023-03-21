@@ -96,6 +96,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reposicion_SuspencionDBSinORM.cs" />
     <Compile Include="Repositorio.cs" />
+    <Compile Include="TablasAfectadasFCCBNetDB\Cancelaciones_InterfazPercepcionesDeducciones_IPD_DbSinEntity.cs" />
     <Compile Include="TablasAfectadasFCCBNetDB\Tbl_InventarioContenedores_DbSinEntity.cs" />
     <Compile Include="TablasAfectadasFCCBNetDB\Tbl_InventarioDetalle_DbSinEntity.cs" />
     <Compile Include="TablasAfectadasFCCBNetDB\Tbl_Pagos_DbSinEntity.cs" />

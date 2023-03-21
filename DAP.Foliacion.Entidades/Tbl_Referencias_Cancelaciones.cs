@@ -31,6 +31,11 @@ namespace DAP.Foliacion.Entidades
         public string FolioDocumento { get; set; }
         public byte[] ArchivoSustento { get; set; }
         public bool Activo { get; set; }
+        public Nullable<System.DateTime> FechaActualizacion_AgregoOQuitoFormas { get; set; }
+        public Nullable<System.DateTime> FechaCreacionIPD { get; set; }
+        public Nullable<int> TotalFormasIPD { get; set; }
+        public Nullable<System.DateTime> FechaCreacionIPDC { get; set; }
+        public Nullable<int> TotalFormasIPDC { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Tbl_Pagos> Tbl_Pagos { get; set; }

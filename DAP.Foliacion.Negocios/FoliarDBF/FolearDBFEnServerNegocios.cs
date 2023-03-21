@@ -353,7 +353,7 @@ namespace DAP.Foliacion.Negocios.FoliarDBF
             /**   2 == **/
             /**   3 == **/
             /**   4 == **/
-            /**   5 == **/
+            /**   5 == (USADO x DBF) LIMPIEZA DE CAMPOS DBF CONDICIONADOS A LOS NUMEROS DE EMPLEADOS EN CONDICION POR INCUMPLIMIENDO DEL AJUSTE DE INHABILITADOS EN LA FOLIACION **/ 
             /**   6 == LIMPIEZA DE CAMPOS DBF CONDICIONADOS CUANDO LA FOLIACION DEL PUNTO 1 NO CUMPLE CON EL ESTANDART PARA AMBAS FORMAS DE PAGO**/
             /**   7 == **/
             /**   8 == **/
@@ -394,36 +394,7 @@ namespace DAP.Foliacion.Negocios.FoliarDBF
                 string rutaPrueba = RutaRealDentroDeServidorDFB(datosNominaCompleto.Ruta);
 
                 datosNominaCompleto.Ruta = rutaPrueba;
-                /****************************************************************************************************************/
-                /****************************************************************************************************************/
-                /****************************************************************************************************************/
-                ////string pathBasesServidor47 = @"\\172.19.3.173\";
-
-                ////bool estaModoDebuger = System.Diagnostics.Debugger.IsAttached ;
-
-                ////string letraRutaReal;
-                ////string letraRuta = datosNominaCompleto.Ruta.Substring(0, 2);
-                ////if (letraRuta.ToUpper() == "F:")
-                ////{
-                ////    letraRutaReal = estaModoDebuger? "F2": "F" ;
-                ////    pathBasesServidor47 = pathBasesServidor47 + letraRutaReal;
-
-                ////}
-                ////else if (letraRuta.ToUpper() == "J:")
-                ////{
-                ////    letraRutaReal = estaModoDebuger? "J2": "J";
-                ////    pathBasesServidor47 = pathBasesServidor47 + letraRutaReal;
-                ////}
-
-
-                ////datosNominaCompleto.Ruta = datosNominaCompleto.Ruta.Replace("" + letraRuta + "", ""); // \SAGITARI\AYUDAS\ARCHIVOS\            
-                ////datosNominaCompleto.Ruta = pathBasesServidor47 + datosNominaCompleto.Ruta; //\\172.19.3.173\F\SAGITARI\AYUDAS\ARCHIVOS\
-
-                /****************************************************************************************************************/
-                /****************************************************************************************************************/
-                /****************************************************************************************************************/
-
-
+                
 
                 //  CRUCERO DE REDIRECCIONAMIENTO HACIA EL METODO CORRECTO AL QUE DEBEN IR LOS DATOS  //
                 switch (OpcionARedireccionar)
@@ -458,6 +429,16 @@ namespace DAP.Foliacion.Negocios.FoliarDBF
                         break; 
                     case 5:
                         //number = "Five";
+                        resultado_OperacionDBF = ActualizacionDFBS.LimpiarBaseDBFAJusteFoliacion(datosNominaCompleto.Ruta, datosNominaCompleto.RutaNomina, Condicion);
+                        AlertasAlFolearPagomaticosDTO alertaEncontradaLimpiezaAjuste = FolearDBFEnServerNegocios.ValidaExistenciaONoEsteAbierta(resultado_OperacionDBF, datosNominaCompleto);
+                        if (alertaEncontradaLimpiezaAjuste != null)
+                        {
+                            //Si existe un error esque no se termino de limpiar la base con condicion correctamente por ende solo se cambia el texto que se le informara al usuario 
+                            alertaEncontradaLimpiezaAjuste.Detalle += alertaEncontradaLimpiezaAjuste.Detalle + " || HUBO UN ERROR EN FOLIACION Y LA BASE NO SE PUDO TERMINAR DE LIMPIAR";
+                            alertaEncontradaLimpiezaAjuste.Solucion += alertaEncontradaLimpiezaAjuste.Solucion + " || INTENTE BLANQUEAR LA BASE MANUALMENTE Y REPITA EL PROCESO DE FOLIACION";
+
+                            return alertaEncontradaLimpiezaAjuste;
+                        }
                         break; 
                     case 6:
                         resultado_OperacionDBF = ActualizacionDFBS.LimpiarBaseDBF_IncumplimientoCalidadFoliacion(datosNominaCompleto.Ruta, datosNominaCompleto.RutaNomina, Condicion);

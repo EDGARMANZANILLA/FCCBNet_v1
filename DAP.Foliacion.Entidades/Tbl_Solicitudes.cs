@@ -19,6 +19,8 @@ namespace DAP.Foliacion.Entidades
         public int IdCuentaBancaria { get; set; }
         public int Cantidad { get; set; }
         public string FolioInicial { get; set; }
+        public string FolioMuestra { get; set; }
+        public Nullable<decimal> UsoAproximadoMeses { get; set; }
         public System.DateTime FechaSolicitud { get; set; }
         public bool Activo { get; set; }
     

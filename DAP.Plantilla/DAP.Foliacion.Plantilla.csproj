@@ -278,10 +278,40 @@
       <DependentUpon>ReportePensionAlimenticiaCC.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Reportes\Crystal\ReportesCC\IPD\ReporteCuotasPatronalesRamoUnidad.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ReporteCuotasPatronalesRamoUnidad.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reportes\Crystal\ReportesCC\IPD\ReporteGeneral.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ReporteGeneral.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reportes\Crystal\ReportesCC\IPD\ReporteTGCxCuentaBancaria.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ReporteTGCxCuentaBancaria.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Reportes\Crystal\ReportesCC\IPD\ReporteTGCxNomina.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ReporteTGCxNomina.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reportes\Crystal\ReportesCC\IPD\SubReporteTGCxCuentaBancaria.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SubReporteTGCxCuentaBancaria.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reportes\Crystal\ReportesCC\IPD\SubReporteTGCxNomina.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SubReporteTGCxNomina.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Reportes\Crystal\RevicionFoliacionNomina.cs">
@@ -316,6 +346,21 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>DsPensionAlimenticiaCC.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Reportes\Datasets\DsReportesCC\DsIPD\DsCoutasPatronalesxNomina.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DsCoutasPatronalesxNomina.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Reportes\Datasets\DsReportesCC\DsIPD\DsResumenGeneral.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DsResumenGeneral.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Reportes\Datasets\DsReportesCC\DsIPD\DsTGCxCuentaBancaria.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DsTGCxCuentaBancaria.xsd</DependentUpon>
     </Compile>
     <Compile Include="Reportes\Datasets\DsReportesCC\DsIPD\DsTGCxNomina.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -2096,6 +2141,39 @@
     <Content Include="Reportes\Datasets\DsReportesCC\DsIPD\DsTGCxNomina.xsc">
       <DependentUpon>DsTGCxNomina.xsd</DependentUpon>
     </Content>
+    <Content Include="Reportes\Datasets\DsReportesCC\DsIPD\DsTGCxCuentaBancaria.xsc">
+      <DependentUpon>DsTGCxCuentaBancaria.xsd</DependentUpon>
+    </Content>
+    <Content Include="Reportes\Datasets\DsReportesCC\DsIPD\DsResumenGeneral.xsc">
+      <DependentUpon>DsResumenGeneral.xsd</DependentUpon>
+    </Content>
+    <Content Include="Reportes\Datasets\DsReportesCC\DsIPD\DsCoutasPatronalesxNomina.xsc">
+      <DependentUpon>DsCoutasPatronalesxNomina.xsd</DependentUpon>
+    </Content>
+    <None Include="Reportes\Datasets\DsReportesCC\DsIPD\DsCoutasPatronalesxNomina.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DsCoutasPatronalesxNomina.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="Reportes\Datasets\DsReportesCC\DsIPD\DsCoutasPatronalesxNomina.xss">
+      <DependentUpon>DsCoutasPatronalesxNomina.xsd</DependentUpon>
+    </Content>
+    <None Include="Reportes\Datasets\DsReportesCC\DsIPD\DsResumenGeneral.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DsResumenGeneral.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="Reportes\Datasets\DsReportesCC\DsIPD\DsResumenGeneral.xss">
+      <DependentUpon>DsResumenGeneral.xsd</DependentUpon>
+    </Content>
+    <None Include="Reportes\Datasets\DsReportesCC\DsIPD\DsTGCxCuentaBancaria.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DsTGCxCuentaBancaria.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="Reportes\Datasets\DsReportesCC\DsIPD\DsTGCxCuentaBancaria.xss">
+      <DependentUpon>DsTGCxCuentaBancaria.xsd</DependentUpon>
+    </Content>
     <None Include="Reportes\Datasets\DsReportesCC\DsIPD\DsTGCxNomina.xsd">
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
@@ -2459,6 +2537,32 @@
     <Content Include="Reportes\Crystal\RevicionFoliacionNominaCheques.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>RevicionFoliacionNominaCheques.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Reportes\Crystal\ReportesCC\IPD\ReporteTGCxCuentaBancaria.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>ReporteTGCxCuentaBancaria.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Reportes\Crystal\ReportesCC\IPD\ReporteCuotasPatronalesRamoUnidad.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>ReporteCuotasPatronalesRamoUnidad.cs</LastGenOutput>
+    </Content>
+    <Content Include="Reportes\Crystal\ReportesCC\IPD\ReporteGeneral.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>ReporteGeneral.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Reportes\Crystal\ReportesCC\IPD\SubReporteTGCxCuentaBancaria.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>SubReporteTGCxCuentaBancaria.cs</LastGenOutput>
+    </Content>
+    <Content Include="Reportes\Crystal\ReportesCC\IPD\SubReporteTGCxNomina.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>SubReporteTGCxNomina.cs</LastGenOutput>
     </Content>
   </ItemGroup>
   <PropertyGroup>

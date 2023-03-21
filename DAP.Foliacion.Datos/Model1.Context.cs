@@ -46,10 +46,12 @@ namespace DAP.Foliacion.Datos
         public virtual DbSet<Tbl_Pagos> Tbl_Pagos { get; set; }
         public virtual DbSet<Tbl_Referencias_Cancelaciones> Tbl_Referencias_Cancelaciones { get; set; }
         public virtual DbSet<Tbl_SeguimientoHistoricoFormas_Pagos> Tbl_SeguimientoHistoricoFormas_Pagos { get; set; }
-        public virtual DbSet<Tbl_Solicitudes> Tbl_Solicitudes { get; set; }
         public virtual DbSet<Login_Modulos> Login_Modulos { get; set; }
         public virtual DbSet<Login_Permisos> Login_Permisos { get; set; }
         public virtual DbSet<Login_Roles> Login_Roles { get; set; }
         public virtual DbSet<Login_Usuarios> Login_Usuarios { get; set; }
+        public virtual DbSet<Cancelaciones_InterfazPercepcionesDeduccionesCompensados_IPDC> Cancelaciones_InterfazPercepcionesDeduccionesCompensados_IPDC { get; set; }
+        public virtual DbSet<Cancelaciones_InterfazPercepcionesDeducciones_IPD> Cancelaciones_InterfazPercepcionesDeducciones_IPD { get; set; }
+        public virtual DbSet<Tbl_Solicitudes> Tbl_Solicitudes { get; set; }
     }
 }

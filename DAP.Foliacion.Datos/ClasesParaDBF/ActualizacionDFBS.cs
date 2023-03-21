@@ -326,7 +326,9 @@ namespace DAP.Foliacion.Datos.ClasesParaDBF
                         }
                         else
                         {
-                            ExecutarQuery = "UPDATE [" + NombreArchivo + "] SET Num_che = '" + nuevoRegistro.NumChe + "', Banco_x = '" + nuevoRegistro.BancoX + "', Cuenta_x = '" + nuevoRegistro.CuentaX + "' , Observa = '" + nuevoRegistro.Observa + "' WHERE NUM = '" + nuevoRegistro.CadenaNumEmpleado + "' and LIQUIDO = " + nuevoRegistro.Liquido + " and DELEG = '" + nuevoRegistro.Delegacion + "' ";
+                            //SE QUITO EL REQUERIMIENTO A QUE PERTENESCA A UNA DELEGACION YA QUE CON EL NUMERO DE EMPLEADO DEBE SER SUFICIENTE Y LA DELEGACION NO ES TAN IMPORTANTE
+                            //ExecutarQuery = "UPDATE [" + NombreArchivo + "] SET Num_che = '" + nuevoRegistro.NumChe + "', Banco_x = '" + nuevoRegistro.BancoX + "', Cuenta_x = '" + nuevoRegistro.CuentaX + "' , Observa = '" + nuevoRegistro.Observa + "' WHERE NUM = '" + nuevoRegistro.CadenaNumEmpleado + "' and LIQUIDO = " + nuevoRegistro.Liquido + " and DELEG = '" + nuevoRegistro.Delegacion + "' ";
+                            ExecutarQuery = "UPDATE [" + NombreArchivo + "] SET Num_che = '" + nuevoRegistro.NumChe + "', Banco_x = '" + nuevoRegistro.BancoX + "', Cuenta_x = '" + nuevoRegistro.CuentaX + "' , Observa = '" + nuevoRegistro.Observa + "' WHERE NUM = '" + nuevoRegistro.CadenaNumEmpleado + "' and LIQUIDO = " + nuevoRegistro.Liquido + " ";
 
                         }
 
@@ -699,6 +701,39 @@ namespace DAP.Foliacion.Datos.ClasesParaDBF
         /************************************************************          Limpiar campos  de registro de la base EN DBF (funcion para recuperar un folio mal foliado y recrese al inventario )         *******************************************/
         /**********************************************************************************************************************************************************************************************************************************************/
         /**********************************************************************************************************************************************************************************************************************************************/
+        public static string LimpiarBaseDBF_IncumplimientoCalidadFoliacion(string RutaPath, string NombreArchivo, List<string> NumEmpleadosLimpiarAjuste)
+        {
+            string constr = "Provider=VFPOLEDB.1 ;Data Source=" + RutaPath + "";
+
+            int totalActualizado = 0;
+            try
+            {
+                using (OleDbConnection con = new OleDbConnection(constr))
+                {                    
+                    con.Open();
+
+                    foreach (string nuevoNum in NumEmpleadosLimpiarAjuste) 
+                    {
+                        string ExecutarQuery = ExecutarQuery = "UPDATE [" + NombreArchivo + "] SET NUM_CHE = '' , BANCO_X = '' , CUENTA_X = '' , OBSERVA = ''   WHERE  num = "+nuevoNum+" ";
+
+                        OleDbCommand cmd = new OleDbCommand(ExecutarQuery, con);
+                        totalActualizado = cmd.ExecuteNonQuery();
+                    }
+
+                    con.Close();
+                }
+            }
+            catch (System.Data.OleDb.OleDbException E)
+            {
+                return E.Message.ToString();
+            }
+            return Convert.ToString(totalActualizado);
+        }
+
+
+        /**************************************************************************************************************************************************************************************************************/
+        /************************************************************          Limpiar campos  de registro de la base EN DBF donde de llevo un ajuste mal        ******************************************************/
+        /**************************************************************************************************************************************************************************************************************/
         public static string LimpiarBaseDBF_IncumplimientoCalidadFoliacion(string RutaPath, string NombreArchivo, string condicionACumplir)
         {
             string constr = "Provider=VFPOLEDB.1 ;Data Source=" + RutaPath + "";
@@ -715,6 +750,39 @@ namespace DAP.Foliacion.Datos.ClasesParaDBF
                     OleDbCommand cmd = new OleDbCommand(ExecutarQuery, con);
                     totalActualizado = cmd.ExecuteNonQuery();
 
+                    con.Close();
+                }
+            }
+            catch (System.Data.OleDb.OleDbException E)
+            {
+                return E.Message.ToString();
+            }
+            return Convert.ToString(totalActualizado);
+        }
+
+
+
+        /**********************************************************************************************************************************************************************************************************************************************/
+        /************************************************************          Limpiar campos  de registro de la base EN DBF (funcion para recuperar un folio mal foliado y recrese al inventario )         *******************************************/
+        /**********************************************************************************************************************************************************************************************************************************************/
+        public static string LimpiarBaseDBFAJusteFoliacion(string RutaPath, string NombreArchivo, string condicionACumplir)
+        {
+            string constr = "Provider=VFPOLEDB.1 ;Data Source=" + RutaPath + "";
+            int totalActualizado = 0;
+
+            string[] arrayNumEmpleados = condicionACumplir.Split(',');
+            try
+            {
+                using (OleDbConnection con = new OleDbConnection(constr))
+                {
+                    con.Open();
+                    foreach (string nuevoNum in arrayNumEmpleados)
+                    {
+                        string ExecutarQuery = ExecutarQuery = "UPDATE [" + NombreArchivo + "] SET NUM_CHE = '' , BANCO_X = '' , CUENTA_X = '' , OBSERVA = ''   WHERE  num = '"+nuevoNum+"' ";
+
+                        OleDbCommand cmd = new OleDbCommand(ExecutarQuery, con);
+                        totalActualizado = cmd.ExecuteNonQuery();
+                    }
                     con.Close();
                 }
             }

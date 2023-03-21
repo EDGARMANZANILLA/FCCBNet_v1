@@ -861,24 +861,25 @@ function AjustarInhabilitados() {
                             //    LlenarTablaDetalleProblemasCheques(response.data.FoliosConIncidencias);
                             //    $('#DetalleProblemasConCHEQUES').modal('show');
 
-                            //} else if (response.data.resultServer == 200) {
+                            //} else
+                            if (response.data.resultServer == 200) {
 
-                            //    MensajeCorrectoSweet("Se ha foliado la nomina correctamente");
+                                MensajeCorrectoSweet("Se ha realizado el ajuste correctamente en los rangos correspondientes");
 
-                            //    document.getElementById("rangoFinal").innerText = response.data.resultadoFoliacion[0].UltimoFolioUsado;
-                            //    document.getElementById("registrosFoliados").innerText = response.data.resultadoFoliacion[0].RegistrosFoliados;
+                                document.getElementById("rangoFinal").innerText = response.data.resultadoFoliacion[0].UltimoFolioUsado;
+                               // document.getElementById("registrosFoliados").innerText = response.data.resultadoFoliacion[0].RegistrosFoliados;
 
 
-                            //    ActualizaTablaResumenFoliar();
-                            //    verResumenXDelegacionNominaCheque();
+                                ActualizaTablaResumenFoliar();
+                                verResumenXDelegacionNominaCheque();
 
-                            //} else if (response.data.resultServer == 500) {
+                            } else if (response.data.resultServer == 500) {
 
-                            //    MensajeErrorSweet(response.data.DBFAbierta[0].Detalle, response.data.DBFAbierta[0].Solucion);
+                                MensajeErrorSweet(response.data.DBFAbierta[0].Detalle, response.data.DBFAbierta[0].Solucion);
 
-                            //} else if (response.data.resultServer == 501) {
-                            //    MensajeInformacionSweet(response.data.FoliosSaltados);
-                            //}
+                            } else if (response.data.resultServer == 501) {
+                                MensajeInformacionSweet(response.data.FoliosSaltados);
+                            }
 
 
                             OcultarMensajeCargando();

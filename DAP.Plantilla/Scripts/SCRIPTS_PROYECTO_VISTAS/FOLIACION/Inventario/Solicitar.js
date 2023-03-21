@@ -7,9 +7,9 @@
 function DibujarTablaAjax() {
     $("#divTablaCrud").append(
 
-        "<table id='tablaAgregados'  class='table table-striped display table-bordered table-hover' cellspacing='0'  style='width:100%'>" +
+        "<table id='tablaAgregados'  class='table table-striped display table-bordered table-hover text-center' cellspacing='0'  style='width:100%'>" +
         " <caption class='text-uppercase'>Detalle general de formas de pago inhabilitadas </caption>"
-        + "<thead class='tabla'>" +
+        + "<thead class='tabla '>" +
 
         "<tr>" +
         "<th>Id </th>" +
@@ -18,6 +18,7 @@ function DibujarTablaAjax() {
         "<th>Cuenta</th>" +
         "<th>Cantidad</th>" +
         "<th>Folio Inicial</th>" +
+        "<th>Folio Muestra</th>" +
         "<th></th>" +
 
         "</tr>" +
@@ -60,6 +61,7 @@ function PintarConsultas(datos) {
             { "data": "cuentaBanco" },
             { "data": "cantidadFormas" },
             { "data": "fInicial" },
+            { "data": "FolioMuestra" },
             { "defaultContent": "<a class='editar btn btn-success' data-toggle='modal' data-target='#EditarSolicitud'  > <i class='fas fa-edit'></i></a> <a class='eliminar btn btn-danger'> <i class='fas fa-trash-alt'></i></a>" }
 
 
@@ -73,7 +75,7 @@ function PintarConsultas(datos) {
 function DibujarTablaSolicitudesCreadasAjax() {
     $("#TablaHistorica").append(
 
-        "<table id='tbHistoricoSolicitudesCreadas'  class='table table-striped display table-bordered table-hover' cellspacing='0'  style='width:100%'>" +
+        "<table id='tbHistoricoSolicitudesCreadas'  class='table table-striped display table-bordered table-hover text-center' cellspacing='0'  style='width:100%'>" +
         " <caption class='text-uppercase'>Historico de solicitudes creadas </caption>"
         + "<thead class='tabla text-center'>" +
         "<tr>" +
@@ -142,11 +144,12 @@ function DibujarTablaDetalleSolicitudAjax() {
         " <caption class='text-uppercase'>Detalle de la Solicitud </caption>"
         + "<thead class='tabla'>" +
         "<tr>" +
-        "<th>Numero Memorandum</th>" +
+        "<th>N. Memo</th>" +
         "<th>Banco</th>" +
         "<th>Cuenta</th>" +
         "<th>Cantidad  </th>" +
         "<th>Folio Inicial  </th>" +
+        "<th>Folio Muestra  </th>" +
         "</tr>" +
         "</thead>" +
 
@@ -187,7 +190,10 @@ function PintarConsultaDetalleSolicitud(datos) {
             { "data": "NumeroCuenta" },
             { "data": "Cantidad" },
             { "data": "FolioInicial" },
-        ]
+            { "data": "FolioMuestra" }
+        ],
+        "order": [[0, 'desc']]
+
 
     });
 };
@@ -226,12 +232,13 @@ let bancoSeleccionado = null;
 let cuentaBanco = null;
 let cantidadFormas = null;
 let fInicial = null;
+let FolioMuestra = null;
 let Id = 0;
 let texto;
 
 function Anexar_Solicitud() {
 
-
+    FolioMuestra = document.getElementById('FMuestra').value;
     cantidadFormas = document.getElementById('CantidadFormas').value;
     fInicial = document.getElementById("FInicial").value;
     bancoSeleccionado = document.getElementById("SeleccionBancoSolicitud");
@@ -248,23 +255,28 @@ function Anexar_Solicitud() {
 
     if (bancoSeleccionado.value != 0) {
         if (cantidadFormas != null && cantidadFormas != "") {
-            Id += 1;
-            let IdBanco = bancoSeleccionado.value;
 
-            listaBancosSolicitados.push({ Id, IdBanco, cadenaNombreBanco, cuentaBanco, cantidadFormas, fInicial });
+            if (FolioMuestra > 0)
+            {
+                Id += 1;
+                let IdBanco = bancoSeleccionado.value;
 
-            //   console.log(Id, cadenaSeparada[0], cadenaSeparada[1], cantidadFormas, fInicial);
+                listaBancosSolicitados.push({ Id, IdBanco, cadenaNombreBanco, cuentaBanco, cantidadFormas, fInicial, FolioMuestra });
 
+                $("#divTablaCrud").empty();
+                DibujarTablaAjax();
+                PintarConsultas(listaBancosSolicitados);
 
-            $("#divTablaCrud").empty();
-            DibujarTablaAjax();
-            PintarConsultas(listaBancosSolicitados);
+                //blanquea los campos de las opciones del banco a cargar 
+                document.getElementById("SeleccionBancoSolicitud").value = '';
+                document.getElementById('CantidadFormas').value = '';
+                document.getElementById("FInicial").value = '';
+                document.getElementById("FMuestra").value = '';
 
-             //blanquea los campos de las opciones del banco a cargar 
-            document.getElementById("SeleccionBancoSolicitud").value = '';
-             document.getElementById('CantidadFormas').value = '';
-             document.getElementById("FInicial").value = '';
-
+            } else
+            {
+                MensajeWarningSweet('Ingrese un folio de muestra del banco seleccionado');
+            }
 
         } else {
 
@@ -326,6 +338,7 @@ $(document).on("click", ".editar", function () {
     //$('#EditarSeleccionNombreBanco').change();
     document.getElementById("EditarCantidadFormas").value = listaBancosSolicitados[i].cantidadFormas;
     document.getElementById("EditarFInicial").value = listaBancosSolicitados[i].fInicial;
+    document.getElementById("EditarFMuestraEnvio").value = listaBancosSolicitados[i].FolioMuestra;
 
 
 
@@ -342,20 +355,12 @@ $(document).on("click", ".editar", function () {
             //se muestra el mensaje cargando para bloquear la pantalla
             MensajeCargando();
             /// Editar(datoAEditar.Id);
-
-
+            
             let indice = listaBancosSolicitados.findIndex(y => y.Id == datoAEditar.Id);
-            //  console.log("asdf");
-            //  console.log(indice);
-
-
-
-
+            
             let bancoEditado = document.getElementById("EditarSeleccionNombreBanco");
             let htmlObtendidoDeSeleccion = bancoEditado.options[bancoEditado.selectedIndex].innerText;
             let cadenaSeparadaSplit = htmlObtendidoDeSeleccion.split("||");
-
-
             let cadenaNombreBancoEditado = cadenaSeparadaSplit[0];
             let cuentaBancoEditado = cadenaSeparadaSplit[1];
 
@@ -365,6 +370,7 @@ $(document).on("click", ".editar", function () {
             //Obtiene los datos modificados del modal
             let cantidadFormasEdicion = document.getElementById('EditarCantidadFormas').value;
             let folioInicialEdicion = document.getElementById('EditarFInicial').value;
+            let EditarFMuestraEnvio = document.getElementById('EditarFMuestraEnvio').value;
 
             //se actualizan los varlores dentro del arreglo
 
@@ -373,6 +379,7 @@ $(document).on("click", ".editar", function () {
             listaBancosSolicitados[indice].cuentaBanco = cuentaBancoEditado;
             listaBancosSolicitados[indice].cantidadFormas = cantidadFormasEdicion;
             listaBancosSolicitados[indice].fInicial = folioInicialEdicion;
+            listaBancosSolicitados[indice].FolioMuestra = EditarFMuestraEnvio;
 
 
             //se vacia la tabla
@@ -426,8 +433,13 @@ function CrearSolicitudFormasPago() {
                 })
                     .then(function (response) {
 
+                        console.log(response);
+
                         //console.log("msg", msg);
-                        if (response.data == true) {
+                        if (response.data.RespuestaServidor === 200) {
+
+                            document.getElementById("DlReport").href = '/Inventario/GenerarReporteSolicitud?NumMemorandum='+response.data.Data;
+
                             $('#Descargar').modal('show');
 
                         } else {

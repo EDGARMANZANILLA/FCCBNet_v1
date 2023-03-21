@@ -59,6 +59,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cancelaciones_InterfazPercepcionesDeduccionesCompensados_IPDC.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Cancelaciones_InterfazPercepcionesDeducciones_IPD.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Cat_EstadoCancelados_Pagos.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -95,7 +101,11 @@
     <Compile Include="DTO\CrearReferencia_CanceladosDTO\ReporteCCancelados\CuentasBancariasAnualesDTO.cs" />
     <Compile Include="DTO\CrearReferencia_CanceladosDTO\ReporteCCancelados\IPDC\IPDCDTO.cs" />
     <Compile Include="DTO\CrearReferencia_CanceladosDTO\ReporteCCancelados\IPD\DescripcionPPDD_DTO.cs" />
+    <Compile Include="DTO\CrearReferencia_CanceladosDTO\ReporteCCancelados\IPD\RegistrosCuotasPatronalesDTO.cs" />
     <Compile Include="DTO\CrearReferencia_CanceladosDTO\ReporteCCancelados\IPD\RegistrosTGCxNominaDTO.cs" />
+    <Compile Include="DTO\CrearReferencia_CanceladosDTO\ReporteCCancelados\IPD\RegistrosTGCxCuentaBancariaDTO.cs" />
+    <Compile Include="DTO\CrearReferencia_CanceladosDTO\ReporteCCancelados\IPD\ResumenGeneralXNominaDTO.cs" />
+    <Compile Include="DTO\CrearReferencia_CanceladosDTO\ReporteCCancelados\IPD\TotalesGeneralesPorConceptoCuentaBancariaDTO.cs" />
     <Compile Include="DTO\CrearReferencia_CanceladosDTO\ReporteCCancelados\IPD\TotalesGeneralesPorConceptoDTO.cs" />
     <Compile Include="DTO\CrearReferencia_CanceladosDTO\ReporteCCancelados\NominasAnualesDTO.cs" />
     <Compile Include="DTO\CrearReferencia_CanceladosDTO\ReporteCCancelados\PensionAlimenticiaDTO.cs" />

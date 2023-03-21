@@ -513,6 +513,7 @@ namespace DAP.Foliacion.Negocios
 
                         //Actualiza TBL_ReferenciaCancelados
                         registroFereciaEncontrado.FormasPagoDentroReferencia += 1;
+                        registroFereciaEncontrado.FechaActualizacion_AgregoOQuitoFormas = DateTime.Now;
 
 
                         //Se agrego a una referencia con exito con exito
@@ -526,7 +527,7 @@ namespace DAP.Foliacion.Negocios
                         /*************** Agrega un registro al tracking, Actualiza tbl_pago con la nueva referencia y resta 1 a la ferencia donde estaba y suma 1 a donde va estar ahora **************/
                         /******************************************************************************************************************************************************************************/
 
-                        //hace cambios de referencia
+                        //REALIZA UN CAMBIO DE UNA REFERENCIA HACIA OTRA REFERENCIA
                         // Se valida que el idfererenciaCancelado del pago no sea el mismo al que se quiera voler agregar y que la referencia exista
 
                         //Obtener la referencia de donde se encuentra cargado actualmente el pago para descontar esa forma de pago 
@@ -550,9 +551,12 @@ namespace DAP.Foliacion.Negocios
                         //cambia el IdreferenciaCancelado al nuevo id
                         registroPagoEncontrado.IdTbl_Referencias_Cancelaciones = IdReferenciaCancelado;
 
-                        //resta 1 a la ferencia donde estaba y suma 1 a donde va estar ahora
+                        //RESTA 1 FORMA DE PAGO A LA REFERENCIA ACTUAL (DONDE ESTABA) Y SE LA PASA A LA NUEVA REFERENCIA DONDE SE ESTA CARGANDO (suma 1 a donde va estar ahora)
                         registroFerecia_Original.FormasPagoDentroReferencia -= 1;
+                        registroFerecia_Original.FechaActualizacion_AgregoOQuitoFormas = DateTime.Now;
+
                         registroFereciaEncontrado.FormasPagoDentroReferencia += 1;
+                        registroFereciaEncontrado.FechaActualizacion_AgregoOQuitoFormas = DateTime.Now;
 
                         //Se Cambio de referencia con Exito
                         numeroError = 7;
@@ -645,6 +649,7 @@ namespace DAP.Foliacion.Negocios
 
                         //Actualiza TBL_ReferenciaCancelados descontando el pago que se revoco
                         registroFereciaEncontrado_Original.FormasPagoDentroReferencia -= 1;
+                        registroFereciaEncontrado_Original.FechaActualizacion_AgregoOQuitoFormas = DateTime.Now;
 
 
 

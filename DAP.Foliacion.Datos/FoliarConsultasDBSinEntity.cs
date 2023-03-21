@@ -567,9 +567,7 @@ namespace DAP.Foliacion.Datos
             catch (Exception E)
             {
                 var transaccion = new Transaccion();
-
                 var repositorio = new Repositorio<LOG_EXCEPCIONES>(transaccion);
-
                 LOG_EXCEPCIONES NuevaExcepcion = new LOG_EXCEPCIONES();
 
                 NuevaExcepcion.Clase = "FoliarConsultasDBSinEntity";
@@ -582,7 +580,6 @@ namespace DAP.Foliacion.Datos
                 repositorio.Agregar(NuevaExcepcion);
 
             }
-
             return resumenNomina;
         }
 
@@ -591,11 +588,11 @@ namespace DAP.Foliacion.Datos
 
 
 
-        /**********************************************************************************************************************************************************************************/
-        /**********************************************************************************************************************************************************************************/
-        /**************************************************     METODOS PARA FOLIAR PAGOMATICOS DE UNA NOMINA EN ESPECIFICO*************************************************************************/
-        /**********************************************************************************************************************************************************************************/
-        /**********************************************************************************************************************************************************************************/
+        /*****************************************************************************************************************************************************************************************/
+        /*****************************************************************************************************************************************************************************************/
+        /**************************************************     METODOS PARA FOLIAR PAGOMATICOS DE UNA NOMINA EN ESPECIFICO***********************************************************************/
+        /*****************************************************************************************************************************************************************************************/
+        /*****************************************************************************************************************************************************************************************/
 
         public static List<ResumenPersonalAFoliarDTO> ObtenerDatosPersonalesNomina_FoliacionPAGOMATICO(string ExecutarQuery, int complementoQuincena, bool EsPena)
         {
@@ -828,7 +825,9 @@ namespace DAP.Foliacion.Datos
                         }
                         else
                         {
-                            queryActualizaInterfacesSQL = "UPDATE interfaces" + visitaAnioInterface + ".dbo." + datosCompletosNomina.An + " SET Num_che = '" + guardaNuevaPersona.NumChe + "', Banco_x = '" + guardaNuevaPersona.BancoX + "', Cuenta_x = '" + guardaNuevaPersona.CuentaX + "', Observa = '" + guardaNuevaPersona.Observa + "' WHERE NUM = '" + guardaNuevaPersona.CadenaNumEmpleado + "' and LIQUIDO = '" + guardaNuevaPersona.Liquido + "' and NOMBRE = '" + guardaNuevaPersona.Nombre + "' and DELEG = '" + guardaNuevaPersona.Delegacion + "' ";
+                            //SE QUITO EL REQUERIMIENTO A QUE PERTENESCA A UNA DELEGACION YA QUE CON EL NUMERO DE EMPLEADO DEBE SER SUFICIENTE Y LA DELEGACION NO ES TAN IMPORTANTE
+                            //queryActualizaInterfacesSQL = "UPDATE interfaces" + visitaAnioInterface + ".dbo." + datosCompletosNomina.An + " SET Num_che = '" + guardaNuevaPersona.NumChe + "', Banco_x = '" + guardaNuevaPersona.BancoX + "', Cuenta_x = '" + guardaNuevaPersona.CuentaX + "', Observa = '" + guardaNuevaPersona.Observa + "' WHERE NUM = '" + guardaNuevaPersona.CadenaNumEmpleado + "' and LIQUIDO = '" + guardaNuevaPersona.Liquido + "' and NOMBRE = '" + guardaNuevaPersona.Nombre + "' and DELEG = '" + guardaNuevaPersona.Delegacion + "' ";
+                            queryActualizaInterfacesSQL = "UPDATE interfaces" + visitaAnioInterface + ".dbo." + datosCompletosNomina.An + " SET Num_che = '" + guardaNuevaPersona.NumChe + "', Banco_x = '" + guardaNuevaPersona.BancoX + "', Cuenta_x = '" + guardaNuevaPersona.CuentaX + "', Observa = '" + guardaNuevaPersona.Observa + "' WHERE NUM = '" + guardaNuevaPersona.CadenaNumEmpleado + "' and LIQUIDO = '" + guardaNuevaPersona.Liquido + "' and NOMBRE = '" + guardaNuevaPersona.Nombre + "'  ";
                         }
 
                         // Must assign both transaction object and connection
@@ -1020,7 +1019,7 @@ namespace DAP.Foliacion.Datos
         /****************************************************************************************************************************************************************************************************************************/
         public static int ActualizarTblPagos_DespuesDeFoliacion(List<ActualizarFoliacionPagomaticoTblPagoDTO> ActualizarPersonal)
         {
-            int registrosBorrados = 0;
+            int registrosActualizados = 0;
             try
             {
                 string nombreDB = ObtenerConexionesDB.ObtenerNombreDBValidacionFoliosDeploy();
@@ -1036,7 +1035,7 @@ namespace DAP.Foliacion.Datos
 
                         if (registroActualizadao == 1)
                         {
-                            registrosBorrados += registroActualizadao;
+                            registrosActualizados += registroActualizadao;
                         }
                         else 
                         {
@@ -1068,7 +1067,7 @@ namespace DAP.Foliacion.Datos
             }
 
 
-            return registrosBorrados;
+            return registrosActualizados;
         }
 
 
@@ -1643,6 +1642,48 @@ namespace DAP.Foliacion.Datos
         #endregion
 
 
+
+        #region LIMPIA LOS CAMPOS DE LAS PERSONAS A LAS QUE SE DEBERIA AJUSTAR SU FOLIO POR ALGUN DETALLE DEL PROCESO DE FOLIACION
+
+        public static int LimpiarANSql_IncumplimientoAjuste(List<ResumenPersonalAFoliarDTO> resumenPersonalAjustar, string VisitaAnioInterfas , string AN)
+        {
+            int registrosBorrados = 0;
+            try
+            {
+               
+                using (System.Data.SqlClient.SqlConnection connection = new System.Data.SqlClient.SqlConnection(ObtenerConexionesDB.obtenerCadenaConexionDeploy()))
+                {
+                    connection.Open();
+
+                    foreach (ResumenPersonalAFoliarDTO nuevaPersona in resumenPersonalAjustar) 
+                    {
+                        string queryActualizaInterfacesSQL = "UPDATE interfaces" + VisitaAnioInterfas + ".dbo." + AN + " SET Num_che = '', Banco_x = '', Cuenta_x = '', Observa = '' where num = '"+ nuevaPersona.NumEmpleado+"' and liquido = "+nuevaPersona.Liquido+" ";
+
+                        System.Data.SqlClient.SqlCommand command = new System.Data.SqlClient.SqlCommand(queryActualizaInterfacesSQL, connection);
+                        registrosBorrados += command.ExecuteNonQuery();
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception E)
+            {
+                var transaccion = new Transaccion();
+                var repositorio = new Repositorio<LOG_EXCEPCIONES>(transaccion);
+                
+                LOG_EXCEPCIONES NuevaExcepcion = new LOG_EXCEPCIONES();
+                NuevaExcepcion.Clase = "FoliarConsultasDBSinEntity";
+                NuevaExcepcion.Metodo = "LimpiarANSql_IncumplimientoAjuste";
+                NuevaExcepcion.Usuario = null;
+                NuevaExcepcion.Excepcion = E.Message;
+                NuevaExcepcion.Comentario = "No se Borraron algunos datos al realizar un ajuste ";
+                NuevaExcepcion.Fecha = DateTime.Now;
+                repositorio.Agregar(NuevaExcepcion);
+            }
+            return registrosBorrados;
+        }
+
+
+        #endregion
 
     }
 }

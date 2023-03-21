@@ -268,9 +268,10 @@
                     <span> VER REPORTES: </span>
                     <br />
                     <br />
-                    <button type="button" class="btn btn-success" onclick="AbrirReporteInicial('@Url.Content("~/CrearReferencia_Cancelados/")')"> Reportes INICIALES </button>
-                    <button type="button" class="btn btn-success" onclick="AbrirReporteIPD('@Url.Content("~/CrearReferencia_Cancelados/")')"> IPD </button>
-                    <button type="button" class="btn btn-success" onclick="AbrirReporteIPDCOMPENSADO('@Url.Content("~/CrearReferencia_Cancelados/")')"> IPD_Compensado </button>
+                    <button type="button" class="btn btn-success" title="Descarga de reportes" onclick="AbrirReporteInicial('@Url.Content("~/CrearReferencia_Cancelados/")')"> Reportes INICIALES </button>
+                    <button type="button" class="btn btn-success" title="Descarga de reportes y dbf de Interfaz de percepciones y deducciones" onclick="AbrirReporteIPD('@Url.Content("~/CrearReferencia_Cancelados/")')"> IPD </button>
+                    <button type="button" class="btn btn-success" title="Descarga de reportes y acumulado en dbf de Interfaz de percepciones y deducciones compensadas" onclick="AbrirReporteIPDCOMPENSADO('@Url.Content("~/CrearReferencia_Cancelados/")')"> IPD_Compensado </button>
+                    <button type="button" class="btn btn-success" title="Interfaz afectacion presupuestal" onclick="AbrirInterfazAfectacionPresupuestal('@Url.Content("~/CrearReferencia_Cancelados/")')"> Interfaz Afectacion Presupuestal </button>
 
                     @*<button type="button" class="btn btn-success" onclick="exportarIPD('@Url.Content("~/CrearReferencia_Cancelados/DescargarIPD")')" ><i class="fas fa-cloud-download-alt" ></i>  IPD  (.dbf)</button>
                         <button id="btnIPDCompensado" type="button" class="btn btn-success" ><i class="fas fa-cloud-download-alt"></i>  IPD Compensado  (.dbf)</button>*@
@@ -422,15 +423,12 @@
 
                 <div class="row card-deck">
 
-
-
-
-                    <div class="col-12 col-md-6 text-center">
+                    <div class="col col-md-6 text-center margen32px">
                         <div class="card" style="box-shadow: 0 4px 8px 0 rgba(118, 223, 20, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
                             <div class="card-body text-success">
-                                <h5 class="card-title">Tot. Gral de Nomina por Conceptos</h5>
-                                <a id="TotalesIPDPorNomina" class="btn btn-success" onclick="EstamosEnDesarrollo()">
-                                    TGDNXC  <br />
+                                <h5 class="card-title">Tot. Gral de Conceptos por Nomina </h5>
+                                <a id="TotalesIPDPorNomina" class="btn btn-success" title="Descarga un zip que se debe de comparar con INICIAL => NOMINAS Y el pdf de resumen en el campo percepciones" onclick="exportarTotalesGeneralesxConceptoNomina('@Url.Content("~/CrearReferencia_Cancelados/DescargarTGCxNomina_2023")')" @*onclick="EstamosEnDesarrollo()"*@>
+                                    TGCxN  <br />
                                     <i class="fas fa-cloud-download-alt"></i>
                                 </a>
 
@@ -438,12 +436,12 @@
                         </div>
                     </div>
 
-                    <div class="col-12 col-md-6 text-center">
+                    <div class="col col-md-6 text-center margen32px">
                         <div class="card" style="box-shadow: 0 4px 8px 0 rgba(118, 223, 20, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
                             <div class="card-body text-success">
                                 <h5 class="card-title">Tot. Gral de Banco por Conceptos </h5>
-                                <a id="TotalesIPDPorBanco" class="btn btn-success" onclick="EstamosEnDesarrollo()">
-                                    TGDBXB  <br />
+                                <a id="TotalesIPDPorBanco" class="btn btn-success" title="Descarga un zip y se debe comparar con  el reporte INICIAL => CUENTAS BANCARIAS" onclick="exportarTotalesGeneralesxConceptoCuentaBancaria('@Url.Content("~/CrearReferencia_Cancelados/DescargarTGCxCuentaBancaria_2023")')">
+                                    TGCxCB  <br />
                                     <i class="fas fa-cloud-download-alt"></i>
                                 </a>
                             </div>
@@ -454,25 +452,40 @@
 
                 </div>
 
-                <br />
-                <!--<div class="row">-->
-                <!-- card Principal-->
-                <!--<div class="col-12 offset-md-2 col-md-8  text-center">
-                        <div class="card" style="box-shadow: 0 4px 8px 0 rgba(20, 108, 223, 0.700), 0 6px 10px 6px rgba(67, 85, 201, 0.21);">
+                <div class="row card-deck">
+
+          
+                    <div class="col col-md-6 text-center margen32px">
+                        <div class="card" style="box-shadow: 0 4px 8px 0 rgba(118, 223, 20, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
                             <div class="card-body text-success">
-                                <h5 class="card-title">Descargar IPD para afectacion presupuestal</h5>
-                                <a id="IPD" class="btn btn-success">
-                                    ... IPD ...   <br />
+                                <h5 class="card-title">Resumen General PP CP</h5>
+                                <a class="btn btn-success" title="Descarga el resumen de Percepciones y Coutas patronales por añio " onclick="ExportarResumenGeneralChequesCancelados('@Url.Content("~/CrearReferencia_Cancelados/DescargarReporte_ResumenGeneralPercepcionesCuotasPatronales_XIdReferencia_2023")')">
+                                    Resumen  <br />
                                     <i class="fas fa-cloud-download-alt"></i>
                                 </a>
                             </div>
                         </div>
                     </div>
 
+                    <div class="col col-md-6 text-center margen32px">
+                        <div class="card" style="box-shadow: 0 4px 8px 0 rgba(118, 223, 20, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+                            <div class="card-body text-success">
+                                <h5 class="card-title">Cuotas Patronales </h5>
+                                <a class="btn btn-success" title="Descarga los reportes de cuotas patronales por añio y nomina" onclick="ExportarCuotasPatronalesAnualXNomina('@Url.Content("~/CrearReferencia_Cancelados/DescargarCuotasPatronalesxNomina_2023")')">
+                                    Resumen  <br />
+                                    <i class="fas fa-cloud-download-alt"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
 
-                </div>-->
+                </div>
 
-                <div class="row">
+
+                <br />
+
+
+                <div class="row margen32px">
 
                     <!-- card Principal-->
                     <div class="col-12 offset-md-2 col-md-8  text-center">
@@ -516,50 +529,12 @@
 
 
 
+                <div class="row margen32px">
 
-
-
-                <div class="row row-cols-1 row-cols-md-2">
-                    <div class="col mb-4 text-center">
-                        <div class="card" style="box-shadow: 0 4px 8px 0 rgba(118, 223, 20, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
-                            <div class="card-body text-success">
-                                <h5 class="card-title"> Descargar Resumen General de Montos por Nomina a Cancelar </h5>
-                                <button class="btn btn-success" onclick="EstamosEnDesarrollo()">
-                                    Resumen Montos   <br />
-                                    <i class="fas fa-cloud-download-alt"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col mb-4 text-center">
-                        <div class="card" style="box-shadow: 0 4px 8px 0 rgba(118, 223, 20, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
-                            <div class="card-body text-success">
-                                <h5 class="card-title"> Interface de Coutas Patronales por Nomina </h5>
-                                <button class="btn btn-success" onclick="EstamosEnDesarrollo()">
-                                    ICPXN   <br />
-                                    <i class="fas fa-cloud-download-alt"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    @*<div class="col mb-4 text-center">
-                            <div class="card" style="box-shadow: 0 4px 8px 0 rgba(20, 108, 223, 0.700), 0 6px 10px 6px rgba(67, 85, 201, 0.21);">
-                                <div class="card-body text-success">
-                                    <h5 class="card-title"> Descargar IPD_Compensados para afectacion Presupuestal </h5>
-                                    <a id="DescargarIPDCxAnio" class="btn btn-success" >
-                                        ... IPD_C ...  <br />
-                                        <i class="fas fa-cloud-download-alt"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>*@
-
-                    <div class="col mb-4 text-center">
+                    <div class="col-12 offset-md-2 col-md-8  text-center">
                         <div class="card" style="box-shadow: 0 4px 8px 0 rgba(20, 108, 223, 0.700), 0 6px 10px 6px rgba(67, 85, 201, 0.21);">
                             <div class="card-body text-success">
-                                <h5 class="card-title"> Descargar IPD_Compensados para afectacion Presupuestal </h5>
+                                <h5 class="card-title"> Descargar IPD_Compensados </h5>
                                 <a id="DescargarIPDCxAnio" class="btn btn-success" onclick="exportarIPDCompensado('@Url.Content("~/CrearReferencia_Cancelados/DescargarIPDCompensadoPorAnio_AXIOS")')">
                                     ... IPD_C ...  <br />
                                     <i class="fas fa-cloud-download-alt"></i>
@@ -568,25 +543,7 @@
                         </div>
                     </div>
 
-
-
-
-
-                    @*<div class="col mb-4 text-center">
-                            <div class="card" style="box-shadow: 0 4px 8px 0 rgba(118, 223, 20, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
-                                <div class="card-body text-success">
-                                    <h5 class="card-title"> Descargar Reporte de Pension Alimenticia General </h5>
-                                    <button class="btn btn-success">
-                                        ... IPD_C ... <br />
-                                        <i class="fas fa-cloud-download-alt"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>*@
                 </div>
-
-
-
 
 
 

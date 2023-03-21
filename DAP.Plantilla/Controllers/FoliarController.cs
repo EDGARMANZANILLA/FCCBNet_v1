@@ -216,7 +216,7 @@ namespace DAP.Plantilla.Controllers
             {
 
                 List<FoliosAFoliarInventario> chequesVerificadosFoliar = FoliarNegocios.verificarDisponibilidadFoliosEnInventarioDetalle(NuevaFoliacionNomina.IdBancoPagador, NuevaFoliacionNomina.RangoInicial, totalDeRegistrosAFoliar, NuevaFoliacionNomina.Inhabilitado, NuevaFoliacionNomina.RangoInhabilitadoInicial, NuevaFoliacionNomina.RangoInhabilitadoFinal).ToList();
-
+                
                 List<FoliosAFoliarInventario> foliosNoDisponibles = chequesVerificadosFoliar.Where(y => y.Incidencia != "").ToList();
 
                 if (foliosNoDisponibles.Count() > 0)
@@ -320,120 +320,39 @@ namespace DAP.Plantilla.Controllers
                 AjustarDelegacionNomina.IdGrupoFoliacion = NuevaAjusteDelegacionNomina.IdGrupoFoliacion;
                 AjustarDelegacionNomina.AnioInterfaz = anioInterface;
 
-                FoliarNegocios.RealizarAjusteFoliacion(AjustarDelegacionNomina);
-            }
+
+                List<AlertasAlFolearPagomaticosDTO> resultadoFoliacion = await FoliarNegocios.RealizarAjusteFoliacion(AjustarDelegacionNomina);
+                var DbfAbierta = resultadoFoliacion.Where(x => x.IdAtencion == 4).Select(x => new { x.Id_Nom, x.Detalle, x.Solucion }).ToList();
 
 
-
-
-            /***    SE LOCALIZAN EL NUMERO TOTAL DE CHEQUES QUE SE VAN A UTILIZAR    ***/
-            int totalDeRegistrosAFoliar = 0;
-            if (NuevaAjusteDelegacionNomina.IdGrupoFoliacion == 0)
-            {
-                if (NuevaAjusteDelegacionNomina.Confianza > 0 && NuevaAjusteDelegacionNomina.Sindicato == 0)
+                if (DbfAbierta.Count() > 0)
                 {
-                    //son de confianza
-                    totalDeRegistrosAFoliar = NuevaAjusteDelegacionNomina.Confianza;
+                    return Json(new
+                    {
+                        resultServer = 500,
+                        DBFAbierta = DbfAbierta
+                    });
                 }
-                else if (NuevaAjusteDelegacionNomina.Confianza == 0 && NuevaAjusteDelegacionNomina.Sindicato > 0)
-                {
-                    //Son sindicalizados
-                    totalDeRegistrosAFoliar = NuevaAjusteDelegacionNomina.Sindicato;
-                }
-            }
-            else if (NuevaAjusteDelegacionNomina.IdGrupoFoliacion == 1)
-            {
-                totalDeRegistrosAFoliar = NuevaAjusteDelegacionNomina.Otros;
-            }
 
-
-            /***    SE RECUPERAN LOS FOLIOS APARTIR DEL FOLIO INICIAL DE INHABILITACION MENOS 1 (-1)    ***/
-
-
-
-            bool hayFoliosConsecutivosSinUsar = FoliarNegocios.VerificarFoliosConsecutivos(NuevaAjusteDelegacionNomina.IdBancoPagador, NuevaAjusteDelegacionNomina.RangoInicial);
-
-            if (hayFoliosConsecutivosSinUsar)
-            {
-                //Informa al usuario que exiten cheques consecutivos que se saltaran durante la foliacion  
-                int rangoSaltadoInicial = NuevaAjusteDelegacionNomina.RangoInicial - 6;
-                int rangoSaltadoFinal = NuevaAjusteDelegacionNomina.RangoInicial;
                 return Json(new
                 {
-                    resultServer = 501,
-                    FoliosSaltados = "Esta intentanto foliar con un salto de folios consecutivos sin usar aun,  va del rango inicial " + rangoSaltadoInicial + " al rango final " + rangoSaltadoFinal + ". Se aconseja no saltar folios sin usar."
+                    resultServer = 200,
+                    resultadoFoliacion = resultadoFoliacion
                 });
             }
-            else
-            {
 
-                List<FoliosAFoliarInventario> chequesVerificadosFoliar = FoliarNegocios.verificarDisponibilidadFoliosEnInventarioDetalle(NuevaAjusteDelegacionNomina.IdBancoPagador, NuevaAjusteDelegacionNomina.RangoInicial, totalDeRegistrosAFoliar, NuevaAjusteDelegacionNomina.Inhabilitado, NuevaAjusteDelegacionNomina.RangoInhabilitadoInicial, NuevaAjusteDelegacionNomina.RangoInhabilitadoFinal).ToList();
-
-                List<FoliosAFoliarInventario> foliosNoDisponibles = chequesVerificadosFoliar.Where(y => y.Incidencia != "").ToList();
-
-                if (foliosNoDisponibles.Count() > 0)
+                List<AlertasAlFolearPagomaticosDTO> Alertas = new List<AlertasAlFolearPagomaticosDTO>();
+                AlertasAlFolearPagomaticosDTO nuevaAlerta = new AlertasAlFolearPagomaticosDTO();
+                nuevaAlerta.Id_Nom =  NuevaAjusteDelegacionNomina.IdNomina.ToString();
+                nuevaAlerta.Detalle = "Inicie foliando la delegacion y luego proceda a realizar el ajuste de las inhabilitaciones";
+                nuevaAlerta.Solucion = "LA DELEGACION AUN NO SE ENCUENTRA FOLIADA TODAVIA, POR ESO NO SE PUEDE AJUSTAR AUN. ";
+            Alertas.Add(nuevaAlerta);
+                return Json(new
                 {
-                    return Json(new
-                    {
-                        resultServer = 0,
-                        FoliosConIncidencias = foliosNoDisponibles
-                    });
-
-                }
-                else
-                {
-
-                    FoliarFormasPagoDTO AjustarDelegacionNomina = new FoliarFormasPagoDTO();
-
-                    AjustarDelegacionNomina.IdNomina = NuevaAjusteDelegacionNomina.IdNomina;
-                    AjustarDelegacionNomina.IdDelegacion = NuevaAjusteDelegacionNomina.IdDelegacion;
-                    AjustarDelegacionNomina.Sindicato = NuevaAjusteDelegacionNomina.Sindicato;
-                    AjustarDelegacionNomina.Confianza = NuevaAjusteDelegacionNomina.Confianza;
-                    AjustarDelegacionNomina.Otros = NuevaAjusteDelegacionNomina.Otros;
-                    AjustarDelegacionNomina.IdBancoPagador = NuevaAjusteDelegacionNomina.IdBancoPagador;
-                    AjustarDelegacionNomina.RangoInicial = NuevaAjusteDelegacionNomina.RangoInicial;
-
-                    //
-                    AjustarDelegacionNomina.Inhabilitado = NuevaAjusteDelegacionNomina.Inhabilitado;
-                    AjustarDelegacionNomina.RangoInhabilitadoInicial = NuevaAjusteDelegacionNomina.RangoInhabilitadoInicial;
-                    AjustarDelegacionNomina.RangoInhabilitadoFinal = NuevaAjusteDelegacionNomina.RangoInhabilitadoFinal;
-
-
-                    //propiedad usada para saber a que grupo de nomina corresponde
-                    // 1 = le pertenece a las nominas general y descentralizada
-                    // 2 = le pertenece a cualquier otra nomina que no se folea por sindicato y confianza
-                    AjustarDelegacionNomina.IdGrupoFoliacion = NuevaAjusteDelegacionNomina.IdGrupoFoliacion;
-                    AjustarDelegacionNomina.AnioInterfaz = FoliarNegocios.ObtenerAnioDeQuincena(NuevaAjusteDelegacionNomina.Quincena);
-
-                    string Observa = "CHEQUE";
-                    //List<AlertasAlFolearPagomaticosDTO> resultadoFoliacion = await FoliarNegocios.FoliarChequesPorNomina(foliarNomina, Observa, chequesVerificadosFoliar);
-                    List<AlertasAlFolearPagomaticosDTO> resultadoFoliacion = await FoliarNegocios.FoliarChequesPorNomina_TIEMPO_DE_RESPUESTA_MEJORADO(AjustarDelegacionNomina, Observa, chequesVerificadosFoliar);
-
-                    var DbfAbierta = resultadoFoliacion.Where(x => x.IdAtencion == 4).Select(x => new { x.Id_Nom, x.Detalle, x.Solucion }).ToList();
-
-
-                    if (DbfAbierta.Count() > 0)
-                    {
-                        return Json(new
-                        {
-                            resultServer = 500,
-                            DBFAbierta = DbfAbierta
-                        });
-                    }
-
-
-                    return Json(new
-                    {
-                        resultServer = 200,
-                        resultadoFoliacion = resultadoFoliacion
-                    });
-
-                }
-
-
-
-            }
-
+                    resultServer = 500,
+                    DBFAbierta = Alertas
+                });
+          
 
         }
 

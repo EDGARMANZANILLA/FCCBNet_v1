@@ -89,6 +89,14 @@
             <label class="col-12 text-center offset-md-0 col-md-4 text-md-right">A partir del folio:</label>
             <input id="FInicial" class="offset-1 col-10 offset-md-0 col-md-6" placeholder="Ingrese inicio del folio a solicitar" type="number" pattern=" 0+\.[0-9]*[1-9][0-9]*$" name="itemConsumption" onkeypress="return event.charCode >= 48 && event.charCode <= 57 " />
         </div>
+        <br />
+
+        <!--- Input para el folio de muestra -->
+        <div class="row ">
+            <label class="col-12 text-center offset-md-0 col-md-4 text-md-right">Folio de muestra:</label>
+            <input id="FMuestra" class="offset-1 col-10 offset-md-0 col-md-6" placeholder="Ingrese el folio que se enviara como muestra" type="number" pattern=" 0+\.[0-9]*[1-9][0-9]*$" name="itemConsumption" onkeypress="return event.charCode >= 48 && event.charCode <= 57 " />
+        </div>
+
 
         <br />
         <button type="button" class="col-12 text-center offset-md-3 col-md-6 btn btn-outline-success" onclick="Anexar_Solicitud()"> Anexar a solicitud </button>
@@ -238,6 +246,7 @@
 
             <div class="modal-body">
 
+                <!--    ID DE SELECCIONADA PARA LA EDICION  -->
                 <div class="row">
                     <label class=" col-12 text-center offset-md-1 col-md-3 text-md-right ">Id:</label>
                     <label id="IdEdicion" class=" offset-1 col-10 text-center offset-md-0 col-md-6 h5" title="Id de solicutud a modificar"></label>
@@ -245,7 +254,7 @@
                 </div>
 
 
-                <!--Seleccionar banco-->
+                <!--    BANCO A SELECCIONAR PARA LA EDICION -->
                 <div class="row">
 
                     <div class=" col-12 text-center offset-md-1 col-md-3 text-md-right">
@@ -256,7 +265,7 @@
                         <div class="form-group">
                             <select class="form-control" id="EditarSeleccionNombreBanco" name="EditSeleccionBanco" required>
                                 <option value="" selected>Selecciona un banco...</option>
-                                @foreach (var banco in Model)
+                                @foreach (var banco in ViewBag.BancosConChequera)
                                 {
 
 
@@ -275,21 +284,26 @@
 
 
 
-                <!--Input para la cantidad de formas que desea solicitar el usuario-->
+                <!--    INPUT PARA LA CANTIDAD DE FORMAS QUE DESEA SOLICITAR EL USUARIO -->
                 <div class="row">
                     <label class=" col-12 text-center offset-md-1 col-md-3 text-md-right">Cantidad:</label>
                     <input id="EditarCantidadFormas" class="offset-1 col-10 offset-md-0 col-md-6" placeholder="Ingrese C. de formas a solicitar" type="number" pattern=" 0+\.[0-9]*[1-9][0-9]*$" name="itemConsumption" onkeypress="" required />
                 </div>
                 <br />
 
-                <!--- Input para el folio inicial -->
+                <!---   INPUT PARA EL FOLIO INICIAL  -->
                 <div class="row ">
                     <label class="col-12 text-center offset-md-0 col-md-4 text-md-right">A partir del folio:</label>
                     <input id="EditarFInicial" class="offset-1 col-10 offset-md-0 col-md-6" placeholder="Ingrese inicio del folio a solicitar" type="text" pattern="[A-Za-z0-9]" onkeypress="" required />
                 </div>
+                <br />
 
 
-
+                <!---   INPUT PARA EL FOLIO DE MUESTRA QUE EN BANCO ENVIA MAS FORMAS DE ESE TIPO     -->
+                <div class="row ">
+                    <label class="col-12 text-center offset-md-0 col-md-4 text-md-right">Folio de muestra a enviar:</label>
+                    <input id="EditarFMuestraEnvio" class="offset-1 col-10 offset-md-0 col-md-6" placeholder="Ingrese un folio de muestra que se enviara al banco, Asegura de inhabilitar el folio" type="text" pattern="[A-Za-z0-9]" onkeypress="" required />
+                </div>
                 <br />
 
             </div>
@@ -326,7 +340,7 @@
 
 
             <div class="modal-body text-center">
-                <a class="btn btn-success btn-lg text-center" id="DlReport" href="@Url.Action("GenerarReporteSolicitud", "Inventario", new { NumMemorandum = "0" })">Descargar solicitud creada</a>
+                <a  class="btn btn-success btn-lg text-center" id="DlReport" href="@Url.Action("GenerarReporteSolicitud", "Inventario", new { NumMemorandum = "0" })">Descargar solicitud creada</a>
 
             </div>
 

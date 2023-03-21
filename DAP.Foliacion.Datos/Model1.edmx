@@ -5,6 +5,66 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="FoliacionInterfacesCargadasPruebaDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Cancelaciones_InterfazPercepcionesDeducciones_IPD">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdReferenciaCancelados" Type="int" Nullable="false" />
+          <Property Name="AnioEnReferencia" Type="int" />
+          <Property Name="IdBancoPagadorFCCBNetDb" Type="int" />
+          <Property Name="Referencia" Type="nvarchar" MaxLength="20" />
+          <Property Name="TipoNom" Type="nvarchar" MaxLength="20" />
+          <Property Name="Cve_presup" Type="nvarchar" MaxLength="50" />
+          <Property Name="Cvegto" Type="nvarchar" MaxLength="50" />
+          <Property Name="Cvepd" Type="nvarchar" MaxLength="50" />
+          <Property Name="MontoPositivo" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="MontoNegativo" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="Tipoclave" Type="nvarchar" MaxLength="50" />
+          <Property Name="Adicional" Type="nvarchar" MaxLength="50" />
+          <Property Name="Partida" Type="nvarchar" MaxLength="50" />
+          <Property Name="Num" Type="nvarchar" MaxLength="50" />
+          <Property Name="Nombre" Type="nvarchar" MaxLength="250" />
+          <Property Name="Num_che" Type="nvarchar" MaxLength="50" />
+          <Property Name="Foliocdfi" Type="int" />
+          <Property Name="Deleg" Type="nvarchar" MaxLength="50" />
+          <Property Name="Idctabanca" Type="int" />
+          <Property Name="IdBanco" Type="int" />
+          <Property Name="Pagomat" Type="nvarchar" MaxLength="50" />
+          <Property Name="Tipo_pagom" Type="nvarchar" MaxLength="50" />
+          <Property Name="Numtarjeta" Type="nvarchar" MaxLength="50" />
+          <Property Name="Orden" Type="int" />
+          <Property Name="Quincena" Type="nvarchar" MaxLength="50" />
+          <Property Name="Nomalpha" Type="nvarchar" MaxLength="50" />
+          <Property Name="Fecha" Type="nvarchar" MaxLength="50" />
+          <Property Name="Cvegasto" Type="nvarchar" MaxLength="50" />
+          <Property Name="Cla_pto" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Cancelaciones_InterfazPercepcionesDeduccionesCompensados_IPDC">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdReferenciaCancelados" Type="int" Nullable="false" />
+          <Property Name="AnioEnReferencia" Type="int" />
+          <Property Name="TipoNom" Type="nvarchar" MaxLength="50" />
+          <Property Name="Cve_presup" Type="nvarchar" MaxLength="50" />
+          <Property Name="CveGto" Type="nvarchar" MaxLength="50" />
+          <Property Name="Monto" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="TipoClave" Type="nvarchar" MaxLength="50" />
+          <Property Name="Num_che" Type="nvarchar" MaxLength="50" />
+          <Property Name="CveReal" Type="nvarchar" MaxLength="50" />
+          <Property Name="CveCompen" Type="nvarchar" MaxLength="50" />
+          <Property Name="fecha" Type="nvarchar" MaxLength="50" />
+          <Property Name="IdctaBanca" Type="int" />
+          <Property Name="IdBanco" Type="int" />
+          <Property Name="Num" Type="nvarchar" MaxLength="50" />
+          <Property Name="NomAlpha" Type="nvarchar" MaxLength="50" />
+          <Property Name="Quincena" Type="nvarchar" MaxLength="50" />
+          <Property Name="Adicional" Type="nvarchar" MaxLength="50" />
+          <Property Name="Cla_pto" Type="nvarchar" MaxLength="50" />
+          <Property Name="Ldf_6d" Type="int" />
+        </EntityType>
         <EntityType Name="Cat_EstadoCancelados_Pagos">
           <Key>
             <PropertyRef Name="Id" />
@@ -288,6 +348,11 @@
           <Property Name="FolioDocumento" Type="nvarchar" MaxLength="100" />
           <Property Name="ArchivoSustento" Type="varbinary(max)" />
           <Property Name="Activo" Type="bit" Nullable="false" />
+          <Property Name="FechaActualizacion_AgregoOQuitoFormas" Type="datetime" />
+          <Property Name="FechaCreacionIPD" Type="datetime" />
+          <Property Name="TotalFormasIPD" Type="int" />
+          <Property Name="FechaCreacionIPDC" Type="datetime" />
+          <Property Name="TotalFormasIPDC" Type="int" />
         </EntityType>
         <EntityType Name="Tbl_SeguimientoHistoricoFormas_Pagos">
           <Key>
@@ -314,6 +379,8 @@
           <Property Name="IdCuentaBancaria" Type="int" Nullable="false" />
           <Property Name="Cantidad" Type="int" Nullable="false" />
           <Property Name="FolioInicial" Type="nvarchar" MaxLength="50" />
+          <Property Name="FolioMuestra" Type="nvarchar" MaxLength="50" />
+          <Property Name="UsoAproximadoMeses" Type="decimal" Precision="18" Scale="2" />
           <Property Name="FechaSolicitud" Type="date" Nullable="false" />
           <Property Name="Activo" Type="bit" Nullable="false" />
         </EntityType>
@@ -510,6 +577,8 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="FoliacionInterfacesCargadasPruebaDBModelStoreContainer">
+          <EntitySet Name="Cancelaciones_InterfazPercepcionesDeducciones_IPD" EntityType="Self.Cancelaciones_InterfazPercepcionesDeducciones_IPD" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Cancelaciones_InterfazPercepcionesDeduccionesCompensados_IPDC" EntityType="Self.Cancelaciones_InterfazPercepcionesDeduccionesCompensados_IPDC" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Cat_EstadoCancelados_Pagos" EntityType="Self.Cat_EstadoCancelados_Pagos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Cat_EstadosPago_Pagos" EntityType="Self.Cat_EstadosPago_Pagos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="cat_FiltroConsultaDatosPersonalesNomina" EntityType="Self.cat_FiltroConsultaDatosPersonalesNomina" Schema="dbo" store:Type="Tables" />
@@ -625,7 +694,6 @@
           <EntitySet Name="Tbl_Pagos" EntityType="FoliacionInterfacesCargadasPruebaDBModel.Tbl_Pagos" />
           <EntitySet Name="Tbl_Referencias_Cancelaciones" EntityType="FoliacionInterfacesCargadasPruebaDBModel.Tbl_Referencias_Cancelaciones" />
           <EntitySet Name="Tbl_SeguimientoHistoricoFormas_Pagos" EntityType="FoliacionInterfacesCargadasPruebaDBModel.Tbl_SeguimientoHistoricoFormas_Pagos" />
-          <EntitySet Name="Tbl_Solicitudes" EntityType="FoliacionInterfacesCargadasPruebaDBModel.Tbl_Solicitudes" />
           <AssociationSet Name="FK_Tbl_SeguimientoFormas_Pagos_Cat_EstadoCancelados_Pagos" Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_SeguimientoFormas_Pagos_Cat_EstadoCancelados_Pagos">
             <End Role="Cat_EstadoCancelados_Pagos" EntitySet="Cat_EstadoCancelados_Pagos" />
             <End Role="Tbl_SeguimientoHistoricoFormas_Pagos" EntitySet="Tbl_SeguimientoHistoricoFormas_Pagos" />
@@ -649,10 +717,6 @@
           <AssociationSet Name="FK_Tbl_Pagos_Tbl_CuentasBancarias" Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Pagos_Tbl_CuentasBancarias">
             <End Role="Tbl_CuentasBancarias" EntitySet="Tbl_CuentasBancarias" />
             <End Role="Tbl_Pagos" EntitySet="Tbl_Pagos" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Tbl_Solicitudes_Tbl_CuentasBancarias" Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Solicitudes_Tbl_CuentasBancarias">
-            <End Role="Tbl_CuentasBancarias" EntitySet="Tbl_CuentasBancarias" />
-            <End Role="Tbl_Solicitudes" EntitySet="Tbl_Solicitudes" />
           </AssociationSet>
           <AssociationSet Name="FK_Tbl_InventarioContenedores_Tbl_Inventario" Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_InventarioContenedores_Tbl_Inventario">
             <End Role="Tbl_Inventario" EntitySet="Tbl_Inventario" />
@@ -693,6 +757,13 @@
           <AssociationSet Name="FK_Login_Permisos_Login_Usuarios" Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Login_Permisos_Login_Usuarios">
             <End Role="Login_Usuarios" EntitySet="Login_Usuarios" />
             <End Role="Login_Permisos" EntitySet="Login_Permisos" />
+          </AssociationSet>
+          <EntitySet Name="Cancelaciones_InterfazPercepcionesDeduccionesCompensados_IPDC" EntityType="FoliacionInterfacesCargadasPruebaDBModel.Cancelaciones_InterfazPercepcionesDeduccionesCompensados_IPDC" />
+          <EntitySet Name="Cancelaciones_InterfazPercepcionesDeducciones_IPD" EntityType="FoliacionInterfacesCargadasPruebaDBModel.Cancelaciones_InterfazPercepcionesDeducciones_IPD" />
+          <EntitySet Name="Tbl_Solicitudes" EntityType="FoliacionInterfacesCargadasPruebaDBModel.Tbl_Solicitudes" />
+          <AssociationSet Name="FK_Tbl_Solicitudes_Tbl_CuentasBancarias" Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Solicitudes_Tbl_CuentasBancarias">
+            <End Role="Tbl_CuentasBancarias" EntitySet="Tbl_CuentasBancarias" />
+            <End Role="Tbl_Solicitudes" EntitySet="Tbl_Solicitudes" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="cat_FiltroConsultaDatosPersonalesNomina">
@@ -962,6 +1033,11 @@
           <Property Name="ArchivoSustento" Type="Binary" MaxLength="Max" FixedLength="false" />
           <Property Name="Activo" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Tbl_Pagos" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Pagos_Tbl_Referencias_Cancelaciones" FromRole="Tbl_Referencias_Cancelaciones" ToRole="Tbl_Pagos" />
+          <Property Name="FechaActualizacion_AgregoOQuitoFormas" Type="DateTime" Precision="3" />
+          <Property Name="FechaCreacionIPD" Type="DateTime" Precision="3" />
+          <Property Name="TotalFormasIPD" Type="Int32" />
+          <Property Name="FechaCreacionIPDC" Type="DateTime" Precision="3" />
+          <Property Name="TotalFormasIPDC" Type="Int32" />
         </EntityType>
         <EntityType Name="Tbl_SeguimientoHistoricoFormas_Pagos">
           <Key>
@@ -979,19 +1055,6 @@
           <Property Name="IdCat_EstadoCancelado" Type="Int32" />
           <Property Name="Activo" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Cat_EstadoCancelados_Pagos" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_SeguimientoFormas_Pagos_Cat_EstadoCancelados_Pagos" FromRole="Tbl_SeguimientoHistoricoFormas_Pagos" ToRole="Cat_EstadoCancelados_Pagos" />
-        </EntityType>
-        <EntityType Name="Tbl_Solicitudes">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="NumeroMemo" Type="Int32" Nullable="false" />
-          <Property Name="IdCuentaBancaria" Type="Int32" Nullable="false" />
-          <Property Name="Cantidad" Type="Int32" Nullable="false" />
-          <Property Name="FolioInicial" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="FechaSolicitud" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="Activo" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Tbl_CuentasBancarias" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Solicitudes_Tbl_CuentasBancarias" FromRole="Tbl_Solicitudes" ToRole="Tbl_CuentasBancarias" />
         </EntityType>
         <Association Name="FK_Tbl_SeguimientoFormas_Pagos_Cat_EstadoCancelados_Pagos">
           <End Type="FoliacionInterfacesCargadasPruebaDBModel.Cat_EstadoCancelados_Pagos" Role="Cat_EstadoCancelados_Pagos" Multiplicity="0..1" />
@@ -1062,18 +1125,6 @@
             </Principal>
             <Dependent Role="Tbl_Pagos">
               <PropertyRef Name="IdTbl_CuentaBancaria_BancoPagador" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Tbl_Solicitudes_Tbl_CuentasBancarias">
-          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Tbl_CuentasBancarias" Role="Tbl_CuentasBancarias" Multiplicity="1" />
-          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Tbl_Solicitudes" Role="Tbl_Solicitudes" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Tbl_CuentasBancarias">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Tbl_Solicitudes">
-              <PropertyRef Name="IdCuentaBancaria" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1228,6 +1279,93 @@
             </Principal>
             <Dependent Role="Login_Permisos">
               <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Cancelaciones_InterfazPercepcionesDeduccionesCompensados_IPDC">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdReferenciaCancelados" Type="Int32" Nullable="false" />
+          <Property Name="TipoNom" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Cve_presup" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CveGto" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Monto" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="TipoClave" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Num_che" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CveReal" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CveCompen" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="fecha" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IdctaBanca" Type="Int32" />
+          <Property Name="IdBanco" Type="Int32" />
+          <Property Name="Num" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="NomAlpha" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Quincena" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Adicional" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Cla_pto" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Ldf_6d" Type="Int32" />
+          <Property Name="AnioEnReferencia" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Cancelaciones_InterfazPercepcionesDeducciones_IPD">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdReferenciaCancelados" Type="Int32" Nullable="false" />
+          <Property Name="AnioEnReferencia" Type="Int32" Nullable="false" />
+          <Property Name="IdBancoPagadorFCCBNetDb" Type="Int32" />
+          <Property Name="Referencia" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="TipoNom" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Cve_presup" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Cvegto" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Cvepd" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MontoPositivo" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="MontoNegativo" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Tipoclave" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Adicional" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Partida" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Num" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Nombre" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Num_che" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Foliocdfi" Type="Int32" />
+          <Property Name="Deleg" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Idctabanca" Type="Int32" />
+          <Property Name="IdBanco" Type="Int32" />
+          <Property Name="Pagomat" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Tipo_pagom" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Numtarjeta" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Orden" Type="Int32" />
+          <Property Name="Quincena" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Nomalpha" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Fecha" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Cvegasto" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Cla_pto" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Tbl_Solicitudes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NumeroMemo" Type="Int32" Nullable="false" />
+          <Property Name="IdCuentaBancaria" Type="Int32" Nullable="false" />
+          <Property Name="Cantidad" Type="Int32" Nullable="false" />
+          <Property Name="FolioInicial" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FolioMuestra" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UsoAproximadoMeses" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="FechaSolicitud" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Activo" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Tbl_CuentasBancarias" Relationship="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Solicitudes_Tbl_CuentasBancarias" FromRole="Tbl_Solicitudes" ToRole="Tbl_CuentasBancarias" />
+        </EntityType>
+        <Association Name="FK_Tbl_Solicitudes_Tbl_CuentasBancarias">
+          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Tbl_CuentasBancarias" Role="Tbl_CuentasBancarias" Multiplicity="1" />
+          <End Type="FoliacionInterfacesCargadasPruebaDBModel.Tbl_Solicitudes" Role="Tbl_Solicitudes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tbl_CuentasBancarias">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Tbl_Solicitudes">
+              <PropertyRef Name="IdCuentaBancaria" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1486,6 +1624,11 @@
           <EntitySetMapping Name="Tbl_Referencias_Cancelaciones">
             <EntityTypeMapping TypeName="FoliacionInterfacesCargadasPruebaDBModel.Tbl_Referencias_Cancelaciones">
               <MappingFragment StoreEntitySet="Tbl_Referencias_Cancelaciones">
+                <ScalarProperty Name="TotalFormasIPDC" ColumnName="TotalFormasIPDC" />
+                <ScalarProperty Name="FechaCreacionIPDC" ColumnName="FechaCreacionIPDC" />
+                <ScalarProperty Name="TotalFormasIPD" ColumnName="TotalFormasIPD" />
+                <ScalarProperty Name="FechaCreacionIPD" ColumnName="FechaCreacionIPD" />
+                <ScalarProperty Name="FechaActualizacion_AgregoOQuitoFormas" ColumnName="FechaActualizacion_AgregoOQuitoFormas" />
                 <ScalarProperty Name="Activo" ColumnName="Activo" />
                 <ScalarProperty Name="ArchivoSustento" ColumnName="ArchivoSustento" />
                 <ScalarProperty Name="FolioDocumento" ColumnName="FolioDocumento" />
@@ -1513,19 +1656,6 @@
                 <ScalarProperty Name="ChequeAnterior" ColumnName="ChequeAnterior" />
                 <ScalarProperty Name="FechaCambio" ColumnName="FechaCambio" />
                 <ScalarProperty Name="IdTbl_Pagos" ColumnName="IdTbl_Pagos" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Tbl_Solicitudes">
-            <EntityTypeMapping TypeName="FoliacionInterfacesCargadasPruebaDBModel.Tbl_Solicitudes">
-              <MappingFragment StoreEntitySet="Tbl_Solicitudes">
-                <ScalarProperty Name="Activo" ColumnName="Activo" />
-                <ScalarProperty Name="FechaSolicitud" ColumnName="FechaSolicitud" />
-                <ScalarProperty Name="FolioInicial" ColumnName="FolioInicial" />
-                <ScalarProperty Name="Cantidad" ColumnName="Cantidad" />
-                <ScalarProperty Name="IdCuentaBancaria" ColumnName="IdCuentaBancaria" />
-                <ScalarProperty Name="NumeroMemo" ColumnName="NumeroMemo" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -1570,6 +1700,83 @@
                 <ScalarProperty Name="UltimaSesion" ColumnName="UltimaSesion" />
                 <ScalarProperty Name="NumEmpleado" ColumnName="NumEmpleado" />
                 <ScalarProperty Name="IdTblUsers" ColumnName="IdTblUsers" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Cancelaciones_InterfazPercepcionesDeduccionesCompensados_IPDC">
+            <EntityTypeMapping TypeName="FoliacionInterfacesCargadasPruebaDBModel.Cancelaciones_InterfazPercepcionesDeduccionesCompensados_IPDC">
+              <MappingFragment StoreEntitySet="Cancelaciones_InterfazPercepcionesDeduccionesCompensados_IPDC">
+                <ScalarProperty Name="AnioEnReferencia" ColumnName="AnioEnReferencia" />
+                <ScalarProperty Name="Ldf_6d" ColumnName="Ldf_6d" />
+                <ScalarProperty Name="Cla_pto" ColumnName="Cla_pto" />
+                <ScalarProperty Name="Adicional" ColumnName="Adicional" />
+                <ScalarProperty Name="Quincena" ColumnName="Quincena" />
+                <ScalarProperty Name="NomAlpha" ColumnName="NomAlpha" />
+                <ScalarProperty Name="Num" ColumnName="Num" />
+                <ScalarProperty Name="IdBanco" ColumnName="IdBanco" />
+                <ScalarProperty Name="IdctaBanca" ColumnName="IdctaBanca" />
+                <ScalarProperty Name="fecha" ColumnName="fecha" />
+                <ScalarProperty Name="CveCompen" ColumnName="CveCompen" />
+                <ScalarProperty Name="CveReal" ColumnName="CveReal" />
+                <ScalarProperty Name="Num_che" ColumnName="Num_che" />
+                <ScalarProperty Name="TipoClave" ColumnName="TipoClave" />
+                <ScalarProperty Name="Monto" ColumnName="Monto" />
+                <ScalarProperty Name="CveGto" ColumnName="CveGto" />
+                <ScalarProperty Name="Cve_presup" ColumnName="Cve_presup" />
+                <ScalarProperty Name="TipoNom" ColumnName="TipoNom" />
+                <ScalarProperty Name="IdReferenciaCancelados" ColumnName="IdReferenciaCancelados" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Cancelaciones_InterfazPercepcionesDeducciones_IPD">
+            <EntityTypeMapping TypeName="FoliacionInterfacesCargadasPruebaDBModel.Cancelaciones_InterfazPercepcionesDeducciones_IPD">
+              <MappingFragment StoreEntitySet="Cancelaciones_InterfazPercepcionesDeducciones_IPD">
+                <ScalarProperty Name="Cla_pto" ColumnName="Cla_pto" />
+                <ScalarProperty Name="Cvegasto" ColumnName="Cvegasto" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="Nomalpha" ColumnName="Nomalpha" />
+                <ScalarProperty Name="Quincena" ColumnName="Quincena" />
+                <ScalarProperty Name="Orden" ColumnName="Orden" />
+                <ScalarProperty Name="Numtarjeta" ColumnName="Numtarjeta" />
+                <ScalarProperty Name="Tipo_pagom" ColumnName="Tipo_pagom" />
+                <ScalarProperty Name="Pagomat" ColumnName="Pagomat" />
+                <ScalarProperty Name="IdBanco" ColumnName="IdBanco" />
+                <ScalarProperty Name="Idctabanca" ColumnName="Idctabanca" />
+                <ScalarProperty Name="Deleg" ColumnName="Deleg" />
+                <ScalarProperty Name="Foliocdfi" ColumnName="Foliocdfi" />
+                <ScalarProperty Name="Num_che" ColumnName="Num_che" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Num" ColumnName="Num" />
+                <ScalarProperty Name="Partida" ColumnName="Partida" />
+                <ScalarProperty Name="Adicional" ColumnName="Adicional" />
+                <ScalarProperty Name="Tipoclave" ColumnName="Tipoclave" />
+                <ScalarProperty Name="MontoNegativo" ColumnName="MontoNegativo" />
+                <ScalarProperty Name="MontoPositivo" ColumnName="MontoPositivo" />
+                <ScalarProperty Name="Cvepd" ColumnName="Cvepd" />
+                <ScalarProperty Name="Cvegto" ColumnName="Cvegto" />
+                <ScalarProperty Name="Cve_presup" ColumnName="Cve_presup" />
+                <ScalarProperty Name="TipoNom" ColumnName="TipoNom" />
+                <ScalarProperty Name="Referencia" ColumnName="Referencia" />
+                <ScalarProperty Name="IdBancoPagadorFCCBNetDb" ColumnName="IdBancoPagadorFCCBNetDb" />
+                <ScalarProperty Name="AnioEnReferencia" ColumnName="AnioEnReferencia" />
+                <ScalarProperty Name="IdReferenciaCancelados" ColumnName="IdReferenciaCancelados" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tbl_Solicitudes">
+            <EntityTypeMapping TypeName="FoliacionInterfacesCargadasPruebaDBModel.Tbl_Solicitudes">
+              <MappingFragment StoreEntitySet="Tbl_Solicitudes">
+                <ScalarProperty Name="Activo" ColumnName="Activo" />
+                <ScalarProperty Name="FechaSolicitud" ColumnName="FechaSolicitud" />
+                <ScalarProperty Name="UsoAproximadoMeses" ColumnName="UsoAproximadoMeses" />
+                <ScalarProperty Name="FolioMuestra" ColumnName="FolioMuestra" />
+                <ScalarProperty Name="FolioInicial" ColumnName="FolioInicial" />
+                <ScalarProperty Name="Cantidad" ColumnName="Cantidad" />
+                <ScalarProperty Name="IdCuentaBancaria" ColumnName="IdCuentaBancaria" />
+                <ScalarProperty Name="NumeroMemo" ColumnName="NumeroMemo" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

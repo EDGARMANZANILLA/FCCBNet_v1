@@ -561,7 +561,12 @@ namespace DAP.Foliacion.Plantilla.Controllers
                 bandera = true;
             }
 
-            return Json(bandera, JsonRequestBehavior.AllowGet);
+
+            return Json(new
+            {
+                RespuestaServidor = bandera == true ? 200 : 500 ,
+                Data = numMemoDevuelto
+            });
         }
 
         //obtiene las solicitudes para el historico de las solicitudes
@@ -609,15 +614,14 @@ namespace DAP.Foliacion.Plantilla.Controllers
                 nuevaCuenta.NumeroCuenta = solicitud.Tbl_CuentasBancarias.Cuenta ;
                 nuevaCuenta.Cantidad = solicitud.Cantidad;
                 nuevaCuenta.FolioInicial = solicitud.FolioInicial;
+                nuevaCuenta.FolioMuestra = solicitud.FolioMuestra;
                 nuevaCuenta.FechaSolicitud = solicitud.FechaSolicitud.ToString("dd/MM/yyyy");
 
                 detalleSolicitud.Add(nuevaCuenta);
 
             }
-
             return Json(detalleSolicitud, JsonRequestBehavior.AllowGet);
         }
-
 
         //exporta el pfd que se guardo anteriormente usando sessiones para guardar datos 
         public FileResult GenerarReporteSolicitud(int NumMemorandum)
@@ -636,7 +640,9 @@ namespace DAP.Foliacion.Plantilla.Controllers
                         nuevaSolicitud.cadenaNombreBanco = solicitud.Tbl_CuentasBancarias.NombreBanco;
                         nuevaSolicitud.cuentaBanco = solicitud.Tbl_CuentasBancarias.Cuenta;
                         nuevaSolicitud.fInicial = solicitud.FolioInicial;
-                        nuevaSolicitud.cantidadFormas = Convert.ToString( solicitud.Cantidad);
+                        nuevaSolicitud.cantidadFormas = solicitud.Cantidad.ToString();
+                        nuevaSolicitud.FolioMuestra = solicitud.FolioMuestra.ToString();
+                        nuevaSolicitud.UsoAproximadoMeses = solicitud.UsoAproximadoMeses.ToString();
 
                         solicitudDescargar.Add(nuevaSolicitud);
                 }
@@ -644,24 +650,20 @@ namespace DAP.Foliacion.Plantilla.Controllers
             }
 
 
-           // List<SolicitudFormasPagoModel> listaBancosSolicitadosSolictudReciente = new List<SolicitudFormasPagoModel>();
-            DAP.Plantilla.Reportes.Datasets.SolicitudFormasPago dtsSolicitusFormasPago = new DAP.Plantilla.Reportes.Datasets.SolicitudFormasPago();
+           DAP.Plantilla.Reportes.Datasets.SolicitudFormasPago dtsSolicitusFormasPago = new DAP.Plantilla.Reportes.Datasets.SolicitudFormasPago();
 
            
-                int numeroMemoRegistrado = solicitudesMemoEncontradas.Select(x => x.NumeroMemo).FirstOrDefault();
+            int numeroMemoRegistrado = solicitudesMemoEncontradas.Select(x => x.NumeroMemo).FirstOrDefault();
 
-                //Cargar el numero del memo
-                dtsSolicitusFormasPago.NumeroMemo.AddNumeroMemoRow(Convert.ToString(numeroMemoRegistrado));
+            /***    CARGAR EL NUMERO DEL MENO SELECCIONADO  ***/
+            dtsSolicitusFormasPago.NumeroMemo.AddNumeroMemoRow(Convert.ToString(numeroMemoRegistrado));
 
 
-                //cargar datos al dataset para el reporte
-                foreach (var solicitudRecuperada in solicitudDescargar)
-                {
-                   // solicitudRecuperada.fInicial = solicitudRecuperada.fInicial != null ? solicitudRecuperada.fInicial : " . ";
-                 
-                    dtsSolicitusFormasPago.FormaPago.AddFormaPagoRow(solicitudRecuperada.cadenaNombreBanco, solicitudRecuperada.cuentaBanco, solicitudRecuperada.fInicial, solicitudRecuperada.cantidadFormas);
-
-                 }
+            /***    CARGA LOS DATOS AL DATASET  ***/
+            foreach (var solicitudRecuperada in solicitudDescargar)
+            {
+              dtsSolicitusFormasPago.FormaPago.AddFormaPagoRow(solicitudRecuperada.cadenaNombreBanco, solicitudRecuperada.cuentaBanco, solicitudRecuperada.fInicial, solicitudRecuperada.cantidadFormas , solicitudRecuperada.FolioMuestra , solicitudRecuperada.UsoAproximadoMeses);
+            }
 
             ReportDocument rd = new ReportDocument();
             rd.Load(Path.Combine(Server.MapPath("~/"), "Reportes/Crystal/SolicitarFormasDePagoBancos.rpt"));

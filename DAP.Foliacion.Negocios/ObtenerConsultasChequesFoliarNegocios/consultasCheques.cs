@@ -51,6 +51,30 @@ namespace DAP.Foliacion.Negocios.ObtenerConsultasChequesFoliarNegocios
         }
 
 
+        public static string ConvertirListaNumEmpledosEnCondicionParaLimpiarAjuste(List<string> numEmpleados)
+        {
+            string condicion = "";
+            int i = 0;
+            foreach (string nuevoNum in numEmpleados)
+            {
+                i += 1;
+
+                if (i == 1)
+                {
+                    condicion += condicion = " "+numEmpleados+"  ";
+                }
+                else
+                {
+                    condicion += condicion = " , " + numEmpleados+" ";
+                }
+            }
+            return condicion;
+        }
+
+
+
+
+
 
         /*****************************************************************************************************************************************************************************************************************************/
         /**************************************************************             NOMINAS GENERAL Y DESCENTRALIZADA    *************************************************************************************************************/
@@ -144,7 +168,7 @@ namespace DAP.Foliacion.Negocios.ObtenerConsultasChequesFoliarNegocios
         public static string ObtenerConsultaTotalRegistrosNoFoliadosxDelegacion_OtrasNominasYPenA(string An, string visitaAnioInterface, string CondicionBancos , string DelegacionesIncluidas)
         {
             string universoDatos = "select NUM   from interfaces"+visitaAnioInterface+".dbo."+An+"  where "+CondicionBancos+"  and deleg in "+DelegacionesIncluidas+" ";
-            return "SELECT COUNT(*) FROM interfaces"+visitaAnioInterface+".dbo." + An + " WHERE (NUM_CHE = '' or  banco_x = '' or cuenta_x = '' or Observa = '') AND NUM IN (" + universoDatos + ")";
+            return "SELECT COUNT(*) FROM interfaces"+visitaAnioInterface+".dbo." + An + " WHERE (NUM_CHE = '' or  banco_x = '' or cuenta_x = '' or Observa = '') AND NUM IN (" + universoDatos + ") and  "+ CondicionBancos + "  and deleg in " + DelegacionesIncluidas + "";
         }
 
 
@@ -157,7 +181,7 @@ namespace DAP.Foliacion.Negocios.ObtenerConsultasChequesFoliarNegocios
         {
             int sindi = SindicatoOConfianza(Sindicato);
 
-            return "select Substring(PARTIDA,2,5), NUM, NOMBRE, DELEG, NUM_CHE, LIQUIDO, BANCO_X, CUENTA_X , OBSERVA from interfaces" + visitaAnioInterface + ".dbo." + An + "  where  " + CondicionBancos + " and  sindicato = " + sindi + " and  deleg in " + DelegacionesIncluidas + " order by  IIF(isnull(NOM_ESP, 0) = 1, '1', '2'), DELEG, SUBSTRING(PARTIDA, 2, 8), NOMBRE collate SQL_Latin1_General_CP1_CI_AS ";
+            return "select Substring(PARTIDA,2,5), NUM, NOMBRE, DELEG, NUM_CHE, LIQUIDO, BANCO_X, CUENTA_X , OBSERVA from interfaces" + visitaAnioInterface + ".dbo." + An + " as Inter  where  " + CondicionBancos + " and  sindicato = " + sindi + " and  deleg in " + DelegacionesIncluidas + " order by ( IIF(isnull(NOM_ESP, 0) = 1, '1', '2')+ DELEG+SUBSTRING(PARTIDA, 2, 8)+ REPLACE( REPLACE(REPLACE(REPLACE(Inter.NOMBRE, '¥' ,'Y' ), 'Ñ', 'Y'), 'Ð', 'Y'), '¾', 'Y' ) )  collate Modern_Spanish_CI_AS ";
         }
 
 
@@ -167,11 +191,12 @@ namespace DAP.Foliacion.Negocios.ObtenerConsultasChequesFoliarNegocios
             string universoDatos;
             if (EsPena)
             {
-                universoDatos = "select Substring(PARTIDA,2,5) , NUM, NOMBRE, DELEG, NUM_CHE, LIQUIDO, BANCO_X, CUENTA_X , OBSERVA    from interfaces" + VisitaAnioInterface + ".dbo."+An+"  where "+CondicionBancos+"  and deleg in " + DelegacionesIncluidas + " order by JUZGADO, NOMBRE ";
+                universoDatos = "select Substring(PARTIDA,2,5) , NUM, NOMBRE, DELEG, NUM_CHE, LIQUIDO, BANCO_X, CUENTA_X , OBSERVA    from interfaces" + VisitaAnioInterface + ".dbo."+An+"  where "+CondicionBancos+"  and deleg in " + DelegacionesIncluidas + " order by JUZGADO, REPLACE( REPLACE(REPLACE(NOMBRE, '¥' ,'Y' ), 'Ð', 'Y'), '¾', 'Y' )  collate Modern_Spanish_CI_AS  ";
             }
             else
             {
-                universoDatos = "select Substring(PARTIDA,2,5) , NUM, NOMBRE, DELEG, NUM_CHE, LIQUIDO, BANCO_X, CUENTA_X , OBSERVA   from interfaces"+VisitaAnioInterface + ".dbo."+An+"  where "+CondicionBancos+"  and deleg in " + DelegacionesIncluidas + " order by  IIF(isnull(NOM_ESP, 0) = 1, '1', '2'), DELEG, SUBSTRING(PARTIDA, 2, 8), NOMBRE collate SQL_Latin1_General_CP1_CI_AS ";
+                //universoDatos = "select Substring(PARTIDA,2,5) , NUM, NOMBRE, DELEG, NUM_CHE, LIQUIDO, BANCO_X, CUENTA_X , OBSERVA   from interfaces"+VisitaAnioInterface + ".dbo."+An+"  where "+CondicionBancos+"  and deleg in " + DelegacionesIncluidas + " order by  IIF(isnull(NOM_ESP, 0) = 1, '1', '2'), DELEG, SUBSTRING(PARTIDA, 2, 8), NOMBRE collate SQL_Latin1_General_CP1_CI_AS ";
+                universoDatos = "select Substring(PARTIDA,2,5) , NUM, NOMBRE, DELEG, NUM_CHE, LIQUIDO, BANCO_X, CUENTA_X , OBSERVA   from interfaces"+VisitaAnioInterface + ".dbo."+An+ " as Inter  where " + CondicionBancos+"  and deleg in " + DelegacionesIncluidas + " order by ( IIF(isnull(NOM_ESP, 0) = 1, '1', '2')+ DELEG+SUBSTRING(PARTIDA, 2, 8)+ REPLACE( REPLACE(REPLACE(REPLACE(Inter.NOMBRE, '¥' ,'Y' ), 'Ñ', 'Y'), 'Ð', 'Y'), '¾', 'Y' ) )  collate Modern_Spanish_CI_AS ";
             }
 
 
@@ -186,7 +211,7 @@ namespace DAP.Foliacion.Negocios.ObtenerConsultasChequesFoliarNegocios
         {
            /* Universo de los que SE VAN A FOLIAR */
            int sindi = SindicatoOConfianza(Sindicato);
-           return  "select PARTIDA, NUM, NOMBRE, DELEG, NUM_CHE, LIQUIDO , FolioCFDI, BANCO_X, CUENTA_X, RFC   from interfaces"+VisitaAnioInterface+".dbo." + An + "  where  "+CondicionBancos+"  and sindicato = "+sindi+" and deleg in "+DelegacionesIncluidas+" order by  IIF(isnull(NOM_ESP, 0) = 1, '1', '2'), DELEG, SUBSTRING(PARTIDA, 2, 8), NOMBRE collate SQL_Latin1_General_CP1_CI_AS ";
+           return  "select PARTIDA, NUM, NOMBRE, DELEG, NUM_CHE, LIQUIDO , FolioCFDI, BANCO_X, CUENTA_X, RFC   from interfaces"+VisitaAnioInterface+".dbo." + An + " as Inter  where  " + CondicionBancos+"  and sindicato = "+sindi+" and deleg in "+DelegacionesIncluidas+ " order by  ( IIF(isnull(NOM_ESP, 0) = 1, '1', '2')+ DELEG+SUBSTRING(PARTIDA, 2, 8)+ REPLACE( REPLACE(REPLACE(REPLACE(Inter.NOMBRE, '¥' ,'Y' ), 'Ñ', 'Y'), 'Ð', 'Y'), '¾', 'Y' ) )  collate Modern_Spanish_CI_AS ";
         }
 
 
@@ -195,11 +220,16 @@ namespace DAP.Foliacion.Negocios.ObtenerConsultasChequesFoliarNegocios
             string universoDatos;
             if (EsPena)
             {
-                universoDatos = "select PARTIDA, NUM, Inter.NOMBRE, DELEG, NUM_CHE, LIQUIDO , FolioCFDI, BANCO_X, CUENTA_X , RFC,  BENEF      from interfaces"+VisitaAnioInterface+".dbo."+An+ " as Inter where  "+CondicionBancos+"  and deleg in "+DelegacionesIncluidas+" order by JUZGADO, Inter.NOMBRE ";
+                universoDatos = "select PARTIDA, NUM, Inter.NOMBRE, DELEG, NUM_CHE, LIQUIDO , FolioCFDI, BANCO_X, CUENTA_X , RFC,  BENEF      from interfaces"+VisitaAnioInterface+".dbo."+An+ " as Inter where  "+CondicionBancos+"  and deleg in "+DelegacionesIncluidas+ " order by JUZGADO, REPLACE( REPLACE(REPLACE(Inter.NOMBRE, '¥' ,'Y' ), 'Ð', 'Y'), '¾', 'Y' )  collate Modern_Spanish_CI_AS ";
             }
             else
             {
-                universoDatos = "select PARTIDA, NUM, Inter.NOMBRE, DELEG, NUM_CHE, LIQUIDO , FolioCFDI, BANCO_X, CUENTA_X , RFC              from interfaces"+VisitaAnioInterface+".dbo."+An+" as Inter  where  "+CondicionBancos+"  and deleg in "+DelegacionesIncluidas+" order by  IIF(isnull(NOM_ESP, 0) = 1, '1', '2'), DELEG, SUBSTRING(PARTIDA, 2, 8), Inter.NOMBRE collate SQL_Latin1_General_CP1_CI_AS ";
+                //universoDatos = "select PARTIDA, NUM, Inter.NOMBRE, DELEG, NUM_CHE, LIQUIDO , FolioCFDI, BANCO_X, CUENTA_X , RFC              from interfaces"+VisitaAnioInterface+".dbo."+An+" as Inter  where  "+CondicionBancos+"  and deleg in "+DelegacionesIncluidas+" order by  IIF(isnull(NOM_ESP, 0) = 1, '1', '2') + DELEG + SUBSTRING(PARTIDA, 2, 8) + Inter.NOMBRE collate SQL_Latin1_General_CP1_CI_AS ";
+
+                universoDatos = "select PARTIDA, NUM, Inter.NOMBRE, DELEG, NUM_CHE, LIQUIDO , FolioCFDI, BANCO_X, CUENTA_X , RFC              from interfaces"+VisitaAnioInterface+".dbo."+An+" as Inter  where  "+CondicionBancos+"  and deleg in "+DelegacionesIncluidas+ " order by  ( IIF(isnull(NOM_ESP, 0) = 1, '1', '2')+ DELEG+SUBSTRING(PARTIDA, 2, 8)+ REPLACE( REPLACE(REPLACE(REPLACE(Inter.NOMBRE, '¥' ,'Y' ), 'Ñ', 'Y'), 'Ð', 'Y'), '¾', 'Y' ) )  collate Modern_Spanish_CI_AS ";
+
+                // Hubo un detalle con el indexado que una compañerita despues de un regalo de galletas nos hizo tarabajar demás y por eso la linea de acontinuacion (solo fue para este caso aislado)
+                // universoDatos = "select  a.PARTIDA, a.NUM, a.NOMBRE, b.DELEG, a.NUM_CHE, a.LIQUIDO , a.FolioCFDI, a.BANCO_X, a.CUENTA_X , a.RFC  from Nomina.dbo.nom_tbl_personal as b inner join Interfaces.dbo.ANIN2302000036 as a  on b.NUM = a.num where a.OBSERVA != 'TARJETA' and a.DELEG in ( '00' , '01' , '02' , '08' , '09' , '10' , '12' , '13' , '14' , '15' , '16') and b.baja = 0 order by IIF(isnull(a.NOM_ESP, 0) = 1, '1', '2') + b.DELEG + SUBSTRING(a.PARTIDA,2, 8)+ a.NOMBRE collate SQL_Latin1_General_CP1_CI_AS";
             }
 
             return universoDatos;
@@ -212,7 +242,7 @@ namespace DAP.Foliacion.Negocios.ObtenerConsultasChequesFoliarNegocios
         {
             int sindi = SindicatoOConfianza(Sindicato);
             string indexadoNomina = obtenerIndexadoDeNomina();
-            return "select PARTIDA, NUM, NOMBRE, DELEG, NUM_CHE, LIQUIDO , FolioCFDI, BANCO_X, CUENTA_X, RFC  from  interfaces" + visitaAnioInterface + ".dbo." + An + " where  (NUM_CHE ='' and CUENTA_X = '') and  " + CondicionBancos + " and sindicato = " + sindi + " and  deleg in  " + DelegacionesIncluidas+"  "+indexadoNomina+"  ";
+            return "select PARTIDA, NUM, NOMBRE, DELEG, NUM_CHE, LIQUIDO , FolioCFDI, BANCO_X, CUENTA_X, RFC  from  interfaces"+visitaAnioInterface+".dbo."+An+" as Inter where  (NUM_CHE ='' and CUENTA_X = '') and  " + CondicionBancos + " and sindicato = " + sindi + " and  deleg in  " + DelegacionesIncluidas+"  "+indexadoNomina+"  ";
         }
 
         public static string ObtenerConsultaParaAJuste_OtrasNominasYPenA(string An, string VisitaAnioInterface, string CondicionBancos, string DelegacionesIncluidas, bool EsPena)
@@ -221,7 +251,7 @@ namespace DAP.Foliacion.Negocios.ObtenerConsultasChequesFoliarNegocios
             string universoDatos;
             if (EsPena)
             {
-                universoDatos = "select PARTIDA, NUM, Inter.NOMBRE, DELEG, NUM_CHE, LIQUIDO , FolioCFDI, BANCO_X, CUENTA_X , RFC,  BENEF      from interfaces" + VisitaAnioInterface + ".dbo." + An + " as Inter where   (NUM_CHE ='' and CUENTA_X = '') and " + CondicionBancos + "  and deleg in " + DelegacionesIncluidas + " order by JUZGADO, Inter.NOMBRE ";
+                universoDatos = "select PARTIDA, NUM, Inter.NOMBRE, DELEG, NUM_CHE, LIQUIDO , FolioCFDI, BANCO_X, CUENTA_X , RFC,  BENEF      from interfaces" + VisitaAnioInterface + ".dbo." + An + " as Inter where   (NUM_CHE ='' and CUENTA_X = '') and " + CondicionBancos + "  and deleg in " + DelegacionesIncluidas + " order by JUZGADO,  REPLACE( REPLACE(REPLACE(Inter.NOMBRE, '¥' ,'Y' ), 'Ð', 'Y'), '¾', 'Y' )  collate Modern_Spanish_CI_AS ";
             }
             else
             {
@@ -235,7 +265,8 @@ namespace DAP.Foliacion.Negocios.ObtenerConsultasChequesFoliarNegocios
 
         public static string obtenerIndexadoDeNomina() 
         {
-            return "order by  IIF(isnull(NOM_ESP, 0) = 1, '1', '2'), DELEG, SUBSTRING(PARTIDA, 2, 8), Inter.NOMBRE collate SQL_Latin1_General_CP1_CI_AS";
+            //return "order by  IIF(isnull(NOM_ESP, 0) = 1, '1', '2'), DELEG, SUBSTRING(PARTIDA, 2, 8), Inter.NOMBRE collate SQL_Latin1_General_CP1_CI_AS";
+            return "order by  ( IIF(isnull(NOM_ESP, 0) = 1, '1', '2')+ DELEG+SUBSTRING(PARTIDA, 2, 8)+ REPLACE( REPLACE(REPLACE(REPLACE(Inter.NOMBRE, '¥' ,'Y' ), 'Ñ', 'Y'), 'Ð', 'Y'), '¾', 'Y' ) )  collate Modern_Spanish_CI_AS";
         } 
 
         /*****************************************************************************************************************************************************************************************************************************************************************/

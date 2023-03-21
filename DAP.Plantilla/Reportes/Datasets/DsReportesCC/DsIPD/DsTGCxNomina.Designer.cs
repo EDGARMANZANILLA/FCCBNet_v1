@@ -26,9 +26,7 @@ namespace DAP.Plantilla.Reportes.Datasets.DsReportesCC.DsIPD {
         
         private DatosReferenciaDataTable tableDatosReferencia;
         
-        private TGCxNominaPercepcionesDataTable tableTGCxNominaPercepciones;
-        
-        private TotalesDataTable tableTotales;
+        private DatosTGC_ResumenDataTable tableDatosTGC_Resumen;
         
         private global::System.Data.SchemaSerializationMode _schemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
         
@@ -61,11 +59,8 @@ namespace DAP.Plantilla.Reportes.Datasets.DsReportesCC.DsIPD {
                 if ((ds.Tables["DatosReferencia"] != null)) {
                     base.Tables.Add(new DatosReferenciaDataTable(ds.Tables["DatosReferencia"]));
                 }
-                if ((ds.Tables["TGCxNominaPercepciones"] != null)) {
-                    base.Tables.Add(new TGCxNominaPercepcionesDataTable(ds.Tables["TGCxNominaPercepciones"]));
-                }
-                if ((ds.Tables["Totales"] != null)) {
-                    base.Tables.Add(new TotalesDataTable(ds.Tables["Totales"]));
+                if ((ds.Tables["DatosTGC_Resumen"] != null)) {
+                    base.Tables.Add(new DatosTGC_ResumenDataTable(ds.Tables["DatosTGC_Resumen"]));
                 }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
@@ -99,19 +94,9 @@ namespace DAP.Plantilla.Reportes.Datasets.DsReportesCC.DsIPD {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         [global::System.ComponentModel.Browsable(false)]
         [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
-        public TGCxNominaPercepcionesDataTable TGCxNominaPercepciones {
+        public DatosTGC_ResumenDataTable DatosTGC_Resumen {
             get {
-                return this.tableTGCxNominaPercepciones;
-            }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-        [global::System.ComponentModel.Browsable(false)]
-        [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
-        public TotalesDataTable Totales {
-            get {
-                return this.tableTotales;
+                return this.tableDatosTGC_Resumen;
             }
         }
         
@@ -185,11 +170,8 @@ namespace DAP.Plantilla.Reportes.Datasets.DsReportesCC.DsIPD {
                 if ((ds.Tables["DatosReferencia"] != null)) {
                     base.Tables.Add(new DatosReferenciaDataTable(ds.Tables["DatosReferencia"]));
                 }
-                if ((ds.Tables["TGCxNominaPercepciones"] != null)) {
-                    base.Tables.Add(new TGCxNominaPercepcionesDataTable(ds.Tables["TGCxNominaPercepciones"]));
-                }
-                if ((ds.Tables["Totales"] != null)) {
-                    base.Tables.Add(new TotalesDataTable(ds.Tables["Totales"]));
+                if ((ds.Tables["DatosTGC_Resumen"] != null)) {
+                    base.Tables.Add(new DatosTGC_ResumenDataTable(ds.Tables["DatosTGC_Resumen"]));
                 }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
@@ -230,16 +212,10 @@ namespace DAP.Plantilla.Reportes.Datasets.DsReportesCC.DsIPD {
                     this.tableDatosReferencia.InitVars();
                 }
             }
-            this.tableTGCxNominaPercepciones = ((TGCxNominaPercepcionesDataTable)(base.Tables["TGCxNominaPercepciones"]));
+            this.tableDatosTGC_Resumen = ((DatosTGC_ResumenDataTable)(base.Tables["DatosTGC_Resumen"]));
             if ((initTable == true)) {
-                if ((this.tableTGCxNominaPercepciones != null)) {
-                    this.tableTGCxNominaPercepciones.InitVars();
-                }
-            }
-            this.tableTotales = ((TotalesDataTable)(base.Tables["Totales"]));
-            if ((initTable == true)) {
-                if ((this.tableTotales != null)) {
-                    this.tableTotales.InitVars();
+                if ((this.tableDatosTGC_Resumen != null)) {
+                    this.tableDatosTGC_Resumen.InitVars();
                 }
             }
         }
@@ -254,10 +230,8 @@ namespace DAP.Plantilla.Reportes.Datasets.DsReportesCC.DsIPD {
             this.SchemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
             this.tableDatosReferencia = new DatosReferenciaDataTable();
             base.Tables.Add(this.tableDatosReferencia);
-            this.tableTGCxNominaPercepciones = new TGCxNominaPercepcionesDataTable();
-            base.Tables.Add(this.tableTGCxNominaPercepciones);
-            this.tableTotales = new TotalesDataTable();
-            base.Tables.Add(this.tableTotales);
+            this.tableDatosTGC_Resumen = new DatosTGC_ResumenDataTable();
+            base.Tables.Add(this.tableDatosTGC_Resumen);
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -268,13 +242,7 @@ namespace DAP.Plantilla.Reportes.Datasets.DsReportesCC.DsIPD {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-        private bool ShouldSerializeTGCxNominaPercepciones() {
-            return false;
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-        private bool ShouldSerializeTotales() {
+        private bool ShouldSerializeDatosTGC_Resumen() {
             return false;
         }
         
@@ -337,10 +305,7 @@ namespace DAP.Plantilla.Reportes.Datasets.DsReportesCC.DsIPD {
         public delegate void DatosReferenciaRowChangeEventHandler(object sender, DatosReferenciaRowChangeEvent e);
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-        public delegate void TGCxNominaPercepcionesRowChangeEventHandler(object sender, TGCxNominaPercepcionesRowChangeEvent e);
-        
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-        public delegate void TotalesRowChangeEventHandler(object sender, TotalesRowChangeEvent e);
+        public delegate void DatosTGC_ResumenRowChangeEventHandler(object sender, DatosTGC_ResumenRowChangeEvent e);
         
         /// <summary>
         ///Represents the strongly named DataTable class.
@@ -622,34 +587,52 @@ namespace DAP.Plantilla.Reportes.Datasets.DsReportesCC.DsIPD {
         ///</summary>
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class TGCxNominaPercepcionesDataTable : global::System.Data.TypedTableBase<TGCxNominaPercepcionesRow> {
+        public partial class DatosTGC_ResumenDataTable : global::System.Data.TypedTableBase<DatosTGC_ResumenRow> {
             
-            private global::System.Data.DataColumn columnClavePP;
-            
-            private global::System.Data.DataColumn columnDescripcion;
-            
-            private global::System.Data.DataColumn columnMontoPositivo;
-            
-            private global::System.Data.DataColumn columnMontoNegativo;
+            private global::System.Data.DataColumn columnNombreNomina;
             
             private global::System.Data.DataColumn columnRamo;
             
-            private global::System.Data.DataColumn columnClaveDD;
+            private global::System.Data.DataColumn columnPartida;
             
-            private global::System.Data.DataColumn columnTotalPPPositivo;
+            private global::System.Data.DataColumn columnPP_TipoClave;
             
-            private global::System.Data.DataColumn columnTotalPPNegativo;
+            private global::System.Data.DataColumn columnPP_Cantidad;
             
-            private global::System.Data.DataColumn columnTotalDDPositivo;
+            private global::System.Data.DataColumn columnPP_CvePD;
             
-            private global::System.Data.DataColumn columnTotalDDNegativo;
+            private global::System.Data.DataColumn columnpp_DescripcionCvePD;
             
-            private global::System.Data.DataColumn columnTotalLiquido;
+            private global::System.Data.DataColumn columnPP_SumatoriaPositiva;
+            
+            private global::System.Data.DataColumn columnPP_SumatoriaNegativa;
+            
+            private global::System.Data.DataColumn columnDD_TipoClave;
+            
+            private global::System.Data.DataColumn columnDD_Cantidad;
+            
+            private global::System.Data.DataColumn columnDD_CvePD;
+            
+            private global::System.Data.DataColumn columnDD_DescripcionCvePD;
+            
+            private global::System.Data.DataColumn columnDD_SumatoriaPositiva;
+            
+            private global::System.Data.DataColumn columnDD_SumatoriaNegativa;
+            
+            private global::System.Data.DataColumn columnPP_TotalPositivo;
+            
+            private global::System.Data.DataColumn columnPP_TotalNegativo;
+            
+            private global::System.Data.DataColumn columnDD_TotalPositivo;
+            
+            private global::System.Data.DataColumn columnDD_TotalNegativo;
+            
+            private global::System.Data.DataColumn columnLiquido;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public TGCxNominaPercepcionesDataTable() {
-                this.TableName = "TGCxNominaPercepciones";
+            public DatosTGC_ResumenDataTable() {
+                this.TableName = "DatosTGC_Resumen";
                 this.BeginInit();
                 this.InitClass();
                 this.EndInit();
@@ -657,7 +640,7 @@ namespace DAP.Plantilla.Reportes.Datasets.DsReportesCC.DsIPD {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            internal TGCxNominaPercepcionesDataTable(global::System.Data.DataTable table) {
+            internal DatosTGC_ResumenDataTable(global::System.Data.DataTable table) {
                 this.TableName = table.TableName;
                 if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
                     this.CaseSensitive = table.CaseSensitive;
@@ -674,40 +657,16 @@ namespace DAP.Plantilla.Reportes.Datasets.DsReportesCC.DsIPD {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            protected TGCxNominaPercepcionesDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+            protected DatosTGC_ResumenDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                     base(info, context) {
                 this.InitVars();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn ClavePPColumn {
+            public global::System.Data.DataColumn NombreNominaColumn {
                 get {
-                    return this.columnClavePP;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn DescripcionColumn {
-                get {
-                    return this.columnDescripcion;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn MontoPositivoColumn {
-                get {
-                    return this.columnMontoPositivo;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn MontoNegativoColumn {
-                get {
-                    return this.columnMontoNegativo;
+                    return this.columnNombreNomina;
                 }
             }
             
@@ -721,49 +680,145 @@ namespace DAP.Plantilla.Reportes.Datasets.DsReportesCC.DsIPD {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn ClaveDDColumn {
+            public global::System.Data.DataColumn PartidaColumn {
                 get {
-                    return this.columnClaveDD;
+                    return this.columnPartida;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn TotalPPPositivoColumn {
+            public global::System.Data.DataColumn PP_TipoClaveColumn {
                 get {
-                    return this.columnTotalPPPositivo;
+                    return this.columnPP_TipoClave;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn TotalPPNegativoColumn {
+            public global::System.Data.DataColumn PP_CantidadColumn {
                 get {
-                    return this.columnTotalPPNegativo;
+                    return this.columnPP_Cantidad;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn TotalDDPositivoColumn {
+            public global::System.Data.DataColumn PP_CvePDColumn {
                 get {
-                    return this.columnTotalDDPositivo;
+                    return this.columnPP_CvePD;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn TotalDDNegativoColumn {
+            public global::System.Data.DataColumn pp_DescripcionCvePDColumn {
                 get {
-                    return this.columnTotalDDNegativo;
+                    return this.columnpp_DescripcionCvePD;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn TotalLiquidoColumn {
+            public global::System.Data.DataColumn PP_SumatoriaPositivaColumn {
                 get {
-                    return this.columnTotalLiquido;
+                    return this.columnPP_SumatoriaPositiva;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn PP_SumatoriaNegativaColumn {
+                get {
+                    return this.columnPP_SumatoriaNegativa;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn DD_TipoClaveColumn {
+                get {
+                    return this.columnDD_TipoClave;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn DD_CantidadColumn {
+                get {
+                    return this.columnDD_Cantidad;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn DD_CvePDColumn {
+                get {
+                    return this.columnDD_CvePD;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn DD_DescripcionCvePDColumn {
+                get {
+                    return this.columnDD_DescripcionCvePD;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn DD_SumatoriaPositivaColumn {
+                get {
+                    return this.columnDD_SumatoriaPositiva;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn DD_SumatoriaNegativaColumn {
+                get {
+                    return this.columnDD_SumatoriaNegativa;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn PP_TotalPositivoColumn {
+                get {
+                    return this.columnPP_TotalPositivo;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn PP_TotalNegativoColumn {
+                get {
+                    return this.columnPP_TotalNegativo;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn DD_TotalPositivoColumn {
+                get {
+                    return this.columnDD_TotalPositivo;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn DD_TotalNegativoColumn {
+                get {
+                    return this.columnDD_TotalNegativo;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn LiquidoColumn {
+                get {
+                    return this.columnLiquido;
                 }
             }
             
@@ -778,55 +833,84 @@ namespace DAP.Plantilla.Reportes.Datasets.DsReportesCC.DsIPD {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public TGCxNominaPercepcionesRow this[int index] {
+            public DatosTGC_ResumenRow this[int index] {
                 get {
-                    return ((TGCxNominaPercepcionesRow)(this.Rows[index]));
+                    return ((DatosTGC_ResumenRow)(this.Rows[index]));
                 }
             }
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public event TGCxNominaPercepcionesRowChangeEventHandler TGCxNominaPercepcionesRowChanging;
+            public event DatosTGC_ResumenRowChangeEventHandler DatosTGC_ResumenRowChanging;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public event TGCxNominaPercepcionesRowChangeEventHandler TGCxNominaPercepcionesRowChanged;
+            public event DatosTGC_ResumenRowChangeEventHandler DatosTGC_ResumenRowChanged;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public event TGCxNominaPercepcionesRowChangeEventHandler TGCxNominaPercepcionesRowDeleting;
+            public event DatosTGC_ResumenRowChangeEventHandler DatosTGC_ResumenRowDeleting;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public event TGCxNominaPercepcionesRowChangeEventHandler TGCxNominaPercepcionesRowDeleted;
+            public event DatosTGC_ResumenRowChangeEventHandler DatosTGC_ResumenRowDeleted;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void AddTGCxNominaPercepcionesRow(TGCxNominaPercepcionesRow row) {
+            public void AddDatosTGC_ResumenRow(DatosTGC_ResumenRow row) {
                 this.Rows.Add(row);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public TGCxNominaPercepcionesRow AddTGCxNominaPercepcionesRow(string ClavePP, string Descripcion, decimal MontoPositivo, decimal MontoNegativo, string Ramo, string ClaveDD, decimal TotalPPPositivo, decimal TotalPPNegativo, decimal TotalDDPositivo, decimal TotalDDNegativo, decimal TotalLiquido) {
-                TGCxNominaPercepcionesRow rowTGCxNominaPercepcionesRow = ((TGCxNominaPercepcionesRow)(this.NewRow()));
+            public DatosTGC_ResumenRow AddDatosTGC_ResumenRow(
+                        string NombreNomina, 
+                        string Ramo, 
+                        string Partida, 
+                        string PP_TipoClave, 
+                        string PP_Cantidad, 
+                        string PP_CvePD, 
+                        string pp_DescripcionCvePD, 
+                        decimal PP_SumatoriaPositiva, 
+                        decimal PP_SumatoriaNegativa, 
+                        string DD_TipoClave, 
+                        string DD_Cantidad, 
+                        string DD_CvePD, 
+                        string DD_DescripcionCvePD, 
+                        decimal DD_SumatoriaPositiva, 
+                        decimal DD_SumatoriaNegativa, 
+                        decimal PP_TotalPositivo, 
+                        decimal PP_TotalNegativo, 
+                        decimal DD_TotalPositivo, 
+                        decimal DD_TotalNegativo, 
+                        decimal Liquido) {
+                DatosTGC_ResumenRow rowDatosTGC_ResumenRow = ((DatosTGC_ResumenRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
-                        ClavePP,
-                        Descripcion,
-                        MontoPositivo,
-                        MontoNegativo,
+                        NombreNomina,
                         Ramo,
-                        ClaveDD,
-                        TotalPPPositivo,
-                        TotalPPNegativo,
-                        TotalDDPositivo,
-                        TotalDDNegativo,
-                        TotalLiquido};
-                rowTGCxNominaPercepcionesRow.ItemArray = columnValuesArray;
-                this.Rows.Add(rowTGCxNominaPercepcionesRow);
-                return rowTGCxNominaPercepcionesRow;
+                        Partida,
+                        PP_TipoClave,
+                        PP_Cantidad,
+                        PP_CvePD,
+                        pp_DescripcionCvePD,
+                        PP_SumatoriaPositiva,
+                        PP_SumatoriaNegativa,
+                        DD_TipoClave,
+                        DD_Cantidad,
+                        DD_CvePD,
+                        DD_DescripcionCvePD,
+                        DD_SumatoriaPositiva,
+                        DD_SumatoriaNegativa,
+                        PP_TotalPositivo,
+                        PP_TotalNegativo,
+                        DD_TotalPositivo,
+                        DD_TotalNegativo,
+                        Liquido};
+                rowDatosTGC_ResumenRow.ItemArray = columnValuesArray;
+                this.Rows.Add(rowDatosTGC_ResumenRow);
+                return rowDatosTGC_ResumenRow;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public override global::System.Data.DataTable Clone() {
-                TGCxNominaPercepcionesDataTable cln = ((TGCxNominaPercepcionesDataTable)(base.Clone()));
+                DatosTGC_ResumenDataTable cln = ((DatosTGC_ResumenDataTable)(base.Clone()));
                 cln.InitVars();
                 return cln;
             }
@@ -834,76 +918,103 @@ namespace DAP.Plantilla.Reportes.Datasets.DsReportesCC.DsIPD {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             protected override global::System.Data.DataTable CreateInstance() {
-                return new TGCxNominaPercepcionesDataTable();
+                return new DatosTGC_ResumenDataTable();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             internal void InitVars() {
-                this.columnClavePP = base.Columns["ClavePP"];
-                this.columnDescripcion = base.Columns["Descripcion"];
-                this.columnMontoPositivo = base.Columns["MontoPositivo"];
-                this.columnMontoNegativo = base.Columns["MontoNegativo"];
+                this.columnNombreNomina = base.Columns["NombreNomina"];
                 this.columnRamo = base.Columns["Ramo"];
-                this.columnClaveDD = base.Columns["ClaveDD"];
-                this.columnTotalPPPositivo = base.Columns["TotalPPPositivo"];
-                this.columnTotalPPNegativo = base.Columns["TotalPPNegativo"];
-                this.columnTotalDDPositivo = base.Columns["TotalDDPositivo"];
-                this.columnTotalDDNegativo = base.Columns["TotalDDNegativo"];
-                this.columnTotalLiquido = base.Columns["TotalLiquido"];
+                this.columnPartida = base.Columns["Partida"];
+                this.columnPP_TipoClave = base.Columns["PP_TipoClave"];
+                this.columnPP_Cantidad = base.Columns["PP_Cantidad"];
+                this.columnPP_CvePD = base.Columns["PP_CvePD"];
+                this.columnpp_DescripcionCvePD = base.Columns["pp_DescripcionCvePD"];
+                this.columnPP_SumatoriaPositiva = base.Columns["PP_SumatoriaPositiva"];
+                this.columnPP_SumatoriaNegativa = base.Columns["PP_SumatoriaNegativa"];
+                this.columnDD_TipoClave = base.Columns["DD_TipoClave"];
+                this.columnDD_Cantidad = base.Columns["DD_Cantidad"];
+                this.columnDD_CvePD = base.Columns["DD_CvePD"];
+                this.columnDD_DescripcionCvePD = base.Columns["DD_DescripcionCvePD"];
+                this.columnDD_SumatoriaPositiva = base.Columns["DD_SumatoriaPositiva"];
+                this.columnDD_SumatoriaNegativa = base.Columns["DD_SumatoriaNegativa"];
+                this.columnPP_TotalPositivo = base.Columns["PP_TotalPositivo"];
+                this.columnPP_TotalNegativo = base.Columns["PP_TotalNegativo"];
+                this.columnDD_TotalPositivo = base.Columns["DD_TotalPositivo"];
+                this.columnDD_TotalNegativo = base.Columns["DD_TotalNegativo"];
+                this.columnLiquido = base.Columns["Liquido"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             private void InitClass() {
-                this.columnClavePP = new global::System.Data.DataColumn("ClavePP", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnClavePP);
-                this.columnDescripcion = new global::System.Data.DataColumn("Descripcion", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnDescripcion);
-                this.columnMontoPositivo = new global::System.Data.DataColumn("MontoPositivo", typeof(decimal), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnMontoPositivo);
-                this.columnMontoNegativo = new global::System.Data.DataColumn("MontoNegativo", typeof(decimal), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnMontoNegativo);
+                this.columnNombreNomina = new global::System.Data.DataColumn("NombreNomina", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnNombreNomina);
                 this.columnRamo = new global::System.Data.DataColumn("Ramo", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnRamo);
-                this.columnClaveDD = new global::System.Data.DataColumn("ClaveDD", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnClaveDD);
-                this.columnTotalPPPositivo = new global::System.Data.DataColumn("TotalPPPositivo", typeof(decimal), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnTotalPPPositivo);
-                this.columnTotalPPNegativo = new global::System.Data.DataColumn("TotalPPNegativo", typeof(decimal), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnTotalPPNegativo);
-                this.columnTotalDDPositivo = new global::System.Data.DataColumn("TotalDDPositivo", typeof(decimal), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnTotalDDPositivo);
-                this.columnTotalDDNegativo = new global::System.Data.DataColumn("TotalDDNegativo", typeof(decimal), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnTotalDDNegativo);
-                this.columnTotalLiquido = new global::System.Data.DataColumn("TotalLiquido", typeof(decimal), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnTotalLiquido);
+                this.columnPartida = new global::System.Data.DataColumn("Partida", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnPartida);
+                this.columnPP_TipoClave = new global::System.Data.DataColumn("PP_TipoClave", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnPP_TipoClave);
+                this.columnPP_Cantidad = new global::System.Data.DataColumn("PP_Cantidad", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnPP_Cantidad);
+                this.columnPP_CvePD = new global::System.Data.DataColumn("PP_CvePD", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnPP_CvePD);
+                this.columnpp_DescripcionCvePD = new global::System.Data.DataColumn("pp_DescripcionCvePD", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnpp_DescripcionCvePD);
+                this.columnPP_SumatoriaPositiva = new global::System.Data.DataColumn("PP_SumatoriaPositiva", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnPP_SumatoriaPositiva);
+                this.columnPP_SumatoriaNegativa = new global::System.Data.DataColumn("PP_SumatoriaNegativa", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnPP_SumatoriaNegativa);
+                this.columnDD_TipoClave = new global::System.Data.DataColumn("DD_TipoClave", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnDD_TipoClave);
+                this.columnDD_Cantidad = new global::System.Data.DataColumn("DD_Cantidad", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnDD_Cantidad);
+                this.columnDD_CvePD = new global::System.Data.DataColumn("DD_CvePD", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnDD_CvePD);
+                this.columnDD_DescripcionCvePD = new global::System.Data.DataColumn("DD_DescripcionCvePD", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnDD_DescripcionCvePD);
+                this.columnDD_SumatoriaPositiva = new global::System.Data.DataColumn("DD_SumatoriaPositiva", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnDD_SumatoriaPositiva);
+                this.columnDD_SumatoriaNegativa = new global::System.Data.DataColumn("DD_SumatoriaNegativa", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnDD_SumatoriaNegativa);
+                this.columnPP_TotalPositivo = new global::System.Data.DataColumn("PP_TotalPositivo", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnPP_TotalPositivo);
+                this.columnPP_TotalNegativo = new global::System.Data.DataColumn("PP_TotalNegativo", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnPP_TotalNegativo);
+                this.columnDD_TotalPositivo = new global::System.Data.DataColumn("DD_TotalPositivo", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnDD_TotalPositivo);
+                this.columnDD_TotalNegativo = new global::System.Data.DataColumn("DD_TotalNegativo", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnDD_TotalNegativo);
+                this.columnLiquido = new global::System.Data.DataColumn("Liquido", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnLiquido);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public TGCxNominaPercepcionesRow NewTGCxNominaPercepcionesRow() {
-                return ((TGCxNominaPercepcionesRow)(this.NewRow()));
+            public DatosTGC_ResumenRow NewDatosTGC_ResumenRow() {
+                return ((DatosTGC_ResumenRow)(this.NewRow()));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
-                return new TGCxNominaPercepcionesRow(builder);
+                return new DatosTGC_ResumenRow(builder);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             protected override global::System.Type GetRowType() {
-                return typeof(TGCxNominaPercepcionesRow);
+                return typeof(DatosTGC_ResumenRow);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanged(e);
-                if ((this.TGCxNominaPercepcionesRowChanged != null)) {
-                    this.TGCxNominaPercepcionesRowChanged(this, new TGCxNominaPercepcionesRowChangeEvent(((TGCxNominaPercepcionesRow)(e.Row)), e.Action));
+                if ((this.DatosTGC_ResumenRowChanged != null)) {
+                    this.DatosTGC_ResumenRowChanged(this, new DatosTGC_ResumenRowChangeEvent(((DatosTGC_ResumenRow)(e.Row)), e.Action));
                 }
             }
             
@@ -911,8 +1022,8 @@ namespace DAP.Plantilla.Reportes.Datasets.DsReportesCC.DsIPD {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanging(e);
-                if ((this.TGCxNominaPercepcionesRowChanging != null)) {
-                    this.TGCxNominaPercepcionesRowChanging(this, new TGCxNominaPercepcionesRowChangeEvent(((TGCxNominaPercepcionesRow)(e.Row)), e.Action));
+                if ((this.DatosTGC_ResumenRowChanging != null)) {
+                    this.DatosTGC_ResumenRowChanging(this, new DatosTGC_ResumenRowChangeEvent(((DatosTGC_ResumenRow)(e.Row)), e.Action));
                 }
             }
             
@@ -920,8 +1031,8 @@ namespace DAP.Plantilla.Reportes.Datasets.DsReportesCC.DsIPD {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleted(e);
-                if ((this.TGCxNominaPercepcionesRowDeleted != null)) {
-                    this.TGCxNominaPercepcionesRowDeleted(this, new TGCxNominaPercepcionesRowChangeEvent(((TGCxNominaPercepcionesRow)(e.Row)), e.Action));
+                if ((this.DatosTGC_ResumenRowDeleted != null)) {
+                    this.DatosTGC_ResumenRowDeleted(this, new DatosTGC_ResumenRowChangeEvent(((DatosTGC_ResumenRow)(e.Row)), e.Action));
                 }
             }
             
@@ -929,14 +1040,14 @@ namespace DAP.Plantilla.Reportes.Datasets.DsReportesCC.DsIPD {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleting(e);
-                if ((this.TGCxNominaPercepcionesRowDeleting != null)) {
-                    this.TGCxNominaPercepcionesRowDeleting(this, new TGCxNominaPercepcionesRowChangeEvent(((TGCxNominaPercepcionesRow)(e.Row)), e.Action));
+                if ((this.DatosTGC_ResumenRowDeleting != null)) {
+                    this.DatosTGC_ResumenRowDeleting(this, new DatosTGC_ResumenRowChangeEvent(((DatosTGC_ResumenRow)(e.Row)), e.Action));
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void RemoveTGCxNominaPercepcionesRow(TGCxNominaPercepcionesRow row) {
+            public void RemoveDatosTGC_ResumenRow(DatosTGC_ResumenRow row) {
                 this.Rows.Remove(row);
             }
             
@@ -963,324 +1074,7 @@ namespace DAP.Plantilla.Reportes.Datasets.DsReportesCC.DsIPD {
                 type.Attributes.Add(attribute1);
                 global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
                 attribute2.Name = "tableTypeName";
-                attribute2.FixedValue = "TGCxNominaPercepcionesDataTable";
-                type.Attributes.Add(attribute2);
-                type.Particle = sequence;
-                global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
-                if (xs.Contains(dsSchema.TargetNamespace)) {
-                    global::System.IO.MemoryStream s1 = new global::System.IO.MemoryStream();
-                    global::System.IO.MemoryStream s2 = new global::System.IO.MemoryStream();
-                    try {
-                        global::System.Xml.Schema.XmlSchema schema = null;
-                        dsSchema.Write(s1);
-                        for (global::System.Collections.IEnumerator schemas = xs.Schemas(dsSchema.TargetNamespace).GetEnumerator(); schemas.MoveNext(); ) {
-                            schema = ((global::System.Xml.Schema.XmlSchema)(schemas.Current));
-                            s2.SetLength(0);
-                            schema.Write(s2);
-                            if ((s1.Length == s2.Length)) {
-                                s1.Position = 0;
-                                s2.Position = 0;
-                                for (; ((s1.Position != s1.Length) 
-                                            && (s1.ReadByte() == s2.ReadByte())); ) {
-                                    ;
-                                }
-                                if ((s1.Position == s1.Length)) {
-                                    return type;
-                                }
-                            }
-                        }
-                    }
-                    finally {
-                        if ((s1 != null)) {
-                            s1.Close();
-                        }
-                        if ((s2 != null)) {
-                            s2.Close();
-                        }
-                    }
-                }
-                xs.Add(dsSchema);
-                return type;
-            }
-        }
-        
-        /// <summary>
-        ///Represents the strongly named DataTable class.
-        ///</summary>
-        [global::System.Serializable()]
-        [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class TotalesDataTable : global::System.Data.TypedTableBase<TotalesRow> {
-            
-            private global::System.Data.DataColumn columnTotPercepcionesPositivo;
-            
-            private global::System.Data.DataColumn columnTotPercepcionesNegativo;
-            
-            private global::System.Data.DataColumn columnTotDeduccionesPositivo;
-            
-            private global::System.Data.DataColumn columnTotDeduccionesNegativo;
-            
-            private global::System.Data.DataColumn columnTotLiquido;
-            
-            private global::System.Data.DataColumn columnRamo;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public TotalesDataTable() {
-                this.TableName = "Totales";
-                this.BeginInit();
-                this.InitClass();
-                this.EndInit();
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            internal TotalesDataTable(global::System.Data.DataTable table) {
-                this.TableName = table.TableName;
-                if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
-                    this.CaseSensitive = table.CaseSensitive;
-                }
-                if ((table.Locale.ToString() != table.DataSet.Locale.ToString())) {
-                    this.Locale = table.Locale;
-                }
-                if ((table.Namespace != table.DataSet.Namespace)) {
-                    this.Namespace = table.Namespace;
-                }
-                this.Prefix = table.Prefix;
-                this.MinimumCapacity = table.MinimumCapacity;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            protected TotalesDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
-                    base(info, context) {
-                this.InitVars();
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn TotPercepcionesPositivoColumn {
-                get {
-                    return this.columnTotPercepcionesPositivo;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn TotPercepcionesNegativoColumn {
-                get {
-                    return this.columnTotPercepcionesNegativo;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn TotDeduccionesPositivoColumn {
-                get {
-                    return this.columnTotDeduccionesPositivo;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn TotDeduccionesNegativoColumn {
-                get {
-                    return this.columnTotDeduccionesNegativo;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn TotLiquidoColumn {
-                get {
-                    return this.columnTotLiquido;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn RamoColumn {
-                get {
-                    return this.columnRamo;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            [global::System.ComponentModel.Browsable(false)]
-            public int Count {
-                get {
-                    return this.Rows.Count;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public TotalesRow this[int index] {
-                get {
-                    return ((TotalesRow)(this.Rows[index]));
-                }
-            }
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public event TotalesRowChangeEventHandler TotalesRowChanging;
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public event TotalesRowChangeEventHandler TotalesRowChanged;
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public event TotalesRowChangeEventHandler TotalesRowDeleting;
-            
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public event TotalesRowChangeEventHandler TotalesRowDeleted;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void AddTotalesRow(TotalesRow row) {
-                this.Rows.Add(row);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public TotalesRow AddTotalesRow(decimal TotPercepcionesPositivo, decimal TotPercepcionesNegativo, decimal TotDeduccionesPositivo, decimal TotDeduccionesNegativo, decimal TotLiquido, string Ramo) {
-                TotalesRow rowTotalesRow = ((TotalesRow)(this.NewRow()));
-                object[] columnValuesArray = new object[] {
-                        TotPercepcionesPositivo,
-                        TotPercepcionesNegativo,
-                        TotDeduccionesPositivo,
-                        TotDeduccionesNegativo,
-                        TotLiquido,
-                        Ramo};
-                rowTotalesRow.ItemArray = columnValuesArray;
-                this.Rows.Add(rowTotalesRow);
-                return rowTotalesRow;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public override global::System.Data.DataTable Clone() {
-                TotalesDataTable cln = ((TotalesDataTable)(base.Clone()));
-                cln.InitVars();
-                return cln;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            protected override global::System.Data.DataTable CreateInstance() {
-                return new TotalesDataTable();
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            internal void InitVars() {
-                this.columnTotPercepcionesPositivo = base.Columns["TotPercepcionesPositivo"];
-                this.columnTotPercepcionesNegativo = base.Columns["TotPercepcionesNegativo"];
-                this.columnTotDeduccionesPositivo = base.Columns["TotDeduccionesPositivo"];
-                this.columnTotDeduccionesNegativo = base.Columns["TotDeduccionesNegativo"];
-                this.columnTotLiquido = base.Columns["TotLiquido"];
-                this.columnRamo = base.Columns["Ramo"];
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            private void InitClass() {
-                this.columnTotPercepcionesPositivo = new global::System.Data.DataColumn("TotPercepcionesPositivo", typeof(decimal), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnTotPercepcionesPositivo);
-                this.columnTotPercepcionesNegativo = new global::System.Data.DataColumn("TotPercepcionesNegativo", typeof(decimal), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnTotPercepcionesNegativo);
-                this.columnTotDeduccionesPositivo = new global::System.Data.DataColumn("TotDeduccionesPositivo", typeof(decimal), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnTotDeduccionesPositivo);
-                this.columnTotDeduccionesNegativo = new global::System.Data.DataColumn("TotDeduccionesNegativo", typeof(decimal), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnTotDeduccionesNegativo);
-                this.columnTotLiquido = new global::System.Data.DataColumn("TotLiquido", typeof(decimal), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnTotLiquido);
-                this.columnRamo = new global::System.Data.DataColumn("Ramo", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnRamo);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public TotalesRow NewTotalesRow() {
-                return ((TotalesRow)(this.NewRow()));
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
-                return new TotalesRow(builder);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            protected override global::System.Type GetRowType() {
-                return typeof(TotalesRow);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowChanged(e);
-                if ((this.TotalesRowChanged != null)) {
-                    this.TotalesRowChanged(this, new TotalesRowChangeEvent(((TotalesRow)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowChanging(e);
-                if ((this.TotalesRowChanging != null)) {
-                    this.TotalesRowChanging(this, new TotalesRowChangeEvent(((TotalesRow)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowDeleted(e);
-                if ((this.TotalesRowDeleted != null)) {
-                    this.TotalesRowDeleted(this, new TotalesRowChangeEvent(((TotalesRow)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
-                base.OnRowDeleting(e);
-                if ((this.TotalesRowDeleting != null)) {
-                    this.TotalesRowDeleting(this, new TotalesRowChangeEvent(((TotalesRow)(e.Row)), e.Action));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void RemoveTotalesRow(TotalesRow row) {
-                this.Rows.Remove(row);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
-                global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
-                global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
-                DsTGCxNomina ds = new DsTGCxNomina();
-                global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
-                any1.Namespace = "http://www.w3.org/2001/XMLSchema";
-                any1.MinOccurs = new decimal(0);
-                any1.MaxOccurs = decimal.MaxValue;
-                any1.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
-                sequence.Items.Add(any1);
-                global::System.Xml.Schema.XmlSchemaAny any2 = new global::System.Xml.Schema.XmlSchemaAny();
-                any2.Namespace = "urn:schemas-microsoft-com:xml-diffgram-v1";
-                any2.MinOccurs = new decimal(1);
-                any2.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
-                sequence.Items.Add(any2);
-                global::System.Xml.Schema.XmlSchemaAttribute attribute1 = new global::System.Xml.Schema.XmlSchemaAttribute();
-                attribute1.Name = "namespace";
-                attribute1.FixedValue = ds.Namespace;
-                type.Attributes.Add(attribute1);
-                global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
-                attribute2.Name = "tableTypeName";
-                attribute2.FixedValue = "TotalesDataTable";
+                attribute2.FixedValue = "DatosTGC_ResumenDataTable";
                 type.Attributes.Add(attribute2);
                 type.Particle = sequence;
                 global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
@@ -1424,81 +1218,30 @@ namespace DAP.Plantilla.Reportes.Datasets.DsReportesCC.DsIPD {
         /// <summary>
         ///Represents strongly named DataRow class.
         ///</summary>
-        public partial class TGCxNominaPercepcionesRow : global::System.Data.DataRow {
+        public partial class DatosTGC_ResumenRow : global::System.Data.DataRow {
             
-            private TGCxNominaPercepcionesDataTable tableTGCxNominaPercepciones;
+            private DatosTGC_ResumenDataTable tableDatosTGC_Resumen;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            internal TGCxNominaPercepcionesRow(global::System.Data.DataRowBuilder rb) : 
+            internal DatosTGC_ResumenRow(global::System.Data.DataRowBuilder rb) : 
                     base(rb) {
-                this.tableTGCxNominaPercepciones = ((TGCxNominaPercepcionesDataTable)(this.Table));
+                this.tableDatosTGC_Resumen = ((DatosTGC_ResumenDataTable)(this.Table));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string ClavePP {
+            public string NombreNomina {
                 get {
                     try {
-                        return ((string)(this[this.tableTGCxNominaPercepciones.ClavePPColumn]));
+                        return ((string)(this[this.tableDatosTGC_Resumen.NombreNominaColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("El valor de la columna \'ClavePP\' de la tabla \'TGCxNominaPercepciones\' es DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'NombreNomina\' de la tabla \'DatosTGC_Resumen\' es DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableTGCxNominaPercepciones.ClavePPColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string Descripcion {
-                get {
-                    try {
-                        return ((string)(this[this.tableTGCxNominaPercepciones.DescripcionColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("El valor de la columna \'Descripcion\' de la tabla \'TGCxNominaPercepciones\' es DBNu" +
-                                "ll.", e);
-                    }
-                }
-                set {
-                    this[this.tableTGCxNominaPercepciones.DescripcionColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public decimal MontoPositivo {
-                get {
-                    try {
-                        return ((decimal)(this[this.tableTGCxNominaPercepciones.MontoPositivoColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("El valor de la columna \'MontoPositivo\' de la tabla \'TGCxNominaPercepciones\' es DB" +
-                                "Null.", e);
-                    }
-                }
-                set {
-                    this[this.tableTGCxNominaPercepciones.MontoPositivoColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public decimal MontoNegativo {
-                get {
-                    try {
-                        return ((decimal)(this[this.tableTGCxNominaPercepciones.MontoNegativoColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("El valor de la columna \'MontoNegativo\' de la tabla \'TGCxNominaPercepciones\' es DB" +
-                                "Null.", e);
-                    }
-                }
-                set {
-                    this[this.tableTGCxNominaPercepciones.MontoNegativoColumn] = value;
+                    this[this.tableDatosTGC_Resumen.NombreNominaColumn] = value;
                 }
             }
             
@@ -1507,433 +1250,551 @@ namespace DAP.Plantilla.Reportes.Datasets.DsReportesCC.DsIPD {
             public string Ramo {
                 get {
                     try {
-                        return ((string)(this[this.tableTGCxNominaPercepciones.RamoColumn]));
+                        return ((string)(this[this.tableDatosTGC_Resumen.RamoColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("El valor de la columna \'Ramo\' de la tabla \'TGCxNominaPercepciones\' es DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'Ramo\' de la tabla \'DatosTGC_Resumen\' es DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableTGCxNominaPercepciones.RamoColumn] = value;
+                    this[this.tableDatosTGC_Resumen.RamoColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string ClaveDD {
+            public string Partida {
                 get {
                     try {
-                        return ((string)(this[this.tableTGCxNominaPercepciones.ClaveDDColumn]));
+                        return ((string)(this[this.tableDatosTGC_Resumen.PartidaColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("El valor de la columna \'ClaveDD\' de la tabla \'TGCxNominaPercepciones\' es DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'Partida\' de la tabla \'DatosTGC_Resumen\' es DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableTGCxNominaPercepciones.ClaveDDColumn] = value;
+                    this[this.tableDatosTGC_Resumen.PartidaColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public decimal TotalPPPositivo {
+            public string PP_TipoClave {
                 get {
                     try {
-                        return ((decimal)(this[this.tableTGCxNominaPercepciones.TotalPPPositivoColumn]));
+                        return ((string)(this[this.tableDatosTGC_Resumen.PP_TipoClaveColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("El valor de la columna \'TotalPPPositivo\' de la tabla \'TGCxNominaPercepciones\' es " +
-                                "DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'PP_TipoClave\' de la tabla \'DatosTGC_Resumen\' es DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableTGCxNominaPercepciones.TotalPPPositivoColumn] = value;
+                    this[this.tableDatosTGC_Resumen.PP_TipoClaveColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public decimal TotalPPNegativo {
+            public string PP_Cantidad {
+                get {
+                    if (this.IsPP_CantidadNull()) {
+                        return null;
+                    }
+                    else {
+                        return ((string)(this[this.tableDatosTGC_Resumen.PP_CantidadColumn]));
+                    }
+                }
+                set {
+                    this[this.tableDatosTGC_Resumen.PP_CantidadColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string PP_CvePD {
+                get {
+                    if (this.IsPP_CvePDNull()) {
+                        return null;
+                    }
+                    else {
+                        return ((string)(this[this.tableDatosTGC_Resumen.PP_CvePDColumn]));
+                    }
+                }
+                set {
+                    this[this.tableDatosTGC_Resumen.PP_CvePDColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string pp_DescripcionCvePD {
+                get {
+                    if (this.Ispp_DescripcionCvePDNull()) {
+                        return null;
+                    }
+                    else {
+                        return ((string)(this[this.tableDatosTGC_Resumen.pp_DescripcionCvePDColumn]));
+                    }
+                }
+                set {
+                    this[this.tableDatosTGC_Resumen.pp_DescripcionCvePDColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public decimal PP_SumatoriaPositiva {
                 get {
                     try {
-                        return ((decimal)(this[this.tableTGCxNominaPercepciones.TotalPPNegativoColumn]));
+                        return ((decimal)(this[this.tableDatosTGC_Resumen.PP_SumatoriaPositivaColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("El valor de la columna \'TotalPPNegativo\' de la tabla \'TGCxNominaPercepciones\' es " +
-                                "DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'PP_SumatoriaPositiva\' de la tabla \'DatosTGC_Resumen\' es D" +
+                                "BNull.", e);
                     }
                 }
                 set {
-                    this[this.tableTGCxNominaPercepciones.TotalPPNegativoColumn] = value;
+                    this[this.tableDatosTGC_Resumen.PP_SumatoriaPositivaColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public decimal TotalDDPositivo {
+            public decimal PP_SumatoriaNegativa {
                 get {
                     try {
-                        return ((decimal)(this[this.tableTGCxNominaPercepciones.TotalDDPositivoColumn]));
+                        return ((decimal)(this[this.tableDatosTGC_Resumen.PP_SumatoriaNegativaColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("El valor de la columna \'TotalDDPositivo\' de la tabla \'TGCxNominaPercepciones\' es " +
-                                "DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'PP_SumatoriaNegativa\' de la tabla \'DatosTGC_Resumen\' es D" +
+                                "BNull.", e);
                     }
                 }
                 set {
-                    this[this.tableTGCxNominaPercepciones.TotalDDPositivoColumn] = value;
+                    this[this.tableDatosTGC_Resumen.PP_SumatoriaNegativaColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public decimal TotalDDNegativo {
+            public string DD_TipoClave {
+                get {
+                    if (this.IsDD_TipoClaveNull()) {
+                        return null;
+                    }
+                    else {
+                        return ((string)(this[this.tableDatosTGC_Resumen.DD_TipoClaveColumn]));
+                    }
+                }
+                set {
+                    this[this.tableDatosTGC_Resumen.DD_TipoClaveColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string DD_Cantidad {
+                get {
+                    if (this.IsDD_CantidadNull()) {
+                        return null;
+                    }
+                    else {
+                        return ((string)(this[this.tableDatosTGC_Resumen.DD_CantidadColumn]));
+                    }
+                }
+                set {
+                    this[this.tableDatosTGC_Resumen.DD_CantidadColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string DD_CvePD {
+                get {
+                    if (this.IsDD_CvePDNull()) {
+                        return null;
+                    }
+                    else {
+                        return ((string)(this[this.tableDatosTGC_Resumen.DD_CvePDColumn]));
+                    }
+                }
+                set {
+                    this[this.tableDatosTGC_Resumen.DD_CvePDColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string DD_DescripcionCvePD {
+                get {
+                    if (this.IsDD_DescripcionCvePDNull()) {
+                        return null;
+                    }
+                    else {
+                        return ((string)(this[this.tableDatosTGC_Resumen.DD_DescripcionCvePDColumn]));
+                    }
+                }
+                set {
+                    this[this.tableDatosTGC_Resumen.DD_DescripcionCvePDColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public decimal DD_SumatoriaPositiva {
                 get {
                     try {
-                        return ((decimal)(this[this.tableTGCxNominaPercepciones.TotalDDNegativoColumn]));
+                        return ((decimal)(this[this.tableDatosTGC_Resumen.DD_SumatoriaPositivaColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("El valor de la columna \'TotalDDNegativo\' de la tabla \'TGCxNominaPercepciones\' es " +
-                                "DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'DD_SumatoriaPositiva\' de la tabla \'DatosTGC_Resumen\' es D" +
+                                "BNull.", e);
                     }
                 }
                 set {
-                    this[this.tableTGCxNominaPercepciones.TotalDDNegativoColumn] = value;
+                    this[this.tableDatosTGC_Resumen.DD_SumatoriaPositivaColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public decimal TotalLiquido {
+            public decimal DD_SumatoriaNegativa {
                 get {
                     try {
-                        return ((decimal)(this[this.tableTGCxNominaPercepciones.TotalLiquidoColumn]));
+                        return ((decimal)(this[this.tableDatosTGC_Resumen.DD_SumatoriaNegativaColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("El valor de la columna \'TotalLiquido\' de la tabla \'TGCxNominaPercepciones\' es DBN" +
-                                "ull.", e);
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'DD_SumatoriaNegativa\' de la tabla \'DatosTGC_Resumen\' es D" +
+                                "BNull.", e);
                     }
                 }
                 set {
-                    this[this.tableTGCxNominaPercepciones.TotalLiquidoColumn] = value;
+                    this[this.tableDatosTGC_Resumen.DD_SumatoriaNegativaColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsClavePPNull() {
-                return this.IsNull(this.tableTGCxNominaPercepciones.ClavePPColumn);
+            public decimal PP_TotalPositivo {
+                get {
+                    try {
+                        return ((decimal)(this[this.tableDatosTGC_Resumen.PP_TotalPositivoColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'PP_TotalPositivo\' de la tabla \'DatosTGC_Resumen\' es DBNul" +
+                                "l.", e);
+                    }
+                }
+                set {
+                    this[this.tableDatosTGC_Resumen.PP_TotalPositivoColumn] = value;
+                }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetClavePPNull() {
-                this[this.tableTGCxNominaPercepciones.ClavePPColumn] = global::System.Convert.DBNull;
+            public decimal PP_TotalNegativo {
+                get {
+                    try {
+                        return ((decimal)(this[this.tableDatosTGC_Resumen.PP_TotalNegativoColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'PP_TotalNegativo\' de la tabla \'DatosTGC_Resumen\' es DBNul" +
+                                "l.", e);
+                    }
+                }
+                set {
+                    this[this.tableDatosTGC_Resumen.PP_TotalNegativoColumn] = value;
+                }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsDescripcionNull() {
-                return this.IsNull(this.tableTGCxNominaPercepciones.DescripcionColumn);
+            public decimal DD_TotalPositivo {
+                get {
+                    try {
+                        return ((decimal)(this[this.tableDatosTGC_Resumen.DD_TotalPositivoColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'DD_TotalPositivo\' de la tabla \'DatosTGC_Resumen\' es DBNul" +
+                                "l.", e);
+                    }
+                }
+                set {
+                    this[this.tableDatosTGC_Resumen.DD_TotalPositivoColumn] = value;
+                }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetDescripcionNull() {
-                this[this.tableTGCxNominaPercepciones.DescripcionColumn] = global::System.Convert.DBNull;
+            public decimal DD_TotalNegativo {
+                get {
+                    try {
+                        return ((decimal)(this[this.tableDatosTGC_Resumen.DD_TotalNegativoColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'DD_TotalNegativo\' de la tabla \'DatosTGC_Resumen\' es DBNul" +
+                                "l.", e);
+                    }
+                }
+                set {
+                    this[this.tableDatosTGC_Resumen.DD_TotalNegativoColumn] = value;
+                }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsMontoPositivoNull() {
-                return this.IsNull(this.tableTGCxNominaPercepciones.MontoPositivoColumn);
+            public decimal Liquido {
+                get {
+                    try {
+                        return ((decimal)(this[this.tableDatosTGC_Resumen.LiquidoColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'Liquido\' de la tabla \'DatosTGC_Resumen\' es DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableDatosTGC_Resumen.LiquidoColumn] = value;
+                }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetMontoPositivoNull() {
-                this[this.tableTGCxNominaPercepciones.MontoPositivoColumn] = global::System.Convert.DBNull;
+            public bool IsNombreNominaNull() {
+                return this.IsNull(this.tableDatosTGC_Resumen.NombreNominaColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsMontoNegativoNull() {
-                return this.IsNull(this.tableTGCxNominaPercepciones.MontoNegativoColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetMontoNegativoNull() {
-                this[this.tableTGCxNominaPercepciones.MontoNegativoColumn] = global::System.Convert.DBNull;
+            public void SetNombreNominaNull() {
+                this[this.tableDatosTGC_Resumen.NombreNominaColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public bool IsRamoNull() {
-                return this.IsNull(this.tableTGCxNominaPercepciones.RamoColumn);
+                return this.IsNull(this.tableDatosTGC_Resumen.RamoColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetRamoNull() {
-                this[this.tableTGCxNominaPercepciones.RamoColumn] = global::System.Convert.DBNull;
+                this[this.tableDatosTGC_Resumen.RamoColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsClaveDDNull() {
-                return this.IsNull(this.tableTGCxNominaPercepciones.ClaveDDColumn);
+            public bool IsPartidaNull() {
+                return this.IsNull(this.tableDatosTGC_Resumen.PartidaColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetClaveDDNull() {
-                this[this.tableTGCxNominaPercepciones.ClaveDDColumn] = global::System.Convert.DBNull;
+            public void SetPartidaNull() {
+                this[this.tableDatosTGC_Resumen.PartidaColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsTotalPPPositivoNull() {
-                return this.IsNull(this.tableTGCxNominaPercepciones.TotalPPPositivoColumn);
+            public bool IsPP_TipoClaveNull() {
+                return this.IsNull(this.tableDatosTGC_Resumen.PP_TipoClaveColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetTotalPPPositivoNull() {
-                this[this.tableTGCxNominaPercepciones.TotalPPPositivoColumn] = global::System.Convert.DBNull;
+            public void SetPP_TipoClaveNull() {
+                this[this.tableDatosTGC_Resumen.PP_TipoClaveColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsTotalPPNegativoNull() {
-                return this.IsNull(this.tableTGCxNominaPercepciones.TotalPPNegativoColumn);
+            public bool IsPP_CantidadNull() {
+                return this.IsNull(this.tableDatosTGC_Resumen.PP_CantidadColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetTotalPPNegativoNull() {
-                this[this.tableTGCxNominaPercepciones.TotalPPNegativoColumn] = global::System.Convert.DBNull;
+            public void SetPP_CantidadNull() {
+                this[this.tableDatosTGC_Resumen.PP_CantidadColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsTotalDDPositivoNull() {
-                return this.IsNull(this.tableTGCxNominaPercepciones.TotalDDPositivoColumn);
+            public bool IsPP_CvePDNull() {
+                return this.IsNull(this.tableDatosTGC_Resumen.PP_CvePDColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetTotalDDPositivoNull() {
-                this[this.tableTGCxNominaPercepciones.TotalDDPositivoColumn] = global::System.Convert.DBNull;
+            public void SetPP_CvePDNull() {
+                this[this.tableDatosTGC_Resumen.PP_CvePDColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsTotalDDNegativoNull() {
-                return this.IsNull(this.tableTGCxNominaPercepciones.TotalDDNegativoColumn);
+            public bool Ispp_DescripcionCvePDNull() {
+                return this.IsNull(this.tableDatosTGC_Resumen.pp_DescripcionCvePDColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetTotalDDNegativoNull() {
-                this[this.tableTGCxNominaPercepciones.TotalDDNegativoColumn] = global::System.Convert.DBNull;
+            public void Setpp_DescripcionCvePDNull() {
+                this[this.tableDatosTGC_Resumen.pp_DescripcionCvePDColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsTotalLiquidoNull() {
-                return this.IsNull(this.tableTGCxNominaPercepciones.TotalLiquidoColumn);
+            public bool IsPP_SumatoriaPositivaNull() {
+                return this.IsNull(this.tableDatosTGC_Resumen.PP_SumatoriaPositivaColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetTotalLiquidoNull() {
-                this[this.tableTGCxNominaPercepciones.TotalLiquidoColumn] = global::System.Convert.DBNull;
-            }
-        }
-        
-        /// <summary>
-        ///Represents strongly named DataRow class.
-        ///</summary>
-        public partial class TotalesRow : global::System.Data.DataRow {
-            
-            private TotalesDataTable tableTotales;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            internal TotalesRow(global::System.Data.DataRowBuilder rb) : 
-                    base(rb) {
-                this.tableTotales = ((TotalesDataTable)(this.Table));
+            public void SetPP_SumatoriaPositivaNull() {
+                this[this.tableDatosTGC_Resumen.PP_SumatoriaPositivaColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public decimal TotPercepcionesPositivo {
-                get {
-                    try {
-                        return ((decimal)(this[this.tableTotales.TotPercepcionesPositivoColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("El valor de la columna \'TotPercepcionesPositivo\' de la tabla \'Totales\' es DBNull." +
-                                "", e);
-                    }
-                }
-                set {
-                    this[this.tableTotales.TotPercepcionesPositivoColumn] = value;
-                }
+            public bool IsPP_SumatoriaNegativaNull() {
+                return this.IsNull(this.tableDatosTGC_Resumen.PP_SumatoriaNegativaColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public decimal TotPercepcionesNegativo {
-                get {
-                    try {
-                        return ((decimal)(this[this.tableTotales.TotPercepcionesNegativoColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("El valor de la columna \'TotPercepcionesNegativo\' de la tabla \'Totales\' es DBNull." +
-                                "", e);
-                    }
-                }
-                set {
-                    this[this.tableTotales.TotPercepcionesNegativoColumn] = value;
-                }
+            public void SetPP_SumatoriaNegativaNull() {
+                this[this.tableDatosTGC_Resumen.PP_SumatoriaNegativaColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public decimal TotDeduccionesPositivo {
-                get {
-                    try {
-                        return ((decimal)(this[this.tableTotales.TotDeduccionesPositivoColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("El valor de la columna \'TotDeduccionesPositivo\' de la tabla \'Totales\' es DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableTotales.TotDeduccionesPositivoColumn] = value;
-                }
+            public bool IsDD_TipoClaveNull() {
+                return this.IsNull(this.tableDatosTGC_Resumen.DD_TipoClaveColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public decimal TotDeduccionesNegativo {
-                get {
-                    try {
-                        return ((decimal)(this[this.tableTotales.TotDeduccionesNegativoColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("El valor de la columna \'TotDeduccionesNegativo\' de la tabla \'Totales\' es DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableTotales.TotDeduccionesNegativoColumn] = value;
-                }
+            public void SetDD_TipoClaveNull() {
+                this[this.tableDatosTGC_Resumen.DD_TipoClaveColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public decimal TotLiquido {
-                get {
-                    try {
-                        return ((decimal)(this[this.tableTotales.TotLiquidoColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("El valor de la columna \'TotLiquido\' de la tabla \'Totales\' es DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableTotales.TotLiquidoColumn] = value;
-                }
+            public bool IsDD_CantidadNull() {
+                return this.IsNull(this.tableDatosTGC_Resumen.DD_CantidadColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string Ramo {
-                get {
-                    try {
-                        return ((string)(this[this.tableTotales.RamoColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("El valor de la columna \'Ramo\' de la tabla \'Totales\' es DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableTotales.RamoColumn] = value;
-                }
+            public void SetDD_CantidadNull() {
+                this[this.tableDatosTGC_Resumen.DD_CantidadColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsTotPercepcionesPositivoNull() {
-                return this.IsNull(this.tableTotales.TotPercepcionesPositivoColumn);
+            public bool IsDD_CvePDNull() {
+                return this.IsNull(this.tableDatosTGC_Resumen.DD_CvePDColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetTotPercepcionesPositivoNull() {
-                this[this.tableTotales.TotPercepcionesPositivoColumn] = global::System.Convert.DBNull;
+            public void SetDD_CvePDNull() {
+                this[this.tableDatosTGC_Resumen.DD_CvePDColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsTotPercepcionesNegativoNull() {
-                return this.IsNull(this.tableTotales.TotPercepcionesNegativoColumn);
+            public bool IsDD_DescripcionCvePDNull() {
+                return this.IsNull(this.tableDatosTGC_Resumen.DD_DescripcionCvePDColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetTotPercepcionesNegativoNull() {
-                this[this.tableTotales.TotPercepcionesNegativoColumn] = global::System.Convert.DBNull;
+            public void SetDD_DescripcionCvePDNull() {
+                this[this.tableDatosTGC_Resumen.DD_DescripcionCvePDColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsTotDeduccionesPositivoNull() {
-                return this.IsNull(this.tableTotales.TotDeduccionesPositivoColumn);
+            public bool IsDD_SumatoriaPositivaNull() {
+                return this.IsNull(this.tableDatosTGC_Resumen.DD_SumatoriaPositivaColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetTotDeduccionesPositivoNull() {
-                this[this.tableTotales.TotDeduccionesPositivoColumn] = global::System.Convert.DBNull;
+            public void SetDD_SumatoriaPositivaNull() {
+                this[this.tableDatosTGC_Resumen.DD_SumatoriaPositivaColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsTotDeduccionesNegativoNull() {
-                return this.IsNull(this.tableTotales.TotDeduccionesNegativoColumn);
+            public bool IsDD_SumatoriaNegativaNull() {
+                return this.IsNull(this.tableDatosTGC_Resumen.DD_SumatoriaNegativaColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetTotDeduccionesNegativoNull() {
-                this[this.tableTotales.TotDeduccionesNegativoColumn] = global::System.Convert.DBNull;
+            public void SetDD_SumatoriaNegativaNull() {
+                this[this.tableDatosTGC_Resumen.DD_SumatoriaNegativaColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsTotLiquidoNull() {
-                return this.IsNull(this.tableTotales.TotLiquidoColumn);
+            public bool IsPP_TotalPositivoNull() {
+                return this.IsNull(this.tableDatosTGC_Resumen.PP_TotalPositivoColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetTotLiquidoNull() {
-                this[this.tableTotales.TotLiquidoColumn] = global::System.Convert.DBNull;
+            public void SetPP_TotalPositivoNull() {
+                this[this.tableDatosTGC_Resumen.PP_TotalPositivoColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsRamoNull() {
-                return this.IsNull(this.tableTotales.RamoColumn);
+            public bool IsPP_TotalNegativoNull() {
+                return this.IsNull(this.tableDatosTGC_Resumen.PP_TotalNegativoColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetRamoNull() {
-                this[this.tableTotales.RamoColumn] = global::System.Convert.DBNull;
+            public void SetPP_TotalNegativoNull() {
+                this[this.tableDatosTGC_Resumen.PP_TotalNegativoColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsDD_TotalPositivoNull() {
+                return this.IsNull(this.tableDatosTGC_Resumen.DD_TotalPositivoColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetDD_TotalPositivoNull() {
+                this[this.tableDatosTGC_Resumen.DD_TotalPositivoColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsDD_TotalNegativoNull() {
+                return this.IsNull(this.tableDatosTGC_Resumen.DD_TotalNegativoColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetDD_TotalNegativoNull() {
+                this[this.tableDatosTGC_Resumen.DD_TotalNegativoColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsLiquidoNull() {
+                return this.IsNull(this.tableDatosTGC_Resumen.LiquidoColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetLiquidoNull() {
+                this[this.tableDatosTGC_Resumen.LiquidoColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -1975,56 +1836,22 @@ namespace DAP.Plantilla.Reportes.Datasets.DsReportesCC.DsIPD {
         ///Row event argument class
         ///</summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-        public class TGCxNominaPercepcionesRowChangeEvent : global::System.EventArgs {
+        public class DatosTGC_ResumenRowChangeEvent : global::System.EventArgs {
             
-            private TGCxNominaPercepcionesRow eventRow;
+            private DatosTGC_ResumenRow eventRow;
             
             private global::System.Data.DataRowAction eventAction;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public TGCxNominaPercepcionesRowChangeEvent(TGCxNominaPercepcionesRow row, global::System.Data.DataRowAction action) {
+            public DatosTGC_ResumenRowChangeEvent(DatosTGC_ResumenRow row, global::System.Data.DataRowAction action) {
                 this.eventRow = row;
                 this.eventAction = action;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public TGCxNominaPercepcionesRow Row {
-                get {
-                    return this.eventRow;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataRowAction Action {
-                get {
-                    return this.eventAction;
-                }
-            }
-        }
-        
-        /// <summary>
-        ///Row event argument class
-        ///</summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-        public class TotalesRowChangeEvent : global::System.EventArgs {
-            
-            private TotalesRow eventRow;
-            
-            private global::System.Data.DataRowAction eventAction;
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public TotalesRowChangeEvent(TotalesRow row, global::System.Data.DataRowAction action) {
-                this.eventRow = row;
-                this.eventAction = action;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public TotalesRow Row {
+            public DatosTGC_ResumenRow Row {
                 get {
                     return this.eventRow;
                 }

@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="ddd56015ee7b47d896b9f53df82d75ac" Name="Diagram1" ZoomLevel="84">
+      <Diagram DiagramId="ddd56015ee7b47d896b9f53df82d75ac" Name="Diagram1" ZoomLevel="104">
         <EntityTypeShape EntityType="FoliacionInterfacesCargadasPruebaDBModel.Cat_EstadoCancelados_Pagos" Width="1.5" PointX="11" PointY="1.375" />
         <EntityTypeShape EntityType="FoliacionInterfacesCargadasPruebaDBModel.Cat_EstadosPago_Pagos" Width="1.5" PointX="8.25" PointY="12.375" />
         <EntityTypeShape EntityType="FoliacionInterfacesCargadasPruebaDBModel.cat_FiltroGrupoImpresionDelegaciones" Width="1.5" PointX="1" PointY="0.5" />
@@ -24,14 +24,12 @@
         <EntityTypeShape EntityType="FoliacionInterfacesCargadasPruebaDBModel.Tbl_Pagos" Width="2" PointX="10.5" PointY="5.375" />
         <EntityTypeShape EntityType="FoliacionInterfacesCargadasPruebaDBModel.Tbl_Referencias_Cancelaciones" Width="1.5" PointX="8.25" PointY="2.25" />
         <EntityTypeShape EntityType="FoliacionInterfacesCargadasPruebaDBModel.Tbl_SeguimientoHistoricoFormas_Pagos" Width="1.5" PointX="13.25" PointY="0.75" />
-        <EntityTypeShape EntityType="FoliacionInterfacesCargadasPruebaDBModel.Tbl_Solicitudes" Width="1.5" PointX="5.75" PointY="15.125" />
         <AssociationConnector Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_SeguimientoFormas_Pagos_Cat_EstadoCancelados_Pagos" />
         <AssociationConnector Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Pagos_Cat_EstadosPago_Pagos" />
         <AssociationConnector Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Pagos_Cat_FormasPago_Pagos" />
         <AssociationConnector Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_CuentasBancarias_Tbl_TipoPagoCuenta" />
         <AssociationConnector Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_CuentasBancarias_Tbl_Inventario" />
         <AssociationConnector Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Pagos_Tbl_CuentasBancarias" />
-        <AssociationConnector Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Solicitudes_Tbl_CuentasBancarias" />
         <AssociationConnector Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_InventarioContenedores_Tbl_Inventario" />
         <AssociationConnector Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_InventarioDetalle_Tbl_InventarioAsignacionPersonal" />
         <AssociationConnector Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_InventarioDetalle_Tbl_InventarioContenedores" />
@@ -45,6 +43,10 @@
         <AssociationConnector Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Login_Permisos_Login_Roles" />
         <EntityTypeShape EntityType="FoliacionInterfacesCargadasPruebaDBModel.Login_Usuarios" Width="1.5" PointX="18.75" PointY="7.875" />
         <AssociationConnector Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Login_Permisos_Login_Usuarios" />
+        <EntityTypeShape EntityType="FoliacionInterfacesCargadasPruebaDBModel.Cancelaciones_InterfazPercepcionesDeduccionesCompensados_IPDC" Width="5.25" PointX="5.125" PointY="17.875" />
+        <EntityTypeShape EntityType="FoliacionInterfacesCargadasPruebaDBModel.Cancelaciones_InterfazPercepcionesDeducciones_IPD" Width="4.25" PointX="0.625" PointY="17.875" />
+        <EntityTypeShape EntityType="FoliacionInterfacesCargadasPruebaDBModel.Tbl_Solicitudes" Width="1.5" PointX="10.5" PointY="23.75" />
+        <AssociationConnector Association="FoliacionInterfacesCargadasPruebaDBModel.FK_Tbl_Solicitudes_Tbl_CuentasBancarias" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

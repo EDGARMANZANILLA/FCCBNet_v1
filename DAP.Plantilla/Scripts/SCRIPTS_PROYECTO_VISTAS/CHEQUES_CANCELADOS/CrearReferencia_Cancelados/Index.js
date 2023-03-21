@@ -1,35 +1,4 @@
-﻿/******************************************************************************************************************************************* */
-/******************************************************************************************************************************************* */
-/******************************************************************************************************************************************* */
-/******************************************************************************************************************************************* */
-/******************************************************************************************************************************************* */
-/******************************************************************************************************************************************* */
-/******************************************************************************************************************************************* */
-/******************************************************************************************************************************************* */
-/******************************************************************************************************************************************* */
-/******************************************************************************************************************************************* */
-/******************************************************************************************************************************************* */
-/******************************************************************************************************************************************* */
-/*************************************           VERIFICAR QUE TODO LOS CHEQUES CANCELADOS ESTEN JALANDO        ******************************* */
-/******************************************************************************************************************************************* */
-/******************************************************************************************************************************************* */
-/******************************************************************************************************************************************* */
-/******************************************************************************************************************************************* */
-/******************************************************************************************************************************************* */
-/******************************************************************************************************************************************* */
-/******************************************************************************************************************************************* */
-/******************************************************************************************************************************************* */
-/******************************************************************************************************************************************* */
-/******************************************************************************************************************************************* */
-/******************************************************************************************************************************************* */
-/******************************************************************************************************************************************* */
-/******************************************************************************************************************************************* */
-/******************************************************************************************************************************************* */
-/******************************************************************************************************************************************* */
-/******************************************************************************************************************************************* */
-/******************************************************************************************************************************************* */
-
-
+﻿
 
 function EliminarNumeroReferencia(IdRegistroAInactivar, NumeroReferencia, Anio) {
 
@@ -264,8 +233,6 @@ $(document).ready(function () {
 
 
 
-
-
                 Swal.fire({
                     title: '¿Seguro que desea crear la referencia numero ' + datoObtenidoDel_InputNumeroReferencia + ' del año en curso ?',
                     text: "¡Se guardara un registro de este movimiento y podria no revertirse!",
@@ -302,36 +269,6 @@ $(document).ready(function () {
                         });
 
 
-                        //let BuscarElementoSeleccionado = "{'BuscarElemento_id': '"+datoSeleccionadoSelect2.id+"', 'BuscarElemento_text': '"+datoSeleccionadoSelect2.text+"'}";
-                        //let crearReferenciaCancelacion = "{'NuevoNumeroReferencia':'" + datoObtenidoDel_InputNumeroReferencia + "'}";
-
-
-
-                        //$.ajax({
-                        //    url: 'CrearReferencia_Cancelados/CrearReferenciaCancelado',
-                        //    data: crearReferenciaCancelacion,
-                        //    type: "POST",
-                        //    contentType: "application/json; charset=utf-8",
-                        //    success: function (response) {
-
-                        //        if (response) {
-                        //            MensajeCorrectoConRecargaPagina("Se a creado exitosamente la nueva referencia");
-                        //        }
-                        //        else {
-                        //            MensajeErrorSweet("Cambie el numero de referencia, ya que se repite con otro activo", "No se puede crear un numero de referencia repetida en un mismo año")
-                        //        }
-
-
-                        //        OcultarMensajeCargando();
-
-                        //    }, error: function (jqXHR, textStatus) {
-                        //        MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
-                        //        OcultarMensajeCargando();
-                        //    }
-                        //});
-
-
-
                     }
                 })
 
@@ -342,10 +279,6 @@ $(document).ready(function () {
             else {
                 MensajeErrorSweet("Ingrese un numero", "No se ingreso ninguna dato");
             }
-
-
-
-
 
 
 
@@ -550,40 +483,6 @@ function AbrirDetalleReferencia(IdReferencia, NumeroReferencia) {
             OcultarMensajeCargando();
         });
 
-    //let EnviarDatos = "{'IdReferencia': '" + IdReferencia + "'}";
-    //$.ajax({
-    //    url: '/CrearReferencia_Cancelados/ObtenerDetalleReferenciasParaModal',
-    //    data: EnviarDatos,
-    //    type: "POST",
-    //    contentType: "application/json; charset=utf-8",
-    //    success: function (response) {
-
-    //        if (response.bandera) {
-    //            $("#divTablaDetalleReferencia").empty();
-    //            DibujarTablaDetalleReferencia(NumeroReferencia);
-    //            PintarResultadoDetalleReferencia(response.respuestaServer);
-
-    //            document.getElementById("NumeroReferencia").innerHTML = "DETALLE DE LA REFERENCIA #" + NumeroReferencia + "";
-    //            document.getElementById("IdReferenciaCanceladoSelecionado").innerHTML = IdReferencia;
-    //            document.getElementById("NombreReferenciaCancelado").innerHTML = NumeroReferencia;
-
-    //            document.querySelector(".dt-buttons").style = "text-align: right;";
-    //            $('#DetalleReferencia').modal('show')
-    //        } else {
-    //            MensajeErrorSweet("Aun no existen registros dentro de la referencia seleccionada");
-    //        }
-
-
-
-
-    //        OcultarMensajeCargando();
-
-    //    }, error: function (jqXHR, textStatus) {
-    //        MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
-    //        OcultarMensajeCargando();
-    //    }
-    //});
-
 }
 
 function CerrarDetalleReferencia() {
@@ -596,7 +495,6 @@ $(document).on("click", ".AnularIdDeReferencia", function () {
     let pagoARemover = tableDetallesReferecniaCancelacion.row($(this).parents("tr")).data();
     
 
-    //console.log(pagoARemover);
 
     Swal.fire({
         title: '¿Seguro que deseas remover esta forma de pago del proceso de cancelacion?'/*'Do you want to save the changes?'*/,
@@ -632,38 +530,6 @@ $(document).on("click", ".AnularIdDeReferencia", function () {
                 OcultarMensajeCargando();
             });
 
-            //   tableDetallesReferecniaCancelacion.row($(this).parents("tr")).remove().draw();
-            //Peticion por ejax al server para eliminar el cheque de la referencia
-            //let EnviarDatos = "{'IdPago': '" + pagoARemover.Id + "'}";
-
-            //$.ajax({
-            //    url: '/CrearReferencia_Cancelados/AnularCancelacion',
-            //    data: EnviarDatos,
-            //    type: "POST",
-            //    contentType: "application/json; charset=utf-8",
-            //    success: function (response) {
-
-            //        if (response.bandera) {
-
-            //            eliminarDetoTemporalDeDataTable.remove().draw();
-
-            //            MensajeCorrectoSweet("Se removio con exito la forma de pago de la referencia");
-            //        } else {
-            //            MensajeErrorSweet("Hubo un problema y no se pudo remover la forma de pago de la referencia");
-            //        }
-
-            //        OcultarMensajeCargando();
-
-            //    }, error: function (jqXHR, textStatus) {
-            //        MensajeErrorSweet("Ocurrio un error intente de nuevo " + textStatus)
-            //        OcultarMensajeCargando();
-            //    }
-            //});
-
-
-
-
-
 
         } else if (result.isDenied) {
 
@@ -679,11 +545,12 @@ $(document).on("click", ".AnularIdDeReferencia", function () {
 
 
 /******************************************************************************************************************************************************************************************/
-/******************************************************************************************************************************************************************************************/
 /******************************************************  funcion para mostrar la previa del PDF del documento acreditado             ******************************************************/
+/******************************************************************************************************************************************************************************************/
 
 function AbrirVistaPreviaPDF(IdReferencia) {
 
+    MensajeCargando();
     axios.post('/CrearReferencia_Cancelados/ObtenerPdfReferenciaCancelada', {
         IdReferenciaCancelado: IdReferencia
     })
@@ -712,55 +579,122 @@ function AbrirVistaPreviaPDF(IdReferencia) {
 
 /******************************************************************************************************************************************************************************************/
 /******************************************************************************************************************************************************************************************/
-/******************************************************             Funciones para abrir modales para ver y descargar reportes            *************************************************/
+/******************************************************                        FUNCIONES PARA LOS REPORTES INICIALES                      *************************************************/
 /******************************************************************************************************************************************************************************************/
 /******************************************************************************************************************************************************************************************/
 function AbrirReporteInicial(urlControler)
 {
     let IdSeleccionado = document.getElementById("IdReferenciaCanceladoSelecionado").innerHTML;
     $('#ReportesBasicos').modal('show');
-   // console.log(urlControler);
-   // console.log(IdSeleccionado);
 
-   // console.log(urlControler + "?IdReferencia=" + IdSeleccionado);
-
-
-   // href = "/CrearReferencia_Cancelados/DescargarReporteNominaAnual?IdReferencia=1
-   // document.getElementById('descargaNominaAnual').setAttribute('href', urlControler +"DescargarReporteNominaAnual"+  "?IdReferencia=" + IdSeleccionado);
-  //  document.getElementById('descargaCBAnual').setAttribute('href', urlControler +"DescargarReporteCuentaBancariaAnual"+  "?IdReferencia=" + IdSeleccionado);
-  //  document.getElementById('descargaPenA').setAttribute('href', urlControler +"DescargarReportePensionAlimenticia"+  "?IdReferencia=" + IdSeleccionado);
-
-
-    // DescargarReporteCuentaBancariaAnual
 
 
 }
+
+/***    DESCARGA LOS REPORTES INICIALES DE NOMINA , CUENTA BANCARIA Y PENSION ALIMENTICIA     ***/
+async function exportarZIP(url, numero) {
+
+    let IdSeleccionado = document.getElementById("IdReferenciaCanceladoSelecionado").innerHTML;
+    let nombreRefeCancelacion = document.getElementById("NombreReferenciaCancelado").innerHTML;
+    //console.log(IdSeleccionado)
+    //console.log(nombreRefeCancelacion)
+
+    //console.log(numero)
+    //console.log(url)
+
+    let nombreReporte;
+    switch (numero) {
+        case 1:
+            nombreReporte = "ReporteNominaAnualCC_" + nombreRefeCancelacion + ".Zip";
+            break;
+        case 2:
+            nombreReporte = "ReporteCuentaBancariaAnualCC_" + nombreRefeCancelacion + ".Zip";
+            break;
+        case 3:
+            nombreReporte = "ReportePensionAlimenticiaCC_" + nombreRefeCancelacion + ".Zip";
+            break;
+    }
+
+    // Genero una petición con axios que me regresará una archivo Blob (Binary Large Object) como respuesta
+    // y una vez obtenido el archivo crea un ancla temporal el cúal su función será descargar el archivo
+    // generado por medio del window.URL.createObjectURL
+
+    MensajeCargando();
+
+    axios({
+        url: url,
+        method: 'GET',
+        responseType: 'blob',
+        params: {
+            IdReferencia: IdSeleccionado
+        }
+    }).then((response) => {
+
+
+        // console.log(response.data)
+        // alert("Listo");
+
+        const url = window.URL.createObjectURL(response.data);
+        const link = document.createElement('a');
+
+        link.href = url;
+        // link.setAttribute('download', `ipd${nombreRefeCancelacion}.dbf`);
+        link.setAttribute('download', nombreReporte);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+
+
+    }).catch(error => {
+        console.log(error)
+        //cargar(false)
+    }).finally(() => {
+        OcultarMensajeCargando();
+    })
+}
+
+
+/******************************************************************************************************************************************************************************************/
+/******************************************************************************************************************************************************************************************/
+/******************************************************                          FUNCIONES PARA DESCARGAS DEL IPD                     ******************************************************/
+/******************************************************************************************************************************************************************************************/
+/******************************************************************************************************************************************************************************************/
 
 function AbrirReporteIPD(urlControler) {
+    /*********************************************************************************************************************************************************************/
+    /*************************************      AL ABRIR EL MODAL LA IDEA ES QUE SE CREEN LOS IPDS   *********************************************************************/
+    /*********************************************************************************************************************************************************************/
+    MensajeCargando();
     let IdSeleccionado = document.getElementById("IdReferenciaCanceladoSelecionado").innerHTML;
 
-   // document.getElementById('TotalesIPDPorNomina').setAttribute('href', urlControler +"DescargarTGCxNomina"+"?IdReferencia="+IdSeleccionado);
-  // document.getElementById('IPD').setAttribute('href', urlControler +"DescargarIPDPorAnio"+"?IdReferencia="+IdSeleccionado);
-   // document.getElementById('TotalesIPDPorBanco').setAttribute('href', urlControler +"DescargarTGCxBanco"+"?IdReferencia="+IdSeleccionado);
+    console.log(IdSeleccionado);
 
-    $('#ReportesIPD').modal('show');
+    axios.post('/CrearReferencia_Cancelados/ValidaCreaIPD', {
+        IdReferenciaCancelado: IdSeleccionado
+    })
+        .then(function (response) {
+
+            if (response.data.bandera) {
+
+                $('#ReportesIPD').modal('show');
+
+            } else {
+                MensajeErrorSweet("intentelo de nuevo mas tarde y/o contacte con el desarrollador", "Hubo un problema y no se pudo generar correctamente el ipd correspondiente");
+            }
+
+            OcultarMensajeCargando();
+        })
+        .catch(function (error) {
+            MensajeErrorSweet("Ocurrio un error intente de nuevo ", error)
+            OcultarMensajeCargando();
+        });
+
+
+
 }
 
-function AbrirReporteIPDCOMPENSADO(urlControler) {
-    let IdSeleccionado = document.getElementById("IdReferenciaCanceladoSelecionado").innerHTML;
-  //  document.getElementById('DescargarIPDCxAnio').setAttribute('href', urlControler+"DescargarIPDCompensadoPorAnio"+"?IdReferencia="+IdSeleccionado);
-
-    $('#ReportesIPD_COMPENSADO').modal('show');
-}
-
-
-
-/******************************************************************************************************************************************************************************************/
-/******************************************************************************************************************************************************************************************/
-/******************************************************             funciones para Descargar el IPD y funciones aun en desarrollo            ******************************************************/
-/******************************************************************************************************************************************************************************************/
-/******************************************************************************************************************************************************************************************/
-
+/***    EXPORTAR IPD.DBF ***/
 async function exportarIPD(url) {
 
     let IdSeleccionado = document.getElementById("IdReferenciaCanceladoSelecionado").innerHTML;
@@ -807,63 +741,257 @@ async function exportarIPD(url) {
     }).catch(error => {
             console.log(error)
             //cargar(false)
+        MensajeErrorSweet("", error)
+    }).finally(() => {
+        OcultarMensajeCargando();
+    })
+}
+
+/***    EXPORTAR REPORTE DEL IPD ***/
+async function exportarTotalesGeneralesxConceptoNomina(url) {
+
+    let IdSeleccionado = document.getElementById("IdReferenciaCanceladoSelecionado").innerHTML;
+    let nombreRefeCancelacion = document.getElementById("NombreReferenciaCancelado").innerHTML;
+    console.log(IdSeleccionado)
+    console.log(nombreRefeCancelacion)
+
+    //console.log("Download")
+    //console.log(url)
+
+
+    // Genero una petición con axios que me regresará una archivo Blob (Binary Large Object) como respuesta
+    // y una vez obtenido el archivo crea un ancla temporal el cúal su función será descargar el archivo
+    // generado por medio del window.URL.createObjectURL
+
+    MensajeCargando();
+
+    axios({
+        url: url,
+        method: 'GET',
+        responseType: 'blob',
+        params: {
+            IdReferencia: IdSeleccionado,
+        }
+    }).then((response) => {
+
+
+        console.log(response.data)
+        // alert("Listo");
+
+        const url = window.URL
+            .createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+
+        link.href = url;
+        // link.setAttribute('download', `ipd${nombreRefeCancelacion}.dbf`);
+        link.setAttribute('download', `TGCxNomina_${nombreRefeCancelacion}.Zip`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+
+
+    }).catch(error => {
+        console.log(error)
+        //cargar(false)
+        MensajeErrorSweet("", error)
+    }).finally(() => {
+        OcultarMensajeCargando();
+    })
+}
+
+async function exportarTotalesGeneralesxConceptoCuentaBancaria(url) {
+
+    let IdSeleccionado = document.getElementById("IdReferenciaCanceladoSelecionado").innerHTML;
+    let nombreRefeCancelacion = document.getElementById("NombreReferenciaCancelado").innerHTML;
+    console.log(IdSeleccionado)
+    console.log(nombreRefeCancelacion)
+
+    
+
+    // Genero una petición con axios que me regresará una archivo Blob (Binary Large Object) como respuesta
+    // y una vez obtenido el archivo crea un ancla temporal el cúal su función será descargar el archivo
+    // generado por medio del window.URL.createObjectURL
+
+    MensajeCargando();
+
+    axios({
+        url: url,
+        method: 'GET',
+        responseType: 'blob',
+        params: {
+            IdReferencia: IdSeleccionado,
+        }
+    }).then((response) => {
+
+
+        console.log(response.data)
+        // alert("Listo");
+
+        const url = window.URL
+            .createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+
+        link.href = url;
+        // link.setAttribute('download', `ipd${nombreRefeCancelacion}.dbf`);
+        link.setAttribute('download', `TGCxCuentaBancaria_${nombreRefeCancelacion}.Zip`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+
+
+    }).catch(error => {
+        console.log(error)
+        //cargar(false)
+        MensajeErrorSweet("", error)
+    }).finally(() => {
+        OcultarMensajeCargando();
+    })
+}
+
+async function ExportarResumenGeneralChequesCancelados(url) {
+
+    let IdSeleccionado = document.getElementById("IdReferenciaCanceladoSelecionado").innerHTML;
+    let nombreRefeCancelacion = document.getElementById("NombreReferenciaCancelado").innerHTML;
+    console.log(IdSeleccionado)
+    console.log(nombreRefeCancelacion)
+
+
+
+    // Genero una petición con axios que me regresará una archivo Blob (Binary Large Object) como respuesta
+    // y una vez obtenido el archivo crea un ancla temporal el cúal su función será descargar el archivo
+    // generado por medio del window.URL.createObjectURL
+
+    MensajeCargando();
+
+    axios({
+        url: url,
+        method: 'GET',
+        responseType: 'blob',
+        params: {
+            IdReferencia: IdSeleccionado,
+        }
+    }).then((response) => {
+
+
+        console.log(response.data)
+        // alert("Listo");
+
+        const url = window.URL
+            .createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+
+        link.href = url;
+        // link.setAttribute('download', `ipd${nombreRefeCancelacion}.dbf`);
+        link.setAttribute('download', `ResumesGeneralXAnio_${nombreRefeCancelacion}.Zip`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+
+
+    }).catch(error => {
+        console.log(error)
+        MensajeErrorSweet("", error)
+    }).finally(() => {
+        OcultarMensajeCargando();
+    })
+}
+
+async function ExportarCuotasPatronalesAnualXNomina(url) {
+
+    let IdSeleccionado = document.getElementById("IdReferenciaCanceladoSelecionado").innerHTML;
+    let nombreRefeCancelacion = document.getElementById("NombreReferenciaCancelado").innerHTML;
+   // console.log(IdSeleccionado)
+   // console.log(nombreRefeCancelacion)
+
+
+
+    // Genero una petición con axios que me regresará una archivo Blob (Binary Large Object) como respuesta
+    // y una vez obtenido el archivo crea un ancla temporal el cúal su función será descargar el archivo
+    // generado por medio del window.URL.createObjectURL
+
+    MensajeCargando();
+
+    axios({
+        url: url,
+        method: 'GET',
+        responseType: 'blob',
+        params: {
+            IdReferencia: IdSeleccionado,
+        }
+    }).then((response) => {
+
+
+        console.log(response.data)
+        // alert("Listo");
+
+        const url = window.URL
+            .createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+
+        link.href = url;
+        // link.setAttribute('download', `ipd${nombreRefeCancelacion}.dbf`);
+        link.setAttribute('download', `CuotaPatronalXAnioxNomina_${nombreRefeCancelacion}.Zip`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+
+
+    }).catch(error => {
+        console.log(error)
+        MensajeErrorSweet("", error)
     }).finally(() => {
         OcultarMensajeCargando();
     })
 }
 
 
-function EstamosEnDesarrollo()
-{
-    MensajeEstamosEnConstrucion();
-}
 
 
 
-function CheCancRPNominaAnual() {
-    let IdReferencia = document.getElementById("IdReferenciaCanceladoSelecionado").innerHTML;
 
-    //let EnviarDatos = "{'IdReferencia': '" + IdReferencia + "'}";
+
+
+/******************************************************************************************************************************************************************************************/
+/******************************************************************************************************************************************************************************************/
+/******************************************************                 FUNCIONES PARA DESCARGAS DEL IPDCOMPENSADO                  *******************************************************/
+/******************************************************************************************************************************************************************************************/
+/******************************************************************************************************************************************************************************************/
+
+/***    EXPORTAR IPDC.DBF ***/
+function AbrirReporteIPDCOMPENSADO(urlControler) {
 
     MensajeCargando();
-    axios.post('/CrearReferencia_Cancelados/ObtenerDetalleReferenciasParaModal', {
-        IdReferencia: IdReferencia
+
+    let IdSeleccionado = document.getElementById("IdReferenciaCanceladoSelecionado").innerHTML;
+
+    axios.post('/CrearReferencia_Cancelados/ValidaCreaIPDCompensado', {
+        IdReferenciaCancelado: IdSeleccionado
     })
-    .then(function (response) {
+        .then(function (response) {
 
-        if (response.data.bandera) {
-            $("#divTablaDetalleReferencia").empty();
-            DibujarTablaDetalleReferencia(NumeroReferencia);
-            PintarResultadoDetalleReferencia(response.data.respuestaServer);
+            if (response.data.bandera) {
 
-                document.getElementById("NumeroReferencia").innerHTML = "DETALLE DE LA REFERENCIA #" + NumeroReferencia + "";
-                document.getElementById("IdReferenciaCanceladoSelecionado").innerHTML = IdReferencia;
-                document.getElementById("NombreReferenciaCancelado").innerHTML = NumeroReferencia;
-                $('#DetalleReferencia').modal('show')
-        } else {
-                MensajeErrorSweet("Aun no existen registros dentro de la referencia seleccionada");
-        }
+                $('#ReportesIPD_COMPENSADO').modal('show');
+
+            } else {
+                MensajeErrorSweet("intentelo de nuevo mas tarde y/o contacte con el desarrollador", "Hubo un problema y no se pudo generar correctamente el ipd compensado correspondiente");
+            }
 
             OcultarMensajeCargando();
-
-    })
+        })
         .catch(function (error) {
             MensajeErrorSweet("Ocurrio un error intente de nuevo ", error)
-        OcultarMensajeCargando();
-    });
-
-
-
-  
+            OcultarMensajeCargando();
+        });
 
 }
 
-/******************************************************************************************************************************************************************************************/
-/******************************************************************************************************************************************************************************************/
-/******************************************************             funciones para Descargar IPDcompensado               ******************************************************/
-/******************************************************************************************************************************************************************************************/
-/******************************************************************************************************************************************************************************************/
 
+/***    EXPORTAR IPDC.DBF ***/
 async function exportarIPDCompensado(url) {
 
     let IdSeleccionado = document.getElementById("IdReferenciaCanceladoSelecionado").innerHTML;
@@ -918,66 +1046,54 @@ async function exportarIPDCompensado(url) {
 
 
 
+/******************************************************************************************************************************************************************************************/
+/******************************************************************************************************************************************************************************************/
+/******************************************************             FUNCIONES PARA INTERFAZ DE AFECTACION PRESUPUESTAL              *******************************************************/
+/******************************************************************************************************************************************************************************************/
+/******************************************************************************************************************************************************************************************/
 
-async function exportarZIP(url , numero) {
-
-    let IdSeleccionado = document.getElementById("IdReferenciaCanceladoSelecionado").innerHTML;
-    let nombreRefeCancelacion = document.getElementById("NombreReferenciaCancelado").innerHTML;
-    //console.log(IdSeleccionado)
-    //console.log(nombreRefeCancelacion)
-
-    //console.log(numero)
-    //console.log(url)
-
-    let nombreReporte;
-    switch (numero) {
-        case 1:
-            nombreReporte = "ReporteNominaAnualCC_"+nombreRefeCancelacion+".Zip";
-            break;
-        case 2:
-            nombreReporte = "ReporteCuentaBancariaAnualCC_"+nombreRefeCancelacion+".Zip";  
-            break;
-        case 3:
-            nombreReporte = "ReportePensionAlimenticiaCC_"+nombreRefeCancelacion+".Zip";
-            break;
-    }
-
-    // Genero una petición con axios que me regresará una archivo Blob (Binary Large Object) como respuesta
-    // y una vez obtenido el archivo crea un ancla temporal el cúal su función será descargar el archivo
-    // generado por medio del window.URL.createObjectURL
-
-    MensajeCargando();
-
-    axios({
-        url: url,
-        method: 'GET',
-        responseType: 'blob',
-        params: {
-            IdReferencia: IdSeleccionado
-        }
-    }).then((response) => {
-
-
-        // console.log(response.data)
-        // alert("Listo");
-
-        const url = window.URL.createObjectURL(response.data);
-        const link = document.createElement('a');
-
-        link.href = url;
-        // link.setAttribute('download', `ipd${nombreRefeCancelacion}.dbf`);
-        link.setAttribute('download', nombreReporte);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-
-
-
-    }).catch(error => {
-        console.log(error)
-        //cargar(false)
-    }).finally(() => {
-        OcultarMensajeCargando();
-    })
+function AbrirInterfazAfectacionPresupuestal(url)
+{
+    MensajeEstamosEnConstrucion();
 }
+
+
+
+
+
+
+/*** NO SE PA QUE SIRVE ESTO    ***/
+//function CheCancRPNominaAnual() {
+//    let IdReferencia = document.getElementById("IdReferenciaCanceladoSelecionado").innerHTML;
+
+//    //let EnviarDatos = "{'IdReferencia': '" + IdReferencia + "'}";
+
+//    MensajeCargando();
+//    axios.post('/CrearReferencia_Cancelados/ObtenerDetalleReferenciasParaModal', {
+//        IdReferencia: IdReferencia
+//    })
+//        .then(function (response) {
+
+//            if (response.data.bandera) {
+//                $("#divTablaDetalleReferencia").empty();
+//                DibujarTablaDetalleReferencia(NumeroReferencia);
+//                PintarResultadoDetalleReferencia(response.data.respuestaServer);
+
+//                document.getElementById("NumeroReferencia").innerHTML = "DETALLE DE LA REFERENCIA #" + NumeroReferencia + "";
+//                document.getElementById("IdReferenciaCanceladoSelecionado").innerHTML = IdReferencia;
+//                document.getElementById("NombreReferenciaCancelado").innerHTML = NumeroReferencia;
+//                $('#DetalleReferencia').modal('show')
+//            } else {
+//                MensajeErrorSweet("Aun no existen registros dentro de la referencia seleccionada");
+//            }
+
+//            OcultarMensajeCargando();
+
+//        })
+//        .catch(function (error) {
+//            MensajeErrorSweet("Ocurrio un error intente de nuevo ", error)
+//            OcultarMensajeCargando();
+//        });
+
+//}
 

@@ -8,6 +8,7 @@ namespace DAP.Foliacion.Entidades.DTO.CrearReferencia_CanceladosDTO.ReporteCCanc
 {
     public class TotalesGeneralesPorConceptoDTO
     {
+        public int identificador_Iterador { get; set; }
         public bool EsPercepcion { get; set; }
         public string RU { get; set; }
         public string Clave { get; set; }

@@ -14,5 +14,7 @@ namespace DAP.Foliacion.Entidades.DTO
         public string cuentaBanco { get; set; }
         public string cantidadFormas { get; set; }
         public string fInicial { get; set; }
+        public string FolioMuestra { get; set; }
+        public string UsoAproximadoMeses { get; set; }
     }
 }

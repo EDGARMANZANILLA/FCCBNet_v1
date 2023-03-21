@@ -197,9 +197,17 @@ namespace DAP.Foliacion.Datos
         }
 
 
-        public static List<DatosAdeducionesIPD_DTO> ObtenerDeducciones_IPD(string AnioInterfas, string AD, string Num)
+        public static List<DatosAdeducionesIPD_DTO> ObtenerDeducciones_IPD(string AnioInterfas, string AD, string Num , bool contieneCampoBenef_AD)
         {
-            string executaQuery = "select cla_dedu , monto_dedu , nomina.dbo.fGetCveGastoTab(cla_dedu) 'cvegasto' from interfaces"+AnioInterfas+".dbo."+AD+" where num = '"+Num+ "' order by cla_dedu ";
+            string executaQuery = "";
+            if (contieneCampoBenef_AD)
+            {
+                 executaQuery = "select cla_dedu , monto_dedu , nomina.dbo.fGetCveGastoTab(cla_dedu) 'cvegasto', BENEF from interfaces"+AnioInterfas+".dbo."+AD+" where num = '"+Num+ "' order by cla_dedu ";
+            }
+            else 
+            {
+                 executaQuery = "select cla_dedu , monto_dedu , nomina.dbo.fGetCveGastoTab(cla_dedu) 'cvegasto' from interfaces"+AnioInterfas+".dbo."+AD+" where num = '"+Num+ "' order by cla_dedu ";
+            }
             List<DatosAdeducionesIPD_DTO> deducciones = new List<DatosAdeducionesIPD_DTO>();
             try
             {
@@ -209,14 +217,33 @@ namespace DAP.Foliacion.Datos
                     System.Data.SqlClient.SqlCommand command = new System.Data.SqlClient.SqlCommand(executaQuery, connection);
                     System.Data.SqlClient.SqlDataReader reader = command.ExecuteReader();
 
+                    var columns = Enumerable.Range(0, reader.FieldCount).Select(reader.GetName).ToList();
+                    List<string> ColumnasMayus = columns.Select(a => a.ToUpper()).ToList();
+
+                    int iteradorId = 0;
                     while (reader.Read())
                     {
                         DatosAdeducionesIPD_DTO deduccionesEncontradas = new DatosAdeducionesIPD_DTO();
                         deduccionesEncontradas.Cla_dedu  = reader[0].ToString().Trim();
-                        deduccionesEncontradas.Monto = Convert.ToDecimal(reader[1].ToString().Trim());
-                        deduccionesEncontradas.Cvegasto = reader[2].ToString().Trim();
 
-                        deducciones.Add(deduccionesEncontradas);
+                        if (deducciones.Where(x => x.Cla_dedu != "25").Select(x => x.Cla_dedu).Contains(deduccionesEncontradas.Cla_dedu))
+                        {
+                            DatosAdeducionesIPD_DTO deducionRepetida = deducciones.Where(x => x.Cla_dedu == deduccionesEncontradas.Cla_dedu).FirstOrDefault();
+                            deducionRepetida.Monto += Convert.ToDecimal(reader[1].ToString().Trim());
+                        }
+                        else
+                        {
+                            deduccionesEncontradas.IdVirtualDeduccion = ++iteradorId;
+                            deduccionesEncontradas.Monto = Convert.ToDecimal(reader[1].ToString().Trim());
+                            /***   EL CAMPO MontoReal SOLO ES UN CAMPO PARA SABER CUANTO ES EL MONTO ANTES INICIAL DE LA DEDUCCION  => SIRVE PARA EL METODO DE COMPENSACION  ***/
+                            deduccionesEncontradas.MontoReal = Convert.ToDecimal(reader[1].ToString().Trim());
+                            deduccionesEncontradas.Cvegasto = reader[2].ToString().Trim();
+                            deduccionesEncontradas.BENEF = contieneCampoBenef_AD ? reader[3].ToString().Trim() : "";
+                            deducciones.Add(deduccionesEncontradas);
+                        }
+
+
+                       
                     }
                 }
             }
@@ -236,6 +263,41 @@ namespace DAP.Foliacion.Datos
             return deducciones;
         }
 
+
+        public static bool ContieneCampoBenefAD_IPD(string AnioInterfas, string AD, string Num)
+        {
+            bool existeCampoBeneficiario = false;
+            string executaQuery = "select top 1 * from interfaces" + AnioInterfas + ".dbo." + AD + " where num = '" + Num + "' order by cla_dedu ";
+           
+            try
+            {
+                using (System.Data.SqlClient.SqlConnection connection = new System.Data.SqlClient.SqlConnection(ObtenerConexionesDB.obtnercadenaConexionAlpha()))
+                {
+                    connection.Open();
+                    System.Data.SqlClient.SqlCommand command = new System.Data.SqlClient.SqlCommand(executaQuery, connection);
+                    System.Data.SqlClient.SqlDataReader reader = command.ExecuteReader();
+
+                    var columns = Enumerable.Range(0, reader.FieldCount).Select(reader.GetName).ToList();
+                    List<string> ColumnasMayus = columns.Select(a => a.ToUpper()).ToList();
+
+                    existeCampoBeneficiario = ColumnasMayus.Contains("BENEF");
+                }
+            }
+            catch (Exception E)
+            {
+                var transaccion = new Transaccion();
+                var repositorio = new Repositorio<LOG_EXCEPCIONES>(transaccion);
+
+                LOG_EXCEPCIONES NuevaExcepcion = new LOG_EXCEPCIONES();
+                NuevaExcepcion.Clase = "CrearReferencia_CanceladosDbSinEntity";
+                NuevaExcepcion.Metodo = "ContieneCampoBenefAD_IPD";
+                NuevaExcepcion.Usuario = null;
+                NuevaExcepcion.Excepcion = E.Message;
+                NuevaExcepcion.Fecha = DateTime.Now;
+                repositorio.Agregar(NuevaExcepcion);
+            }
+            return existeCampoBeneficiario;
+        }
 
 
 
@@ -423,16 +485,17 @@ namespace DAP.Foliacion.Datos
         /************************************************************************************************************************************************************************/
         //***************************************************************                Reportes del IDP               *********************************************************/
 
+        /*
         public static string ObtenerDescripcionRamo(string Partida, int AnioInterfaz)
         {
 
             string anio = "";
             if (DateTime.Now.Year != AnioInterfaz)
             {
-                anio ="_"+Convert.ToString(AnioInterfaz)+"";
+                anio =""+Convert.ToString(AnioInterfaz)+"";
             }
 
-            string executaQuery = "SELECT nomina.dbo.fGetDescripRamo"+anio+"(substring('"+Partida+"', 2, 2))'RAMO'";
+            string executaQuery = "SELECT nomina.dbo.fGetDescripRamo_"+anio+"(substring('"+Partida+"', 2, 2))'RAMO'";
             try
             {
                 using (System.Data.SqlClient.SqlConnection connection = new System.Data.SqlClient.SqlConnection(ObtenerConexionesDB.obtnercadenaConexionAlpha()))
@@ -462,6 +525,47 @@ namespace DAP.Foliacion.Datos
             }
             return "";
         }
+
+        public static string ObtenerDescripcionUnidad(string Partida, int AnioInterfaz)
+        {
+
+            string anio = "";
+            if (DateTime.Now.Year != AnioInterfaz)
+            {
+                anio = "" + Convert.ToString(AnioInterfaz) + "";
+            }
+
+            string executaQuery = "SELECT nomina.dbo.fGetDescripPart_" + anio + "( SUBSTRING('"+ Partida + "' , CHARINDEX('1', '"+Partida+"')+1 , LEN( '"+Partida+ "' )  )  )'UNIDAD Segun CatalogoPartida'";
+            try
+            {
+                using (System.Data.SqlClient.SqlConnection connection = new System.Data.SqlClient.SqlConnection(ObtenerConexionesDB.obtnercadenaConexionAlpha()))
+                {
+                    connection.Open();
+                    System.Data.SqlClient.SqlCommand command = new System.Data.SqlClient.SqlCommand(executaQuery, connection);
+                    System.Data.SqlClient.SqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        return reader[0].ToString().Trim();
+                    }
+                }
+            }
+            catch (Exception E)
+            {
+                var transaccion = new Transaccion();
+                var repositorio = new Repositorio<LOG_EXCEPCIONES>(transaccion);
+
+                LOG_EXCEPCIONES NuevaExcepcion = new LOG_EXCEPCIONES();
+                NuevaExcepcion.Clase = "CrearReferencia_CanceladosDbSinEntity";
+                NuevaExcepcion.Metodo = "ObtenerDescripcionRamo";
+                NuevaExcepcion.Usuario = null;
+                NuevaExcepcion.Excepcion = E.Message;
+                NuevaExcepcion.Fecha = DateTime.Now;
+                repositorio.Agregar(NuevaExcepcion);
+            }
+            return "";
+        }
+        
 
         public static List<RegistrosTGCxNominaDTO> ObtenerRegistrosTGCxNomina(string Consulta)
         {
@@ -507,7 +611,7 @@ namespace DAP.Foliacion.Datos
             return regitrosXNomina;
 
         }
-
+        */
 
         public static List<DescripcionPPDD_DTO> ObtenerPercepcionesParaTotalesPorConcepto(string AP, int AnioInterfaz, string Num)
         {
@@ -530,12 +634,21 @@ namespace DAP.Foliacion.Datos
 
                     while (reader.Read())
                     {
-                        DescripcionPPDD_DTO nuevaPercepcion = new DescripcionPPDD_DTO();
-                        nuevaPercepcion.Monto = Convert.ToDecimal( reader[0].ToString().Trim() );
-                        nuevaPercepcion.Clave = reader[1].ToString().Trim();
-                        nuevaPercepcion.Descripcion = reader[2].ToString().Trim();
+                        string nuevaClave = reader[1].ToString().Trim();
+                        if ( percepciones.Select(x => x.Clave).Contains(nuevaClave) ) 
+                        {
+                            percepciones.Where(x => x.Clave == nuevaClave).FirstOrDefault().Monto += Convert.ToDecimal(reader[0].ToString().Trim());
+                        }
+                        else 
+                        {
+                            DescripcionPPDD_DTO nuevaPercepcion = new DescripcionPPDD_DTO();
+                            nuevaPercepcion.Monto = Convert.ToDecimal(reader[0].ToString().Trim());
+                            nuevaPercepcion.Clave = reader[1].ToString().Trim();
+                            nuevaPercepcion.Descripcion = reader[2].ToString().Trim();
 
-                        percepciones.Add(nuevaPercepcion);
+                            percepciones.Add(nuevaPercepcion);
+                        }
+ 
                     }
                 }
             }

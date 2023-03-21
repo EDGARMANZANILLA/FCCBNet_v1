@@ -322,6 +322,10 @@ namespace DAP.Plantilla.Reportes.Datasets {
             
             private global::System.Data.DataColumn columnCantidad;
             
+            private global::System.Data.DataColumn columnFolioMuestra;
+            
+            private global::System.Data.DataColumn columnUsoAprox;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public FormaPagoDataTable() {
@@ -389,6 +393,22 @@ namespace DAP.Plantilla.Reportes.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn FolioMuestraColumn {
+                get {
+                    return this.columnFolioMuestra;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn UsoAproxColumn {
+                get {
+                    return this.columnUsoAprox;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -424,13 +444,15 @@ namespace DAP.Plantilla.Reportes.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public FormaPagoRow AddFormaPagoRow(string NombreBanco, string NumeroCuenta, string FolioInicial, string Cantidad) {
+            public FormaPagoRow AddFormaPagoRow(string NombreBanco, string NumeroCuenta, string FolioInicial, string Cantidad, string FolioMuestra, string UsoAprox) {
                 FormaPagoRow rowFormaPagoRow = ((FormaPagoRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         NombreBanco,
                         NumeroCuenta,
                         FolioInicial,
-                        Cantidad};
+                        Cantidad,
+                        FolioMuestra,
+                        UsoAprox};
                 rowFormaPagoRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowFormaPagoRow);
                 return rowFormaPagoRow;
@@ -457,6 +479,8 @@ namespace DAP.Plantilla.Reportes.Datasets {
                 this.columnNumeroCuenta = base.Columns["NumeroCuenta"];
                 this.columnFolioInicial = base.Columns["FolioInicial"];
                 this.columnCantidad = base.Columns["Cantidad"];
+                this.columnFolioMuestra = base.Columns["FolioMuestra"];
+                this.columnUsoAprox = base.Columns["UsoAprox"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -470,6 +494,10 @@ namespace DAP.Plantilla.Reportes.Datasets {
                 base.Columns.Add(this.columnFolioInicial);
                 this.columnCantidad = new global::System.Data.DataColumn("Cantidad", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnCantidad);
+                this.columnFolioMuestra = new global::System.Data.DataColumn("FolioMuestra", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnFolioMuestra);
+                this.columnUsoAprox = new global::System.Data.DataColumn("UsoAprox", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnUsoAprox);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -923,6 +951,38 @@ namespace DAP.Plantilla.Reportes.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string FolioMuestra {
+                get {
+                    try {
+                        return ((string)(this[this.tableFormaPago.FolioMuestraColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'FolioMuestra\' de la tabla \'FormaPago\' es DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableFormaPago.FolioMuestraColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string UsoAprox {
+                get {
+                    try {
+                        return ((string)(this[this.tableFormaPago.UsoAproxColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("El valor de la columna \'UsoAprox\' de la tabla \'FormaPago\' es DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableFormaPago.UsoAproxColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public bool IsNombreBancoNull() {
                 return this.IsNull(this.tableFormaPago.NombreBancoColumn);
             }
@@ -967,6 +1027,30 @@ namespace DAP.Plantilla.Reportes.Datasets {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetCantidadNull() {
                 this[this.tableFormaPago.CantidadColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsFolioMuestraNull() {
+                return this.IsNull(this.tableFormaPago.FolioMuestraColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetFolioMuestraNull() {
+                this[this.tableFormaPago.FolioMuestraColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsUsoAproxNull() {
+                return this.IsNull(this.tableFormaPago.UsoAproxColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetUsoAproxNull() {
+                this[this.tableFormaPago.UsoAproxColumn] = global::System.Convert.DBNull;
             }
         }
         
